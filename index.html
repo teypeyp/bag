@@ -735,6 +735,24 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .splash-dot.active{width:22px;background:var(--accent)}
 .splash-cta{width:100%}
 </style>
+  <!-- Firebase bağlantısı için eklenmesi gerekenler -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyArJQ8_C9UASadMdS79Gu9gQcnstjv_nSA",
+    authDomain: "budgedbud.firebaseapp.com",
+    projectId: "budgedbud",
+    storageBucket: "budgedbud.appspot.com",
+    messagingSenderId: "10852714790",
+    appId: "1:10852714790:web:f59e30b44d12bfe00fd9e7",
+    measurementId: "G-B4084HK3JE"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+</script>
+  
 </head>
 <body>
 <div id="appWrap">
