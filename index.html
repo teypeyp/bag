@@ -1819,7 +1819,7 @@ function getDayStatus(dateStr) {
 
   if (!incomeUntil) return 'empty';
 
-  const dayTxs = data.transactions.filter(t => t.date === dateStr && t.type === 'expense');
+  const dayTxs = data.transactions.filter(t => t.date === dateStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit);
   const daySpent = dayTxs.reduce((s,t) => s + t.amount, 0);
 
   if (!daySpent) return 'green';
@@ -2550,24 +2550,31 @@ function renderTxList(container, txs, limitTo5) {
 
 
 let expandedTx = null;
-let _touchMoved = false;
 let _touchStartY = 0;
 let _touchStartX = 0;
+let _touchEndY = 0;
+let _touchEndX = 0;
 
 document.addEventListener('touchstart', e => {
   _touchStartY = e.touches[0].clientY;
   _touchStartX = e.touches[0].clientX;
-  _touchMoved = false;
+  _touchEndY = _touchStartY;
+  _touchEndX = _touchStartX;
 }, { passive: true });
 
-document.addEventListener('touchmove', e => {
-  const dy = Math.abs(e.touches[0].clientY - _touchStartY);
-  const dx = Math.abs(e.touches[0].clientX - _touchStartX);
-  if (dy > 8 || dx > 8) _touchMoved = true;
+document.addEventListener('touchend', e => {
+  _touchEndY = e.changedTouches[0].clientY;
+  _touchEndX = e.changedTouches[0].clientX;
 }, { passive: true });
+
+function _wasTap() {
+  const dy = Math.abs(_touchEndY - _touchStartY);
+  const dx = Math.abs(_touchEndX - _touchStartX);
+  return dy < 12 && dx < 12;
+}
 
 function toggleTxDelete(id) {
-  if (_touchMoved) return;
+  if (!_wasTap()) return;
   const delBtn = document.getElementById('txdel_' + id);
   const editBtn = document.getElementById('txedit_' + id);
   const item = document.getElementById('tx_' + id);
@@ -2591,7 +2598,7 @@ function toggleTxDelete(id) {
 let _expandedItem = null;
 
 function toggleItemExpand(id) {
-  if (_touchMoved) return;
+  if (!_wasTap()) return;
   if (_expandedItem && _expandedItem !== id) {
     const prev = document.getElementById(_expandedItem);
     if (prev) prev.classList.remove('item-expanded');
