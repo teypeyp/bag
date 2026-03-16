@@ -1439,7 +1439,6 @@ let data = {
   onboarded: false,
   walletName: '',
   monthlyTargets: {},
-  settings: {},
   streak: {
     current: 0,
     best: 0,
@@ -1609,6 +1608,10 @@ function save() {
 
 // =================== UTILS ===================
 function uid() { return Math.random().toString(36).slice(2, 10); }
+
+function esc(str) {
+  return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
 function parseNum(s) {
   if (!s && s !== 0) return 0;
@@ -1872,7 +1875,8 @@ function calcStreakData() {
 
   // En iyi streak (tarihsel — all time)
   data.streak.current = streak;
-  if (streak > (data.streak.best || 0)) data.streak.best = streak;
+  let _needsSave = false;
+  if (streak > (data.streak.best || 0)) { data.streak.best = streak; _needsSave = true; }
 
   // Aylık skor: kaç gün green/frozen
   const greenDays = days.filter(d => d.d <= todayD && (d.status==='green'||d.status==='frozen')).length;
@@ -1887,7 +1891,7 @@ function calcStreakData() {
   if (streak > 0 && streak % 7 === 0 && data.streak.lastWeeklyFreezeGift !== weeklyGiftKey) {
     data.streak.lastWeeklyFreezeGift = weeklyGiftKey;
     data.streak.freezeTotal = (data.streak.freezeTotal || 2) + 1;
-    save();
+    _needsSave = true;
     showToast('🎁 7 gün streak! +1 freeze hakkı kazandın!');
   }
 
@@ -1910,7 +1914,7 @@ function calcStreakData() {
     else monthBadge = { cls:'trying', emoji:'📈', title:'Gelişiyorsun', sub:`%${score} yeşil gün — devam et` };
   }
 
-  save();
+  if (_needsSave) save();
   const fb = calcFreeBudget(mk);
   const monthlySavings = fb.remaining;
   return { days, streak, score, greenDays, totalPastDays, freezesLeft, milestone, monthBadge, dim, todayD, monthlySavings };
@@ -2307,7 +2311,7 @@ function buildCarouselItems(fb) {
         (a.totalAmount - a.paidCount*a.monthlyAmount) - (b.totalAmount - b.paidCount*b.monthlyAmount))[0];
       const left = Math.round(smallest.totalAmount - smallest.paidCount * smallest.monthlyAmount);
       if (left > 0) items.push({ cls:'warn', icon:'🎯',
-        title:`En küçük borcu önce bitir: ${smallest.name}`,
+        title:`En küçük borcu önce bitir: ${esc(smallest.name)}`,
         sub:`${fmtTL(left)} kaldı — bitince diğerine ekstra öde.` });
     }
   } else if (fb.income > 0) {
@@ -2327,21 +2331,21 @@ function buildCarouselItems(fb) {
       const proj = calcWishProjection(w, fb);
       if (proj.canAfford) {
         items.push({ cls: 'good', icon: '🛍️',
-          title: `${w.name} için bütçen yeterli!`,
+          title: `${esc(w.name)} için bütçen yeterli!`,
           sub: `Bu ay alabilirsin — ${fmtTL(w.price)}.` });
       } else if (proj.monthsAway !== null && proj.monthsAway <= 3) {
         items.push({ cls: 'good', icon: '🛍️',
-          title: `${w.name} — ${proj.monthsAway === 1 ? 'gelecek ay' : proj.monthsAway + ' ay sonra'}`,
+          title: `${esc(w.name)} — ${proj.monthsAway === 1 ? 'gelecek ay' : proj.monthsAway + ' ay sonra'}`,
           sub: proj.subText });
       } else if (proj.monthsAway !== null) {
         items.push({ cls: 'warn', icon: '🛍️',
-          title: `${w.name} — ~${proj.monthsAway} ay kaldı`,
+          title: `${esc(w.name)} — ~${proj.monthsAway} ay kaldı`,
           sub: proj.tipText || proj.subText });
       }
       if (proj.trendText) {
         items.push({ cls: proj.trendText.includes('uzaklaş') ? 'bad' : 'good',
           icon: '🎯',
-          title: `${w.name} hedefin`,
+          title: `${esc(w.name)} hedefin`,
           sub: proj.trendText.replace(/^[📈📉]\s*/, '') });
       }
     });
@@ -2520,7 +2524,7 @@ function renderTxList(container, txs, limitTo5) {
       itemsHtml += `<div class="tx-item tx-deletable stagger-item" id="tx_${t.id}" onclick="toggleTxDelete('${t.id}')">
         <div class="tx-icon ${t.type}" style="background:${iconBg}">${cat.emoji}</div>
         <div class="tx-info">
-          <div class="tx-desc">${t.desc}</div>
+          <div class="tx-desc">${esc(t.desc)}</div>
           <div class="tx-cat">${cat.name}</div>
         </div>
         <div class="tx-right">
@@ -2665,7 +2669,7 @@ function deleteTx(id) {
   if (histOverlay && histOverlay.style.display === 'flex') {
     const listEl = document.getElementById('historyTxList');
     const subEl = document.getElementById('historySubtitle');
-    const all = data.transactions.slice().sort((a,b) => b.date > a.date ? 1 : -1);
+    const all = data.transactions.slice().sort((a,b) => b.date < a.date ? -1 : b.date > a.date ? 1 : 0);
     if (subEl) subEl.textContent = all.length + ' işlem';
     renderTxList(listEl, all);
   }
@@ -2793,14 +2797,6 @@ function renderDailyLimit() {
         </div>
       </div>
     </div>`;
-
-  // Ay başında freeze reset
-  const thisMonthKey = monthKey();
-  if (!data.streak.lastFreezeResetMonth || data.streak.lastFreezeResetMonth !== thisMonthKey) {
-    data.streak.freezesUsed = 0;
-    data.streak.lastFreezeResetMonth = thisMonthKey;
-    save();
-  }
 }
 
 function toggleRecForm() {
@@ -2854,13 +2850,13 @@ function renderRecList() {
     const paid = isPaidThisMonth(r, mk);
     const cat = getCat(r.category);
     return `<div class="rec-item ${paid?'paid-item':''}" id="recitem_${r.id}" onclick="toggleItemExpand('recitem_${r.id}')">
-      <div style="flex:1;display:flex;align-items:center;gap:12px;pointer-events:none">
-        <div class="rec-icon" style="background:${paid?'rgba(45,184,102,.12)':'var(--surface3)'}; transition:background .2s;pointer-events:auto" onclick="event.stopPropagation();togglePaidRecurring('${r.id}')">${cat.emoji}</div>
-        <div class="rec-info" style="pointer-events:none">
-          <div class="rec-name" style="opacity:${paid?'0.5':'1'};text-decoration:${paid?'line-through':'none'}">${r.desc}</div>
+      <div style="flex:1;display:flex;align-items:center;gap:12px">
+        <div class="rec-icon" style="background:${paid?'rgba(45,184,102,.12)':'var(--surface3)'}; transition:background .2s" onclick="event.stopPropagation();togglePaidRecurring('${r.id}')">${cat.emoji}</div>
+        <div class="rec-info" style="flex:1;min-width:0;pointer-events:none">
+          <div class="rec-name" style="opacity:${paid?'0.5':'1'};text-decoration:${paid?'line-through':'none'}">${esc(r.desc)}</div>
           <div class="rec-meta">${cat.name} · ${fmtTL(r.amount)}/ay</div>
         </div>
-        <div class="rec-status" style="pointer-events:auto" onclick="event.stopPropagation();togglePaidRecurring('${r.id}')">
+        <div class="rec-status" onclick="event.stopPropagation();togglePaidRecurring('${r.id}')">
           <div class="rec-status-badge ${paid?'paid':'unpaid'}">${paid?'✓ Ödendi':'Öde'}</div>
           <div class="rec-status-amount" style="color:${paid?'var(--accent)':'var(--text)'}">${fmtTL(r.amount)}</div>
         </div>
@@ -2944,11 +2940,11 @@ function renderDebtList() {
     const done = !d.active;
     const pct = d.installments ? Math.round((d.paidCount / d.installments) * 100) : 100;
     return `<div class="rec-item debt-item ${paid?'paid-item':''}" id="debtitem_${d.id}" style="${done?'opacity:.55':''}" onclick="toggleItemExpand('debtitem_${d.id}')">
-      <div style="flex:1;display:flex;align-items:center;gap:12px;pointer-events:none">
-        <div class="rec-icon" style="background:${done?'rgba(45,184,102,.12)':paid?'rgba(45,184,102,.12)':'rgba(255,69,58,.08)'};pointer-events:auto;cursor:${future||done?'default':'pointer'}" onclick="event.stopPropagation();${!future&&!done?`togglePaidDebt('${d.id}')`:''}"
+      <div style="flex:1;display:flex;align-items:center;gap:12px">
+        <div class="rec-icon" style="background:${done?'rgba(45,184,102,.12)':paid?'rgba(45,184,102,.12)':'rgba(255,69,58,.08)'};cursor:${future||done?'default':'pointer'}" onclick="event.stopPropagation();${!future&&!done?`togglePaidDebt('${d.id}')`:''}"
 >💳</div>
-        <div class="rec-info" style="pointer-events:none">
-          <div class="rec-name" style="opacity:${(paid||done)?'0.5':'1'};text-decoration:${paid||done?'line-through':'none'}">${d.name}</div>
+        <div class="rec-info" style="flex:1;min-width:0;pointer-events:none">
+          <div class="rec-name" style="opacity:${(paid||done)?'0.5':'1'};text-decoration:${paid||done?'line-through':'none'}">${esc(d.name)}</div>
           <div class="rec-meta">${d.paidCount}/${d.installments} taksit · ${fmtTL(d.monthlyAmount)}/ay</div>
           <div style="height:3px;background:var(--surface3);border-radius:2px;margin-top:6px;overflow:hidden">
             <div style="width:${pct}%;height:100%;background:${done?'var(--accent)':paid?'var(--accent)':'rgba(255,69,58,.5)'};border-radius:2px;transition:width .5s ease"></div>
@@ -2956,7 +2952,7 @@ function renderDebtList() {
           ${future?`<div style="font-size:10px;color:var(--warning);margin-top:3px;font-weight:800">⏳ ${d.startMonth} ayında başlıyor</div>`:''}
           ${done?`<div style="font-size:10px;color:var(--accent);margin-top:3px;font-weight:800">✓ Tamamlandı</div>`:''}
         </div>
-        <div class="rec-status" style="pointer-events:auto;cursor:${future||done?'default':'pointer'}" onclick="event.stopPropagation();${!future&&!done?`togglePaidDebt('${d.id}')`:''}"
+        <div class="rec-status" style="cursor:${future||done?'default':'pointer'}" onclick="event.stopPropagation();${!future&&!done?`togglePaidDebt('${d.id}')`:''}"
 >
           <div class="rec-status-badge ${done?'paid':paid?'paid':'unpaid'}">${done?'Bitti 🎉':future?'Bekliyor':paid?'✓ Ödendi':'Öde'}</div>
           <div class="rec-status-amount" style="color:${done||paid?'var(--accent)':'var(--danger)'}">${fmtTL(d.monthlyAmount)}</div>
@@ -3113,14 +3109,14 @@ function renderGoalsList() {
     const isMonthlyPaid = (g.paidMonths||[]).includes(mk);
     const barColor = pct>=100?'var(--accent)':pct>=60?'var(--warning)':'var(--blue)';
     return `<div class="goal-card" id="goalitem_${g.id}" onclick="toggleItemExpand('goalitem_${g.id}')">
-      <div class="goal-header" style="pointer-events:none">
+      <div class="goal-header" style="pointer-events:none;user-select:none">
         <div class="goal-emoji-wrap">${g.emoji}</div>
         <div style="flex:1">
-          <div class="goal-title">${g.name}</div>
+          <div class="goal-title">${esc(g.name)}</div>
           <div class="goal-subtitle">${fmtTL(total)} / ${fmtTL(g.target)} · ${pct}%</div>
         </div>
       </div>
-      <div class="goal-progress" style="pointer-events:none">
+      <div class="goal-progress" style="pointer-events:none;user-select:none">
         <div class="goal-stats">
           <span>${pct}% tamamlandı</span>
           ${g.monthly?`<span>${fmtTL(g.monthly)}/ay</span>`:''}
@@ -3357,7 +3353,7 @@ function renderWishSummaryCard() {
             <div style="font-size:14px;font-weight:800;color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${reachable[0].name}</div>
             <div style="font-size:10px;font-weight:700;color:var(--accent);margin-top:3px">Bütçen yeterli! 🎉</div>
           ` : soonest ? `
-            <div style="font-size:13px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${soonest.w.name}</div>
+            <div style="font-size:13px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(soonest.w.name)}</div>
             <div style="font-size:10px;font-weight:700;color:var(--purple);margin-top:3px">
               ${soonest.proj.monthsAway === 1 ? 'Gelecek ay' : '~' + soonest.proj.monthsAway + ' ay sonra'}
             </div>
@@ -3375,7 +3371,7 @@ function renderWishSummaryCard() {
           const dotColor = w.priority === 'high' ? 'var(--danger)' : w.priority === 'mid' ? 'var(--purple)' : 'var(--muted)';
           return `<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(44,44,53,.2)">
             <div style="width:6px;height:6px;border-radius:50%;background:${dotColor};flex-shrink:0"></div>
-            <div style="flex:1;font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${w.name}</div>
+            <div style="flex:1;font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(w.name)}</div>
             <div style="font-size:12px;font-weight:800;color:var(--purple);flex-shrink:0">${fmtTL(w.price)}</div>
             <div style="font-size:10px;font-weight:700;color:${proj.canAfford?'var(--accent)':'var(--muted)'};flex-shrink:0;min-width:48px;text-align:right">
               ${proj.canAfford ? 'Bu ay ✓' : proj.monthsAway ? '~'+proj.monthsAway+'ay' : '—'}
@@ -3585,17 +3581,17 @@ function renderWishList() {
 
     return `
     <div class="wish-card priority-${w.priority} ${reachableClass}${isDone?' done-item':''}" id="wish_${w.id}" style="${isDone?'opacity:.7':''}" onclick="toggleItemExpand('wish_${w.id}')">
-      <div class="wish-top" style="pointer-events:none">
+      <div class="wish-top" style="pointer-events:none;user-select:none">
         <div class="wish-icon" style="${isDone?'background:rgba(45,184,102,.12)':''}">🛍️</div>
         <div class="wish-info">
-          <div class="wish-name" style="${isDone?'text-decoration:line-through;opacity:.6':''}"> ${w.name}</div>
+          <div class="wish-name" style="${isDone?'text-decoration:line-through;opacity:.6':''}"> ${esc(w.name)}</div>
           <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
             <span class="wish-price" style="${isDone?'color:var(--accent)':''}">${fmtTL(w.price)}</span>
             <span class="wish-priority-badge ${w.priority}">${priorityLabel}</span>
           </div>
         </div>
       </div>
-      <div style="pointer-events:none">
+      <div style="pointer-events:none;user-select:none">
         ${projectionHtml}
         ${progressHtml}
       </div>
@@ -3664,7 +3660,7 @@ function renderFinancialAdvice() {
     if (activeDebts.length > 1) {
       const smallest = [...activeDebts].sort((a,b)=>(a.totalAmount-a.paidCount*a.monthlyAmount)-(b.totalAmount-b.paidCount*b.monthlyAmount))[0];
       const left = smallest.totalAmount - smallest.paidCount * smallest.monthlyAmount;
-      tips.push({ icon:'🎯', cls:'warn', title:`En küçük borcu önce bitir: ${smallest.name}`, sub:`${fmtTL(Math.round(left))} kaldı — bitince diğerine ekstra öde. Çığ kartopu etkisi.` });
+      tips.push({ icon:'🎯', cls:'warn', title:`En küçük borcu önce bitir: ${esc(smallest.name)}`, sub:`${fmtTL(Math.round(left))} kaldı — bitince diğerine ekstra öde. Çığ kartopu etkisi.` });
     }
     const hasEmergencyFund = data.savingsGoals.some(g => g.name.toLowerCase().includes('acil') || g.name.toLowerCase().includes('fon'));
     if (!hasEmergencyFund) {
@@ -3990,7 +3986,7 @@ function renderDebtSummaryCard() {
           <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1">
             <div style="width:28px;height:28px;border-radius:8px;background:rgba(255,69,58,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">💳</div>
             <div style="min-width:0">
-              <div style="font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.name}</div>
+              <div style="font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(d.name)}</div>
               <div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:1px">${d.paidCount}/${d.installments} taksit · ${fmtTL(d.monthlyAmount)}/ay</div>
             </div>
           </div>
@@ -4302,16 +4298,16 @@ function renderYillik() {
     const savColor = savRate >= 20 ? 'var(--accent)' : savRate >= 0 ? 'var(--text)' : 'var(--danger)';
     const incomePct = Math.round((m.income / maxVal) * 100);
     const expensePct = Math.round((m.expense / maxVal) * 100);
-    const uid = 'ym_' + m.mk.replace('-','');
+    const ymId = 'ym_' + m.mk.replace('-','');
 
     return `<div class="year-month-item">
-      <div class="year-month-header" onclick="toggleYearMonth('${uid}')">
+      <div class="year-month-header" onclick="toggleYearMonth('${ymId}')">
         <span class="year-month-name">${m.name}</span>
         <span class="year-month-sav" style="color:${savColor}">%${savRate}</span>
         <span class="year-month-net" style="color:${netColor}">${m.net>=0?'+':''}${fmtTL(m.net)}</span>
-        <span class="year-month-chevron" id="chev_${uid}">›</span>
+        <span class="year-month-chevron" id="chev_${ymId}">›</span>
       </div>
-      <div class="year-month-body" id="${uid}">
+      <div class="year-month-body" id="${ymId}">
         <div class="year-month-detail">
           <div class="ymb-bars">
             <div class="ymb-bar-row">
@@ -4368,7 +4364,7 @@ function openHistory() {
   const titleEl = document.getElementById('historyTitle');
   const subEl = document.getElementById('historySubtitle');
   el.style.display = 'flex';
-  const all = data.transactions.slice().sort((a,b) => b.date > a.date ? 1 : -1);
+  const all = data.transactions.slice().sort((a,b) => b.date < a.date ? -1 : b.date > a.date ? 1 : 0);
   if (titleEl) titleEl.textContent = 'Tüm İşlemler';
   if (subEl) subEl.textContent = all.length + ' işlem';
   renderTxList(listEl, all);
@@ -4510,14 +4506,15 @@ function resetAll() {
   showConfirm('Tüm veriler silinecek! Bu işlem geri alınamaz. Devam etmek istiyor musunuz?', () => {
     try { localStorage.removeItem(KEY); } catch(e) {}
     location.reload();
-  });
+  }, 'Sıfırla');
 }
 
 // =================== CONFIRM MODAL ===================
 let confirmCallback = null;
 
-function showConfirm(msg, cb) {
+function showConfirm(msg, cb, btnText) {
   document.getElementById('confirmMsg').textContent = msg;
+  document.getElementById('confirmOkBtn').textContent = btnText || 'Sil';
   confirmCallback = cb;
   document.getElementById('confirmModal').classList.add('show');
 }
