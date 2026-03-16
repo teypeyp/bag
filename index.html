@@ -861,8 +861,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <button class="btn btn-primary btn-full" id="addTxBtn" onclick="addTransaction()">Ekle</button>
   </div>
 
-  <div class="card collapsible-card" id="txSection" style="margin-top:14px;background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.25)">
-    <div class="card-collapse-header" onclick="toggleTxSection()">
+  <div class="card" id="txSection" style="margin-top:14px;background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.25);padding:0;border-radius:var(--radius)">
+    <div class="card-collapse-header" onclick="toggleTxSection()" style="border-radius:var(--radius)">
       <div class="collapse-left">
         <div class="collapse-icon-wrap" style="background:rgba(45,184,102,.12);border:1px solid rgba(45,184,102,.2);font-size:18px">📋</div>
         <div>
@@ -875,10 +875,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();openHistory()">Geçmiş →</button>
       </div>
     </div>
-    <div class="collapsible-body" id="txBody">
-      <div class="collapsible-inner">
-        <div id="txList"></div>
-      </div>
+    <div id="txBody" style="padding:0 12px 12px">
+      <div id="txList"></div>
     </div>
   </div>
 </div>
@@ -1784,7 +1782,19 @@ function switchTab(id, btn) {
   if (btn) btn.classList.add('active');
   currentTab = id;
   if (id === 'aylik') renderMonthly();
-  if (id === 'sabit') { renderSabit(); updateCollapseSummaries(); }
+  if (id === 'sabit') {
+    renderSabit(); updateCollapseSummaries();
+    // Tüm section'ları otomatik aç
+    ['rec','debt','goal','wish'].forEach(name => {
+      if (!sectionState[name]) {
+        sectionState[name] = true;
+        const body = document.getElementById(name + 'Body');
+        const chevron = document.getElementById(name + 'Chevron');
+        if (body) body.classList.remove('collapsed');
+        if (chevron) chevron.classList.add('open');
+      }
+    });
+  }
   if (id === 'ozet') {
     renderOzetStats();
     Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
@@ -1841,7 +1851,7 @@ function getDayStatus(dateStr) {
   // Geçmiş günlerin sapması (o gün hariç)
   const paidFixed = txsUntilDay.filter(t => t.isRecurring || t.isDebt || t.isGoalDeposit).reduce((s,t) => s + t.amount, 0);
   const varSpentUntil = Math.max(0, expUntil - paidFixed);
-  const pastVarSpent = varSpentUntil - daySpent;
+  const pastVarSpent = Math.max(0, varSpentUntil - daySpent);
   const pastDays = Math.max(0, d - 1);
   const pastDeviation = (baseDaily * pastDays) - pastVarSpent;
   const dailyAllowance = baseDaily + (daysLeftThatDay > 0 ? pastDeviation / daysLeftThatDay : 0);
@@ -1864,13 +1874,18 @@ function calcStreakData() {
   }
 
   // Streak: bugüne kadar ardışık green/frozen günler (geriye doğru)
-  // empty = harcama yok veya gelir yok → streak'i KIRMAZ, atlanır
+  // empty = harcama yok veya gelir yok → streak'i KIRMAZ ama sayılmaz
   // red = limit aşıldı → kırar
   let streak = 0;
+  let foundGreen = false;
   for (let i = Math.min(todayD, dim) - 1; i >= 0; i--) {
     const s = days[i].status;
-    if (s === 'green' || s === 'frozen' || s === 'empty') streak++;
-    else break; // red = kırıldı
+    if (s === 'red') break; // red = kırıldı
+    if (s === 'green' || s === 'frozen') {
+      streak++;
+      foundGreen = true;
+    }
+    // empty: zinciri kırmaz, sayılmaz — geçmeye devam et
   }
 
   // En iyi streak (tarihsel — all time)
@@ -1936,6 +1951,8 @@ function useFreeze() {
 function renderStreakCard(sd) {
   const { days, streak, freezesLeft, milestone, monthBadge, dim, todayD } = sd;
   const isDead = streak === 0;
+  const mk = currentMonth;
+  const hasIncome = calcMonthData(mk).income > 0;
 
   const shieldsHtml = Array.from({length: data.streak.freezeTotal || 2}, (_,i) => {
     const used = i >= freezesLeft;
@@ -1971,6 +1988,11 @@ function renderStreakCard(sd) {
       </div>
     </div>` : '';
 
+  const noIncomeHint = !hasIncome ? `
+    <div style="margin:0 16px 12px;padding:10px 14px;background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.07)">
+      <div style="font-size:12px;font-weight:700;color:var(--muted)">💡 Bu ay gelir kaydı ekle, limit takibini başlat.</div>
+    </div>` : '';
+
   return `
   <div class="streak-card">
     <div class="streak-header">
@@ -1978,12 +2000,13 @@ function renderStreakCard(sd) {
       <div class="streak-main">
         <div class="streak-count${isDead?' dead':''}">${streak}</div>
         <div class="streak-meta${isDead?' dead':''}">
-          gün limit altında
+          ${hasIncome ? 'gün limit altında' : 'streak henüz başlamadı'}
           <span class="streak-best-chip">En iyi ${data.streak.best || 0}</span>
         </div>
       </div>
     </div>
 
+    ${noIncomeHint}
     ${milestoneHtml}
     ${monthBadgeHtml}
 
@@ -3766,12 +3789,12 @@ function renderOzetStats() {
   }
 
 
-  // Streak card
+  // Streak card - her zaman göster
   const scWrap = document.getElementById('streakCardWrap');
-  if (scWrap && fb.income) {
+  if (scWrap) {
     const sd = calcStreakData();
     scWrap.innerHTML = renderStreakCard(sd);
-  } else if (scWrap) { scWrap.innerHTML = ''; }
+  }
 
   // Freeze reset ay başında
   const thisMonthKey = monthKey();
@@ -3832,7 +3855,7 @@ function renderDailyStats() {
     const avBase = available / dim;
     const paidFixed = txsUntil.filter(t=>t.isRecurring||t.isDebt||t.isGoalDeposit).reduce((s,t)=>s+t.amount,0);
     const varUntil = Math.max(0, expUntil - paidFixed);
-    const pastVar = varUntil - daySpent;
+    const pastVar = Math.max(0, varUntil - daySpent);
     const pastDev = (avBase * Math.max(0, d-1)) - pastVar;
     const dLeft = Math.max(1, dim - d + 1);
     const dayLimit = avBase + pastDev / dLeft;
