@@ -2546,7 +2546,24 @@ function renderTxList(container, txs, limitTo5) {
 
 
 let expandedTx = null;
+let _touchMoved = false;
+let _touchStartY = 0;
+let _touchStartX = 0;
+
+document.addEventListener('touchstart', e => {
+  _touchStartY = e.touches[0].clientY;
+  _touchStartX = e.touches[0].clientX;
+  _touchMoved = false;
+}, { passive: true });
+
+document.addEventListener('touchmove', e => {
+  const dy = Math.abs(e.touches[0].clientY - _touchStartY);
+  const dx = Math.abs(e.touches[0].clientX - _touchStartX);
+  if (dy > 8 || dx > 8) _touchMoved = true;
+}, { passive: true });
+
 function toggleTxDelete(id) {
+  if (_touchMoved) return;
   const delBtn = document.getElementById('txdel_' + id);
   const editBtn = document.getElementById('txedit_' + id);
   const item = document.getElementById('tx_' + id);
@@ -2568,28 +2585,9 @@ function toggleTxDelete(id) {
 
 // Genel item expand/collapse — rec/debt/goal/wish için
 let _expandedItem = null;
-let _touchStartY = 0;
-let _touchStartX = 0;
-
-document.addEventListener('touchstart', e => {
-  _touchStartY = e.touches[0].clientY;
-  _touchStartX = e.touches[0].clientX;
-  window._lastTouchY = _touchStartY;
-  window._lastTouchX = _touchStartX;
-}, { passive: true });
-
-document.addEventListener('touchmove', e => {
-  window._lastTouchY = e.touches[0].clientY;
-  window._lastTouchX = e.touches[0].clientX;
-}, { passive: true });
 
 function toggleItemExpand(id) {
-  // Parmak kaydırma hareketi varsa expand'i engelle
-  if (typeof _touchStartY !== 'undefined') {
-    const dy = Math.abs((window._lastTouchY || _touchStartY) - _touchStartY);
-    const dx = Math.abs((window._lastTouchX || _touchStartX) - _touchStartX);
-    if (dy > 8 || dx > 8) return;
-  }
+  if (_touchMoved) return;
   if (_expandedItem && _expandedItem !== id) {
     const prev = document.getElementById(_expandedItem);
     if (prev) prev.classList.remove('item-expanded');
