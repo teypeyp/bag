@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>BAGIT</title>
+<title>BAGIT v3</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BAGIT">
@@ -334,7 +334,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .collapse-chevron{font-size:20px;color:var(--muted);transition:transform .25s cubic-bezier(.4,0,.2,1);display:inline-block;line-height:1}
 .collapse-chevron.open{transform:rotate(90deg)}
 .collapse-add-btn{padding:6px 12px;font-size:11px;border-radius:8px}
-.collapsible-body{display:grid;grid-template-rows:1fr;overflow:hidden;transition:grid-template-rows .3s cubic-bezier(.4,0,.2,1),opacity .25s ease;opacity:1}
+.collapsible-body{display:grid;grid-template-rows:1fr;overflow:hidden;transition:grid-template-rows .3s cubic-bezier(.4,0,.2,1),opacity .25s ease;opacity:1;touch-action:pan-y}
 .collapsible-body > .collapsible-inner{padding:8px 12px 12px;min-height:0}
 .collapsible-body.collapsed{grid-template-rows:0fr;opacity:0;pointer-events:none}
 .collapsible-body.collapsed > .collapsible-inner{padding:0}
@@ -345,12 +345,13 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   padding:13px 14px;border-radius:16px;
   background:var(--surface2);border:1.5px solid var(--border);
   margin-bottom:8px;
-  transition:background .15s,border-color .15s,transform .1s;
+  transition:background .15s,border-color .15s;
   -webkit-tap-highlight-color:transparent;user-select:none;
+  touch-action:pan-y;
   position:relative;overflow:hidden;
 }
 .rec-item:last-child{margin-bottom:0}
-.rec-item:active{transform:scale(.98);background:var(--surface3)}
+.rec-item:active{background:var(--surface3)}
 .rec-item.paid-item{border-color:rgba(45,184,102,.25);background:rgba(45,184,102,.04)}
 .rec-item.debt-item.paid-item{border-color:rgba(45,184,102,.25);background:rgba(45,184,102,.04)}
 
@@ -397,8 +398,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   background:var(--surface2);border:1.5px solid var(--border);
   border-radius:16px;padding:14px;margin-bottom:8px;
   position:relative;overflow:hidden;
-  transition:transform .1s,border-color .2s;
-  -webkit-tap-highlight-color:transparent;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:transform .1s,border-color .2s,background .15s;
 }
 .wish-card:last-child{margin-bottom:0}
 .wish-card:active{transform:scale(.985)}
@@ -443,7 +444,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .wish-priority-badge.low{background:var(--surface3);color:var(--muted)}
 
 /* ===== GOAL CARDS ===== */
-.goal-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:10px}
+.goal-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s}
+.goal-card:active{background:var(--surface3)}
 .goal-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .goal-emoji-wrap{width:44px;height:44px;border-radius:12px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
 .goal-title{font-size:15px;font-weight:800;letter-spacing:-.1px}
@@ -625,16 +627,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .tx-item.tx-deletable{cursor:pointer;transition:background .15s}
 .tx-item.tx-deletable:active{background:var(--surface2)}
 .tx-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.tx-delete-btn{
-  display:none;padding:6px 12px;border-radius:10px;border:none;
-  background:var(--danger);color:#fff;font-size:12px;font-weight:800;
-  font-family:'Montserrat',sans-serif;cursor:pointer;white-space:nowrap;
-  opacity:0;transform:scale(.8);transition:opacity .2s,transform .2s;
-  pointer-events:none;
-}
-.tx-delete-btn.show{
-  display:block;opacity:1;transform:scale(1);pointer-events:auto;
-}
 .tx-item.tx-expanded .tx-amount{color:var(--muted)!important}
 
 /* ===== SETTINGS APPLE STYLE ===== */
@@ -650,26 +642,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .settings-row-sub{font-size:12px;color:var(--muted);margin-top:2px}
 .settings-chevron{font-size:20px;color:var(--muted);line-height:1}
 .settings-inline-input{background:transparent;border:none;color:var(--accent);font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;text-align:right;width:100px;outline:none}
-
-/* ===== DRAG & DROP ===== */
-/* ===== DRAG & DROP SECTIONS ===== */
-.draggable-section{
-  transition: transform .3s cubic-bezier(.34,1.2,.64,1), box-shadow .3s ease, opacity .2s ease;
-  touch-action: pan-x;
-}
-.draggable-section.is-dragging{
-  opacity: .96;
-  transform: scale(1.03);
-  box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 0 1.5px rgba(45,184,102,.35);
-  z-index: 100;
-  position: relative;
-}
-.draggable-section.drag-placeholder{
-  opacity: .3;
-  transform: scale(.97);
-}
-.drag-handle{font-size:14px;color:var(--muted);cursor:grab;padding:0 4px;user-select:none;touch-action:none;letter-spacing:-2px;opacity:.5}
-.drag-handle:active{cursor:grabbing}
 
 /* ===== HAMBURGER ===== */
 /* app-header position handled above */
@@ -792,7 +764,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .btn:active{transform:scale(.94) !important;opacity:.85}
 .tab-btn:active{transform:scale(.9)}
 .year-month-header:active{transform:scale(.98)}
-.rec-item:active,.debt-item:active,.goal-item:active{transform:scale(.985);transition:transform .1s}
+.rec-item:active,.debt-item:active,.goal-item:active{transition:background .1s}
 .cat-bar-row:active{transform:scale(.97);transition:transform .1s}
 .hero-chip:active{transform:scale(.92);transition:transform .1s}
 /* Kart stagger giriş animasyonu */
@@ -899,8 +871,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   </div>
 </div>
 
-<!-- quote rendered inline in wallet tab -->
-
 <!-- HEADER -->
 <div class="app-header">
   <div class="app-logo" onclick="switchTab('aylik', document.querySelector('.tab-btn'))" style="cursor:pointer" id="appLogo">Vault</div>
@@ -997,7 +967,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
   <div id="sabitSectionsContainer" style="margin-top:28px">
   <!-- Ödemeler -->
-  <div class="card collapsible-card draggable-section" id="recSection" data-section="rec" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.25)">
+  <div class="card collapsible-card" id="recSection" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.25)">
     <div class="card-collapse-header" onclick="toggleSection('rec')">
       <div class="collapse-left">
         <div class="collapse-icon-wrap" style="background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.25);font-size:18px">🗓</div>
@@ -1007,8 +977,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         </div>
       </div>
       <div class="collapse-right">
-        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();toggleRecForm()">+ Ekle</button>
-        <span class="drag-handle" title="Sürükle">⋮⋮</span><span class="collapse-chevron" id="recChevron">›</span>
+        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();toggleRecForm()">+ Ekle</button><span class="collapse-chevron" id="recChevron">›</span>
       </div>
     </div>
     <div class="collapsible-body collapsed" id="recBody"><div class="collapsible-inner">
@@ -1034,7 +1003,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   </div>
 
   <!-- Borçlar -->
-  <div class="card collapsible-card draggable-section" id="debtSection" data-section="debt" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.25)">
+  <div class="card collapsible-card" id="debtSection" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.25)">
     <div class="card-collapse-header" onclick="toggleSection('debt')">
       <div class="collapse-left">
         <div class="collapse-icon-wrap" style="background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.2)">💳</div>
@@ -1044,8 +1013,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         </div>
       </div>
       <div class="collapse-right">
-        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();toggleDebtForm()">+ Ekle</button>
-        <span class="drag-handle" title="Sürükle">⋮⋮</span><span class="collapse-chevron" id="debtChevron">›</span>
+        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();toggleDebtForm()">+ Ekle</button><span class="collapse-chevron" id="debtChevron">›</span>
       </div>
     </div>
     <div class="collapsible-body collapsed" id="debtBody"><div class="collapsible-inner">
@@ -1076,7 +1044,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   </div>
 
   <!-- Birikim -->
-  <div class="card collapsible-card draggable-section" id="goalSection" data-section="goal" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.25)">
+  <div class="card collapsible-card" id="goalSection" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.25)">
     <div class="card-collapse-header" onclick="toggleSection('goal')">
       <div class="collapse-left">
         <div class="collapse-icon-wrap" style="background:rgba(45,184,102,.12);border:1px solid rgba(45,184,102,.2)">🪙</div>
@@ -1086,8 +1054,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         </div>
       </div>
       <div class="collapse-right">
-        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();toggleGoalForm()">+ Ekle</button>
-        <span class="drag-handle" title="Sürükle">⋮⋮</span><span class="collapse-chevron" id="goalChevron">›</span>
+        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();toggleGoalForm()">+ Ekle</button><span class="collapse-chevron" id="goalChevron">›</span>
       </div>
     </div>
     <div class="collapsible-body collapsed" id="goalBody"><div class="collapsible-inner">
@@ -1120,7 +1087,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   </div>
 
   <!-- Hedefler -->
-  <div class="card collapsible-card draggable-section" id="wishSection" data-section="wish" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.25)">
+  <div class="card collapsible-card" id="wishSection" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.25)">
     <div class="card-collapse-header" onclick="toggleSection('wish')">
       <div class="collapse-left">
         <div class="collapse-icon-wrap" style="background:rgba(191,90,242,.12);border:1px solid rgba(191,90,242,.22);font-size:18px">🛍️</div>
@@ -1130,8 +1097,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         </div>
       </div>
       <div class="collapse-right">
-        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();toggleWishForm()">+ Ekle</button>
-        <span class="drag-handle" title="Sürükle">⋮⋮</span><span class="collapse-chevron" id="wishChevron">›</span>
+        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();toggleWishForm()">+ Ekle</button><span class="collapse-chevron" id="wishChevron">›</span>
       </div>
     </div>
     <div class="collapsible-body collapsed" id="wishBody"><div class="collapsible-inner">
@@ -1514,7 +1480,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="saveRecEditModal()">Kaydet</button>
   </div>
 </div>
-</div>
 
 <!-- DEPOSIT MODAL -->
 <div class="modal-overlay" id="depositModal" onclick="if(event.target===this)closeDepositModal()">
@@ -1530,13 +1495,14 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   </div>
 </div>
 
+</div><!-- /appWrap -->
+
 <script>
 // =================== GLOBALS ===================
 const SVG_EDIT = `<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
 const SVG_TRASH = `<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
 let charts = {};
 let viewYear = new Date().getFullYear();
-let sectionOrder = ['rec', 'debt', 'goal', 'wish'];
 
 // =================== DATA ===================
 const KEY = 'butcem_v3';
@@ -2671,7 +2637,7 @@ function renderTxList(container, txs, limitTo5) {
       const cat = getCat(t.category);
       const iconBg = t.type === 'income' ? 'var(--accent-dim)' : (cat.color + '22');
       itemsHtml += `<div class="tx-item tx-deletable stagger-item" id="tx_${t.id}" onclick="toggleTxDelete('${t.id}')">
-        <div class="tx-icon" style="background:${iconBg}">${cat.emoji}</div>
+        <div class="tx-icon ${t.type}" style="background:${iconBg}">${cat.emoji}</div>
         <div class="tx-info">
           <div class="tx-desc">${t.desc}</div>
           <div class="tx-cat">${cat.name}</div>
@@ -2721,7 +2687,28 @@ function toggleTxDelete(id) {
 
 // Genel item expand/collapse — rec/debt/goal/wish için
 let _expandedItem = null;
+let _touchStartY = 0;
+let _touchStartX = 0;
+
+document.addEventListener('touchstart', e => {
+  _touchStartY = e.touches[0].clientY;
+  _touchStartX = e.touches[0].clientX;
+  window._lastTouchY = _touchStartY;
+  window._lastTouchX = _touchStartX;
+}, { passive: true });
+
+document.addEventListener('touchmove', e => {
+  window._lastTouchY = e.touches[0].clientY;
+  window._lastTouchX = e.touches[0].clientX;
+}, { passive: true });
+
 function toggleItemExpand(id) {
+  // Parmak kaydırma hareketi varsa expand'i engelle
+  if (typeof _touchStartY !== 'undefined') {
+    const dy = Math.abs((window._lastTouchY || _touchStartY) - _touchStartY);
+    const dx = Math.abs((window._lastTouchX || _touchStartX) - _touchStartX);
+    if (dy > 8 || dx > 8) return;
+  }
   if (_expandedItem && _expandedItem !== id) {
     const prev = document.getElementById(_expandedItem);
     if (prev) prev.classList.remove('item-expanded');
@@ -2892,26 +2879,11 @@ function addTransaction() {
 // =================== SABIT ===================
 function renderSabit() {
   renderDailyLimit();
-  // Sürüklenebilir sıraya göre render
-  const container = document.getElementById('sabitSectionsContainer');
-  if (container) {
-    const sections = {
-      rec: document.getElementById('recSection'),
-      debt: document.getElementById('debtSection'),
-      goal: document.getElementById('goalSection'),
-      wish: document.getElementById('wishSection'),
-    };
-    sectionOrder.forEach(key => {
-      const el = sections[key];
-      if (el) container.appendChild(el);
-    });
-  }
   renderRecList();
   renderDebtList();
   renderGoalsList();
   renderWishList();
   updateCollapseSummaries();
-  initDragSections();
 }
 
 function renderDailyLimit() {
@@ -3010,13 +2982,13 @@ function renderRecList() {
     const paid = isPaidThisMonth(r, mk);
     const cat = getCat(r.category);
     return `<div class="rec-item ${paid?'paid-item':''}" id="recitem_${r.id}" onclick="toggleItemExpand('recitem_${r.id}')">
-      <div style="flex:1;display:flex;align-items:center;gap:12px" onclick="event.stopPropagation();togglePaidRecurring('${r.id}')">
-        <div class="rec-icon" style="background:${paid?'rgba(45,184,102,.12)':'var(--surface3)'}; transition:background .2s">${cat.emoji}</div>
-        <div class="rec-info">
+      <div style="flex:1;display:flex;align-items:center;gap:12px;pointer-events:none">
+        <div class="rec-icon" style="background:${paid?'rgba(45,184,102,.12)':'var(--surface3)'}; transition:background .2s;pointer-events:auto" onclick="event.stopPropagation();togglePaidRecurring('${r.id}')">${cat.emoji}</div>
+        <div class="rec-info" style="pointer-events:none">
           <div class="rec-name" style="opacity:${paid?'0.5':'1'};text-decoration:${paid?'line-through':'none'}">${r.desc}</div>
           <div class="rec-meta">${cat.name} · ${fmtTL(r.amount)}/ay</div>
         </div>
-        <div class="rec-status">
+        <div class="rec-status" style="pointer-events:auto" onclick="event.stopPropagation();togglePaidRecurring('${r.id}')">
           <div class="rec-status-badge ${paid?'paid':'unpaid'}">${paid?'✓ Ödendi':'Öde'}</div>
           <div class="rec-status-amount" style="color:${paid?'var(--accent)':'var(--text)'}">${fmtTL(r.amount)}</div>
         </div>
@@ -3029,33 +3001,6 @@ function renderRecList() {
   }).join('');
 }
 
-let editingRec = null;
-let openCtxItem = null;
-
-function setupRecItemLongPress() {
-  // Close ctx on outside tap
-  document.addEventListener('click', e => {
-    if (openCtxItem && !e.target.closest(`#${openCtxItem}`)) {
-      const el = document.getElementById(openCtxItem);
-      if (el) el.classList.remove('ctx-open');
-      openCtxItem = null;
-    }
-  });
-}
-
-function openCtxMenu(itemId) {
-  if (openCtxItem && openCtxItem !== itemId) {
-    const prev = document.getElementById(openCtxItem);
-    if (prev) prev.classList.remove('ctx-open');
-  }
-  const el = document.getElementById(itemId);
-  if (!el) return;
-  const isOpen = el.classList.contains('ctx-open');
-  el.classList.toggle('ctx-open', !isOpen);
-  openCtxItem = isOpen ? null : itemId;
-}
-
-setupRecItemLongPress();
 
 function togglePaidRecurring(id) {
   const mk = currentMonth;
@@ -3127,10 +3072,10 @@ function renderDebtList() {
     const done = !d.active;
     const pct = d.installments ? Math.round((d.paidCount / d.installments) * 100) : 100;
     return `<div class="rec-item debt-item ${paid?'paid-item':''}" id="debtitem_${d.id}" style="${done?'opacity:.55':''}" onclick="toggleItemExpand('debtitem_${d.id}')">
-      <div style="flex:1;display:flex;align-items:center;gap:12px;cursor:${future||done?'default':'pointer'}" onclick="event.stopPropagation();${!future&&!done?`togglePaidDebt('${d.id}')`:''}"
->
-        <div class="rec-icon" style="background:${done?'rgba(45,184,102,.12)':paid?'rgba(45,184,102,.12)':'rgba(255,69,58,.08)'}">💳</div>
-        <div class="rec-info">
+      <div style="flex:1;display:flex;align-items:center;gap:12px;pointer-events:none">
+        <div class="rec-icon" style="background:${done?'rgba(45,184,102,.12)':paid?'rgba(45,184,102,.12)':'rgba(255,69,58,.08)'};pointer-events:auto;cursor:${future||done?'default':'pointer'}" onclick="event.stopPropagation();${!future&&!done?`togglePaidDebt('${d.id}')`:''}"
+>💳</div>
+        <div class="rec-info" style="pointer-events:none">
           <div class="rec-name" style="opacity:${(paid||done)?'0.5':'1'};text-decoration:${paid||done?'line-through':'none'}">${d.name}</div>
           <div class="rec-meta">${d.paidCount}/${d.installments} taksit · ${fmtTL(d.monthlyAmount)}/ay</div>
           <div style="height:3px;background:var(--surface3);border-radius:2px;margin-top:6px;overflow:hidden">
@@ -3139,7 +3084,8 @@ function renderDebtList() {
           ${future?`<div style="font-size:10px;color:var(--warning);margin-top:3px;font-weight:800">⏳ ${d.startMonth} ayında başlıyor</div>`:''}
           ${done?`<div style="font-size:10px;color:var(--accent);margin-top:3px;font-weight:800">✓ Tamamlandı</div>`:''}
         </div>
-        <div class="rec-status">
+        <div class="rec-status" style="pointer-events:auto;cursor:${future||done?'default':'pointer'}" onclick="event.stopPropagation();${!future&&!done?`togglePaidDebt('${d.id}')`:''}"
+>
           <div class="rec-status-badge ${done?'paid':paid?'paid':'unpaid'}">${done?'Bitti 🎉':future?'Bekliyor':paid?'✓ Ödendi':'Öde'}</div>
           <div class="rec-status-amount" style="color:${done||paid?'var(--accent)':'var(--danger)'}">${fmtTL(d.monthlyAmount)}</div>
         </div>
@@ -3295,14 +3241,14 @@ function renderGoalsList() {
     const isMonthlyPaid = (g.paidMonths||[]).includes(mk);
     const barColor = pct>=100?'var(--accent)':pct>=60?'var(--warning)':'var(--blue)';
     return `<div class="goal-card" id="goalitem_${g.id}" onclick="toggleItemExpand('goalitem_${g.id}')">
-      <div class="goal-header" onclick="event.stopPropagation()">
+      <div class="goal-header" style="pointer-events:none">
         <div class="goal-emoji-wrap">${g.emoji}</div>
         <div style="flex:1">
           <div class="goal-title">${g.name}</div>
           <div class="goal-subtitle">${fmtTL(total)} / ${fmtTL(g.target)} · ${pct}%</div>
         </div>
       </div>
-      <div class="goal-progress" onclick="event.stopPropagation()">
+      <div class="goal-progress" style="pointer-events:none">
         <div class="goal-stats">
           <span>${pct}% tamamlandı</span>
           ${g.monthly?`<span>${fmtTL(g.monthly)}/ay</span>`:''}
@@ -3641,9 +3587,6 @@ function calcWishProjection(wish, fb) {
     }
   }
 
-  // ── Kısılma önerisi ──
-  let tipText = null;
-
   // ── Sonuç ──
   let result = { trendText, trendDir };
 
@@ -3770,7 +3713,7 @@ function renderWishList() {
 
     return `
     <div class="wish-card priority-${w.priority} ${reachableClass}${isDone?' done-item':''}" id="wish_${w.id}" style="${isDone?'opacity:.7':''}" onclick="toggleItemExpand('wish_${w.id}')">
-      <div class="wish-top" onclick="event.stopPropagation()">
+      <div class="wish-top" style="pointer-events:none">
         <div class="wish-icon" style="${isDone?'background:rgba(45,184,102,.12)':''}">🛍️</div>
         <div class="wish-info">
           <div class="wish-name" style="${isDone?'text-decoration:line-through;opacity:.6':''}"> ${w.name}</div>
@@ -3780,7 +3723,7 @@ function renderWishList() {
           </div>
         </div>
       </div>
-      <div onclick="event.stopPropagation()">
+      <div style="pointer-events:none">
         ${projectionHtml}
         ${progressHtml}
       </div>
@@ -4716,7 +4659,6 @@ function closeConfirm() {
   document.getElementById('confirmModal').classList.remove('show');
   confirmCallback = null;
 }
-// =================== RENDER ALL ===================
 // =================== SWIPE TO DELETE ===================
 function initSwipe(el, onEdit, onDelete) {
   if (!el || el._swipeInit) return;
@@ -4889,158 +4831,6 @@ function saveKeywords() {
 }
 
 // ===== DRAG & DROP SECTIONS =====
-function initDragSections() {
-  const container = document.getElementById('sabitSectionsContainer');
-  if (!container || container._dragInit) return;
-  container._dragInit = true;
-
-  let dragging = null;       // element being dragged
-  let dragLongPressTimer = null;
-  let dragStartY = 0;
-  let currentY = 0;
-  let offsetY = 0;           // finger offset within element
-  let placeholder = null;    // where element will land
-  let origRect = null;
-
-  function getOrder() {
-    return [...container.querySelectorAll('.draggable-section')].map(e => e.dataset.section);
-  }
-
-  function getSections() {
-    return [...container.querySelectorAll('.draggable-section')];
-  }
-
-  function startDrag(el, touchY) {
-    dragging = el;
-    origRect = el.getBoundingClientRect();
-    offsetY = touchY - origRect.top;
-
-    // Lift animation
-    el.classList.add('is-dragging');
-    el.style.width = origRect.width + 'px';
-    el.style.position = 'fixed';
-    el.style.top = (touchY - offsetY) + 'px';
-    el.style.left = origRect.left + 'px';
-    el.style.margin = '0';
-    el.style.zIndex = '200';
-    el.style.pointerEvents = 'none';
-
-    // Placeholder keeping space
-    placeholder = document.createElement('div');
-    placeholder.style.cssText = `height:${origRect.height}px;margin-bottom:14px;border-radius:20px;background:rgba(255,255,255,.04);border:1.5px dashed rgba(255,255,255,.1);transition:all .2s ease;`;
-    container.insertBefore(placeholder, el.nextSibling);
-
-    if (navigator.vibrate) navigator.vibrate(10);
-  }
-
-  function moveDrag(touchY) {
-    if (!dragging) return;
-    currentY = touchY;
-    dragging.style.top = (touchY - offsetY) + 'px';
-
-    // Find insert position
-    const sections = getSections().filter(s => s !== dragging);
-    let insertBefore = null;
-
-    for (const sec of sections) {
-      const r = sec.getBoundingClientRect();
-      const midY = r.top + r.height / 2;
-      if (touchY < midY) { insertBefore = sec; break; }
-    }
-
-    // Move placeholder smoothly
-    if (insertBefore) {
-      container.insertBefore(placeholder, insertBefore);
-    } else {
-      container.appendChild(placeholder);
-    }
-  }
-
-  function endDrag() {
-    if (!dragging) return;
-
-    // Animate back to placeholder position
-    const pRect = placeholder.getBoundingClientRect();
-    dragging.style.transition = 'top .25s cubic-bezier(.34,1.2,.64,1), left .25s cubic-bezier(.34,1.2,.64,1)';
-    dragging.style.top = pRect.top + 'px';
-    dragging.style.left = pRect.left + 'px';
-
-    setTimeout(() => {
-      // Restore to flow
-      dragging.style.cssText = '';
-      dragging.classList.remove('is-dragging');
-      container.insertBefore(dragging, placeholder);
-      placeholder.remove();
-      placeholder = null;
-      sectionOrder = getOrder();
-      save();
-      dragging = null;
-    }, 260);
-  }
-
-  // Attach to each section header
-  getSections().forEach(section => {
-    const header = section.querySelector('.card-collapse-header');
-    if (!header) return;
-
-    header.addEventListener('touchstart', e => {
-      const touch = e.touches[0];
-      dragStartY = touch.clientY;
-
-      dragLongPressTimer = setTimeout(() => {
-        dragLongPressTimer = null;
-        startDrag(section, touch.clientY);
-      }, 350);
-    }, { passive: true });
-
-    header.addEventListener('touchmove', e => {
-      const touch = e.touches[0];
-      const dy = Math.abs(touch.clientY - dragStartY);
-
-      if (dragLongPressTimer && dy > 8) {
-        clearTimeout(dragLongPressTimer);
-        dragLongPressTimer = null;
-      }
-
-      if (dragging) {
-        e.preventDefault();
-        moveDrag(touch.clientY);
-      }
-    }, { passive: false });
-
-    header.addEventListener('touchend', () => {
-      if (dragLongPressTimer) { clearTimeout(dragLongPressTimer); dragLongPressTimer = null; }
-      if (dragging) endDrag();
-    });
-
-    header.addEventListener('touchcancel', () => {
-      if (dragLongPressTimer) { clearTimeout(dragLongPressTimer); dragLongPressTimer = null; }
-      if (dragging) endDrag();
-    });
-  });
-
-  // Desktop mouse drag (mousedown on drag handle)
-  getSections().forEach(section => {
-    const handle = section.querySelector('.drag-handle');
-    if (!handle) return;
-
-    handle.addEventListener('mousedown', e => {
-      e.preventDefault();
-      const rect = section.getBoundingClientRect();
-      startDrag(section, e.clientY);
-
-      const onMove = ev => moveDrag(ev.clientY);
-      const onUp = () => {
-        endDrag();
-        window.removeEventListener('mousemove', onMove);
-        window.removeEventListener('mouseup', onUp);
-      };
-      window.addEventListener('mousemove', onMove);
-      window.addEventListener('mouseup', onUp);
-    });
-  });
-}
-
 function toggleHamburger() {
   const menu = document.getElementById('hamburgerMenu');
   const btn = document.getElementById('hamburgerBtn');
