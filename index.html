@@ -72,6 +72,9 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .onboard-input-wrap .currency{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:800;color:var(--muted);pointer-events:none}
 .onboard-input-wrap .form-input{padding-right:36px;font-size:22px;font-weight:800;padding-top:14px;padding-bottom:14px}
 
+.carousel-nav-btn{width:20px;height:20px;background:none;border:none;color:rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:color .15s;-webkit-tap-highlight-color:transparent;flex-shrink:0}
+.carousel-nav-btn:active{color:rgba(255,255,255,.9)}
+
 /* TOAST */
 #toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:var(--surface3);border:1px solid var(--border);border-radius:24px;padding:11px 20px;font-size:13px;font-weight:700;z-index:999;display:none;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.5);backdrop-filter:blur(8px)}
 
@@ -158,25 +161,27 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 /* ===== FEEDBACK INSIGHT / CAROUSEL ===== */
 @keyframes insightIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes insightOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
-.insight-carousel{border-radius:var(--radius-sm);overflow:hidden;margin-bottom:12px}
-.insight-card{padding:13px 16px 0;display:flex;align-items:center;gap:12px}
+.insight-carousel{border-radius:var(--radius-sm);overflow:hidden;margin-bottom:12px;height:76px}
+.insight-card{padding:0;display:flex;flex-direction:column;height:76px}
 .insight-card.good{background:var(--accent-dim)}
 .insight-card.warn{background:var(--warning-dim)}
 .insight-card.bad{background:var(--danger-dim)}
-.insight-card-inner{padding-bottom:12px;flex:1;display:flex;align-items:center;gap:12px;animation:insightIn .3s ease}
+.insight-card-inner{padding:10px 14px 8px;flex:1;display:flex;align-items:center;gap:12px;animation:insightIn .3s ease;overflow:hidden}
+.insight-title{font-size:13px;font-weight:800;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.insight-sub{font-size:11px;font-weight:600;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .insight-card-inner.leaving{animation:insightOut .25s ease forwards}
 .insight-icon{font-size:22px;flex-shrink:0}
-.insight-text{flex:1}
-.insight-title{font-size:13px;font-weight:800;margin-bottom:2px}
-.insight-sub{font-size:11px;font-weight:600;opacity:.7}
+.insight-text{flex:1;min-width:0;overflow:hidden}
+.insight-title{font-size:13px;font-weight:800;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.insight-sub{font-size:11px;font-weight:600;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .insight-card.good .insight-title{color:var(--accent)}
 .insight-card.warn .insight-title{color:var(--warning)}
 .insight-card.bad .insight-title{color:var(--danger)}
 .insight-progress-track{height:3px;background:rgba(255,255,255,.08);display:block}
 .insight-progress-fill{display:block;height:3px;width:0%;transition:none}
-.insight-card.good .insight-progress-fill{background:rgba(45,184,102,.7)}
-.insight-card.warn .insight-progress-fill{background:rgba(255,214,10,.7)}
-.insight-card.bad .insight-progress-fill{background:rgba(255,69,58,.7)}
+.insight-card.good .insight-progress-fill{background:var(--accent)}
+.insight-card.warn .insight-progress-fill{background:var(--warning)}
+.insight-card.bad .insight-progress-fill{background:var(--danger)}
 
 /* ===== CAT BARS ===== */
 .cat-bars-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
@@ -339,10 +344,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* ===== REC / DEBT ITEMS ===== */
 .rec-item{
-  display:flex;align-items:center;gap:12px;
+  display:flex;flex-direction:column;
   padding:13px 14px;border-radius:16px;
   background:var(--surface2);border:1.5px solid var(--border);
-  margin-bottom:8px;cursor:pointer;
+  margin-bottom:8px;
   transition:background .15s,border-color .15s,transform .1s;
   -webkit-tap-highlight-color:transparent;user-select:none;
   position:relative;overflow:hidden;
@@ -561,7 +566,15 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .hero-daily-val{font-size:24px;font-weight:900;letter-spacing:-.8px;line-height:1.1}
 .hero-daily-sub{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
 
-/* ===== TX DELETE ===== */
+/* ===== SWIPE TO DELETE ===== */
+.swipe-item{position:relative;overflow:hidden;touch-action:pan-y}
+.swipe-content{position:relative;z-index:1;background:inherit;transition:transform .25s cubic-bezier(.4,0,.2,1);will-change:transform}
+.swipe-actions{position:absolute;right:0;top:0;bottom:0;display:flex;align-items:stretch;z-index:0}
+.swipe-action-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:72px;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;gap:4px;transition:filter .15s;-webkit-tap-highlight-color:transparent}
+.swipe-action-btn.edit{background:var(--surface3);color:var(--text)}
+.swipe-action-btn.delete{background:var(--danger);color:#fff}
+.swipe-action-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.swipe-action-btn:active{filter:brightness(.85)}
 .tx-item.tx-deletable{cursor:pointer;transition:background .15s}
 .tx-item.tx-deletable:active{background:var(--surface2)}
 .tx-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
@@ -592,9 +605,22 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .settings-inline-input{background:transparent;border:none;color:var(--accent);font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;text-align:right;width:100px;outline:none}
 
 /* ===== DRAG & DROP ===== */
-.draggable-section{transition:opacity .2s}
-.draggable-section.drag-ghost{opacity:.4}
-.draggable-section.drag-over{outline:2px dashed var(--accent);outline-offset:2px;border-radius:20px}
+/* ===== DRAG & DROP SECTIONS ===== */
+.draggable-section{
+  transition: transform .3s cubic-bezier(.34,1.2,.64,1), box-shadow .3s ease, opacity .2s ease;
+  touch-action: pan-x;
+}
+.draggable-section.is-dragging{
+  opacity: .96;
+  transform: scale(1.03);
+  box-shadow: 0 20px 60px rgba(0,0,0,.6), 0 0 0 1.5px rgba(45,184,102,.35);
+  z-index: 100;
+  position: relative;
+}
+.draggable-section.drag-placeholder{
+  opacity: .3;
+  transform: scale(.97);
+}
 .drag-handle{font-size:14px;color:var(--muted);cursor:grab;padding:0 4px;user-select:none;touch-action:none;letter-spacing:-2px;opacity:.5}
 .drag-handle:active{cursor:grabbing}
 
@@ -623,7 +649,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .tx-delete-btn{display:none!important} /* eski class artık yok */
 
 /* ===== ICON ACTION BUTTONS ===== */
-.item-actions-row{display:flex;gap:6px;padding:2px 0 6px 52px}
+.item-actions-row{display:flex;gap:6px;padding:4px 0 6px 50px;flex-shrink:0}
 .icon-action-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--surface3);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0;-webkit-tap-highlight-color:transparent}
 .icon-action-btn:active{transform:scale(.9)}
 .icon-action-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -735,24 +761,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .splash-dot.active{width:22px;background:var(--accent)}
 .splash-cta{width:100%}
 </style>
-  <!-- Firebase bağlantısı için eklenmesi gerekenler -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyArJQ8_C9UASadMdS79Gu9gQcnstjv_nSA",
-    authDomain: "budgedbud.firebaseapp.com",
-    projectId: "budgedbud",
-    storageBucket: "budgedbud.appspot.com",
-    messagingSenderId: "10852714790",
-    appId: "1:10852714790:web:f59e30b44d12bfe00fd9e7",
-    measurementId: "G-B4084HK3JE"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-</script>
-  
 </head>
 <body>
 <div id="appWrap">
@@ -800,6 +808,16 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         </div>
       </div>
 
+      <div class="splash-slide" data-idx="4">
+        <div class="splash-emoji">🏦</div>
+        <div class="splash-title">Cüzdanına isim ver</div>
+        <div class="splash-sub">Bu senin finansal alanın.</div>
+        <div class="splash-body">İstediğin bir isim ver — header'da logo gibi görünecek. Sonradan ayarlardan değiştirebilirsin.</div>
+        <div class="splash-input-wrap">
+          <input type="text" id="onboardWalletName" class="form-input" placeholder="Örn: Emre'nin Kasası" maxlength="24" style="margin-top:8px;text-align:center;font-size:18px;font-weight:800">
+        </div>
+      </div>
+
     </div>
 
     <!-- Dots -->
@@ -808,6 +826,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       <span class="splash-dot" onclick="goSplash(1)"></span>
       <span class="splash-dot" onclick="goSplash(2)"></span>
       <span class="splash-dot" onclick="goSplash(3)"></span>
+      <span class="splash-dot" onclick="goSplash(4)"></span>
     </div>
 
     <!-- CTA butonu -->
@@ -821,7 +840,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 <!-- HEADER -->
 <div class="app-header">
-  <div class="app-logo" onclick="switchTab('aylik', document.querySelector('.tab-btn'))" style="cursor:pointer">BAG <span style="font-weight:600">IT.</span></div>
+  <div class="app-logo" onclick="switchTab('aylik', document.querySelector('.tab-btn'))" style="cursor:pointer" id="appLogo">Vault</div>
   <div class="header-actions">
     <button class="cat-add-btn" onclick="openCategories()">+ Kategori</button>
     <button class="icon-btn hamburger-btn" onclick="toggleHamburger()" id="hamburgerBtn">
@@ -873,7 +892,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <div style="display:flex;gap:8px">
       <div class="form-group" style="flex:1">
         <label class="form-label">Tutar</label>
-        <input type="text" id="txAmount" class="form-input" placeholder="0" oninput="fmtInput(this)" onkeydown="if(event.key==='Enter')addTransaction()" autocomplete="off">
+        <input type="text" id="txAmount" class="form-input" placeholder="0" oninput="fmtInput(this)" inputmode="numeric" onkeydown="if(event.key==='Enter')addTransaction()" autocomplete="off">
       </div>
       <div class="form-group" style="flex:1">
         <label class="form-label">Tarih</label>
@@ -938,7 +957,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         <div style="display:flex;gap:8px">
           <div class="form-group" style="flex:1">
             <label class="form-label">Tutar</label>
-            <input type="text" id="recAmount" class="form-input" placeholder="0" oninput="fmtInput(this)">
+            <input type="text" id="recAmount" class="form-input" placeholder="0" oninput="fmtInput(this)" inputmode="numeric">
           </div>
           <div class="form-group" style="flex:1">
             <label class="form-label">Kategori</label>
@@ -957,7 +976,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       <div class="collapse-left">
         <div class="collapse-icon-wrap" style="background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.2)">💳</div>
         <div>
-          <div class="collapse-title">Borçlar</div>
+          <div class="collapse-title">Ödemeler</div>
           <div class="collapse-summary" id="debtSummaryLabel"></div>
         </div>
       </div>
@@ -969,13 +988,13 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <div class="collapsible-body collapsed" id="debtBody"><div class="collapsible-inner">
       <div id="debtForm" style="display:none;margin-bottom:14px;padding:12px;background:var(--surface2);border-radius:var(--radius-sm)">
         <div class="form-group">
-          <label class="form-label">Borç Adı</label>
-          <input type="text" id="debtName" class="form-input" placeholder="Diş hekimi, kredi...">
+          <label class="form-label">Ödeme Adı</label>
+          <input type="text" id="debtName" class="form-input" placeholder="Kira ödemesi, kredi...">
         </div>
         <div style="display:flex;gap:8px">
           <div class="form-group" style="flex:1">
             <label class="form-label">Toplam Tutar</label>
-            <input type="text" id="debtTotal" class="form-input" placeholder="20.000" oninput="fmtInput(this)">
+            <input type="text" id="debtTotal" class="form-input" placeholder="20.000" oninput="fmtInput(this)" inputmode="numeric">
           </div>
           <div class="form-group" style="flex:1">
             <label class="form-label">Taksit Sayısı</label>
@@ -1019,7 +1038,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         <div style="display:flex;gap:8px">
           <div class="form-group" style="flex:1">
             <label class="form-label">Hedef Tutar</label>
-            <input type="text" id="goalTarget" class="form-input" placeholder="100.000" oninput="fmtInput(this)">
+            <input type="text" id="goalTarget" class="form-input" placeholder="100.000" oninput="fmtInput(this)" inputmode="numeric">
           </div>
           <div class="form-group" style="flex:1">
             <label class="form-label">Kaç Ayda?</label>
@@ -1028,7 +1047,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         </div>
         <div class="form-group">
           <label class="form-label" style="display:flex;justify-content:space-between"><span>Aylık Birikim</span><span id="goalMonthlyHint" style="color:var(--accent);font-weight:800"></span></label>
-          <input type="text" id="goalMonthly" class="form-input" placeholder="Otomatik hesaplanır" oninput="fmtInput(this)">
+          <input type="text" id="goalMonthly" class="form-input" placeholder="Otomatik hesaplanır" oninput="fmtInput(this)" inputmode="numeric">
         </div>
         <div style="display:none">
         </div>
@@ -1049,7 +1068,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   </div>
   <div class="ozet-stats-row" id="ozetStatsRow"></div>
 
-
+  <!-- GÜNLÜK LİMİT İSTATİSTİKLERİ -->
+  <div id="dailyStatsCard"></div>
 
   <!-- STREAK CARD -->
   <div id="streakCardWrap"></div>
@@ -1120,7 +1140,20 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 <div class="modal-overlay" id="settingsModal" onclick="if(event.target===this)closeSettings()">
   <div class="modal-sheet settings-sheet" style="position:relative">
     <button class="modal-close" onclick="closeSettings()">×</button>
-    <div class="modal-title" style="margin-bottom:20px">Ayarlar</div>
+    <div class="modal-title" style="margin-bottom:4px">Ayarlar</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:20px">Vault · Kişisel Bütçe Yöneticisi</div>
+
+    <!-- Cüzdan -->
+    <div class="settings-section-label">Cüzdan</div>
+    <div class="settings-group">
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <div class="settings-row-title">Cüzdan İsmi</div>
+          <div class="settings-row-sub">Header'da görünen isim</div>
+        </div>
+        <input type="text" id="walletNameInput" class="settings-inline-input" placeholder="Vault" maxlength="24" onblur="saveWalletName()" style="width:140px">
+      </div>
+    </div>
 
     <!-- Bütçe hedefi -->
     <div class="settings-section-label">Bütçe</div>
@@ -1130,7 +1163,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
           <div class="settings-row-title">Bu Ay Hedef Bütçe</div>
           <div class="settings-row-sub">Aylık harcama limiti</div>
         </div>
-        <input type="text" id="monthlyTarget" class="settings-inline-input" placeholder="—" oninput="fmtInput(this)" onblur="saveMonthlyTarget()">
+        <input type="text" id="monthlyTarget" class="settings-inline-input" placeholder="—" oninput="fmtInput(this)" inputmode="numeric" onblur="saveMonthlyTarget()">
       </div>
     </div>
 
@@ -1166,7 +1199,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:24px;font-size:11px;color:var(--muted)">BAGIT v3 · Veriler bu cihazda saklanır</div>
+    <div style="text-align:center;margin-top:24px;font-size:11px;color:var(--muted)">Vault · Veriler bu cihazda saklanır</div>
   </div>
 </div>
 
@@ -1258,7 +1291,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <div style="display:flex;gap:8px">
       <div class="form-group" style="flex:1">
         <label class="form-label">Tutar</label>
-        <input type="text" id="editTxAmount" class="form-input" oninput="fmtInput(this)">
+        <input type="text" id="editTxAmount" class="form-input" oninput="fmtInput(this)" inputmode="numeric">
       </div>
       <div class="form-group" style="flex:1">
         <label class="form-label">Tarih</label>
@@ -1277,15 +1310,15 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 <div class="modal-overlay" id="debtEditModal" onclick="if(event.target===this)closeDebtEdit()">
   <div class="modal-sheet" style="position:relative">
     <button class="modal-close" onclick="closeDebtEdit()">×</button>
-    <div class="modal-title">Borcu Düzenle</div>
+    <div class="modal-title">Ödemeyi Düzenle</div>
     <div class="form-group">
-      <label class="form-label">Borç adı</label>
+      <label class="form-label">Ödeme adı</label>
       <input type="text" id="editDebtName" class="form-input">
     </div>
     <div style="display:flex;gap:8px">
       <div class="form-group" style="flex:1">
         <label class="form-label">Toplam tutar</label>
-        <input type="text" id="editDebtTotal" class="form-input" oninput="fmtInput(this)">
+        <input type="text" id="editDebtTotal" class="form-input" oninput="fmtInput(this)" inputmode="numeric">
       </div>
       <div class="form-group" style="flex:1">
         <label class="form-label">Taksit sayısı</label>
@@ -1313,11 +1346,11 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <div style="display:flex;gap:8px">
       <div class="form-group" style="flex:1">
         <label class="form-label">Hedef tutar</label>
-        <input type="text" id="editGoalTarget" class="form-input" oninput="fmtInput(this)">
+        <input type="text" id="editGoalTarget" class="form-input" oninput="fmtInput(this)" inputmode="numeric">
       </div>
       <div class="form-group" style="flex:1">
         <label class="form-label">Aylık birikim</label>
-        <input type="text" id="editGoalMonthly" class="form-input" oninput="fmtInput(this)">
+        <input type="text" id="editGoalMonthly" class="form-input" oninput="fmtInput(this)" inputmode="numeric">
       </div>
     </div>
     <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="saveGoalEdit()">Kaydet</button>
@@ -1335,7 +1368,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     </div>
     <div class="form-group">
       <label class="form-label">Tutar</label>
-      <input type="text" id="editRecAmountModal" class="form-input" oninput="fmtInput(this)">
+      <input type="text" id="editRecAmountModal" class="form-input" oninput="fmtInput(this)" inputmode="numeric">
     </div>
     <div class="form-group">
       <label class="form-label">Kategori</label>
@@ -1378,6 +1411,7 @@ let data = {
   categories: [],
   startingBalance: 0,
   onboarded: false,
+  walletName: '',
   monthlyTargets: {},
   lastQuoteDate: '',
   settings: {},
@@ -1634,7 +1668,7 @@ function isPaidThisMonth(item, mk) {
 
 // =================== ONBOARDING ===================
 let _splashIdx = 0;
-const _SPLASH_COUNT = 4;
+const _SPLASH_COUNT = 5;
 
 function initSplash() {
   _splashIdx = 0;
@@ -1696,6 +1730,8 @@ function finishOnboarding() {
       date: today(), category: 'gelir'
     });
   }
+  const walletName = document.getElementById('onboardWalletName')?.value.trim();
+  if (walletName) data.walletName = walletName;
   data.onboarded = true;
   save();
   const ob = document.getElementById('onboarding');
@@ -1742,45 +1778,42 @@ function toggleSection(name) {
 // =================== GAMIFICATION ENGINE ===================
 
 function getDayStatus(dateStr) {
-  // dateStr: 'YYYY-MM-DD'
-  // returns: 'green' | 'red' | 'frozen' | 'future' | 'empty'
   const todayStr = today();
   if (dateStr > todayStr) return 'future';
   if (data.streak.frozenDays.includes(dateStr)) return 'frozen';
 
   const mk = monthKey(dateStr);
-
-  // O güne kadar bu aydaki tüm gelirler
   const txsUntilDay = data.transactions.filter(t => t.date <= dateStr && monthKey(t.date) === mk);
   const incomeUntil = txsUntilDay.filter(t => t.type === 'income').reduce((s,t) => s + t.amount, 0);
 
-  // Gelir yoksa değerlendirme yapılamaz
   if (!incomeUntil) return 'empty';
 
-  // O güne ait harcamalar
   const dayTxs = data.transactions.filter(t => t.date === dateStr && t.type === 'expense');
   const daySpent = dayTxs.reduce((s,t) => s + t.amount, 0);
 
-  // Harcama yoksa limit aşılmamış = green
   if (!daySpent) return 'green';
 
-  // O güne kadar kalan serbest bütçe hesapla
   const [,,d] = dateStr.split('-').map(Number);
   const dim = daysInMonth(mk);
   const daysLeftThatDay = Math.max(1, dim - d + 1);
 
   const expUntil = txsUntilDay.filter(t => t.type === 'expense').reduce((s,t) => s + t.amount, 0);
   const recTotal = data.recurring.filter(r => r.active).reduce((s,r) => s + r.amount, 0);
-  const debtTotal = data.debts.filter(d => d.active && (!d.startMonth || d.startMonth <= mk)).reduce((s,d) => s + d.monthlyAmount, 0);
+  const debtTotal = data.debts.filter(dd => dd.active && (!dd.startMonth || dd.startMonth <= mk)).reduce((s,dd) => s + dd.monthlyAmount, 0);
   const goalTotal = data.savingsGoals.filter(g => g.monthly).reduce((s,g) => s + g.monthly, 0);
   const savTarget = data.monthlyTargets[mk] || 0;
   const available = incomeUntil - recTotal - debtTotal - goalTotal - savTarget;
 
+  // Baz limit: sabit referans
+  const baseDaily = available > 0 ? available / dim : 0;
+
+  // Geçmiş günlerin sapması (o gün hariç)
   const paidFixed = txsUntilDay.filter(t => t.isRecurring || t.isDebt || t.isGoalDeposit).reduce((s,t) => s + t.amount, 0);
-  const varSpentUntil = expUntil - paidFixed;
-  // remainingUntil: bugünün harcaması hariç kalan (dailyAllowance hesabı için)
-  const remainingUntil = available - varSpentUntil + daySpent;
-  const dailyAllowance = remainingUntil / daysLeftThatDay;
+  const varSpentUntil = Math.max(0, expUntil - paidFixed);
+  const pastVarSpent = varSpentUntil - daySpent;
+  const pastDays = Math.max(0, d - 1);
+  const pastDeviation = (baseDaily * pastDays) - pastVarSpent;
+  const dailyAllowance = baseDaily + (daysLeftThatDay > 0 ? pastDeviation / daysLeftThatDay : 0);
 
   return daySpent <= Math.max(0, dailyAllowance) ? 'green' : 'red';
 }
@@ -1941,23 +1974,18 @@ function calcFreeBudget(mk) {
   const { income, expense, txs } = calcMonthData(mk);
   const savTarget = data.monthlyTargets[mk] || 0;
 
-  // Tüm sabitler her zaman düşülür (ödendi/ödenmedi fark etmez)
   const recTotal = data.recurring.filter(r => r.active)
     .reduce((s, r) => s + r.amount, 0);
-  // Tüm aktif borçlar her zaman düşülür (bu ay başlamış olanlar)
   const debtTotal = data.debts.filter(d => d.active &&
     (!d.startMonth || d.startMonth <= mk))
     .reduce((s, d) => s + d.monthlyAmount, 0);
-  // Tüm birikim hedefleri her zaman düşülür
   const goalTotal = data.savingsGoals.filter(g => g.monthly)
     .reduce((s, g) => s + g.monthly, 0);
 
-  // Diğer harcamalar = toplam gider - sabit/borç/hedef ödemeleri
   const paidFixed = txs.filter(t => t.isRecurring || t.isDebt || t.isGoalDeposit)
     .reduce((s, t) => s + t.amount, 0);
   const varSpent = Math.max(0, expense - paidFixed);
 
-  // Serbest = gelir - tüm yükümlülükler - değişken harcama
   const available = income - recTotal - debtTotal - goalTotal - savTarget;
   const remaining = available - varSpent;
 
@@ -1965,14 +1993,33 @@ function calcFreeBudget(mk) {
   const todayD = new Date().getDate();
   const dim = daysInMonth(mk);
   const daysLeft = isCurrentMonth ? Math.max(1, dim - todayD) : 1;
-  const daily = remaining / daysLeft;
+
+  // Baz limit: aylık serbest bütçe / ay gün sayısı (sabit referans)
+  const baseDaily = available > 0 ? available / dim : 0;
+
+  // Geçmiş günlerin sapması (bugün hariç)
+  const todayStr = today();
+  const todayVarSpent = isCurrentMonth
+    ? txs.filter(t => t.date === todayStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+        .reduce((s, t) => s + t.amount, 0)
+    : 0;
+  const pastVarSpent = varSpent - todayVarSpent;
+  const pastDays = isCurrentMonth ? Math.max(0, todayD - 1) : dim;
+  const expectedPast = baseDaily * pastDays;
+  const pastDeviation = expectedPast - pastVarSpent; // + = tasarruf, - = aşım
+
+  // Günlük limit: baz ± sapma kalan günlere dağıtılmış
+  const daily = baseDaily + (daysLeft > 0 ? pastDeviation / daysLeft : 0);
+
+  // Bugün için kalan
+  const todayRemaining = daily - todayVarSpent;
 
   // Ödenmemiş kalanlar (UI gösterimi için)
   const recUnpaid = data.recurring.filter(r => r.active && !isPaidThisMonth(r, mk)).reduce((s,r) => s+r.amount, 0);
   const debtUnpaid = data.debts.filter(d => d.active && !isPaidThisMonth(d, mk) && (!d.startMonth || d.startMonth <= mk)).reduce((s,d) => s+d.monthlyAmount, 0);
   const goalUnpaid = data.savingsGoals.filter(g => g.monthly && !isPaidThisMonth(g, mk)).reduce((s,g) => s+g.monthly, 0);
 
-  return { income, expense, savTarget, recTotal, debtTotal, goalTotal, paidFixed, varSpent, available, remaining, daysLeft, daily, recUnpaid, debtUnpaid, goalUnpaid };
+  return { income, expense, savTarget, recTotal, debtTotal, goalTotal, paidFixed, varSpent, available, remaining, daysLeft, daily, baseDaily, todayVarSpent, todayRemaining, recUnpaid, debtUnpaid, goalUnpaid };
 }
 
 // =================== RENDER MONTHLY ===================
@@ -2002,8 +2049,8 @@ function animateCount(el, fromVal, toVal, duration = 2500) {
   function step(now) {
     const elapsed = now - startTime;
     const progress = Math.min(elapsed / duration, 1);
-    // easeOutExpo - hızlı başlar, yavaşlayarak biter
-    const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+    // easeOutExpo: hızlı başlar, sonlara doğru belirgin yavaşlar
+    const ease = progress === 1 ? 1 : 1 - Math.pow(2, -12 * progress);
     const current = Math.round(absFrom + (absTo - absFrom) * ease);
     el.textContent = (isNeg ? '−' : '') + fmtTL(current);
     el.style.color = color;
@@ -2052,29 +2099,33 @@ function renderWalletHero(balance, income, expense, fb) {
   const dailyColor = fb.daily < 0 ? 'var(--danger)' : fb.daily < 150 ? 'var(--warning)' : 'var(--accent)';
   const remColor = fb.remaining >= 0 ? 'var(--accent)' : 'var(--danger)';
 
+  const todaySpent = fb.todayVarSpent;
+  const todayRemaining = Math.round(fb.todayRemaining);
+  const todayRemColor = todayRemaining < 0 ? 'var(--danger)' : todayRemaining < fb.daily * 0.25 ? 'var(--warning)' : 'var(--accent)';
+
   const dailySection = fb.income > 0 ? `
-    <div style="height:1px;background:rgba(255,255,255,.06);margin:20px 0 18px"></div>
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:4px">
+    <div style="height:1px;background:rgba(255,255,255,.06);margin:18px 0 16px"></div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
       <div>
-        <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">Günlük limit</div>
-        <div style="font-size:28px;font-weight:900;letter-spacing:-1px;line-height:1;color:${dailyColor}">${fb.daily < 0 ? '−' : ''}${fmtTL(Math.abs(Math.round(fb.daily)))}</div>
+        <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Günlük Limit</div>
+        <div style="font-size:36px;font-weight:900;letter-spacing:-1.5px;line-height:1;color:${dailyColor}">${fb.daily < 0 ? '−' : ''}${fmtTL(Math.abs(Math.round(fb.daily)))}</div>
+        ${todaySpent > 0 ? `
+        <div style="margin-top:6px;font-size:11px;font-weight:600;color:var(--muted)">${fmtTL(Math.round(todaySpent))} harcandı</div>` : `
+        <div style="margin-top:6px;font-size:11px;font-weight:600;color:var(--muted)">henüz harcama yok</div>`}
       </div>
-      <div style="text-align:right">
-        <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px">Kalan para</div>
-        <div style="font-size:28px;font-weight:900;letter-spacing:-1px;line-height:1;color:${remColor}">${fmtTL(Math.round(fb.remaining))}</div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Kalan Para</div>
+        <div style="font-size:22px;font-weight:900;letter-spacing:-1px;line-height:1;color:${remColor}">${fmtTL(Math.round(fb.remaining))}</div>
+        <div style="font-size:11px;color:var(--muted);font-weight:600;margin-top:4px">${fb.daysLeft} gün kaldı</div>
       </div>
     </div>` : '';
 
   el.innerHTML = `
     <div class="wallet-hero-combined">
-      <div class="hero-top" style="padding-bottom:30px">
+      <div class="hero-top" style="padding-bottom:28px">
         <div style="width:100%">
           <div class="hero-label">Toplam Varlığın</div>
           <div class="hero-balance" style="color:${balColor}">${fmtTL(balance)}</div>
-          <div class="hero-chips">
-            <span class="hero-chip inc">↑ ${fmtTL(income)}</span>
-            <span class="hero-chip exp">↓ ${fmtTL(expense)}</span>
-          </div>
           ${dailySection}
         </div>
       </div>
@@ -2087,117 +2138,145 @@ function buildCarouselItems(fb) {
   const mk = currentMonth;
   const todayD = new Date().getDate();
   const dim = daysInMonth(mk);
-  const savingRate = fb.income > 0 ? Math.round((fb.remaining / fb.income) * 100) : 0;
 
-  // 1. Temel bütçe durumu (her zaman)
+  // Ortalama günlük değişken harcama (bugün dahil, geçen gün sayısına göre)
+  const pastDays = Math.max(1, todayD);
+  const avgDailySpent = fb.varSpent / pastDays;
+
+  // 1. Temel bütçe durumu
   if (fb.remaining < 0) {
-    items.push({ cls:'bad', icon:'🩸', title:`Bütçeyi ${fmtTL(Math.round(-fb.remaining))} aştın`, sub:'Harcamalarını kısmayı dene.' });
-  } else if (fb.daily < 150) {
-    items.push({ cls:'warn', icon:'🧨', title:'Günlük limitin çok düştü', sub:`Kalan ${fb.daysLeft} gün için günlük sadece ${fmtTL(Math.round(fb.daily))} var.` });
-  } else if (savingRate >= 20) {
-    items.push({ cls:'good', icon:'🧘', title:`Gelirinin %${savingRate}'ini biriktiriyorsun`, sub:`Günlük ${fmtTL(Math.round(fb.daily))} limitin var.` });
+    items.push({ cls:'bad', icon:'🩸', title:`Bütçeyi ${fmtTL(Math.round(-fb.remaining))} aştın`, sub:'Harcamalarını kıs, günlük limit düştü.' });
+  } else if (fb.daily < 100) {
+    items.push({ cls:'warn', icon:'🧨', title:'Günlük limitin çok düştü', sub:`${fb.daysLeft} gün için günlük sadece ${fmtTL(Math.round(fb.daily))} var.` });
+  } else if (fb.remaining > 0) {
+    items.push({ cls:'good', icon:'🫀', title:'Bütçen kontrol altında', sub:`${fmtTL(Math.round(fb.remaining))} kaldı · günlük ${fmtTL(Math.round(fb.daily))} limitin var.` });
   } else {
-    items.push({ cls:'good', icon:'🫀', title:'Bütçen kontrol altında', sub:`Günlük ${fmtTL(Math.round(fb.daily))} limitin var.` });
+    items.push({ cls:'bad', icon:'🔴', title:'Bu ay giderin gelirini geçti', sub:'Sabit gider ve borçlarını gözden geçir.' });
   }
 
-  // 2. Harcama hızı — limite göre
-  const avgDailySpent = todayD > 0 ? fb.varSpent / todayD : 0;
-  if (avgDailySpent > 0) {
-    const overSpeed = avgDailySpent > fb.daily && fb.daily > 0;
-    const diff = Math.abs(Math.round(fb.daily - avgDailySpent));
-    items.push({ cls: overSpeed?'bad':'good', icon: overSpeed?'🌡️':'🧊',
-      title: overSpeed
-        ? `Günlük limitini ortalama ${fmtTL(diff)} aşıyorsun`
-        : `Günlük limitinin ${fmtTL(diff)} altındasın`,
-      sub: overSpeed ? 'Bu hızda kalan para eriyecek.' : 'Limit altında kalmak günlük limitini artırıyor.' });
-  }
-
-  // 3. Limitin artışı — bugün harcamamak limiti artırıyor
-  if (fb.daysLeft > 1 && fb.remaining > 0) {
-    const currentDaily = fb.daily;
-    const hypotheticalDaily = fb.remaining / (fb.daysLeft - 1);
-    const gain = Math.round(hypotheticalDaily - currentDaily);
-    if (gain > 10) {
-      items.push({ cls:'good', icon:'🔭',
-        title:`Bugün harcamasan limitin ${fmtTL(gain)} artacak`,
-        sub:`Yarın günlük ${fmtTL(Math.round(hypotheticalDaily))} limitinle devam ederdin.` });
+  // Harca azalt / biriktir motivasyonu
+  if (fb.remaining > 0 && fb.daysLeft > 0 && avgDailySpent > 0) {
+    const savePerDay = Math.round(fb.daily * 0.2);
+    const potentialSaving = savePerDay * fb.daysLeft;
+    if (potentialSaving > 100) {
+      items.push({ cls:'good', icon:'💡', title:`Günde ${fmtTL(savePerDay)} az harcarsan`, sub:`Ay sonuna ${fmtTL(potentialSaving)} daha birikir.` });
     }
   }
 
-  // 4. Streak — limit odaklı
+  // 2. Harcama hızı — baz limite göre karşılaştır
+  if (avgDailySpent > 0 && todayD >= 3) {
+    const overSpeed = avgDailySpent > fb.baseDaily && fb.baseDaily > 0;
+    const diff = Math.abs(Math.round(fb.baseDaily - avgDailySpent));
+    items.push({ cls: overSpeed ? 'bad' : 'good', icon: overSpeed ? '🌡️' : '🧊',
+      title: overSpeed
+        ? `Günlük baz limiti ortalama ${fmtTL(diff)} aşıyorsun`
+        : `Günlük baz limitinin ${fmtTL(diff)} altındasın`,
+      sub: overSpeed
+        ? `Bu hızda limit düşmeye devam eder.`
+        : `Tasarruf farkı sonraki günlere yansıyor.` });
+  }
+
+  // 3. Ay sonu tahmini
+  if (fb.daysLeft > 1 && avgDailySpent > 0 && todayD >= 3) {
+    const projectedVarTotal = fb.varSpent + avgDailySpent * fb.daysLeft;
+    const projectedVsAvail = Math.round(fb.available - projectedVarTotal);
+    if (projectedVsAvail > 0) {
+      items.push({ cls:'good', icon:'🔭',
+        title:`Bu hızda ay sonu ${fmtTL(projectedVsAvail)} artı kaparsın`,
+        sub:`Ort. günlük: ${fmtTL(Math.round(avgDailySpent))}.` });
+    } else {
+      items.push({ cls:'warn', icon:'🔭',
+        title:`Bu hızda ay sonu ${fmtTL(Math.abs(projectedVsAvail))} açık verir`,
+        sub:`Günlük ${fmtTL(Math.round(fb.daily))} altında tut.` });
+    }
+  }
+
+  // 4. Streak
   const streak = data.streak.current || 0;
   if (streak >= 2) {
-    items.push({ cls:'good', icon:'🧬',
-      title:`${streak} gün üst üste günlük limitini geçmedin`,
-      sub: streak >= 7 ? 'Limit disiplinin mükemmel.' : 'Her limitsiz gün kalan paranı artırıyor.' });
+    items.push({ cls:'good', icon:'🔥',
+      title:`${streak} gün üst üste limit altındasın`,
+      sub: streak >= 7 ? 'Mükemmel disiplin!' : 'Her yeşil gün limiti artırıyor.' });
+  } else if (streak === 0 && todayD > 3) {
+    items.push({ cls:'warn', icon:'💡',
+      title:'Limitte kal, streaki başlat',
+      sub:'Günlük limitini aşmayan her gün zinciri uzatır.' });
   }
 
-  // 5. Kurtarılan para — limitten tasarruf
-  const savedVsLimit = (fb.daily * todayD) - fb.varSpent;
-  if (savedVsLimit > 100 && fb.remaining >= 0) {
-    items.push({ cls:'good', icon:'🪣',
-      title:`Limitine kıyasla ${fmtTL(Math.round(savedVsLimit))} altında harcadın`,
-      sub:'Bu fark günlük limitini yüksek tutuyor.' });
+  // 5. Birikim hedefi durumu
+  const goalsWithMonthly = data.savingsGoals.filter(g => g.monthly);
+  if (goalsWithMonthly.length > 0) {
+    const paidGoals = goalsWithMonthly.filter(g => (g.paidMonths||[]).includes(mk)).length;
+    if (paidGoals === goalsWithMonthly.length) {
+      items.push({ cls:'good', icon:'🎯',
+        title:`Bu ay tüm birikim hedeflerini karşıladın`,
+        sub:'Harika, devam et!' });
+    } else {
+      const unpaid = goalsWithMonthly.length - paidGoals;
+      items.push({ cls:'warn', icon:'🎯',
+        title:`${unpaid} birikim hedefin bu ay henüz ödenmedi`,
+        sub:'Giderler sekmesinden ekle.' });
+    }
   }
 
-  // 6. Kazanılan zaman
+  // 6. Kazanılan zaman (sadece varSpent bazlı, daha doğru)
   if (fb.remaining > 0 && avgDailySpent > 0) {
     const extraDays = Math.floor(fb.remaining / avgDailySpent);
-    if (extraDays > 0) items.push({ cls:'good', icon:'⌛',
-      title:`Bu harcama hızında paranın ${extraDays} gün daha yetişir`,
-      sub:'Limiti düşük tutmak sana süre kazandırıyor.' });
+    if (extraDays > 0 && extraDays < 90) {
+      items.push({ cls:'good', icon:'⌛',
+        title:`Bu hızda bütçen ${extraDays} gün daha yetişir`,
+        sub:'Limitin altında kal.' });
+    }
   }
 
-  // 7. Kategori uyarısı
+  // 7. Kategori uyarısı — geçen aya göre
   const prevMk = (() => { const [y,m] = mk.split('-').map(Number); return m===1?`${y-1}-12`:`${y}-${String(m-1).padStart(2,'0')}`; })();
   const thisTxs = data.transactions.filter(t=>monthKey(t.date)===mk&&t.type==='expense');
   const prevTxs = data.transactions.filter(t=>monthKey(t.date)===prevMk&&t.type==='expense');
-  if (thisTxs.length && prevTxs.length) {
+  if (thisTxs.length >= 3 && prevTxs.length >= 3) {
     const byCatThis={}, byCatPrev={};
     thisTxs.forEach(t=>{byCatThis[t.category]=(byCatThis[t.category]||0)+t.amount;});
     prevTxs.forEach(t=>{byCatPrev[t.category]=(byCatPrev[t.category]||0)+t.amount;});
     let topCat=null, topPct=0;
     Object.entries(byCatThis).forEach(([id,amt])=>{
       const prev=byCatPrev[id]||0;
-      if(prev>0){const pct=Math.round(((amt-prev)/prev)*100);if(pct>20&&pct>topPct){topPct=pct;topCat={id,pct};}}
+      if(prev>0){const pct=Math.round(((amt-prev)/prev)*100);if(pct>30&&pct>topPct){topPct=pct;topCat={id,pct};}}
     });
     if (topCat) {
       const cat=getCat(topCat.id);
-      items.push({cls:'warn',icon:'🔬',title:`${cat.emoji} ${cat.name}'e geçen aya göre %${topCat.pct} fazla harcadın`,sub:'Bu kategori limitini aşağı çekiyor.'});
+      items.push({cls:'warn',icon:'🔬',
+        title:`${cat.name} harcaman geçen aya göre %${topCat.pct} arttı`,
+        sub:'Bu kategori limiti düşürüyor.'});
     }
   }
 
-  // 8. Finansal tavsiyeler — borç/tasarruf odaklı, carousel'a entegre
+  // 8. Borç durumu
   const activeDebts = data.debts.filter(d => d.active);
   if (activeDebts.length > 0) {
     const monthlyDebtLoad = activeDebts.reduce((s,d) => s + d.monthlyAmount, 0);
     const debtToIncomeRatio = fb.income > 0 ? monthlyDebtLoad / fb.income : 0;
     const debtPct = Math.round(debtToIncomeRatio * 100);
     if (debtToIncomeRatio > 0.4) {
-      items.push({ cls:'bad', icon:'🫀',
+      items.push({ cls:'bad', icon:'💳',
         title:`Borç yükün gelirinin %${debtPct}'i — kritik`,
-        sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit gidiyor. Ekstra ödemeyi önceliklendır.` });
+        sub:`%30 sınırını aşıyorsun.` });
     } else if (debtToIncomeRatio > 0.2) {
-      items.push({ cls:'warn', icon:'👁',
+      items.push({ cls:'warn', icon:'💳',
         title:`Borç yükün gelirinin %${debtPct}'i`,
-        sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit gidiyor. Yeni borç girme.` });
-    } else {
-      items.push({ cls:'good', icon:'🧘',
-        title:`Borç yükün gelirinin sadece %${debtPct}'i`,
-        sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit — sağlıklı oran.` });
+        sub:`Yeni borç alma.` });
     }
     if (activeDebts.length > 1) {
       const smallest = [...activeDebts].sort((a,b) =>
         (a.totalAmount - a.paidCount*a.monthlyAmount) - (b.totalAmount - b.paidCount*b.monthlyAmount))[0];
       const left = Math.round(smallest.totalAmount - smallest.paidCount * smallest.monthlyAmount);
-      items.push({ cls:'warn', icon:'🎯',
+      if (left > 0) items.push({ cls:'warn', icon:'🎯',
         title:`En küçük borcu önce bitir: ${smallest.name}`,
         sub:`${fmtTL(left)} kaldı — bitince diğerine ekstra öde.` });
     }
   } else if (fb.income > 0) {
     items.push({ cls:'good', icon:'🫶',
       title:'Aktif borcun yok',
-      sub:'Finansal özgürlüğün en sağlam temeli. Şimdi biriktir.' });
+      sub:'Şimdi biriktirme vakti!' });
   }
 
   return items;
@@ -2207,11 +2286,14 @@ function renderFeedbackPill(fb) {
   const el = document.getElementById('feedbackPillWrap');
   if (!el || !fb.income) { if(el) el.innerHTML=''; stopCarousel(); return; }
 
-  _carouselItems = buildCarouselItems(fb);
+  // Randomize sıra
+  const raw = buildCarouselItems(fb);
+  _carouselItems = raw.sort(() => Math.random() - 0.5);
   if (!_carouselItems.length) { el.innerHTML=''; stopCarousel(); return; }
 
   _carouselIndex = 0;
-  el.innerHTML = `<div class="insight-carousel" id="insightCarousel"></div>`;
+  el.innerHTML = `
+    <div class="insight-carousel" id="insightCarousel"></div>`;
   showCarouselItem(0);
   startCarousel();
 }
@@ -2220,32 +2302,84 @@ function showCarouselItem(idx) {
   const el = document.getElementById('insightCarousel');
   if (!el || !_carouselItems.length) return;
   const item = _carouselItems[idx];
+  const total = _carouselItems.length;
+  const barColor = item.cls === 'good' ? 'var(--accent)' : item.cls === 'warn' ? 'var(--warning)' : 'var(--danger)';
+  const overlayColor = item.cls === 'good' ? 'rgba(45,184,102,.18)' : item.cls === 'warn' ? 'rgba(255,214,10,.15)' : 'rgba(255,69,58,.18)';
 
-  el.className = `insight-carousel`;
+  el.className = 'insight-carousel';
   el.innerHTML = `
-    <div class="insight-card ${item.cls}">
-      <div class="insight-card-inner">
+    <div class="insight-card ${item.cls}" style="position:relative;overflow:hidden">
+      <div class="insight-card-inner" style="position:relative;z-index:1">
         <div class="insight-icon">${item.icon}</div>
         <div class="insight-text">
           <div class="insight-title">${item.title}</div>
           <div class="insight-sub">${item.sub}</div>
         </div>
+        ${total > 1 ? `
+        <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;padding-left:16px;margin-right:-4px">
+          <button onclick="carouselNav(-1)" class="carousel-nav-btn" aria-label="Önceki">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 9L7 5L11 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button onclick="carouselNav(1)" class="carousel-nav-btn" aria-label="Sonraki">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 5L7 9L11 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>` : ''}
       </div>
-      <div class="insight-progress-track">
-        <div class="insight-progress-fill" id="insightProgressFill"></div>
+      <div class="insight-progress-track" style="position:relative;z-index:1">
+        <div class="insight-progress-fill" id="insightProgressFill" style="background:${barColor}"></div>
       </div>
+      <div id="insightOverlay" style="position:absolute;inset:0;background:${overlayColor};transform:scaleX(0);transform-origin:left;z-index:0;pointer-events:none"></div>
     </div>`;
 
-  // Progress bar animasyonu
-  const fill = document.getElementById('insightProgressFill');
-  if (fill) {
-    fill.style.transition = 'none';
-    fill.style.width = '0%';
-    setTimeout(() => {
-      fill.style.transition = `width ${CAROUSEL_DURATION}ms linear`;
-      fill.style.width = '100%';
-    }, 30);
+  // Progress bar + overlay aynı anda
+  requestAnimationFrame(() => {
+    const fill = document.getElementById('insightProgressFill');
+    const overlay = document.getElementById('insightOverlay');
+    if (fill) {
+      fill.style.transition = 'none';
+      fill.style.width = '0%';
+    }
+    if (overlay) {
+      overlay.style.transition = 'none';
+      overlay.style.transform = 'scaleX(0)';
+    }
+    requestAnimationFrame(() => {
+      if (fill) {
+        fill.style.transition = `width ${CAROUSEL_DURATION}ms linear`;
+        fill.style.width = '100%';
+      }
+      if (overlay) {
+        overlay.style.transition = `transform ${CAROUSEL_DURATION}ms linear`;
+        overlay.style.transform = 'scaleX(1)';
+      }
+    });
+  });
+
+  // Touch swipe desteği
+  const card = el.querySelector('.insight-card');
+  if (card && total > 1) {
+    let _sx = 0;
+    card.addEventListener('touchstart', e => { _sx = e.touches[0].clientY; }, { passive: true });
+    card.addEventListener('touchend', e => {
+      const dy = e.changedTouches[0].clientY - _sx;
+      if (Math.abs(dy) > 30) carouselNav(dy < 0 ? 1 : -1);
+    }, { passive: true });
   }
+}
+
+function carouselNav(dir) {
+  stopCarousel();
+  const inner = document.querySelector('.insight-card-inner');
+  if (inner) inner.classList.add('leaving');
+  setTimeout(() => {
+    _carouselIndex = (_carouselIndex + dir + _carouselItems.length) % _carouselItems.length;
+    showCarouselItem(_carouselIndex);
+    startCarousel();
+  }, 200);
 }
 
 function startCarousel() {
@@ -2774,7 +2908,7 @@ function addDebt() {
   const totalAmount = parseNum(document.getElementById('debtTotal').value);
   const installments = parseInt(document.getElementById('debtInstall').value) || 1;
   const startMonth = document.getElementById('debtStartMonth').value || monthKey();
-  if (!name || !totalAmount) { showToast('⚠️ Borç adı ve tutar gerekli'); return; }
+  if (!name || !totalAmount) { showToast('⚠️ Ödeme adı ve tutar gerekli'); return; }
   const monthlyAmount = Math.round(totalAmount / installments);
   data.debts.push({ id: uid(), name, totalAmount, installments, monthlyAmount, paidCount: 0, active: true, paidMonths: [], startMonth });
   save();
@@ -2782,7 +2916,7 @@ function addDebt() {
   document.getElementById('debtTotal').value = '';
   document.getElementById('debtInstall').value = '';
   document.getElementById('debtForm').style.display = 'none';
-  showToast('✅ Borç eklendi');
+  showToast('✅ Ödeme eklendi');
   renderAll();
 }
 
@@ -2794,7 +2928,7 @@ function renderDebtList() {
   const allDebts = data.debts;
   const activeDebts = allDebts.filter(d => d.active);
   if (!allDebts.length) {
-    el.innerHTML = `<div class="empty-state" style="padding:24px 0"><span class="empty-state-icon">🎉</span><div class="empty-state-text">Borç yok!</div><div class="empty-state-sub">Harika — borçsuz bir hayat.</div></div>`;
+    el.innerHTML = `<div class="empty-state" style="padding:24px 0"><span class="empty-state-icon">🎉</span><div class="empty-state-text">Ödeme yok!</div><div class="empty-state-sub">Harika — tüm ödemeler temiz.</div></div>`;
     if (sumEl) sumEl.innerHTML = '';
     return;
   }
@@ -2832,10 +2966,10 @@ function renderDebtList() {
     const paidTotal = activeDebts.filter(d => isPaidThisMonth(d,mk)).reduce((s,d)=>s+d.monthlyAmount,0);
     const totalLeft = activeDebts.reduce((s,d)=>s+(d.totalAmount-d.paidCount*d.monthlyAmount),0);
     sumEl.innerHTML = `<div class="debt-summary-box">
-      <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;grid-column:1/-1;margin-bottom:4px">Borç Özeti</div>
+      <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;grid-column:1/-1;margin-bottom:4px">Ödeme Özeti</div>
       <div><div class="ds-label">Bu ay ödenecek</div><div class="ds-val" style="color:${unpaidTotal>0?'var(--danger)':'var(--muted)'}">${fmtTL(unpaidTotal)}</div></div>
       <div><div class="ds-label">Bu ay ödendi</div><div class="ds-val" style="color:${paidTotal>0?'var(--accent)':'var(--muted)'}">${fmtTL(paidTotal)}</div></div>
-      <div class="ds-full"><div class="ds-label">Toplam kalan borç</div><div class="ds-val" style="color:var(--danger)">${fmtTL(Math.max(0,totalLeft))}</div></div>
+      <div class="ds-full"><div class="ds-label">Toplam kalan</div><div class="ds-val" style="color:var(--danger)">${fmtTL(Math.max(0,totalLeft))}</div></div>
     </div>`;
   }
 }
@@ -2898,11 +3032,11 @@ function saveDebtEdit() {
   d.name = name; d.totalAmount = totalAmount; d.installments = installments;
   d.monthlyAmount = Math.round(totalAmount / installments); d.startMonth = startMonth;
   save(); closeDebtEdit(); renderAll();
-  showToast('✅ Borç güncellendi');
+  showToast('✅ Ödeme güncellendi');
 }
 
 function deleteDebt(id) {
-  showConfirm('Bu borcu silmek istediğinize emin misiniz?', () => {
+  showConfirm('Bu ödemeyi silmek istediğinize emin misiniz?', () => {
     data.debts = data.debts.filter(d => d.id !== id);
     data.transactions = data.transactions.filter(t => t.debtId !== id);
     save(); renderAll();
@@ -3177,7 +3311,7 @@ function updateCollapseSummaries() {
     const active = data.debts.filter(d => d.active);
     const paid = active.filter(d => isPaidThisMonth(d, mk)).length;
     const total = active.reduce((s,d) => s+d.monthlyAmount, 0);
-    debtEl.textContent = active.length ? `${paid}/${active.length} ödendi · ${fmtTL(total)}/ay` : 'Borç yok 🎉';
+    debtEl.textContent = active.length ? `${paid}/${active.length} ödendi · ${fmtTL(total)}/ay` : 'Ödeme yok 🎉';
   }
   const goalEl = document.getElementById('goalSummaryLabel');
   if (goalEl) {
@@ -3233,6 +3367,141 @@ function renderOzetStats() {
   }
 
   renderFinancialAdvice();
+  renderDailyStats();
+}
+
+function renderDailyStats() {
+  const el = document.getElementById('dailyStatsCard');
+  if (!el) return;
+  const mk = currentMonth;
+  const fb = calcFreeBudget(mk);
+  if (!fb.income) { el.innerHTML = ''; return; }
+
+  const dim = daysInMonth(mk);
+  const todayD = new Date().getDate();
+  const baseDaily = fb.baseDaily;
+
+  // Geçen ay
+  const [y, m] = mk.split('-').map(Number);
+  const prevMk = m === 1 ? `${y-1}-12` : `${y}-${String(m-1).padStart(2,'0')}`;
+  const prevDim = daysInMonth(prevMk);
+  const prevTxs = data.transactions.filter(t => monthKey(t.date) === prevMk && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit);
+  const prevVarSpent = prevTxs.reduce((s,t) => s + t.amount, 0);
+  const prevAvgDaily = prevDim > 0 ? Math.round(prevVarSpent / prevDim) : 0;
+
+  // Her gün için veri topla
+  let greenDays = 0, redDays = 0, emptyDays = 0;
+  let maxSpent = 0, maxSpentDate = '';
+  let minSpent = Infinity, minSpentDate = '';
+  let totalVarSpent = 0;
+  const dayBars = [];
+
+  for (let d = 1; d <= Math.min(todayD, dim); d++) {
+    const dateStr = `${mk.slice(0,7)}-${String(d).padStart(2,'0')}`;
+    const dayTxs = data.transactions.filter(t => t.date === dateStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit);
+    const daySpent = dayTxs.reduce((s,t) => s + t.amount, 0);
+
+    // O günün limiti (baz + sapma)
+    const txsUntil = data.transactions.filter(t => t.date <= dateStr && monthKey(t.date) === mk);
+    const incomeUntil = txsUntil.filter(t => t.type==='income').reduce((s,t) => s+t.amount, 0);
+    if (!incomeUntil) { dayBars.push({ d, daySpent: 0, limit: baseDaily, status: 'empty' }); emptyDays++; continue; }
+
+    const expUntil = txsUntil.filter(t => t.type==='expense').reduce((s,t) => s+t.amount, 0);
+    const recTotal = data.recurring.filter(r=>r.active).reduce((s,r)=>s+r.amount,0);
+    const debtTotal = data.debts.filter(dd=>dd.active&&(!dd.startMonth||dd.startMonth<=mk)).reduce((s,dd)=>s+dd.monthlyAmount,0);
+    const goalTotal = data.savingsGoals.filter(g=>g.monthly).reduce((s,g)=>s+g.monthly,0);
+    const savTarget = data.monthlyTargets[mk]||0;
+    const available = incomeUntil - recTotal - debtTotal - goalTotal - savTarget;
+    const avBase = available / dim;
+    const paidFixed = txsUntil.filter(t=>t.isRecurring||t.isDebt||t.isGoalDeposit).reduce((s,t)=>s+t.amount,0);
+    const varUntil = Math.max(0, expUntil - paidFixed);
+    const pastVar = varUntil - daySpent;
+    const pastDev = (avBase * Math.max(0, d-1)) - pastVar;
+    const dLeft = Math.max(1, dim - d + 1);
+    const dayLimit = avBase + pastDev / dLeft;
+
+    const status = daySpent === 0 ? 'empty' : daySpent <= Math.max(0, dayLimit) ? 'green' : 'red';
+    dayBars.push({ d, daySpent, limit: dayLimit, status });
+
+    totalVarSpent += daySpent;
+    if (status === 'green') greenDays++;
+    else if (status === 'red') redDays++;
+    else emptyDays++;
+
+    if (daySpent > maxSpent) { maxSpent = daySpent; maxSpentDate = dateStr; }
+    if (daySpent > 0 && daySpent < minSpent) { minSpent = daySpent; minSpentDate = dateStr; }
+  }
+
+  const avgDaily = todayD > 0 ? Math.round(totalVarSpent / todayD) : 0;
+  const scorePct = (todayD - emptyDays) > 0 ? Math.round((greenDays / (todayD - emptyDays)) * 100) : 0;
+  const scoreColor = scorePct >= 70 ? 'var(--accent)' : scorePct >= 40 ? 'var(--warning)' : 'var(--danger)';
+  const scoreLabel = scorePct >= 80 ? 'Mükemmel' : scorePct >= 60 ? 'İyi' : scorePct >= 40 ? 'Gelişiyor' : 'Zorlanıyor';
+
+  // Geçen ay karşılaştırma
+  const vsLastMonth = prevAvgDaily > 0 ? avgDaily - prevAvgDaily : null;
+  const vsColor = vsLastMonth === null ? 'var(--muted)' : vsLastMonth <= 0 ? 'var(--accent)' : 'var(--danger)';
+  const vsText = vsLastMonth === null ? '—' : (vsLastMonth > 0 ? '+' : '') + fmtTL(vsLastMonth);
+
+  // Mini bar chart
+  const maxBar = Math.max(...dayBars.map(b => b.daySpent), baseDaily, 1);
+  const barHtml = dayBars.map(b => {
+    const h = Math.round((b.daySpent / maxBar) * 40);
+    const limitH = Math.round((b.limit / maxBar) * 40);
+    const col = b.status === 'green' ? 'var(--accent)' : b.status === 'red' ? 'var(--danger)' : 'rgba(255,255,255,.08)';
+    const isToday = b.d === todayD;
+    return `<div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:44px;gap:2px;position:relative;flex:1;min-width:0">
+      <div style="width:100%;max-width:10px;height:${Math.max(h,2)}px;background:${col};border-radius:2px 2px 0 0;transition:height .4s ease${isToday?';outline:1.5px solid rgba(255,255,255,.3);outline-offset:1px':''}"></div>
+    </div>`;
+  }).join('');
+
+  // Limit çizgisi oranı
+  const limitLineH = Math.round((baseDaily / maxBar) * 40);
+
+  el.innerHTML = `
+    <div class="card" style="padding:18px;margin-bottom:12px">
+      <div class="card-title">Günlük Limit İstatistikleri</div>
+
+      <!-- Skor + geçen ay karşılaştırma -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
+        <div style="background:var(--surface2);border-radius:12px;padding:12px 10px;text-align:center">
+          <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Performans</div>
+          <div style="font-size:22px;font-weight:900;color:${scoreColor}">%${scorePct}</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:3px;line-height:1.4">${todayD - emptyDays} günden<br>${scoreLabel}</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:12px;padding:12px 10px;text-align:center">
+          <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Ort. Harcama</div>
+          <div style="font-size:18px;font-weight:900;color:var(--text)">${fmtTL(avgDaily)}</div>
+          <div style="font-size:10px;color:${vsColor};font-weight:700;margin-top:3px">${vsLastMonth === null ? 'geçen ay veri yok' : (vsLastMonth > 0 ? '↑ ' : '↓ ') + fmtTL(Math.abs(vsLastMonth)) + ' geçen aya göre'}</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:12px;padding:12px 10px;text-align:center">
+          <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Limitler</div>
+          <div style="font-size:13px;font-weight:800;color:var(--accent);margin-top:4px">✓ ${greenDays} gün altında</div>
+          <div style="font-size:13px;font-weight:800;color:${redDays > 0 ? 'var(--danger)' : 'var(--muted)'};margin-top:2px">✕ ${redDays} gün üstünde</div>
+        </div>
+      </div>
+
+      <!-- Detay satırları -->
+      <div style="border-top:1px solid var(--border);padding-top:12px;display:flex;flex-direction:column">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(44,44,53,.25)">
+          <span style="font-size:13px;font-weight:600;color:var(--muted)">Bugünün günlük limiti</span>
+          <span style="font-size:14px;font-weight:800;color:${Math.round(fb.daily) < 0 ? 'var(--danger)' : Math.round(fb.daily) < 150 ? 'var(--warning)' : 'var(--accent)'}">${fmtTL(Math.round(fb.daily))}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(44,44,53,.25)">
+          <span style="font-size:13px;font-weight:600;color:var(--muted)">En çok harcanan gün</span>
+          <div style="text-align:right">
+            <span style="font-size:13px;font-weight:800;color:var(--danger)">${fmtTL(Math.round(maxSpent))}</span>
+            <span style="font-size:11px;color:var(--muted);margin-left:6px">${maxSpentDate ? fmtDate(maxSpentDate) : '—'}</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
+          <span style="font-size:13px;font-weight:600;color:var(--muted)">En az harcanan gün</span>
+          <div style="text-align:right">
+            <span style="font-size:13px;font-weight:800;color:var(--accent)">${minSpent < Infinity ? fmtTL(Math.round(minSpent)) : '—'}</span>
+            <span style="font-size:11px;color:var(--muted);margin-left:6px">${minSpentDate ? fmtDate(minSpentDate) : ''}</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
 }
 function renderCharts() {
   ['barChart','doughnutChart','lineChart'].forEach(id => {
@@ -3371,7 +3640,7 @@ function renderCharts() {
           const pct = Math.round((amt / totalExp) * 100);
           return `<div class="donut-legend-item">
             <div class="donut-legend-dot" style="background:${cat.color}"></div>
-            <span class="donut-legend-name">${cat.emoji} ${cat.name}</span>
+            <span class="donut-legend-name">${cat.name}</span>
             <span class="donut-legend-amt">%${pct}</span>
           </div>`;
         }).join('') +
@@ -3628,7 +3897,16 @@ function openSettings() {
   const mk = currentMonth;
   const el = document.getElementById('monthlyTarget');
   if (el) { el.value = data.monthlyTargets[mk] ? String(Math.round(data.monthlyTargets[mk])).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : ''; }
+  const wn = document.getElementById('walletNameInput');
+  if (wn) wn.value = data.walletName || '';
   document.getElementById('settingsModal').classList.add('show');
+}
+
+function saveWalletName() {
+  const val = document.getElementById('walletNameInput')?.value.trim();
+  data.walletName = val || '';
+  save();
+  updateAppLogo();
 }
 
 function closeSettings() {
@@ -3701,7 +3979,81 @@ function closeConfirm() {
   confirmCallback = null;
 }
 // =================== RENDER ALL ===================
+// =================== SWIPE TO DELETE ===================
+function initSwipe(el, onEdit, onDelete) {
+  if (!el || el._swipeInit) return;
+  el._swipeInit = true;
+
+  const content = el.querySelector('.swipe-content');
+  const actions = el.querySelector('.swipe-actions');
+  if (!content || !actions) return;
+
+  const THRESHOLD = 60;
+  const MAX = actions.offsetWidth || 144;
+  let startX = 0, startY = 0, currentX = 0, isDragging = false, isOpen = false;
+
+  // Close all others
+  function closeAll(except) {
+    document.querySelectorAll('.swipe-item._open').forEach(item => {
+      if (item !== except) closeSwipe(item);
+    });
+  }
+
+  function closeSwipe(item) {
+    const c = item.querySelector('.swipe-content');
+    if (c) c.style.transform = 'translateX(0)';
+    item.classList.remove('_open');
+  }
+
+  content.addEventListener('touchstart', e => {
+    closeAll(el);
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    isDragging = true;
+    content.style.transition = 'none';
+  }, { passive: true });
+
+  content.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    const dx = e.touches[0].clientX - startX;
+    const dy = e.touches[0].clientY - startY;
+    // If more vertical than horizontal, let page scroll
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(currentX) < 5) { isDragging = false; return; }
+    currentX = Math.min(0, Math.max(-MAX, dx + (isOpen ? -MAX : 0)));
+    content.style.transform = `translateX(${currentX}px)`;
+  }, { passive: true });
+
+  content.addEventListener('touchend', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    content.style.transition = 'transform .25s cubic-bezier(.4,0,.2,1)';
+    const shouldOpen = currentX < -THRESHOLD;
+    if (shouldOpen) {
+      content.style.transform = `translateX(-${MAX}px)`;
+      el.classList.add('_open');
+      isOpen = true;
+    } else {
+      content.style.transform = 'translateX(0)';
+      el.classList.remove('_open');
+      isOpen = false;
+    }
+    currentX = isOpen ? -MAX : 0;
+  });
+
+  // Close on outside tap
+  document.addEventListener('touchstart', e => {
+    if (isOpen && !el.contains(e.target)) closeSwipe(el);
+  }, { passive: true });
+}
+
+function updateAppLogo() {
+  const el = document.getElementById('appLogo');
+  if (!el) return;
+  el.textContent = data.walletName || 'Vault';
+}
+
 function renderAll() {
+  updateAppLogo();
   populateCatSelects();
   renderMonthly();
   if (currentTab === 'sabit') renderSabit();
@@ -3806,74 +4158,150 @@ function initDragSections() {
   const container = document.getElementById('sabitSectionsContainer');
   if (!container || container._dragInit) return;
   container._dragInit = true;
-  let dragSrc = null;
 
-  container.querySelectorAll('.draggable-section').forEach(el => {
-    const header = el.querySelector('.card-collapse-header');
-    const enableDrag = () => el.setAttribute('draggable','true');
-    if (header) header.addEventListener('mousedown', enableDrag);
+  let dragging = null;       // element being dragged
+  let longPressTimer = null;
+  let dragStartY = 0;
+  let currentY = 0;
+  let offsetY = 0;           // finger offset within element
+  let placeholder = null;    // where element will land
+  let origRect = null;
 
-    el.addEventListener('dragstart', e => {
-      dragSrc = el;
-      e.dataTransfer.effectAllowed = 'move';
-      // Sadece header'ı ghost olarak göster
-      const ghost = header.cloneNode(true);
-      ghost.style.cssText = `position:fixed;top:-9999px;left:0;width:${el.offsetWidth}px;background:var(--surface2);border-radius:16px;opacity:.9;pointer-events:none;`;
-      document.body.appendChild(ghost);
-      e.dataTransfer.setDragImage(ghost, e.offsetX, 30);
-      requestAnimationFrame(() => document.body.removeChild(ghost));
-      setTimeout(() => { el.style.opacity = '0.4'; el.style.transform = 'scale(.98)'; }, 0);
+  function getOrder() {
+    return [...container.querySelectorAll('.draggable-section')].map(e => e.dataset.section);
+  }
+
+  function getSections() {
+    return [...container.querySelectorAll('.draggable-section')];
+  }
+
+  function startDrag(el, touchY) {
+    dragging = el;
+    origRect = el.getBoundingClientRect();
+    offsetY = touchY - origRect.top;
+
+    // Lift animation
+    el.classList.add('is-dragging');
+    el.style.width = origRect.width + 'px';
+    el.style.position = 'fixed';
+    el.style.top = (touchY - offsetY) + 'px';
+    el.style.left = origRect.left + 'px';
+    el.style.margin = '0';
+    el.style.zIndex = '200';
+    el.style.pointerEvents = 'none';
+
+    // Placeholder keeping space
+    placeholder = document.createElement('div');
+    placeholder.style.cssText = `height:${origRect.height}px;margin-bottom:14px;border-radius:20px;background:rgba(255,255,255,.04);border:1.5px dashed rgba(255,255,255,.1);transition:all .2s ease;`;
+    container.insertBefore(placeholder, el.nextSibling);
+
+    if (navigator.vibrate) navigator.vibrate(10);
+  }
+
+  function moveDrag(touchY) {
+    if (!dragging) return;
+    currentY = touchY;
+    dragging.style.top = (touchY - offsetY) + 'px';
+
+    // Find insert position
+    const sections = getSections().filter(s => s !== dragging);
+    let insertBefore = null;
+
+    for (const sec of sections) {
+      const r = sec.getBoundingClientRect();
+      const midY = r.top + r.height / 2;
+      if (touchY < midY) { insertBefore = sec; break; }
+    }
+
+    // Move placeholder smoothly
+    if (insertBefore) {
+      container.insertBefore(placeholder, insertBefore);
+    } else {
+      container.appendChild(placeholder);
+    }
+  }
+
+  function endDrag() {
+    if (!dragging) return;
+
+    // Animate back to placeholder position
+    const pRect = placeholder.getBoundingClientRect();
+    dragging.style.transition = 'top .25s cubic-bezier(.34,1.2,.64,1), left .25s cubic-bezier(.34,1.2,.64,1)';
+    dragging.style.top = pRect.top + 'px';
+    dragging.style.left = pRect.left + 'px';
+
+    setTimeout(() => {
+      // Restore to flow
+      dragging.style.cssText = '';
+      dragging.classList.remove('is-dragging');
+      container.insertBefore(dragging, placeholder);
+      placeholder.remove();
+      placeholder = null;
+      sectionOrder = getOrder();
+      save();
+      dragging = null;
+    }, 260);
+  }
+
+  // Attach to each section header
+  getSections().forEach(section => {
+    const header = section.querySelector('.card-collapse-header');
+    if (!header) return;
+
+    header.addEventListener('touchstart', e => {
+      const touch = e.touches[0];
+      dragStartY = touch.clientY;
+
+      longPressTimer = setTimeout(() => {
+        longPressTimer = null;
+        startDrag(section, touch.clientY);
+      }, 350);
+    }, { passive: true });
+
+    header.addEventListener('touchmove', e => {
+      const touch = e.touches[0];
+      const dy = Math.abs(touch.clientY - dragStartY);
+
+      if (longPressTimer && dy > 8) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+      }
+
+      if (dragging) {
+        e.preventDefault();
+        moveDrag(touch.clientY);
+      }
+    }, { passive: false });
+
+    header.addEventListener('touchend', () => {
+      if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+      if (dragging) endDrag();
     });
-    el.addEventListener('dragend', () => {
-      el.setAttribute('draggable','false');
-      el.style.opacity = '';
-      el.style.transform = '';
-      container.querySelectorAll('.draggable-section').forEach(e => e.classList.remove('drag-over'));
-      sectionOrder = [...container.querySelectorAll('.draggable-section')].map(e => e.dataset.section);
-      dragSrc = null;
-    });
-    el.addEventListener('dragover', e => {
-      e.preventDefault();
-      if (!dragSrc || dragSrc === el) return;
-      const rect = el.getBoundingClientRect();
-      const sections = [...container.querySelectorAll('.draggable-section')];
-      const srcIdx = sections.indexOf(dragSrc);
-      const tgtIdx = sections.indexOf(el);
-      if (e.clientY < rect.top + rect.height / 2 && srcIdx > tgtIdx) container.insertBefore(dragSrc, el);
-      else if (e.clientY >= rect.top + rect.height / 2 && srcIdx < tgtIdx) container.insertBefore(dragSrc, el.nextSibling);
-    });
-    el.addEventListener('drop', e => {
-      e.preventDefault();
-      sectionOrder = [...container.querySelectorAll('.draggable-section')].map(e => e.dataset.section);
+
+    header.addEventListener('touchcancel', () => {
+      if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+      if (dragging) endDrag();
     });
   });
 
-  // Touch drag via header
-  let touchDrag = null;
-  container.querySelectorAll('.card-collapse-header').forEach(header => {
-    header.addEventListener('touchstart', e => {
-      touchDrag = header.closest('.draggable-section');
-      if (touchDrag) { touchDrag.style.opacity = '0.4'; touchDrag.style.transform = 'scale(.98)'; }
-    }, {passive:true});
-    header.addEventListener('touchmove', e => {
-      if (!touchDrag) return;
+  // Desktop mouse drag (mousedown on drag handle)
+  getSections().forEach(section => {
+    const handle = section.querySelector('.drag-handle');
+    if (!handle) return;
+
+    handle.addEventListener('mousedown', e => {
       e.preventDefault();
-      const touch = e.touches[0];
-      [...container.querySelectorAll('.draggable-section')].filter(s => s !== touchDrag).forEach(el => {
-        const rect = el.getBoundingClientRect();
-        if (touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
-          if (touch.clientY < rect.top + rect.height / 2) container.insertBefore(touchDrag, el);
-          else container.insertBefore(touchDrag, el.nextSibling);
-        }
-      });
-    }, {passive:false});
-    header.addEventListener('touchend', () => {
-      if (touchDrag) {
-        touchDrag.style.opacity = '';
-        touchDrag.style.transform = '';
-        sectionOrder = [...container.querySelectorAll('.draggable-section')].map(e => e.dataset.section);
-        touchDrag = null;
-      }
+      const rect = section.getBoundingClientRect();
+      startDrag(section, e.clientY);
+
+      const onMove = ev => moveDrag(ev.clientY);
+      const onUp = () => {
+        endDrag();
+        window.removeEventListener('mousemove', onMove);
+        window.removeEventListener('mouseup', onUp);
+      };
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onUp);
     });
   });
 }
@@ -3897,7 +4325,7 @@ function init() {
   const dateEl = document.getElementById('txDate');
   if (dateEl) dateEl.value = today();
   populateCatSelects();
-  // Başlangıçta gelir seçili, maaş/gelir kategorisi default
+  updateAppLogo();
   const initCat = document.getElementById('txCategory');
   if (initCat) initCat.value = 'gelir';
 
