@@ -392,6 +392,56 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .rec-ctx-btn.edit{background:#3A3A3C;color:rgba(235,235,245,.8)}
 .rec-ctx-btn.del{background:#3d0f0d;color:rgba(235,235,245,.8)}
 
+/* ===== WISH / HEDEFLER ===== */
+.wish-card{
+  background:var(--surface2);border:1.5px solid var(--border);
+  border-radius:16px;padding:14px;margin-bottom:8px;
+  position:relative;overflow:hidden;
+  transition:transform .1s,border-color .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.wish-card:last-child{margin-bottom:0}
+.wish-card:active{transform:scale(.985)}
+.wish-card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  border-radius:3px 0 0 3px;
+}
+.wish-card.priority-high::before{background:var(--danger)}
+.wish-card.priority-mid::before{background:var(--purple)}
+.wish-card.priority-low::before{background:var(--muted)}
+.wish-card.reachable{border-color:rgba(191,90,242,.3);background:rgba(191,90,242,.04)}
+
+.wish-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.wish-icon{width:36px;height:36px;border-radius:10px;background:rgba(191,90,242,.12);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.wish-info{flex:1;min-width:0}
+.wish-name{font-size:14px;font-weight:800;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wish-price{font-size:13px;font-weight:700;color:var(--purple);margin-top:2px}
+.wish-actions{display:flex;gap:5px;flex-shrink:0}
+
+.wish-projection{
+  background:var(--surface3);border-radius:10px;
+  padding:9px 12px;margin-bottom:8px;
+}
+.wish-proj-main{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.4}
+.wish-proj-sub{font-size:11px;font-weight:600;color:var(--muted);line-height:1.4}
+.wish-proj-tip{font-size:11px;font-weight:600;color:rgba(191,90,242,.7);margin-top:4px;line-height:1.4}
+
+.wish-progress-row{display:flex;align-items:center;gap:8px}
+.wish-progress-track{flex:1;height:4px;background:var(--border);border-radius:99px;overflow:hidden}
+.wish-progress-fill{height:100%;border-radius:99px;background:var(--purple);transition:width .5s ease}
+.wish-progress-label{font-size:10px;font-weight:800;color:var(--muted);flex-shrink:0;min-width:28px;text-align:right}
+
+.wish-priority-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:10px;font-weight:800;letter-spacing:.3px;
+  padding:2px 7px;border-radius:20px;
+}
+.wish-priority-badge.high{background:rgba(255,69,58,.12);color:var(--danger)}
+.wish-priority-badge.mid{background:rgba(191,90,242,.12);color:var(--purple)}
+.wish-priority-badge.low{background:var(--surface3);color:var(--muted)}
+
 /* ===== GOAL CARDS ===== */
 .goal-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:10px}
 .goal-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
@@ -645,12 +695,28 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .del-btn{background:var(--danger);color:#fff}
 .tx-delete-btn{display:none!important} /* eski class artık yok */
 
-/* ===== ICON ACTION BUTTONS ===== */
-.item-actions-row{display:flex;gap:6px;padding:4px 0 6px 50px;flex-shrink:0}
+/* ===== ITEM EXPAND ACTIONS (rec/debt/goal/wish) ===== */
+.item-actions-row{
+  display:grid;grid-template-rows:0fr;
+  overflow:hidden;
+  transition:grid-template-rows .22s cubic-bezier(.4,0,.2,1), opacity .2s;
+  opacity:0;pointer-events:none;
+}
+.item-actions-row > .item-actions-inner{
+  min-height:0;display:flex;gap:6px;padding:0 0 0 50px;
+}
+.item-expanded .item-actions-row{
+  grid-template-rows:1fr;opacity:1;pointer-events:auto;
+}
+.item-expanded .item-actions-row > .item-actions-inner{
+  padding-top:6px;padding-bottom:4px;
+}
 .icon-action-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--surface3);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0;-webkit-tap-highlight-color:transparent}
 .icon-action-btn:active{transform:scale(.9)}
 .icon-action-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .icon-action-btn.danger{border-color:rgba(255,69,58,.25);background:rgba(255,69,58,.08);color:var(--danger)}
+.icon-action-btn.confirm{border-color:rgba(45,184,102,.3);background:rgba(45,184,102,.08);color:var(--accent)}
+.icon-action-btn.undo{border-color:rgba(255,214,10,.25);background:rgba(255,214,10,.06);color:var(--warning)}
 
 /* ===== FINANCIAL ADVICE ANIMATED ===== */
 @keyframes adviceSlideIn {
@@ -930,13 +996,13 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   <div id="dailyLimitBox"></div>
 
   <div id="sabitSectionsContainer" style="margin-top:28px">
-  <!-- Sabit Giderler -->
+  <!-- Ödemeler -->
   <div class="card collapsible-card draggable-section" id="recSection" data-section="rec" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.25)">
     <div class="card-collapse-header" onclick="toggleSection('rec')">
       <div class="collapse-left">
         <div class="collapse-icon-wrap" style="background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.25);font-size:18px">🗓</div>
         <div>
-          <div class="collapse-title">Sabit Giderler</div>
+          <div class="collapse-title">Ödemeler</div>
           <div class="collapse-summary" id="recSummary"></div>
         </div>
       </div>
@@ -973,7 +1039,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       <div class="collapse-left">
         <div class="collapse-icon-wrap" style="background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.2)">💳</div>
         <div>
-          <div class="collapse-title">Ödemeler</div>
+          <div class="collapse-title">Borçlar</div>
           <div class="collapse-summary" id="debtSummaryLabel"></div>
         </div>
       </div>
@@ -1009,13 +1075,13 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     </div></div>
   </div>
 
-  <!-- Birikim Hedefleri -->
+  <!-- Birikim -->
   <div class="card collapsible-card draggable-section" id="goalSection" data-section="goal" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.25)">
     <div class="card-collapse-header" onclick="toggleSection('goal')">
       <div class="collapse-left">
-        <div class="collapse-icon-wrap" style="background:rgba(45,184,102,.12);border:1px solid rgba(45,184,102,.2)">🎯</div>
+        <div class="collapse-icon-wrap" style="background:rgba(45,184,102,.12);border:1px solid rgba(45,184,102,.2)">🪙</div>
         <div>
-          <div class="collapse-title">Birikim Hedefleri</div>
+          <div class="collapse-title">Birikim</div>
           <div class="collapse-summary" id="goalSummaryLabel"></div>
         </div>
       </div>
@@ -1029,7 +1095,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         <div id="emojiGrid" class="emoji-grid"></div>
         <input type="hidden" id="goalEmoji" value="🎯">
         <div class="form-group">
-          <label class="form-label">Hedef Adı</label>
+          <label class="form-label">Birikim Adı</label>
           <input type="text" id="goalName" class="form-input" placeholder="Tatil, araba, acil fon...">
         </div>
         <div style="display:flex;gap:8px">
@@ -1046,13 +1112,54 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
           <label class="form-label" style="display:flex;justify-content:space-between"><span>Aylık Birikim</span><span id="goalMonthlyHint" style="color:var(--accent);font-weight:800"></span></label>
           <input type="text" id="goalMonthly" class="form-input" placeholder="Otomatik hesaplanır" oninput="fmtInput(this)" inputmode="numeric">
         </div>
-        <div style="display:none">
-        </div>
+        <div style="display:none"></div>
         <button class="btn btn-primary btn-full" onclick="addGoal()">Kaydet</button>
       </div>
       <div id="goalsList"></div>
     </div></div>
   </div>
+
+  <!-- Hedefler -->
+  <div class="card collapsible-card draggable-section" id="wishSection" data-section="wish" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.25)">
+    <div class="card-collapse-header" onclick="toggleSection('wish')">
+      <div class="collapse-left">
+        <div class="collapse-icon-wrap" style="background:rgba(191,90,242,.12);border:1px solid rgba(191,90,242,.22);font-size:18px">🛍️</div>
+        <div>
+          <div class="collapse-title">Hedefler</div>
+          <div class="collapse-summary" id="wishSummaryLabel"></div>
+        </div>
+      </div>
+      <div class="collapse-right">
+        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();toggleWishForm()">+ Ekle</button>
+        <span class="drag-handle" title="Sürükle">⋮⋮</span><span class="collapse-chevron" id="wishChevron">›</span>
+      </div>
+    </div>
+    <div class="collapsible-body collapsed" id="wishBody"><div class="collapsible-inner">
+      <div id="wishForm" style="display:none;margin-bottom:14px;padding:12px;background:var(--surface2);border-radius:var(--radius-sm)">
+        <div class="form-group">
+          <label class="form-label">Ne almak istiyorsun?</label>
+          <input type="text" id="wishName" class="form-input" placeholder="Nike Air Max, iPhone, bisiklet...">
+        </div>
+        <div style="display:flex;gap:8px">
+          <div class="form-group" style="flex:1">
+            <label class="form-label">Fiyat</label>
+            <input type="text" id="wishPrice" class="form-input" placeholder="4.500" oninput="fmtInput(this)" inputmode="numeric">
+          </div>
+          <div class="form-group" style="flex:1">
+            <label class="form-label">Öncelik</label>
+            <select id="wishPriority" class="form-select">
+              <option value="high">🔥 Acil</option>
+              <option value="mid" selected>⭐ İstersen</option>
+              <option value="low">💭 Rüya</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" style="background:var(--purple);box-shadow:0 4px 16px rgba(191,90,242,.25)" onclick="addWish()">Ekle</button>
+      </div>
+      <div id="wishList"></div>
+    </div></div>
+  </div>
+
 </div><!-- /sabitSectionsContainer -->
 </div><!-- /tab-sabit -->
 
@@ -1104,6 +1211,9 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
   <!-- BORÇ ÖZETİ -->
   <div id="debtSummaryCard"></div>
+
+  <!-- HEDEFLER ÖZETİ -->
+  <div id="wishSummaryCard"></div>
 
   <!-- Yıllık Özet -->
   <div class="card" style="padding:18px 18px 20px">
@@ -1338,9 +1448,9 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 <div class="modal-overlay" id="goalEditModal" onclick="if(event.target===this)closeGoalEdit()">
   <div class="modal-sheet" style="position:relative">
     <button class="modal-close" onclick="closeGoalEdit()">×</button>
-    <div class="modal-title">Hedefi Düzenle</div>
+    <div class="modal-title">Birikiimi Düzenle</div>
     <div class="form-group">
-      <label class="form-label">Hedef adı</label>
+      <label class="form-label">Birikim adı</label>
       <input type="text" id="editGoalName" class="form-input">
     </div>
     <div style="display:flex;gap:8px">
@@ -1354,6 +1464,33 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       </div>
     </div>
     <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="saveGoalEdit()">Kaydet</button>
+  </div>
+</div>
+
+<!-- WISH EDIT MODAL -->
+<div class="modal-overlay" id="wishEditModal" onclick="if(event.target===this)closeWishEdit()">
+  <div class="modal-sheet" style="position:relative">
+    <button class="modal-close" onclick="closeWishEdit()">×</button>
+    <div class="modal-title">Hedefi Düzenle</div>
+    <div class="form-group">
+      <label class="form-label">Ne almak istiyorsun?</label>
+      <input type="text" id="editWishName" class="form-input">
+    </div>
+    <div style="display:flex;gap:8px">
+      <div class="form-group" style="flex:1">
+        <label class="form-label">Fiyat</label>
+        <input type="text" id="editWishPrice" class="form-input" oninput="fmtInput(this)" inputmode="numeric">
+      </div>
+      <div class="form-group" style="flex:1">
+        <label class="form-label">Öncelik</label>
+        <select id="editWishPriority" class="form-select">
+          <option value="high">🔥 Acil</option>
+          <option value="mid">⭐ İstersen</option>
+          <option value="low">💭 Rüya</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" style="margin-top:4px;background:var(--purple);box-shadow:0 4px 16px rgba(191,90,242,.25)" onclick="saveWishEdit()">Kaydet</button>
   </div>
 </div>
 
@@ -1399,7 +1536,7 @@ const SVG_EDIT = `<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2
 const SVG_TRASH = `<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
 let charts = {};
 let viewYear = new Date().getFullYear();
-let sectionOrder = ['rec', 'debt', 'goal'];
+let sectionOrder = ['rec', 'debt', 'goal', 'wish'];
 
 // =================== DATA ===================
 const KEY = 'butcem_v3';
@@ -1408,6 +1545,7 @@ let data = {
   recurring: [],
   debts: [],
   savingsGoals: [],
+  wishlist: [],
   categories: [],
   startingBalance: 0,
   onboarded: false,
@@ -1551,6 +1689,7 @@ function load() {
       if (!Array.isArray(data.recurring)) data.recurring = [];
       if (!Array.isArray(data.debts)) data.debts = [];
       if (!Array.isArray(data.savingsGoals)) data.savingsGoals = [];
+      if (!Array.isArray(data.wishlist)) data.wishlist = [];
       if (!Array.isArray(data.categories)) data.categories = [];
       // Streak migration
       if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastEvaluatedDate:'', lastWeeklyFreezeGift:'' };
@@ -1744,7 +1883,7 @@ function finishOnboarding() {
 
 // =================== TABS ===================
 let currentTab = 'aylik';
-const sectionState = { rec: false, debt: false, goal: false, chart: false, yillik: false };
+const sectionState = { rec: false, debt: false, goal: false, wish: false, chart: false, yillik: false };
 
 function switchTab(id, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -2289,6 +2428,37 @@ function buildCarouselItems(fb) {
       sub:'Şimdi biriktirme vakti!' });
   }
 
+  // 9. Hedefler (wishlist) projeksiyon insight'ları
+  if (data.wishlist && data.wishlist.length > 0) {
+    const priorityOrder = { high: 0, mid: 1, low: 2 };
+    const sorted = [...data.wishlist].sort((a, b) =>
+      (priorityOrder[a.priority] || 1) - (priorityOrder[b.priority] || 1)
+    );
+    // Sadece en öncelikli 2 hedef için insight üret
+    sorted.slice(0, 2).forEach(w => {
+      const proj = calcWishProjection(w, fb);
+      if (proj.canAfford) {
+        items.push({ cls: 'good', icon: '🛍️',
+          title: `${w.name} için bütçen yeterli!`,
+          sub: `Bu ay alabilirsin — ${fmtTL(w.price)}.` });
+      } else if (proj.monthsAway !== null && proj.monthsAway <= 3) {
+        items.push({ cls: 'good', icon: '🛍️',
+          title: `${w.name} — ${proj.monthsAway === 1 ? 'gelecek ay' : proj.monthsAway + ' ay sonra'}`,
+          sub: proj.subText });
+      } else if (proj.monthsAway !== null) {
+        items.push({ cls: 'warn', icon: '🛍️',
+          title: `${w.name} — ~${proj.monthsAway} ay kaldı`,
+          sub: proj.tipText || proj.subText });
+      }
+      if (proj.trendText) {
+        items.push({ cls: proj.trendText.includes('uzaklaş') ? 'bad' : 'good',
+          icon: '🎯',
+          title: `${w.name} hedefin`,
+          sub: proj.trendText.replace(/^[📈📉]\s*/, '') });
+      }
+    });
+  }
+
   return items;
 }
 
@@ -2549,6 +2719,27 @@ function toggleTxDelete(id) {
   expandedTx = isOpen ? null : id;
 }
 
+// Genel item expand/collapse — rec/debt/goal/wish için
+let _expandedItem = null;
+function toggleItemExpand(id) {
+  if (_expandedItem && _expandedItem !== id) {
+    const prev = document.getElementById(_expandedItem);
+    if (prev) prev.classList.remove('item-expanded');
+  }
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isOpen = el.classList.contains('item-expanded');
+  el.classList.toggle('item-expanded', !isOpen);
+  _expandedItem = isOpen ? null : id;
+}
+function closeExpandedItem() {
+  if (_expandedItem) {
+    const el = document.getElementById(_expandedItem);
+    if (el) el.classList.remove('item-expanded');
+    _expandedItem = null;
+  }
+}
+
 
 // ===== TX EDIT MODAL =====
 let _editTxId = null;
@@ -2708,6 +2899,7 @@ function renderSabit() {
       rec: document.getElementById('recSection'),
       debt: document.getElementById('debtSection'),
       goal: document.getElementById('goalSection'),
+      wish: document.getElementById('wishSection'),
     };
     sectionOrder.forEach(key => {
       const el = sections[key];
@@ -2717,6 +2909,7 @@ function renderSabit() {
   renderRecList();
   renderDebtList();
   renderGoalsList();
+  renderWishList();
   updateCollapseSummaries();
   initDragSections();
 }
@@ -2816,8 +3009,8 @@ function renderRecList() {
   el.innerHTML = items.map(r => {
     const paid = isPaidThisMonth(r, mk);
     const cat = getCat(r.category);
-    return `<div class="rec-item ${paid?'paid-item':''}" id="recitem_${r.id}">
-      <div style="flex:1;display:flex;align-items:center;gap:12px" onclick="togglePaidRecurring('${r.id}')">
+    return `<div class="rec-item ${paid?'paid-item':''}" id="recitem_${r.id}" onclick="toggleItemExpand('recitem_${r.id}')">
+      <div style="flex:1;display:flex;align-items:center;gap:12px" onclick="event.stopPropagation();togglePaidRecurring('${r.id}')">
         <div class="rec-icon" style="background:${paid?'rgba(45,184,102,.12)':'var(--surface3)'}; transition:background .2s">${cat.emoji}</div>
         <div class="rec-info">
           <div class="rec-name" style="opacity:${paid?'0.5':'1'};text-decoration:${paid?'line-through':'none'}">${r.desc}</div>
@@ -2828,10 +3021,10 @@ function renderRecList() {
           <div class="rec-status-amount" style="color:${paid?'var(--accent)':'var(--text)'}">${fmtTL(r.amount)}</div>
         </div>
       </div>
-      <div class="item-actions-row">
-        <button class="icon-action-btn" onclick="openRecEditModal('${r.id}')" title="Düzenle">${SVG_EDIT}</button>
-        <button class="icon-action-btn danger" onclick="deleteRecurring('${r.id}')" title="Sil">${SVG_TRASH}</button>
-      </div>
+      <div class="item-actions-row"><div class="item-actions-inner">
+        <button class="icon-action-btn" onclick="event.stopPropagation();openRecEditModal('${r.id}')" title="Düzenle">${SVG_EDIT}</button>
+        <button class="icon-action-btn danger" onclick="event.stopPropagation();deleteRecurring('${r.id}')" title="Sil">${SVG_TRASH}</button>
+      </div></div>
     </div>`;
   }).join('');
 }
@@ -2933,8 +3126,9 @@ function renderDebtList() {
     const future = d.startMonth && d.startMonth > mk;
     const done = !d.active;
     const pct = d.installments ? Math.round((d.paidCount / d.installments) * 100) : 100;
-    return `<div class="rec-item debt-item ${paid?'paid-item':''}" id="debtitem_${d.id}" style="${done?'opacity:.55':''}">
-      <div style="flex:1;display:flex;align-items:center;gap:12px;cursor:${future||done?'default':'pointer'}" onclick="${!future&&!done?`togglePaidDebt('${d.id}')`:''}">
+    return `<div class="rec-item debt-item ${paid?'paid-item':''}" id="debtitem_${d.id}" style="${done?'opacity:.55':''}" onclick="toggleItemExpand('debtitem_${d.id}')">
+      <div style="flex:1;display:flex;align-items:center;gap:12px;cursor:${future||done?'default':'pointer'}" onclick="event.stopPropagation();${!future&&!done?`togglePaidDebt('${d.id}')`:''}"
+>
         <div class="rec-icon" style="background:${done?'rgba(45,184,102,.12)':paid?'rgba(45,184,102,.12)':'rgba(255,69,58,.08)'}">💳</div>
         <div class="rec-info">
           <div class="rec-name" style="opacity:${(paid||done)?'0.5':'1'};text-decoration:${paid||done?'line-through':'none'}">${d.name}</div>
@@ -2950,10 +3144,10 @@ function renderDebtList() {
           <div class="rec-status-amount" style="color:${done||paid?'var(--accent)':'var(--danger)'}">${fmtTL(d.monthlyAmount)}</div>
         </div>
       </div>
-      <div class="item-actions-row">
-        ${!done ? `<button class="icon-action-btn" onclick="startEditDebt('${d.id}')" title="Düzenle">${SVG_EDIT}</button>` : ''}
-        <button class="icon-action-btn danger" onclick="deleteDebt('${d.id}')" title="Sil">${SVG_TRASH}</button>
-      </div>
+      <div class="item-actions-row"><div class="item-actions-inner">
+        ${!done ? `<button class="icon-action-btn" onclick="event.stopPropagation();startEditDebt('${d.id}')" title="Düzenle">${SVG_EDIT}</button>` : ''}
+        <button class="icon-action-btn danger" onclick="event.stopPropagation();deleteDebt('${d.id}')" title="Sil">${SVG_TRASH}</button>
+      </div></div>
     </div>`;
   }).join('');
 
@@ -3092,7 +3286,7 @@ function renderGoalsList() {
   const el = document.getElementById('goalsList');
   if (!el) return;
   if (!data.savingsGoals.length) {
-    el.innerHTML = `<div class="empty-state" style="padding:24px 0"><span class="empty-state-icon">🎯</span><div class="empty-state-text">Henüz hedef yok</div><div class="empty-state-sub">Tatil, araba, acil fon — hayalini ekle.</div></div>`;
+    el.innerHTML = `<div class="empty-state" style="padding:24px 0"><span class="empty-state-icon">🪙</span><div class="empty-state-text">Henüz birikim yok</div><div class="empty-state-sub">Tatil, araba, acil fon — hayalini ekle.</div></div>`;
     return;
   }
   el.innerHTML = data.savingsGoals.map(g => {
@@ -3100,33 +3294,33 @@ function renderGoalsList() {
     const pct = Math.min(100,Math.round((total/g.target)*100));
     const isMonthlyPaid = (g.paidMonths||[]).includes(mk);
     const barColor = pct>=100?'var(--accent)':pct>=60?'var(--warning)':'var(--blue)';
-    return `<div class="goal-card">
-      <div class="goal-header">
+    return `<div class="goal-card" id="goalitem_${g.id}" onclick="toggleItemExpand('goalitem_${g.id}')">
+      <div class="goal-header" onclick="event.stopPropagation()">
         <div class="goal-emoji-wrap">${g.emoji}</div>
         <div style="flex:1">
           <div class="goal-title">${g.name}</div>
           <div class="goal-subtitle">${fmtTL(total)} / ${fmtTL(g.target)} · ${pct}%</div>
         </div>
-        <div style="display:flex;gap:6px">
-          <button class="icon-action-btn" onclick="startEditGoal('${g.id}')" title="Düzenle">${SVG_EDIT}</button>
-          <button class="icon-action-btn danger" onclick="deleteGoal('${g.id}')" title="Sil">${SVG_TRASH}</button>
-        </div>
       </div>
-      <div class="goal-progress">
+      <div class="goal-progress" onclick="event.stopPropagation()">
         <div class="goal-stats">
           <span>${pct}% tamamlandı</span>
           ${g.monthly?`<span>${fmtTL(g.monthly)}/ay</span>`:''}
         </div>
         <div class="goal-bar"><div class="goal-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
       </div>
-      ${g.monthly?`<div class="monthly-tick-row ${isMonthlyPaid?'paid':''}" onclick="toggleGoalMonthly('${g.id}')">
+      ${g.monthly?`<div class="monthly-tick-row ${isMonthlyPaid?'paid':''}" onclick="event.stopPropagation();toggleGoalMonthly('${g.id}')">
         <div class="monthly-tick-check">${isMonthlyPaid?'✓':''}</div>
         <div class="monthly-tick-info">
           <div class="monthly-tick-label" style="color:${isMonthlyPaid?'var(--accent)':'var(--text)'}">${isMonthlyPaid?'Bu ay biriktirildi ✓':'Bu ay biriktir'}</div>
           <div class="monthly-tick-amount">${fmtTL(g.monthly)} · ${mk}</div>
         </div>
       </div>`:''}
-      <button class="btn btn-ghost btn-sm" style="width:100%;font-size:11px" onclick="openDepositModal('${g.id}')">+ Manuel Ekle</button>
+      <button class="btn btn-ghost btn-sm" style="width:100%;font-size:11px;margin-bottom:6px" onclick="event.stopPropagation();openDepositModal('${g.id}')">+ Manuel Ekle</button>
+      <div class="item-actions-row"><div class="item-actions-inner">
+        <button class="icon-action-btn" onclick="event.stopPropagation();startEditGoal('${g.id}')" title="Düzenle">${SVG_EDIT}</button>
+        <button class="icon-action-btn danger" onclick="event.stopPropagation();deleteGoal('${g.id}')" title="Sil">${SVG_TRASH}</button>
+      </div></div>
     </div>`;
   }).join('');
 }
@@ -3207,7 +3401,402 @@ function saveGoalEdit() {
   if (!name || !target) { showToast('⚠️ Ad ve hedef tutar gerekli'); return; }
   g.name = name; g.target = target; g.monthly = monthly;
   save(); closeGoalEdit(); renderAll();
+  showToast('✅ Birikim güncellendi');
+}
+
+// =================== HEDEFLer (WISHLIST) ===================
+const WISH_PRIORITY_LABEL = { high: '🔥 Acil', mid: '⭐ İstersen', low: '💭 Rüya' };
+
+function toggleWishForm() {
+  if (!sectionState.wish) {
+    sectionState.wish = true;
+    const b = document.getElementById('wishBody');
+    const cv = document.getElementById('wishChevron');
+    if (b) b.classList.remove('collapsed');
+    if (cv) cv.classList.add('open');
+  }
+  const f = document.getElementById('wishForm');
+  const isOpen = f.style.display === 'block';
+  f.style.display = isOpen ? 'none' : 'block';
+  if (!isOpen) setTimeout(() => document.getElementById('wishName')?.focus(), 100);
+}
+
+function addWish() {
+  const name = document.getElementById('wishName').value.trim();
+  const price = parseNum(document.getElementById('wishPrice').value);
+  const priority = document.getElementById('wishPriority').value || 'mid';
+  if (!name || !price) { showToast('⚠️ İsim ve fiyat gerekli'); return; }
+  if (!data.wishlist) data.wishlist = [];
+  data.wishlist.push({ id: uid(), name, price, priority, createdAt: today() });
+  save();
+  document.getElementById('wishName').value = '';
+  document.getElementById('wishPrice').value = '';
+  document.getElementById('wishForm').style.display = 'none';
+  showToast('✅ Hedef eklendi');
+  renderAll();
+}
+
+function deleteWish(id) {
+  showConfirm('Bu hedefi silmek istiyor musunuz?', () => {
+    data.wishlist = data.wishlist.filter(w => w.id !== id);
+    save(); renderAll();
+  });
+}
+
+let _editWishId = null;
+function openWishEdit(id) {
+  const w = data.wishlist.find(w => w.id === id);
+  if (!w) return;
+  _editWishId = id;
+  document.getElementById('editWishName').value = w.name;
+  document.getElementById('editWishPrice').value = fmtTL(w.price).replace('₺','');
+  document.getElementById('editWishPriority').value = w.priority || 'mid';
+  document.getElementById('wishEditModal').classList.add('show');
+}
+function closeWishEdit() {
+  document.getElementById('wishEditModal').classList.remove('show');
+  _editWishId = null;
+}
+function saveWishEdit() {
+  const w = data.wishlist.find(w => w.id === _editWishId);
+  if (!w) return;
+  const name = document.getElementById('editWishName').value.trim();
+  const price = parseNum(document.getElementById('editWishPrice').value);
+  const priority = document.getElementById('editWishPriority').value;
+  if (!name || !price) { showToast('⚠️ İsim ve fiyat gerekli'); return; }
+  w.name = name; w.price = price; w.priority = priority;
+  save(); closeWishEdit(); renderAll();
   showToast('✅ Hedef güncellendi');
+}
+
+function markWishDone(id) {
+  const w = data.wishlist.find(w => w.id === id);
+  if (!w) return;
+  w.boughtAt = today();
+  save(); renderAll();
+  showToast('🎉 Tebrikler! ' + w.name + ' alındı olarak işaretlendi.');
+}
+function undoWishDone(id) {
+  const w = data.wishlist.find(w => w.id === id);
+  if (!w) return;
+  delete w.boughtAt;
+  save(); renderAll();
+  showToast('↩ Geri alındı');
+}
+
+function renderWishSummaryCard() {
+  const el = document.getElementById('wishSummaryCard');
+  if (!el) return;
+  const wishes = data.wishlist || [];
+  if (!wishes.length) { el.innerHTML = ''; return; }
+
+  const fb = calcFreeBudget(currentMonth);
+  const done = wishes.filter(w => w.boughtAt);
+  const active = wishes.filter(w => !w.boughtAt);
+  const totalSpent = done.reduce((s,w) => s + w.price, 0);
+  const totalRemaining = active.reduce((s,w) => s + w.price, 0);
+
+  // En yakın ulaşılabilir hedef
+  const reachable = active.filter(w => calcWishProjection(w, fb).canAfford);
+  const soonest = active
+    .map(w => ({ w, proj: calcWishProjection(w, fb) }))
+    .filter(x => x.proj.monthsAway !== null)
+    .sort((a,b) => (a.proj.monthsAway||99) - (b.proj.monthsAway||99))[0];
+
+  // Öncelik dağılımı
+  const priorityOrder = { high: 0, mid: 1, low: 2 };
+  const topActive = [...active]
+    .sort((a,b) => (priorityOrder[a.priority]||1) - (priorityOrder[b.priority]||1))
+    .slice(0, 3);
+
+  el.innerHTML = `
+    <div class="card" style="padding:20px;margin-bottom:12px">
+
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
+        <div>
+          <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px">Hedefler</div>
+          <div style="font-size:28px;font-weight:900;letter-spacing:-1.2px;color:var(--purple);line-height:1">${fmtTL(totalRemaining)}</div>
+          <div style="font-size:11px;color:var(--muted);font-weight:600;margin-top:4px">${active.length} aktif hedef</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Tamamlanan</div>
+          <div style="font-size:22px;font-weight:900;letter-spacing:-1px;color:var(--accent)">${done.length}</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:1px">hedef alındı</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+        <div style="background:var(--surface2);border-radius:12px;padding:12px 14px">
+          <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Harcanan Toplam</div>
+          <div style="font-size:18px;font-weight:900;letter-spacing:-.5px;color:var(--accent)">${fmtTL(totalSpent)}</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:3px">${done.length} hedef gerçekleşti</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:12px;padding:12px 14px">
+          <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">
+            ${reachable.length > 0 ? 'Bu Ay Alınabilir' : 'En Yakın Hedef'}
+          </div>
+          ${reachable.length > 0 ? `
+            <div style="font-size:14px;font-weight:800;color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${reachable[0].name}</div>
+            <div style="font-size:10px;font-weight:700;color:var(--accent);margin-top:3px">Bütçen yeterli! 🎉</div>
+          ` : soonest ? `
+            <div style="font-size:13px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${soonest.w.name}</div>
+            <div style="font-size:10px;font-weight:700;color:var(--purple);margin-top:3px">
+              ${soonest.proj.monthsAway === 1 ? 'Gelecek ay' : '~' + soonest.proj.monthsAway + ' ay sonra'}
+            </div>
+          ` : `
+            <div style="font-size:13px;color:var(--muted);font-weight:600">Veri yok</div>
+          `}
+        </div>
+      </div>
+
+      ${topActive.length > 0 ? `
+      <div style="border-top:1px solid var(--border);padding-top:12px">
+        <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Aktif Hedefler</div>
+        ${topActive.map(w => {
+          const proj = calcWishProjection(w, fb);
+          const dotColor = w.priority === 'high' ? 'var(--danger)' : w.priority === 'mid' ? 'var(--purple)' : 'var(--muted)';
+          return `<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(44,44,53,.2)">
+            <div style="width:6px;height:6px;border-radius:50%;background:${dotColor};flex-shrink:0"></div>
+            <div style="flex:1;font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${w.name}</div>
+            <div style="font-size:12px;font-weight:800;color:var(--purple);flex-shrink:0">${fmtTL(w.price)}</div>
+            <div style="font-size:10px;font-weight:700;color:${proj.canAfford?'var(--accent)':'var(--muted)'};flex-shrink:0;min-width:48px;text-align:right">
+              ${proj.canAfford ? 'Bu ay ✓' : proj.monthsAway ? '~'+proj.monthsAway+'ay' : '—'}
+            </div>
+          </div>`;
+        }).join('')}
+        ${active.length > 3 ? `<div style="font-size:11px;color:var(--muted);font-weight:600;padding-top:8px;text-align:center">+${active.length-3} hedef daha</div>` : ''}
+      </div>` : ''}
+
+    </div>`;
+}
+
+function calcWishProjection(wish, fb) {
+  const mk = currentMonth;
+  const dim = daysInMonth(mk);
+  const todayD = new Date().getDate();
+  const daysLeft = Math.max(1, dim - todayD);
+
+  // ── Bugünkü harcama hızı ──
+  const todaySpent  = fb.todayVarSpent;   // bugün ne harcandı
+  const baseDaily   = fb.baseDaily;       // baz günlük limit
+
+  // Geçmiş günlerin ortalama günlük değişken harcaması (bugün hariç)
+  const pastTxs = data.transactions.filter(t => {
+    if (monthKey(t.date) !== mk) return false;
+    if (t.type !== 'expense') return false;
+    if (t.isRecurring || t.isDebt || t.isGoalDeposit) return false;
+    if (t.date === today()) return false;
+    return true;
+  });
+  const pastDays = Math.max(1, todayD - 1);
+  const pastVarTotal = pastTxs.reduce((s,t) => s + t.amount, 0);
+  const avgPastDaily = pastDays > 0 ? pastVarTotal / pastDays : baseDaily;
+
+  // Bugünün harcama hızı: bugün bir şey harcandıysa onu kullan, yoksa geçmiş ortalama
+  const effectiveDailyRate = todayD >= 1 && todaySpent > 0
+    ? todaySpent
+    : avgPastDaily > 0 ? avgPastDaily : baseDaily;
+
+  // ── Ay sonu projeksiyonu ──
+  // Bugüne kadar harcanan (değişken) + kalan günlerde bu hızda harcarsak
+  const varSpentSoFar = fb.varSpent;
+  const projectedVarTotal = varSpentSoFar + (effectiveDailyRate * daysLeft);
+  const projectedMonthEnd = Math.round(fb.available - projectedVarTotal);
+
+  // ── Hedef için ay başına düşen serbest para (projeksiyon bazlı) ──
+  // Geçen aylara da bakarak normalize et
+  const prevMonths = [];
+  for (let i = 1; i <= 3; i++) {
+    const d = new Date();
+    d.setMonth(d.getMonth() - i);
+    const pmk = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    const { income: pi, expense: pe } = calcMonthData(pmk);
+    if (pi > 0) prevMonths.push(pi - pe);
+  }
+  const avgPrevFree = prevMonths.length > 0
+    ? prevMonths.reduce((s,v) => s+v, 0) / prevMonths.length
+    : projectedMonthEnd;
+
+  // Ağırlıklı ortalama: bu ay projeksiyonu %60, geçmiş ortalama %40
+  const effectiveFree = Math.round(
+    projectedMonthEnd > 0 || avgPrevFree > 0
+      ? projectedMonthEnd * 0.6 + avgPrevFree * 0.4
+      : 0
+  );
+
+  // ── Trend: bugün hedefe yaklaşıyor mu uzaklaşıyor mu ──
+  let trendText = null;
+  let trendDir = 0; // +1 iyi, -1 kötü
+  if (baseDaily > 0 && todayD >= 1) {
+    if (todaySpent === 0) {
+      // harcama yok — neutral
+    } else if (todaySpent > baseDaily * 1.25) {
+      const extraPerDay = Math.round(todaySpent - baseDaily);
+      trendText = `Bu hızda her gün ${fmtTL(extraPerDay)} fazla harcıyorsun — ay sonu ${fmtTL(Math.abs(projectedMonthEnd < 0 ? projectedMonthEnd : 0))} ${projectedMonthEnd < 0 ? 'açık verir' : 'azalır'}.`;
+      trendDir = -1;
+    } else if (todaySpent < baseDaily * 0.75) {
+      const savedToday = Math.round(baseDaily - todaySpent);
+      trendText = `Bugün ${fmtTL(savedToday)} tasarruf ettin — bu hızda ay sonu ${fmtTL(Math.max(0, projectedMonthEnd))} kalır.`;
+      trendDir = 1;
+    }
+  }
+
+  // ── Kısılma önerisi ──
+  let tipText = null;
+
+  // ── Sonuç ──
+  let result = { trendText, trendDir };
+
+  if (fb.income <= 0) {
+    result.canAfford = false;
+    result.monthsAway = null;
+    result.mainText = 'Gelir kaydı yok';
+    result.subText = 'Önce bu aya bir gelir ekle.';
+  } else if (projectedMonthEnd >= wish.price) {
+    // Bu ay sonunda hedef parası kalacak
+    result.canAfford = true;
+    result.monthsAway = 0;
+    result.mainText = `Bu ay alabilirsin 🎉`;
+    result.subText = `Bu hızda ay sonu ${fmtTL(projectedMonthEnd)} kalır — ${fmtTL(Math.round(projectedMonthEnd - wish.price))} artı.`;
+  } else if (projectedMonthEnd <= 0) {
+    result.canAfford = false;
+    result.monthsAway = null;
+    result.mainText = projectedMonthEnd < 0
+      ? `Bu hızda ay sonu ${fmtTL(Math.abs(projectedMonthEnd))} açık verirsin`
+      : 'Bu ay bütçen yetmiyor';
+    result.subText = effectiveFree > 0
+      ? `Harcamaları kısarsan ${Math.ceil(wish.price / effectiveFree)} ay sonra alabilirsin.`
+      : 'Harcamalarını kısarak bu hedefe yaklaşabilirsin.';
+    // Günde ne kadar kısılırsa bu ay alınabilir?
+    const neededSavePerDay = fb.daysLeft > 0
+      ? Math.round((wish.price - Math.max(0, projectedMonthEnd)) / fb.daysLeft)
+      : null;
+    if (neededSavePerDay && neededSavePerDay < baseDaily * 0.4) {
+      tipText = `Günde ${fmtTL(neededSavePerDay)} az harcasan bu ay alabilirsin.`;
+    }
+  } else {
+    // Ay sonu bir miktar kalıyor ama yetmiyor
+    if (effectiveFree <= 0) {
+      result.canAfford = false;
+      result.monthsAway = null;
+      result.mainText = 'Bu hızla bütçen yetişemiyor';
+      result.subText = 'Harcamalarını azaltmadan bu hedefe ulaşmak zor.';
+    } else {
+      const monthsNeeded = Math.ceil(wish.price / effectiveFree);
+      result.canAfford = false;
+      result.monthsAway = monthsNeeded;
+      result.mainText = monthsNeeded === 1
+        ? 'Gelecek ay alabilirsin'
+        : `~${monthsNeeded} ay sonra alabilirsin`;
+      result.subText = `Bu hızda ay sonu ${fmtTL(projectedMonthEnd)} kalacak — aylık ortalama ${fmtTL(effectiveFree)}.`;
+      // Kısılma önerisi: 1 ay daha erken almak için günlük ne kadar az harcanmalı
+      if (monthsNeeded > 1 && fb.daysLeft > 1) {
+        const monthsEarlier = monthsNeeded - 1;
+        const extraNeeded = wish.price - projectedMonthEnd;
+        const savePerDay = Math.round(extraNeeded / (monthsEarlier * 30));
+        if (savePerDay > 0 && savePerDay < baseDaily * 0.45) {
+          tipText = `Günde ${fmtTL(savePerDay)} az harcasaydın 1 ay erken alırdın.`;
+        }
+      }
+    }
+  }
+
+  result.tipText = tipText;
+
+  // Progress bar: aylık serbest bütçenin hedefe oranı (maksimum %100)
+  result.pct = wish.price > 0 && effectiveFree > 0
+    ? Math.min(100, Math.round((effectiveFree / wish.price) * 100))
+    : 0;
+  // Eğer bu ay alınabiliyorsa %100 göster
+  if (result.canAfford) result.pct = 100;
+
+  return result;
+}
+
+function renderWishList() {
+  const el = document.getElementById('wishList');
+  if (!el) return;
+  if (!data.wishlist || !data.wishlist.length) {
+    el.innerHTML = `<div class="empty-state" style="padding:24px 0">
+      <span class="empty-state-icon">🛍️</span>
+      <div class="empty-state-text">Henüz hedef yok</div>
+      <div class="empty-state-sub">Almak istediğin şeyleri ekle, bütçen ne zaman yeteceğini hesaplasın.</div>
+    </div>`;
+    return;
+  }
+
+  const mk = currentMonth;
+  const fb = calcFreeBudget(mk);
+
+  const priorityOrder = { high: 0, mid: 1, low: 2 };
+  const sorted = [...data.wishlist].sort((a, b) =>
+    (priorityOrder[a.priority] || 1) - (priorityOrder[b.priority] || 1)
+  );
+
+  el.innerHTML = sorted.map(w => {
+    const proj = calcWishProjection(w, fb);
+    const priorityLabel = WISH_PRIORITY_LABEL[w.priority] || '⭐ İstersen';
+    const isDone = !!w.boughtAt;
+    const reachableClass = !isDone && proj.canAfford ? 'reachable' : '';
+
+    const projBg = isDone
+      ? 'background:rgba(45,184,102,.06);border:1px solid rgba(45,184,102,.2)'
+      : proj.canAfford
+        ? 'background:rgba(45,184,102,.08);border:1px solid rgba(45,184,102,.2)'
+        : proj.monthsAway === null
+          ? 'background:rgba(255,69,58,.06);border:1px solid rgba(255,69,58,.15)'
+          : 'background:var(--surface3);border:1px solid rgba(255,255,255,.05)';
+    const projMainColor = isDone ? 'var(--accent)' : proj.canAfford ? 'var(--accent)' : 'var(--text)';
+
+    const projectionHtml = isDone ? `
+      <div class="wish-projection" style="${projBg}">
+        <div class="wish-proj-main" style="color:var(--accent)">✓ Alındı — ${w.boughtAt}</div>
+        <div class="wish-proj-sub">${fmtTL(w.price)} harcandı.</div>
+      </div>` : `
+      <div class="wish-projection" style="${projBg}">
+        <div class="wish-proj-main" style="color:${projMainColor}">${proj.mainText}</div>
+        <div class="wish-proj-sub">${proj.subText}</div>
+        ${proj.trendText ? `<div class="wish-proj-tip" style="color:${proj.trendDir>0?'var(--accent)':proj.trendDir<0?'var(--danger)':'var(--muted)'}">${proj.trendDir>0?'📉 ':'📈 '}${proj.trendText}</div>` : ''}
+        ${proj.tipText ? `<div class="wish-proj-tip">💡 ${proj.tipText}</div>` : ''}
+      </div>`;
+
+    const progressHtml = !isDone ? `
+      <div class="wish-progress-row" style="margin-bottom:8px">
+        <div class="wish-progress-track">
+          <div class="wish-progress-fill" style="width:${proj.pct}%;background:${proj.canAfford?'var(--accent)':'var(--purple)'}"></div>
+        </div>
+        <span class="wish-progress-label" style="color:${proj.canAfford?'var(--accent)':'var(--purple)'}">%${proj.pct}</span>
+      </div>` : '';
+
+    return `
+    <div class="wish-card priority-${w.priority} ${reachableClass}${isDone?' done-item':''}" id="wish_${w.id}" style="${isDone?'opacity:.7':''}" onclick="toggleItemExpand('wish_${w.id}')">
+      <div class="wish-top" onclick="event.stopPropagation()">
+        <div class="wish-icon" style="${isDone?'background:rgba(45,184,102,.12)':''}">🛍️</div>
+        <div class="wish-info">
+          <div class="wish-name" style="${isDone?'text-decoration:line-through;opacity:.6':''}"> ${w.name}</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+            <span class="wish-price" style="${isDone?'color:var(--accent)':''}">${fmtTL(w.price)}</span>
+            <span class="wish-priority-badge ${w.priority}">${priorityLabel}</span>
+          </div>
+        </div>
+      </div>
+      <div onclick="event.stopPropagation()">
+        ${projectionHtml}
+        ${progressHtml}
+      </div>
+      <div class="item-actions-row"><div class="item-actions-inner">
+        ${!isDone ? `
+          <button class="icon-action-btn" onclick="event.stopPropagation();openWishEdit('${w.id}')" title="Düzenle">${SVG_EDIT}</button>
+          <button class="icon-action-btn confirm" onclick="event.stopPropagation();markWishDone('${w.id}')" title="Aldım">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </button>` : `
+          <button class="icon-action-btn undo" onclick="event.stopPropagation();undoWishDone('${w.id}')" title="Geri Al">
+            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4"/></svg>
+          </button>`}
+        <button class="icon-action-btn danger" onclick="event.stopPropagation();deleteWish('${w.id}')" title="Sil">${SVG_TRASH}</button>
+      </div></div>
+    </div>`;
+  }).join('');
 }
 
 let _editRecId = null;
@@ -3318,8 +3907,17 @@ function updateCollapseSummaries() {
     const paid = goals.filter(g => g.monthly && isPaidThisMonth(g, mk)).length;
     const monthly = goals.filter(g => g.monthly).length;
     goalEl.textContent = goals.length
-      ? (monthly ? `${paid}/${monthly} ödendi` : `${goals.length} hedef`)
-      : 'Hedef yok';
+      ? (monthly ? `${paid}/${monthly} ödendi` : `${goals.length} birikim`)
+      : 'Birikim yok';
+  }
+  const wishEl = document.getElementById('wishSummaryLabel');
+  if (wishEl) {
+    const wishes = data.wishlist || [];
+    if (!wishes.length) { wishEl.textContent = 'Hedef yok'; }
+    else {
+      const total = wishes.reduce((s,w) => s + w.price, 0);
+      wishEl.textContent = `${wishes.length} hedef · ${fmtTL(total)}`;
+    }
   }
 }
 
@@ -3368,6 +3966,7 @@ function renderOzetStats() {
   renderFinancialAdvice();
   renderDailyStats();
   renderDebtSummaryCard();
+  renderWishSummaryCard();
 }
 
 function renderDailyStats() {
