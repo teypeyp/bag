@@ -46,6 +46,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* ANIMATIONS */
 @keyframes dlFillIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
 @keyframes tabEnter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes popIn{0%{opacity:0;transform:scale(.82)}55%{transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
@@ -1126,7 +1127,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         </div>
       </div>
       <div class="collapse-right">
-        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();toggleTxSection()" style="margin-right:4px"><span id="txExpandLabel">Tümü</span></button>
         <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();openHistory()">Geçmiş →</button>
       </div>
     </div>
@@ -2996,6 +2996,7 @@ let _touchStartY = 0;
 let _touchStartX = 0;
 let _touchEndY = 0;
 let _touchEndX = 0;
+let _touchOnInteractive = false;
 
 const TAB_ORDER = ['aylik', 'sabit', 'ozet'];
 
@@ -3004,30 +3005,45 @@ document.addEventListener('touchstart', e => {
   _touchStartX = e.touches[0].clientX;
   _touchEndY = _touchStartY;
   _touchEndX = _touchStartX;
+  // Grafik, SVG veya scroll edilebilir alan üzerinde başladıysa swipe'ı engelle
+  const target = e.target;
+  _touchOnInteractive = !!(
+    target.closest('svg') ||
+    target.closest('canvas') ||
+    target.closest('.modal-overlay') ||
+    target.closest('.modal-sheet') ||
+    target.closest('input') ||
+    target.closest('select') ||
+    target.closest('textarea') ||
+    target.closest('.year-month-body') ||
+    target.closest('#dlChartWrap') ||
+    target.closest('.chart-wrap')
+  );
 }, { passive: true });
 
 document.addEventListener('touchend', e => {
   _touchEndY = e.changedTouches[0].clientY;
   _touchEndX = e.changedTouches[0].clientX;
 
+  // Interaktif element üzerinde başladıysa swipe yapma
+  if (_touchOnInteractive) return;
+
   // Modal/overlay açıksa swipe yapma
-  const anyModalOpen = document.querySelector('.modal-overlay.show, .confirm-modal.show, #celebrationOverlay[style*="flex"], #onboarding[style*="flex"]');
+  const anyModalOpen = document.querySelector('.modal-overlay.show, .confirm-modal.show, #celebrationOverlay.show, #onboarding[style*="flex"]');
   if (anyModalOpen) return;
 
   const dx = _touchEndX - _touchStartX;
   const dy = _touchEndY - _touchStartY;
 
-  // Yatay swipe mi? (dikey hareketten büyük olmalı, min 50px)
-  if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+  // Yatay swipe mi? (dikey hareketten belirgin büyük olmalı, min 80px)
+  if (Math.abs(dx) < 80 || Math.abs(dx) < Math.abs(dy) * 2.5) return;
 
   const idx = TAB_ORDER.indexOf(currentTab);
   if (dx < 0 && idx < TAB_ORDER.length - 1) {
-    // Sola kaydır → sonraki tab
     const nextId = TAB_ORDER[idx + 1];
     const btn = document.querySelectorAll('.tab-btn')[idx + 1];
     switchTab(nextId, btn);
   } else if (dx > 0 && idx > 0) {
-    // Sağa kaydır → önceki tab
     const prevId = TAB_ORDER[idx - 1];
     const btn = document.querySelectorAll('.tab-btn')[idx - 1];
     switchTab(prevId, btn);
@@ -3712,13 +3728,15 @@ function togglePaidDebt(id) {
     data.transactions.push({ id: uid(), type: 'expense', desc: d.name + ' taksit', amount: d.monthlyAmount, date: today(), category: 'diger', debtId: id, isDebt: true });
     if (d.paidCount >= d.installments) {
       d.active = false;
-      showCelebration({
+      save(); renderAll();
+      setTimeout(() => showCelebration({
         emoji: '💳',
         title: 'Borcu Tamamladın!',
         sub: `${esc(d.name)} tamamen kapandı.\n${d.installments} taksiti başarıyla bitirdin! 🎉`,
         tag: 'Tebrikler',
         color: 'var(--accent)'
-      });
+      }), 150);
+      return;
     } else {
       showToast('✅ ' + d.name + ' — ' + d.paidCount + '/' + d.installments + '. taksit ödendi');
     }
