@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>VAULT V3</title>
+<title>VAULT V5</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BAGIT">
@@ -950,52 +950,18 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         </div>
       </div>
 
-      <!-- SLIDE 5: Sabit giderler (geçilebilir) -->
+
+
+
+
+      <!-- SLIDE 5: Cüzdan ismi - geçilebilir -->
       <div class="splash-slide" data-idx="5">
-        <div class="ob-tag">Sabit Giderler</div>
-        <div class="ob-title">Sabit giderlerini<br><em>ekle.</em></div>
-        <div class="ob-body">Kira, abonelik, fatura — sonradan daha fazlasını ekleyebilirsin.</div>
-        <div class="ob-input-section" style="margin-top:12px">
-          <div style="display:flex;gap:8px;margin-bottom:8px">
-            <input type="text" id="obRecDesc" class="form-input" placeholder="Gider adı (örn: Kira)" maxlength="32" style="flex:1;border-radius:12px;font-size:14px;font-weight:600" onkeydown="if(event.key==='Enter')obAddRec()">
-            <div style="position:relative;width:130px">
-              <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:900;color:var(--muted);pointer-events:none">₺</span>
-              <input type="text" id="obRecAmount" class="form-input" placeholder="0" inputmode="numeric" onkeydown="obRecNumKey(event)" style="padding-left:28px!important;border-radius:12px;font-size:14px;font-weight:700;width:100%">
-            </div>
-            <button onclick="obAddRec()" style="background:var(--accent);border:none;border-radius:12px;width:44px;height:44px;cursor:pointer;font-size:18px;color:#0A0A0D;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:900">+</button>
-          </div>
-          <div id="obRecList" style="display:flex;flex-direction:column;gap:6px;max-height:160px;overflow-y:auto"></div>
-          <div class="ob-hint" style="margin-top:8px">Sonradan Giderler sekmesinden düzenleyebilirsin.</div>
-        </div>
-      </div>
-      <!-- SLIDE 7: Birikim hedefi ekle (geçilebilir) -->
-      <div class="splash-slide" data-idx="7">
-        <div class="ob-tag">İlk hedef</div>
-        <div class="ob-title">Bir birikim hedefi<br><em>belirle.</em></div>
-        <div class="ob-body">Tatil, araba, telefon — sonradan daha fazlasını ekleyebilirsin.</div>
-        <div class="ob-input-section">
-          <input type="text" id="onboardGoalName" class="form-input" placeholder="Hedef adı (örn: Tatil)" onkeydown="if(event.key==='Enter')nextSplash()" maxlength="32" style="margin-bottom:10px;border-radius:14px;font-size:15px;font-weight:600">
-          <div class="ob-input-row" style="margin-bottom:10px">
-            <span class="ob-currency">₺</span>
-            <input type="text" id="onboardGoalTarget" class="form-input" placeholder="Hedef tutar" inputmode="numeric" onkeydown="obNumKey(event)" style="padding-left:38px!important;font-size:16px!important;font-weight:700!important;border-radius:14px!important">
-          </div>
-          <div class="ob-input-row">
-            <span class="ob-currency">₺</span>
-            <input type="text" id="onboardGoalMonthly" class="form-input" placeholder="Aylık ayıracağın (isteğe bağlı)" inputmode="numeric" onkeydown="obNumKey(event)" style="padding-left:38px!important;font-size:16px!important;font-weight:700!important;border-radius:14px!important">
-          </div>
-          <div class="ob-hint">Sonradan Giderler sekmesinden düzenleyebilirsin.</div>
-        </div>
-      </div>
-
-
-      <!-- SLIDE 6: Cüzdan ismi - geçilebilir -->
-      <div class="splash-slide" data-idx="6">
         <div style="height:16px"></div>
         <div class="ob-tag">Kişiselleştir</div>
         <div class="ob-title">Cüzdanına<br><em>istediğin ismi ver.</em></div>
         <div class="ob-body">Header'da görünür. Ayarlardan değiştirebilirsin.</div>
         <div class="ob-input-section">
-          <input type="text" id="onboardWalletName" class="form-input" placeholder="VAULT" onkeydown="if(event.key==='Enter')nextSplash()" maxlength="24" style="text-align:center;font-size:18px;font-weight:800;border-radius:14px">
+          <input type="text" id="onboardWalletName" class="form-input" placeholder="VAULT" onkeydown="if(event.key==='Enter')nextSplash()" oninput="updateSplashBtn()" maxlength="24" style="text-align:center;font-size:18px;font-weight:800;border-radius:14px">
         </div>
       </div>
 
@@ -1009,8 +975,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         <span class="splash-dot" onclick="goSplash(3)"></span>
         <span class="splash-dot" onclick="goSplash(4)"></span>
         <span class="splash-dot" onclick="goSplash(5)"></span>
-        <span class="splash-dot" onclick="goSplash(6)"></span>
-        <span class="splash-dot" onclick="goSplash(7)"></span>
       </div>
       <div class="splash-cta">
         <button class="btn btn-primary btn-full" id="splashBtn" onclick="nextSplash()">Devam</button>
@@ -1896,10 +1860,12 @@ function obAddRec() {
   document.getElementById('obRecAmount').value = '';
   document.getElementById('obRecDesc').focus();
   renderObRecList();
+  updateSplashBtn();
 }
 function obRemoveRec(i) {
   _obRecs.splice(i, 1);
   renderObRecList();
+  updateSplashBtn();
 }
 function renderObRecList() {
   const el = document.getElementById('obRecList');
@@ -1991,7 +1957,7 @@ function isPaidThisMonth(item, mk) {
 
 // =================== ONBOARDING ===================
 let _splashIdx = 0;
-const _SPLASH_COUNT = 8;
+const _SPLASH_COUNT = 6;
 
 function initSplash() {
   _splashIdx = 0;
@@ -2053,18 +2019,45 @@ function updateSplashDots() {
   });
 }
 
+function isSkippableSlideEmpty() {
+  if (_splashIdx === 5) {
+    // Cüzdan ismi
+    const val = document.getElementById('onboardWalletName')?.value.trim() || '';
+    return val === '';
+  }
+  return false;
+}
+
 function updateSplashBtn() {
   const btn = document.getElementById('splashBtn');
   if (!btn) return;
-  btn.textContent = _splashIdx === _SPLASH_COUNT - 1 ? 'Başla' : (_splashIdx >= 5 ? 'Geç →' : 'Devam');
-  if (_splashIdx >= 5 && _splashIdx < _SPLASH_COUNT - 1) { btn.style.background = 'var(--surface2)'; btn.style.color = 'var(--muted)'; btn.style.boxShadow = 'none'; } else { btn.style.background = ''; btn.style.color = ''; btn.style.boxShadow = ''; }
+  if (_splashIdx === _SPLASH_COUNT - 1) {
+    btn.textContent = 'Başla';
+    btn.style.background = '';
+    btn.style.color = '';
+    btn.style.boxShadow = '';
+  } else if (_splashIdx >= 5) {
+    const empty = isSkippableSlideEmpty();
+    if (empty) {
+      btn.textContent = 'Geç →';
+      btn.style.background = 'var(--surface2)';
+      btn.style.color = 'var(--muted)';
+      btn.style.boxShadow = 'none';
+    } else {
+      btn.textContent = 'Devam';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.boxShadow = '';
+    }
+  } else {
+    btn.textContent = 'Devam';
+    btn.style.background = '';
+    btn.style.color = '';
+    btn.style.boxShadow = '';
+  }
 }
 
 function finishOnboarding() {
-  // Sabit giderler (slide 5)
-  _obRecs.forEach(r => {
-    data.recurring.push({ id: uid(), desc: r.desc, amount: r.amount, category: 'diger', active: true, paidMonths: [] });
-  });
   // Kasada ne kadar var (slide 4)
   const balance = parseNum(document.getElementById('onboardBalance')?.value || '0');
   if (balance > 0) {
@@ -2073,30 +2066,9 @@ function finishOnboarding() {
       date: today(), category: 'gelir'
     });
   }
-  // Sabit gelir (slide 5)
-  const income = parseNum(document.getElementById('onboardIncome')?.value || '0');
-  const incomeDesc = document.getElementById('onboardIncomeDesc')?.value.trim() || 'Maaş';
-  if (income > 0) {
-    data.transactions.push({
-      id: uid(), type: 'income', desc: incomeDesc, amount: income,
-      date: today(), category: 'gelir'
-    });
-  }
-  // Cüzdan ismi (slide 6)
+  // Cüzdan ismi (slide 5)
   const walletName = document.getElementById('onboardWalletName')?.value.trim();
   if (walletName) data.walletName = walletName;
-  // Birikim hedefi (slide 7)
-  const goalName = document.getElementById('onboardGoalName')?.value.trim();
-  const goalTarget = parseNum(document.getElementById('onboardGoalTarget')?.value || '0');
-  const goalMonthly = parseNum(document.getElementById('onboardGoalMonthly')?.value || '0');
-  if (goalName && goalTarget > 0) {
-    if (!data.savingsGoals) data.savingsGoals = [];
-    data.savingsGoals.push({
-      id: uid(), name: goalName, target: goalTarget,
-      monthly: goalMonthly || 0, saved: 0, emoji: '🎯',
-      createdAt: today()
-    });
-  }
   data.onboarded = true;
   save();
   const ob = document.getElementById('onboarding');
@@ -2455,6 +2427,7 @@ function _stopConfetti() {
 
 // =================== CALCULATE ===================
 function calcBalance() {
+  if (!Array.isArray(data.transactions)) data.transactions = [];
   return (data.startingBalance || 0) +
     data.transactions.reduce((s, t) => t.type === 'income' ? s + t.amount : s - t.amount, 0);
 }
@@ -2467,6 +2440,9 @@ function calcMonthData(mk) {
 }
 
 function calcFreeBudget(mk) {
+  if (!Array.isArray(data.recurring)) data.recurring = [];
+  if (!Array.isArray(data.debts)) data.debts = [];
+  if (!Array.isArray(data.savingsGoals)) data.savingsGoals = [];
   const { income, expense, txs } = calcMonthData(mk);
   const savTarget = data.monthlyTargets[mk] || 0;
 
@@ -5171,6 +5147,13 @@ function updateAppLogo() {
 }
 
 function renderAll() {
+  // Guard: array'lerin kesinlikle var olduğundan emin ol
+  if (!Array.isArray(data.transactions)) data.transactions = [];
+  if (!Array.isArray(data.recurring)) data.recurring = [];
+  if (!Array.isArray(data.debts)) data.debts = [];
+  if (!Array.isArray(data.savingsGoals)) data.savingsGoals = [];
+  if (!Array.isArray(data.wishlist)) data.wishlist = [];
+  if (!Array.isArray(data.categories)) data.categories = [];
   updateAppLogo();
   populateCatSelects();
   renderMonthly();
