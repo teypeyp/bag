@@ -85,7 +85,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* TAB CONTENT */
 .tab-content{display:none;flex:1;padding:16px 16px 100px}
-.tab-content.active{display:block;animation:tabEnter .28s cubic-bezier(.4,0,.2,1) both}
+.tab-content.active{display:block;animation:tabEnter .6s cubic-bezier(.4,0,.2,1) both}
 
 /* CARDS */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.2)}
@@ -950,21 +950,24 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         </div>
       </div>
 
-      <!-- SLIDE 5: Sabit gelir gir (geçilebilir) -->
+      <!-- SLIDE 5: Sabit giderler (geçilebilir) -->
       <div class="splash-slide" data-idx="5">
-        <div class="ob-tag">Sabit gelir</div>
-        <div class="ob-title">Düzenli bir gelir<br><em>ekle.</em></div>
-        <div class="ob-body">Maaş, kira geliri veya başka bir düzenli gelir. Sonradan daha fazlasını ekleyebilirsin.</div>
-        <div class="ob-input-section">
-          <input type="text" id="onboardIncomeDesc" class="form-input" placeholder="Gelir adı (örn: Maaş)" onkeydown="if(event.key==='Enter')nextSplash()" maxlength="32" style="margin-bottom:10px;border-radius:14px;font-size:15px;font-weight:600">
-          <div class="ob-input-row">
-            <span class="ob-currency">₺</span>
-            <input type="text" id="onboardIncome" class="form-input" placeholder="0" inputmode="numeric" onkeydown="obNumKey(event)" style="padding-left:38px!important;font-size:32px!important;font-weight:900!important;border-radius:14px!important;letter-spacing:-1px">
+        <div class="ob-tag">Sabit Giderler</div>
+        <div class="ob-title">Sabit giderlerini<br><em>ekle.</em></div>
+        <div class="ob-body">Kira, abonelik, fatura — sonradan daha fazlasını ekleyebilirsin.</div>
+        <div class="ob-input-section" style="margin-top:12px">
+          <div style="display:flex;gap:8px;margin-bottom:8px">
+            <input type="text" id="obRecDesc" class="form-input" placeholder="Gider adı (örn: Kira)" maxlength="32" style="flex:1;border-radius:12px;font-size:14px;font-weight:600" onkeydown="if(event.key==='Enter')obAddRec()">
+            <div style="position:relative;width:130px">
+              <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:900;color:var(--muted);pointer-events:none">₺</span>
+              <input type="text" id="obRecAmount" class="form-input" placeholder="0" inputmode="numeric" onkeydown="obRecNumKey(event)" style="padding-left:28px!important;border-radius:12px;font-size:14px;font-weight:700;width:100%">
+            </div>
+            <button onclick="obAddRec()" style="background:var(--accent);border:none;border-radius:12px;width:44px;height:44px;cursor:pointer;font-size:18px;color:#0A0A0D;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:900">+</button>
           </div>
-          <div class="ob-hint">Sonradan Giderler sekmesinden düzenleyebilirsin.</div>
+          <div id="obRecList" style="display:flex;flex-direction:column;gap:6px;max-height:160px;overflow-y:auto"></div>
+          <div class="ob-hint" style="margin-top:8px">Sonradan Giderler sekmesinden düzenleyebilirsin.</div>
         </div>
       </div>
-
       <!-- SLIDE 7: Birikim hedefi ekle (geçilebilir) -->
       <div class="splash-slide" data-idx="7">
         <div class="ob-tag">İlk hedef</div>
@@ -1155,7 +1158,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
           </div>
           <div class="form-group" style="flex:1">
             <label class="form-label">Taksit Sayısı</label>
-            <input type="number" id="debtInstall" class="form-input" placeholder="12" min="1">
+            <input type="text" id="debtInstall" class="form-input" placeholder="12" inputmode="numeric" onkeydown="if(event.key==='Enter')addDebt()" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
           </div>
         </div>
         <div class="form-group">
@@ -1198,7 +1201,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
           </div>
           <div class="form-group" style="flex:1">
             <label class="form-label">Kaç Ayda?</label>
-            <input type="number" id="goalMonths" class="form-input" placeholder="12" min="1" oninput="calcGoalMonthly()">
+            <input type="text" id="goalMonths" class="form-input" placeholder="12" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');calcGoalMonthly()">
           </div>
         </div>
         <div class="form-group">
@@ -1206,6 +1209,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
           <input type="text" id="goalMonthly" class="form-input" placeholder="Otomatik hesaplanır" onkeydown="if(event.key==='Enter')addGoal()" oninput="fmtInput(this)" inputmode="numeric">
         </div>
         <div style="display:none"></div>
+        <div class="form-group">
+          <label class="form-label">Not <span style="color:var(--muted);font-weight:500">(isteğe bağlı)</span></label>
+          <input type="text" id="goalNote" class="form-input" placeholder="Bu hedef hakkında bir not..." onkeydown="if(event.key==='Enter')addGoal()">
+        </div>
         <button class="btn btn-primary btn-full" onclick="addGoal()">Kaydet</button>
       </div>
       <div id="goalsList"></div>
@@ -1524,7 +1531,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       </div>
       <div class="form-group" style="flex:1">
         <label class="form-label">Taksit sayısı</label>
-        <input type="number" id="editDebtInstall" class="form-input" min="1">
+        <input type="text" id="editDebtInstall" class="form-input" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');updateDebtEditHint()">
       </div>
     </div>
     <div class="form-group">
@@ -1857,12 +1864,72 @@ function daysInMonth(mk) {
   return new Date(y, m, 0).getDate();
 }
 
-function obNumKey(e) {
-  if (e.key === 'Enter') { nextSplash(); return; }
-  const allowed = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'];
+
+// Onboarding geçici sabit gider listesi
+let _obRecs = [];
+function obRecNumKey(e) {
+  if (e.key === 'Enter') { obAddRec(); return; }
+  if (e.key === 'Backspace' || e.key === 'Delete') {
+    setTimeout(() => {
+      const el = e.target;
+      const raw = el.value.replace(/[^0-9]/g, '');
+      el.value = raw ? raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
+    }, 0);
+    return;
+  }
+  const allowed = ['Tab','ArrowLeft','ArrowRight','Home','End'];
   if (allowed.includes(e.key) || e.ctrlKey || e.metaKey) return;
   if (!/^[0-9]$/.test(e.key)) { e.preventDefault(); return; }
-  // Sonraki frame'de formatla
+  setTimeout(() => {
+    const el = e.target;
+    const raw = el.value.replace(/[^0-9]/g, '');
+    el.value = raw ? raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
+  }, 0);
+}
+function obAddRec() {
+  const desc = document.getElementById('obRecDesc')?.value.trim();
+  const amountRaw = document.getElementById('obRecAmount')?.value.replace(/\./g,'');
+  const amount = parseInt(amountRaw) || 0;
+  if (!desc || !amount) { return; }
+  _obRecs.push({ desc, amount });
+  document.getElementById('obRecDesc').value = '';
+  document.getElementById('obRecAmount').value = '';
+  document.getElementById('obRecDesc').focus();
+  renderObRecList();
+}
+function obRemoveRec(i) {
+  _obRecs.splice(i, 1);
+  renderObRecList();
+}
+function renderObRecList() {
+  const el = document.getElementById('obRecList');
+  if (!el) return;
+  if (!_obRecs.length) { el.innerHTML = ''; return; }
+  el.innerHTML = _obRecs.map((r, i) => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px">
+      <span style="font-size:13px;font-weight:700;color:var(--text)">${r.desc}</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:13px;font-weight:800;color:var(--accent)">₺${r.amount.toLocaleString('tr-TR')}</span>
+        <button onclick="obRemoveRec(${i})" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:0;line-height:1">×</button>
+      </div>
+    </div>`).join('');
+}
+
+function obNumKey(e) {
+  if (e.key === 'Enter') { nextSplash(); return; }
+  // Silme tuşlarında sadece ham rakamı sil, yeniden formatlama
+  if (e.key === 'Backspace' || e.key === 'Delete') {
+    setTimeout(() => {
+      const el = e.target;
+      const raw = el.value.replace(/[^0-9]/g, '');
+      if (!raw) { el.value = ''; return; }
+      el.value = raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }, 0);
+    return;
+  }
+  const allowed = ['Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'];
+  if (allowed.includes(e.key) || e.ctrlKey || e.metaKey) return;
+  if (!/^[0-9]$/.test(e.key)) { e.preventDefault(); return; }
   setTimeout(() => {
     const el = e.target;
     const raw = el.value.replace(/[^0-9]/g, '');
@@ -1989,11 +2056,15 @@ function updateSplashDots() {
 function updateSplashBtn() {
   const btn = document.getElementById('splashBtn');
   if (!btn) return;
-  btn.textContent = _splashIdx === _SPLASH_COUNT - 1 ? 'Başla 🚀' : (_splashIdx >= 5 ? 'Geç →' : 'Devam');
+  btn.textContent = _splashIdx === _SPLASH_COUNT - 1 ? 'Başla' : (_splashIdx >= 5 ? 'Geç →' : 'Devam');
   if (_splashIdx >= 5 && _splashIdx < _SPLASH_COUNT - 1) { btn.style.background = 'var(--surface2)'; btn.style.color = 'var(--muted)'; btn.style.boxShadow = 'none'; } else { btn.style.background = ''; btn.style.color = ''; btn.style.boxShadow = ''; }
 }
 
 function finishOnboarding() {
+  // Sabit giderler (slide 5)
+  _obRecs.forEach(r => {
+    data.recurring.push({ id: uid(), desc: r.desc, amount: r.amount, category: 'diger', active: true, paidMonths: [] });
+  });
   // Kasada ne kadar var (slide 4)
   const balance = parseNum(document.getElementById('onboardBalance')?.value || '0');
   if (balance > 0) {
@@ -3682,12 +3753,14 @@ function addGoal() {
   const name = document.getElementById('goalName').value.trim();
   const target = parseNum(document.getElementById('goalTarget').value);
   const monthly = parseNum(document.getElementById('goalMonthly').value);
+  const note = document.getElementById('goalNote')?.value.trim() || '';
   const emoji = document.getElementById('goalEmoji').value || '🎯';
   if (!name || !target) { showToast('⚠️ Ad ve hedef tutar gerekli'); return; }
   data.savingsGoals.push({ id: uid(), name, emoji, target, monthly, deposits: [], paidMonths: [] });
   save();
   document.getElementById('goalName').value = '';
   document.getElementById('goalTarget').value = '';
+  const gn = document.getElementById('goalNote'); if(gn) gn.value = '';
   document.getElementById('goalMonthly').value = '';
   document.getElementById('goalForm').style.display='none'; const gm=document.getElementById('goalMonths'); if(gm)gm.value=''; const gh=document.getElementById('goalMonthlyHint'); if(gh)gh.textContent='';
   showToast('✅ Hedef eklendi');
@@ -4152,22 +4225,7 @@ function renderWishList() {
       </div>` : (w.note ? `
       <div style="margin-top:8px;padding:9px 12px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:10px;font-size:12px;color:var(--muted);font-weight:500;line-height:1.5">${esc(w.note)}</div>` : '');
 
-    // Wish için aylık birikim ilerleme çubuğu
-    const monthlyCapacity = proj.monthlyNeeded || 0;
-    const progressPct = (!isDone && monthlyCapacity > 0 && fb.income > 0)
-      ? Math.min(100, Math.round((Math.max(0, fb.remaining) / monthlyCapacity) * 100))
-      : 0;
-    const progressColor = progressPct >= 100 ? 'var(--accent)' : progressPct >= 50 ? 'var(--warning)' : 'var(--danger)';
-    const progressHtml = (!isDone && monthlyCapacity > 0 && fb.income > 0) ? `
-      <div style="margin-top:8px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <span style="font-size:10px;font-weight:700;color:var(--muted)">Bu ay birikiyor</span>
-          <span style="font-size:10px;font-weight:800;color:${progressColor}">${progressPct}%</span>
-        </div>
-        <div style="height:3px;background:var(--surface3);border-radius:99px;overflow:hidden">
-          <div style="width:${progressPct}%;height:100%;background:${progressColor};border-radius:99px;transition:width .5s ease"></div>
-        </div>
-      </div>` : '';
+    const progressHtml = '';
 
     return `
     <div class="wish-card priority-${w.priority} ${reachableClass}${isDone?' done-item':''}" id="wish_${w.id}" style="${isDone?'opacity:.7':''}" onclick="toggleItemExpand('wish_${w.id}')">
