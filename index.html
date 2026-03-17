@@ -59,9 +59,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s}
 
 /* ONBOARDING */
-.onboard-input-wrap{position:relative;margin-bottom:32px}
-.onboard-input-wrap .currency{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:800;color:var(--muted);pointer-events:none}
-.onboard-input-wrap .form-input{padding-right:36px;font-size:22px;font-weight:800;padding-top:14px;padding-bottom:14px}
 
 
 
@@ -138,8 +135,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 /* ===== WALLET HERO — Apple-style glassmorphism ===== */
 .wallet-hero{position:relative;overflow:hidden;background:linear-gradient(145deg,#141417,#1a1a20);border:1px solid var(--border);border-radius:24px;padding:26px 20px 22px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .wallet-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(45,184,102,.04) 0%,transparent 70%);pointer-events:none}
-.wallet-balance-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
-.wallet-balance{font-size:42px;font-weight:900;letter-spacing:-2px;line-height:1;color:var(--accent);transition:all .3s}
+
 .wallet-sub{font-size:12px;color:var(--muted);font-weight:600;margin-top:8px;display:flex;gap:12px}
 .wallet-sub-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:var(--surface3);border-radius:20px;font-size:11px;font-weight:700}
 .wallet-sub-chip.inc{color:var(--accent)}
@@ -236,12 +232,12 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .tx-icon.expense{background:var(--surface2)}
 .tx-info{flex:1;min-width:0}
 .tx-desc{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tx-cat{font-size:10px;color:var(--muted);font-weight:600;margin-top:1px}
+
 .tx-amount{font-size:13px;font-weight:800;flex-shrink:0;letter-spacing:-.3px}
 .tx-amount.income{color:var(--accent)}
 .tx-amount.expense{color:var(--muted)}
 /* Sadece alarm durumlar kırmızı */
-.tx-amount.expense.over-limit{color:var(--danger)}
+.tx-amount.expense
 
 /* ===== GAMIFICATION STREAK CARD ===== */
 @keyframes streakFlame{0%,100%{transform:scaleY(1) translateY(0)}30%{transform:scaleY(1.08) translateY(-2px)}60%{transform:scaleY(.96) translateY(1px)}}
@@ -276,7 +272,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .streak-best-chip{background:rgba(255,255,255,.06);border-radius:20px;padding:2px 7px;font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.3px}
 
 /* score / savings */
-.streak-score-wrap{padding:0 16px 10px}
+
 
 /* day dots */
 .streak-dots-wrap{padding:0 16px 10px}
@@ -342,11 +338,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .empty-state-sub{font-size:12px;opacity:.6;font-weight:600}
 
 /* ===== DAILY LIMIT BOX ===== */
-.daily-limit-box{background:linear-gradient(145deg,var(--surface),var(--surface2));border:1px solid var(--border);border-radius:24px;padding:22px 20px 26px;margin-bottom:0;position:relative;overflow:hidden}
-.daily-limit-box::before{display:none}
-.daily-limit-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px}
-.daily-limit-amount{font-size:44px;font-weight:900;letter-spacing:-2px;line-height:1}
-.daily-limit-sub{font-size:12px;color:var(--muted);font-weight:600;margin-top:6px}
+
+
+
+
 
 /* ===== COLLAPSIBLE ===== */
 .collapsible-card{padding:0;border-radius:var(--radius);transition:box-shadow .2s}
@@ -415,19 +410,16 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
   border-radius:3px 0 0 3px;
 }
-.wish-card.priority-high::before{background:var(--danger)}
-.wish-card.priority-mid::before{background:var(--purple)}
-.wish-card.priority-low::before{background:var(--muted)}
-.wish-card.reachable{border-color:rgba(191,90,242,.3);background:rgba(191,90,242,.04)}
+.wish-card.wish-card.wish-card.wish-card.reachable{border-color:rgba(191,90,242,.3);background:rgba(191,90,242,.04)}
 
-.wish-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+
 .wish-icon{width:36px;height:36px;border-radius:10px;background:rgba(191,90,242,.12);
   display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .wish-info{flex:1;min-width:0}
 .wish-name{font-size:14px;font-weight:800;color:var(--text);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .wish-price{font-size:13px;font-weight:700;color:var(--purple);margin-top:2px}
-.wish-actions{display:flex;gap:5px;flex-shrink:0}
+
 
 .wish-projection{
   background:var(--surface3);border-radius:10px;
@@ -435,12 +427,12 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 }
 .wish-proj-main{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.4}
 .wish-proj-sub{font-size:11px;font-weight:600;color:var(--muted);line-height:1.4}
-.wish-proj-tip{font-size:11px;font-weight:600;color:rgba(191,90,242,.7);margin-top:4px;line-height:1.4}
 
-.wish-progress-row{display:flex;align-items:center;gap:8px}
-.wish-progress-track{flex:1;height:4px;background:var(--border);border-radius:99px;overflow:hidden}
-.wish-progress-fill{height:100%;border-radius:99px;background:var(--purple);transition:width .5s ease}
-.wish-progress-label{font-size:10px;font-weight:800;color:var(--muted);flex-shrink:0;min-width:28px;text-align:right}
+
+
+
+
+
 
 .wish-priority-badge{
   display:inline-flex;align-items:center;gap:3px;
@@ -502,28 +494,27 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .ozet-stat-val{font-size:16px;font-weight:900;letter-spacing:-.3px}
 .ozet-stat-card.highlight{background:linear-gradient(135deg,rgba(45,184,102,.08),rgba(45,184,102,.03));border-color:rgba(45,184,102,.25)}
 /* Geçen ay karşılaştırma */
-.vs-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;display:flex;flex-direction:column;gap:8px}
-.vs-row{display:flex;align-items:center;justify-content:space-between}
-.vs-label{font-size:12px;font-weight:700;color:var(--muted)}
-.vs-vals{display:flex;align-items:center;gap:8px}
-.vs-current{font-size:14px;font-weight:800;color:var(--text)}
+
+
+
+
+
 .vs-badge{font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px}
 .vs-badge.up{background:rgba(255,69,58,.12);color:var(--danger)}
 .vs-badge.down{background:rgba(45,184,102,.12);color:var(--accent)}
-.vs-badge.neutral{background:var(--surface3);color:var(--muted)}
+.vs-badge
 /* Kategori dağılımı */
-.ozet-cat-list{display:flex;flex-direction:column;gap:6px;margin-top:4px}
-.ozet-cat-row{display:flex;align-items:center;gap:10px}
-.ozet-cat-emoji{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.ozet-cat-name{font-size:12px;font-weight:700;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ozet-cat-bar-wrap{flex:2;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden}
-.ozet-cat-bar-fill{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1)}
-.ozet-cat-amt{font-size:12px;font-weight:800;color:var(--muted);text-align:right;min-width:64px}
+
+
+
+
+
+
+
 /* Tasarruf oranı ring */
-.savings-rate-wrap{display:flex;align-items:center;gap:10px;margin-top:4px}
-.savings-rate-ring{position:relative;width:52px;height:52px;flex-shrink:0}
+
 .savings-rate-ring svg{transform:rotate(-90deg)}
-.savings-rate-ring-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900}
+
 
 /* CHARTS */
 .chart-wrap{position:relative;min-height:180px;height:200px;margin-bottom:8px}
@@ -576,8 +567,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* MOBILE */
 @media(max-width:400px){
-  .wallet-balance{font-size:36px}
-  .daily-limit-amount{font-size:38px}
+    
   .ozet-hero-balance{font-size:42px}
 }
 
@@ -603,27 +593,24 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .hero-top::after{display:none}
 .hero-label{font-size:10px;font-weight:800;color:rgba(45,184,102,.55);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;text-shadow:0 0 12px rgba(45,184,102,.3)}
 .hero-balance{font-size:54px;font-weight:900;letter-spacing:-3px;line-height:1;margin-bottom:14px;text-shadow:0 2px 20px rgba(0,0,0,.4)}
-.hero-chips{display:flex;gap:8px}
+
 .hero-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:800;letter-spacing:.1px}
 .hero-chip.inc{background:rgba(45,184,102,.12);color:var(--accent);border:1px solid rgba(45,184,102,.25);box-shadow:0 0 12px rgba(45,184,102,.1)}
 .hero-chip.exp{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid rgba(255,255,255,.07)}
-.hero-top-left{flex:1}
+
 .hero-top{display:flex;align-items:flex-start;justify-content:space-between}
-.hero-saving-badge{border:1.5px solid;border-radius:14px;padding:8px 12px;text-align:center;min-width:60px;flex-shrink:0;margin-top:4px}
-.hero-saving-pct{font-size:20px;font-weight:900;letter-spacing:-.5px;line-height:1}
-.hero-saving-label{font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
-.hero-divider{height:1px;background:linear-gradient(90deg,transparent 0%,rgba(45,184,102,.35) 30%,rgba(45,184,102,.15) 70%,transparent 100%);margin:0}
-.hero-bottom{padding:20px 24px 26px;position:relative;z-index:2}
-.hero-bottom-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
-.hero-free{font-size:32px;font-weight:900;letter-spacing:-1.2px;line-height:1.1;margin-bottom:5px}
-.hero-free-sub{font-size:12px;color:var(--muted);font-weight:600}
-.hero-bar-track{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin-bottom:18px}
-.hero-bar-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.4,0,.2,1);box-shadow:0 0 8px rgba(45,184,102,.4)}
-.hero-stats{display:grid;grid-template-columns:1fr auto 1fr auto 1fr}
-.hero-stat{text-align:center}
-.hero-stat-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.hero-stat-val{font-size:15px;font-weight:900;letter-spacing:-.4px}
-.hero-stat-divider{width:1px;background:var(--border);margin:0 4px}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* ===== TX ACTION ===== */
@@ -658,15 +645,15 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .ham-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;transition:background .15s;-webkit-tap-highlight-color:transparent}
 .ham-item:active{background:var(--surface2)}
 .ham-item.danger{color:var(--danger)}
-.ham-item-icon{font-size:16px;width:20px;text-align:center}
-.ham-divider{height:1px;background:var(--border);margin:4px 0}
+
+
 
 /* ===== TX ACTION BUTTONS ===== */
 .tx-action-btn{display:none;padding:5px 10px;border-radius:8px;border:none;font-size:11px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;opacity:0;transform:scale(.8);transition:opacity .18s,transform .18s;pointer-events:none;white-space:nowrap}
 .tx-action-btn.show{display:inline-block;opacity:1;transform:scale(1);pointer-events:auto}
 .edit-btn{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
 .del-btn{background:var(--danger);color:#fff}
-.tx-delete-btn{display:none!important} /* eski class artık yok */
+ /* eski class artık yok */
 
 /* ===== ITEM EXPAND ACTIONS (rec/debt/goal/wish) ===== */
 .item-actions-row{
@@ -767,13 +754,12 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .btn:active{transform:scale(.94) !important;opacity:.85}
 .tab-btn:active{transform:scale(.9)}
 .year-month-header:active{transform:scale(.98)}
-.rec-item:active,.debt-item:active,.goal-item:active{transition:background .1s}
-.hero-chip:active{transform:scale(.92);transition:transform .1s}
+.rec-item:active,.debt-item:active,.hero-chip:active{transform:scale(.92);transition:transform .1s}
 /* Kart stagger giriş animasyonu */
 @keyframes staggerIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 .stagger-item{opacity:0;animation:staggerIn .35s cubic-bezier(.4,0,.2,1) both}
 /* Sayı pop */
-.num-flash{animation:numFlash .4s cubic-bezier(.4,0,.2,1)}
+
 @keyframes numFlash{0%{opacity:.3;transform:scale(.92)}60%{transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}
 
 /* ── Onboarding Splash ── */
@@ -876,10 +862,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .ob-gc-pct{font-size:10px;font-weight:800;color:var(--accent);margin-top:4px}
 
 /* Streak */
-.ob-streak-visual{display:flex;flex-direction:column;align-items:center;margin-bottom:20px;animation:obFadeIn .5s ease .05s both;}
-.ob-flame{font-size:64px;line-height:1;animation:streakBounce .6s cubic-bezier(.34,1.4,.64,1) .1s both,iconFloat 3s ease-in-out 1s infinite;filter:drop-shadow(0 0 16px rgba(255,149,0,.45))}
-.ob-streak-num{font-size:60px;font-weight:900;letter-spacing:-3px;line-height:1;color:var(--warning);animation:obFadeUp .5s cubic-bezier(.4,0,.2,1) .3s both;}
-.ob-streak-label{font-size:12px;font-weight:700;color:var(--muted);margin-top:4px;animation:obFadeUp .5s both .4s}
+
+
+
+
 
 /* Input */
 .ob-input-section{width:100%;padding:0 24px;margin-top:20px;animation:obFadeUp .5s both .15s}
@@ -1140,6 +1126,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         </div>
       </div>
       <div class="collapse-right">
+        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();toggleTxSection()" style="margin-right:4px"><span id="txExpandLabel">Tümü</span></button>
         <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();openHistory()">Geçmiş →</button>
       </div>
     </div>
@@ -1172,12 +1159,12 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       <div id="recForm" style="display:none;margin-bottom:14px;padding:12px;background:var(--surface2);border-radius:var(--radius-sm)">
         <div class="form-group">
           <label class="form-label">Açıklama</label>
-          <input type="text" id="recDesc" class="form-input" onkeydown="if(event.key==='Enter')addRec()" placeholder="Kira, Netflix..." oninput="suggestRecCategory()">
+          <input type="text" id="recDesc" class="form-input" onkeydown="if(event.key==='Enter')addRecurring()" placeholder="Kira, Netflix..." oninput="suggestRecCategory()">
         </div>
         <div style="display:flex;gap:8px">
           <div class="form-group" style="flex:1">
             <label class="form-label">Tutar</label>
-            <input type="text" id="recAmount" class="form-input" onkeydown="if(event.key==='Enter')addRec()" placeholder="0" oninput="fmtInput(this)" inputmode="numeric">
+            <input type="text" id="recAmount" class="form-input" onkeydown="if(event.key==='Enter')addRecurring()" placeholder="0" oninput="fmtInput(this)" inputmode="numeric">
           </div>
           <div class="form-group" style="flex:1">
             <label class="form-label">Kategori</label>
@@ -1311,6 +1298,11 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
               <option value="low">💭 Rüya</option>
             </select>
           </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Emoji</label>
+          <input type="hidden" id="wishEmojiHidden" value="🎯">
+          <div id="wishEmojiPicker" style="display:flex;flex-wrap:wrap;gap:6px;padding:8px;background:var(--surface3);border-radius:var(--radius-xs);border:1.5px solid var(--border)"></div>
         </div>
         <button class="btn btn-primary btn-full" style="background:var(--purple);box-shadow:0 4px 16px rgba(191,90,242,.25)" onclick="addWish()">Ekle</button>
       </div>
@@ -1590,7 +1582,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       </div>
       <div class="form-group" style="flex:1">
         <label class="form-label">Taksit sayısı</label>
-        <input type="text" id="editDebtInstall" class="form-input" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');updateDebtEditHint()">
+        <input type="text" id="editDebtInstall" class="form-input" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');updateDebtMonthlyHint()">
       </div>
     </div>
     <div class="form-group">
@@ -1630,6 +1622,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   <div class="modal-sheet" style="position:relative">
     <button class="modal-close" onclick="closeWishEdit()">×</button>
     <div class="modal-title">Hedefi Düzenle</div>
+    <input type="hidden" id="editWishEmoji" value="🎯">
     <div class="form-group">
       <label class="form-label">Ne almak istiyorsun?</label>
       <input type="text" id="editWishName" class="form-input">
@@ -1647,6 +1640,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
           <option value="low">💭 Rüya</option>
         </select>
       </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Emoji</label>
+      <div id="editWishEmojiPicker" style="display:flex;flex-wrap:wrap;gap:6px;padding:8px;background:var(--surface2);border-radius:var(--radius-sm);border:1.5px solid var(--border)"></div>
     </div>
     <div class="form-group">
       <label class="form-label">Not</label>
@@ -1923,59 +1920,6 @@ function daysInMonth(mk) {
   return new Date(y, m, 0).getDate();
 }
 
-
-// Onboarding geçici sabit gider listesi
-let _obRecs = [];
-function obRecNumKey(e) {
-  if (e.key === 'Enter') { obAddRec(); return; }
-  if (e.key === 'Backspace' || e.key === 'Delete') {
-    setTimeout(() => {
-      const el = e.target;
-      const raw = el.value.replace(/[^0-9]/g, '');
-      el.value = raw ? raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
-    }, 0);
-    return;
-  }
-  const allowed = ['Tab','ArrowLeft','ArrowRight','Home','End'];
-  if (allowed.includes(e.key) || e.ctrlKey || e.metaKey) return;
-  if (!/^[0-9]$/.test(e.key)) { e.preventDefault(); return; }
-  setTimeout(() => {
-    const el = e.target;
-    const raw = el.value.replace(/[^0-9]/g, '');
-    el.value = raw ? raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
-  }, 0);
-}
-function obAddRec() {
-  const desc = document.getElementById('obRecDesc')?.value.trim();
-  const amountRaw = document.getElementById('obRecAmount')?.value.replace(/\./g,'');
-  const amount = parseInt(amountRaw) || 0;
-  if (!desc || !amount) { return; }
-  _obRecs.push({ desc, amount });
-  document.getElementById('obRecDesc').value = '';
-  document.getElementById('obRecAmount').value = '';
-  document.getElementById('obRecDesc').focus();
-  renderObRecList();
-  updateSplashBtn();
-}
-function obRemoveRec(i) {
-  _obRecs.splice(i, 1);
-  renderObRecList();
-  updateSplashBtn();
-}
-function renderObRecList() {
-  const el = document.getElementById('obRecList');
-  if (!el) return;
-  if (!_obRecs.length) { el.innerHTML = ''; return; }
-  el.innerHTML = _obRecs.map((r, i) => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px">
-      <span style="font-size:13px;font-weight:700;color:var(--text)">${r.desc}</span>
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:13px;font-weight:800;color:var(--accent)">₺${r.amount.toLocaleString('tr-TR')}</span>
-        <button onclick="obRemoveRec(${i})" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:0;line-height:1">×</button>
-      </div>
-    </div>`).join('');
-}
-
 function obNumKey(e) {
   if (e.key === 'Enter') { nextSplash(); return; }
   // Silme tuşlarında sadece ham rakamı sil, yeniden formatlama
@@ -2183,6 +2127,7 @@ function switchTab(id, btn) {
   const next = document.getElementById('tab-' + id);
   if (next) next.classList.add('active');
   if (btn) btn.classList.add('active');
+  if (id !== 'aylik') stopCarousel();
   currentTab = id;
   if (id === 'aylik') renderMonthly();
   if (id === 'sabit') { renderSabit(); updateCollapseSummaries(); }
@@ -2926,9 +2871,6 @@ function showCarouselItem(idx) {
   if (!el || !_carouselItems.length) return;
   const item = _carouselItems[idx];
   const total = _carouselItems.length;
-  const darkColor  = item.cls === 'good' ? 'rgba(28,40,33,1)'  : item.cls === 'warn' ? 'rgba(38,34,16,1)'  : 'rgba(38,20,18,1)';
-  const lightColor = item.cls === 'good' ? 'rgba(40,58,46,.9)' : item.cls === 'warn' ? 'rgba(58,50,18,.9)' : 'rgba(58,28,24,.9)';
-
   el.className = `insight-carousel ${item.cls}`;
   el.innerHTML = `
     <div class="insight-card ${item.cls}" style="cursor:pointer" onclick="carouselNav(1)">
@@ -3092,8 +3034,9 @@ document.addEventListener('touchend', e => {
   }
 }, { passive: true });
 
-// Form dışına tıklayınca boş formları kapat
+// Form dışına tıklayınca boş formları kapat + hamburger kapat
 document.addEventListener('click', e => {
+  // Boş formları kapat
   const forms = [
     { id: 'recForm',  emptyCheck: () => !document.getElementById('recDesc')?.value.trim() && !document.getElementById('recAmount')?.value.trim() },
     { id: 'debtForm', emptyCheck: () => !document.getElementById('debtName')?.value.trim() && !document.getElementById('debtTotal')?.value.trim() },
@@ -3104,9 +3047,11 @@ document.addEventListener('click', e => {
     const form = document.getElementById(id);
     if (!form || form.style.display !== 'block') return;
     if (form.contains(e.target)) return;
-    if (!emptyCheck()) return; // dolu form kapatılmasın
+    if (!emptyCheck()) return;
     form.style.display = 'none';
   });
+  // Hamburger menüyü kapat
+  if (!e.target.closest('.hamburger-btn') && !e.target.closest('.hamburger-menu')) closeHamburger();
 });
 
 function _wasTap() {
@@ -3882,7 +3827,7 @@ function renderGoalsList() {
   }
   el.innerHTML = data.savingsGoals.map(g => {
     const total = g.deposits.reduce((s,d)=>s+d.amount,0);
-    const pct = Math.min(100,Math.round((total/g.target)*100));
+    const pct = Math.min(100, g.target > 0 ? Math.round((total/g.target)*100) : 0);
     const isMonthlyPaid = (g.paidMonths||[]).includes(mk);
     const barColor = pct>=100?'var(--accent)':pct>=60?'var(--warning)':'var(--blue)';
     return `<div class="goal-card" id="goalitem_${g.id}" onclick="toggleItemExpand('goalitem_${g.id}')">
@@ -3965,7 +3910,7 @@ function saveDepositModal() {
   data.transactions.push({ id: uid(), type: 'expense', desc: g.emoji + ' ' + g.name, amount, date: today(), category: 'diger', isGoalDeposit: true, goalId: _depositGoalId });
 
   const total = g.deposits.reduce((s,d) => s + d.amount, 0);
-  const pct = Math.min(100, Math.round((total / g.target) * 100));
+  const pct = Math.min(100, g.target > 0 ? Math.round((total / g.target) * 100) : 0);
   const celebData = total >= g.target ? {
     emoji: g.emoji || '🏆',
     title: 'Hedefe Ulaştın!',
@@ -4030,14 +3975,20 @@ function toggleWishForm() {
   const f = document.getElementById('wishForm');
   const isOpen = f.style.display === 'block';
   f.style.display = isOpen ? 'none' : 'block';
-  if (!isOpen) setTimeout(() => document.getElementById('wishName')?.focus(), 100);
+  if (!isOpen) {
+    buildWishEmojiPicker('wishEmojiPicker', 'wishEmojiHidden', '🎯');
+    document.getElementById('wishEmojiHidden').value = '🎯';
+    setTimeout(() => document.getElementById('wishName')?.focus(), 100);
+  }
 }
 
 function addWish() {
   const name = document.getElementById('wishName').value.trim();
   const price = parseNum(document.getElementById('wishPrice').value);
   const priority = document.getElementById('wishPriority').value || 'mid';
-  data.wishlist.push({ id: uid(), name, price, priority, createdAt: today() });
+  const emoji = document.getElementById('wishEmojiHidden')?.value || '🎯';
+  if (!name || !price) { showToast('⚠️ Ad ve fiyat gerekli'); return; }
+  data.wishlist.push({ id: uid(), name, price, priority, emoji, createdAt: today() });
   save();
   document.getElementById('wishName').value = '';
   document.getElementById('wishPrice').value = '';
@@ -4097,7 +4048,8 @@ function saveWishEdit() {
   const price = parseNum(document.getElementById('editWishPrice').value);
   const priority = document.getElementById('editWishPriority').value;
   const note = document.getElementById('editWishNote').value;
-  w.name = name; w.price = price; w.priority = priority; w.note = note;
+  const emoji = document.getElementById('editWishEmoji').value || w.emoji || '🎯';
+  w.name = name; w.price = price; w.priority = priority; w.note = note; w.emoji = emoji;
   save(); closeWishEdit(); renderAll();
   showToast('✅ Hedef güncellendi');
 }
@@ -5401,20 +5353,10 @@ function saveKeywords() {
 }
 
 // ===== DRAG & DROP SECTIONS =====
-function toggleHamburger() {
-  const menu = document.getElementById('hamburgerMenu');
-  const btn = document.getElementById('hamburgerBtn');
-  menu.classList.toggle('open');
-  btn.classList.toggle('active');
-}
 function closeHamburger() {
   document.getElementById('hamburgerMenu')?.classList.remove('open');
   document.getElementById('hamburgerBtn')?.classList.remove('active');
 }
-// Dışarı tıklayınca kapat
-document.addEventListener('click', e => {
-  if (!e.target.closest('.hamburger-btn') && !e.target.closest('.hamburger-menu')) closeHamburger();
-});
 function init() {
   load();
   const dateEl = document.getElementById('txDate');
