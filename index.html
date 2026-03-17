@@ -961,13 +961,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       </div>
       <div class="form-group" style="flex:1">
         <label class="form-label">Tarih</label>
-        <div style="position:relative">
-          <div class="form-input" style="display:flex;align-items:center;justify-content:space-between;user-select:none;pointer-events:none">
-            <span id="txDateLabel">—</span>
-            <span style="opacity:.4"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
-          </div>
-          <input type="date" id="txDate" onchange="updateTxDateLabel()" style="position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:none;background:transparent">
-        </div>
+        <input type="date" id="txDate" class="form-input" onchange="updateTxDateLabel()">
       </div>
     </div>
     <div class="form-group">
@@ -3057,7 +3051,6 @@ function addTransaction() {
   document.getElementById('txDesc').value = '';
   document.getElementById('txAmount').value = '';
   document.getElementById('txDate').value = today();
-  updateTxDateLabel();
 
   document.getElementById('txCategory').value = currentType === 'income' ? 'gelir' : 'market';
   setType(currentType);
@@ -5362,22 +5355,10 @@ function saveKeywords() {
 }
 
 // ===== DRAG & DROP SECTIONS =====
-function fmtDateShort(dateStr) {
-  if (!dateStr) return '—';
-  const d = new Date(dateStr + 'T00:00:00');
-  return d.getDate() + ' ' + MONTH_NAMES[d.getMonth()];
-}
-
-function updateTxDateLabel() {
-  const val = document.getElementById('txDate')?.value;
-  const label = document.getElementById('txDateLabel');
-  if (label) label.textContent = val ? fmtDateShort(val) : '—';
-}
-
 function init() {
   load();
   const dateEl = document.getElementById('txDate');
-  if (dateEl) { dateEl.value = today(); updateTxDateLabel(); }
+  if (dateEl) dateEl.value = today();
   populateCatSelects();
   updateAppLogo();
   const initCat = document.getElementById('txCategory');
@@ -5394,4 +5375,3 @@ init();
 </script>
 </body>
 </html>
-  
