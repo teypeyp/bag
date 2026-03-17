@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>VAULT V6</title>
+<title>VAULT</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="VAULT">
@@ -955,12 +955,12 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     </div>
     <div class="form-group">
       <label class="form-label">Açıklama</label>
-      <input type="text" id="txDesc" class="form-input" oninput="autoDetectCategory(this.value)" onkeydown="if(event.key==='Enter')addTransaction()" placeholder="Ne için?" autocomplete="off" autocorrect="off" autocapitalize="off">
+      <input type="text" id="txDesc" class="form-input" oninput="autoDetectCategory(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('txAmount').focus();}" placeholder="Ne için?" autocomplete="off" autocorrect="off" autocapitalize="off" enterkeyhint="next">
     </div>
     <div style="display:flex;gap:8px">
       <div class="form-group" style="flex:1">
         <label class="form-label">Tutar</label>
-        <input type="text" id="txAmount" class="form-input" placeholder="0" oninput="fmtInput(this)" inputmode="numeric" onkeydown="if(event.key==='Enter')addTransaction()" autocomplete="off">
+        <input type="text" id="txAmount" class="form-input" placeholder="0" oninput="fmtInput(this)" inputmode="numeric" onkeydown="if(event.key==='Enter'){event.preventDefault();addTransaction();}" autocomplete="off" enterkeyhint="done">
       </div>
       <div class="form-group" style="flex:1">
         <label class="form-label">Tarih</label>
@@ -1561,7 +1561,6 @@ let data = {
   savingsGoals: [],
   wishlist: [],
   categories: [],
-  startingBalance: 0,
   onboarded: false,
   walletName: '',
   monthlyTargets: {},
@@ -1571,7 +1570,6 @@ let data = {
     freezesUsed: 0,
     freezeTotal: 2,
     frozenDays: [],
-    lastEvaluatedDate: '',
     lastWeeklyFreezeGift: '',
     lastFreezeResetMonth: ''
   }
@@ -1707,7 +1705,7 @@ function load() {
       if (!Array.isArray(data.wishlist)) data.wishlist = [];
       if (!Array.isArray(data.categories)) data.categories = [];
       // Streak migration
-      if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastEvaluatedDate:'', lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
+      if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
       if (!data.streak.frozenDays) data.streak.frozenDays = [];
       if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
       if (data.streak.lastWeeklyFreezeGift === undefined) data.streak.lastWeeklyFreezeGift = '';
@@ -2342,8 +2340,7 @@ function _stopConfetti() {
 // =================== CALCULATE ===================
 function calcBalance() {
   if (!Array.isArray(data.transactions)) data.transactions = [];
-  return (data.startingBalance || 0) +
-    data.transactions.reduce((s, t) => t.type === 'income' ? s + t.amount : s - t.amount, 0);
+  return data.transactions.reduce((s, t) => t.type === 'income' ? s + t.amount : s - t.amount, 0);
 }
 
 function calcMonthData(mk) {
@@ -2459,8 +2456,6 @@ function renderMonthly() {
   const monthTxs = data.transactions.filter(t => monthKey(t.date) === mk);
   renderTxList(document.getElementById('txList'), monthTxs.slice().reverse(), true);
   updateTxSectionSummary(monthTxs);
-  populateCatSelects();
-  renderFinancialAdvice();
 }
 
 function renderWalletHero(balance, fb) {
@@ -2892,8 +2887,7 @@ document.addEventListener('click', e => {
     if (!emptyCheck()) return;
     form.style.display = 'none';
   });
-  // Hamburger menüyü kapat
-  if (!e.target.closest('.hamburger-btn') && !e.target.closest('.hamburger-menu')) closeHamburger();
+
 });
 
 function _wasTap() {
@@ -5085,7 +5079,10 @@ function populateCatSelects() {
   const cats = allCategories();
   // Gider seçimlerinden gelir kategorisini çıkar
   const expenseCats = cats.filter(c => c.id !== 'gelir');
-  const allOpts = cats.map(c => `<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');
+  const allOpts = cats.map(c => {
+    if (c.id === 'gelir') return `<option value="${c.id}">${c.name}</option>`;
+    return `<option value="${c.id}">${c.emoji} ${c.name}</option>`;
+  }).join('');
   const expenseOpts = expenseCats.map(c => `<option value="${c.id}">${c.emoji} ${c.name}</option>`).join('');
   // txCategory: type'a göre filtrele
   const txCat = document.getElementById('txCategory');
@@ -5201,7 +5198,7 @@ function importData(input) {
       if (!Array.isArray(data.debts)) data.debts = [];
       if (!Array.isArray(data.savingsGoals)) data.savingsGoals = [];
       if (!Array.isArray(data.wishlist)) data.wishlist = [];
-      if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastEvaluatedDate:'', lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
+      if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
       if (!Array.isArray(data.streak.frozenDays)) data.streak.frozenDays = [];
       if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
       if (!data.monthlyTargets || typeof data.monthlyTargets !== 'object') data.monthlyTargets = {};
@@ -5356,9 +5353,6 @@ function saveKeywords() {
 }
 
 // ===== DRAG & DROP SECTIONS =====
-function closeHamburger() {
-  document.getElementById('hamburgerBtn')?.classList.remove('active');
-}
 function init() {
   load();
   const dateEl = document.getElementById('txDate');
