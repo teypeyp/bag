@@ -132,11 +132,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 /* ===== FEEDBACK INSIGHT / CAROUSEL ===== */
 @keyframes insightIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes insightOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
-@keyframes insightFadeRight{
-  0%{opacity:0;background-position:100% 0}
-  15%{opacity:.15}
-  100%{opacity:.55;background-position:0% 0}
-}
 .insight-carousel{border-radius:var(--radius-sm);overflow:hidden;margin-bottom:12px;height:58px}
 .insight-card{padding:0;display:flex;flex-direction:column;height:58px}
 .insight-card.good{background:var(--accent-dim)}
@@ -2227,6 +2222,7 @@ let _lastBalance = null;
 let _carouselTimer = null;
 let _carouselIndex = 0;
 let _carouselItems = [];
+let _overlayAnim = null;
 const CAROUSEL_DURATION = 10000;
 
 function animateCount(el, fromVal, toVal, duration = 2500) {
@@ -2529,8 +2525,8 @@ function showCarouselItem(idx) {
   if (!el || !_carouselItems.length) return;
   const item = _carouselItems[idx];
   const total = _carouselItems.length;
-  const barColor = item.cls === 'good' ? 'var(--accent)' : item.cls === 'warn' ? 'var(--warning)' : 'var(--danger)';
-  const overlayColor = item.cls === 'good' ? 'rgba(45,184,102,.18)' : item.cls === 'warn' ? 'rgba(255,214,10,.15)' : 'rgba(255,69,58,.18)';
+  const darkColor  = item.cls === 'good' ? 'rgba(45,184,102,.28)'  : item.cls === 'warn' ? 'rgba(255,214,10,.24)'  : 'rgba(255,69,58,.28)';
+  const lightColor = item.cls === 'good' ? 'rgba(180,255,215,.22)' : item.cls === 'warn' ? 'rgba(255,248,180,.20)' : 'rgba(255,200,195,.22)';
 
   el.className = 'insight-carousel';
   el.innerHTML = `
@@ -2542,15 +2538,29 @@ function showCarouselItem(idx) {
           <div class="insight-sub">${item.sub}</div>
         </div>
       </div>
-      <div id="insightOverlay" style="position:absolute;inset:0;z-index:0;pointer-events:none;
-        background:linear-gradient(to left, ${overlayColor} 0%, transparent 70%);
-        background-size:200% 100%;background-position:100% 0;
-        opacity:0;animation:insightFadeRight ${CAROUSEL_DURATION}ms ease-out forwards"></div>
+      <div id="insightOverlay" style="position:absolute;inset:0;z-index:0;pointer-events:none"></div>
     </div>`;
 
-
-
-
+  // Zemin koyu sabit, açık renk soldan sağa süpürüyor — geniş yayılım
+  if (_overlayAnim) { cancelAnimationFrame(_overlayAnim); _overlayAnim = null; }
+  const overlay = document.getElementById('insightOverlay');
+  if (overlay) {
+    overlay.style.background = darkColor; // koyu zemin hemen görünsün
+    const startTime = performance.now();
+    function animOverlay(now) {
+      const progress = Math.min((now - startTime) / CAROUSEL_DURATION, 1);
+      // Açık renk sağa ilerliyor; band 80% genişliğinde — yumuşak yayılım
+      const front = progress * 130 - 15; // -15 → 115
+      const tail  = front - 80;
+      overlay.style.background = `linear-gradient(to right,
+        ${darkColor} 0%,
+        ${darkColor} ${Math.max(0, tail)}%,
+        ${lightColor} ${Math.min(Math.max(0, front), 100)}%,
+        ${darkColor} 100%)`;
+      if (progress < 1) _overlayAnim = requestAnimationFrame(animOverlay);
+    }
+    _overlayAnim = requestAnimationFrame(animOverlay);
+  }
 }
 
 function carouselNav(dir) {
@@ -2584,6 +2594,7 @@ function startCarousel() {
 
 function stopCarousel() {
   if (_carouselTimer) { clearInterval(_carouselTimer); _carouselTimer = null; }
+  if (_overlayAnim) { cancelAnimationFrame(_overlayAnim); _overlayAnim = null; }
 }
 
 let _txListExpanded = false; // false = son 5, true = tümü
