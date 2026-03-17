@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>VAULT V4</title>
+<title>VAULT V3</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BAGIT">
@@ -40,12 +40,13 @@
   --shadow:0 4px 24px rgba(0,0,0,.4);--shadow-lg:0 12px 48px rgba(0,0,0,.6);
 }
 html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased;overflow:hidden}#appWrap{max-width:520px;margin:0 auto;height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:104px}
-::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar{width:0;height:0;display:none}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+::-webkit-scrollbar-thumb{background:transparent}
 
 /* ANIMATIONS */
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes dlFillIn{from{opacity:0}to{opacity:1}}
+
 @keyframes tabEnter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes popIn{0%{opacity:0;transform:scale(.82)}55%{transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
 @keyframes tikPop{0%{transform:scale(1)}35%{transform:scale(1.55)}65%{transform:scale(.88)}100%{transform:scale(1)}}
@@ -134,9 +135,9 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 @keyframes insightOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
 .insight-carousel{border-radius:var(--radius-sm);overflow:hidden;margin-bottom:12px;height:58px}
 .insight-card{padding:0;display:flex;flex-direction:column;height:58px}
-.insight-card.good{background:var(--accent-dim)}
-.insight-card.warn{background:var(--warning-dim)}
-.insight-card.bad{background:var(--danger-dim)}
+.insight-card.good{background:color-mix(in srgb,var(--surface2) 85%,var(--accent) 15%)}
+.insight-card.warn{background:color-mix(in srgb,var(--surface2) 85%,var(--warning) 15%)}
+.insight-card.bad{background:color-mix(in srgb,var(--surface2) 85%,var(--danger) 15%)}
 .insight-card-inner{padding:7px 12px 6px;flex:1;display:flex;align-items:center;gap:10px;animation:insightIn .3s ease;overflow:hidden}
 .insight-title{font-size:13px;font-weight:800;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .insight-sub{font-size:11px;font-weight:600;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -577,7 +578,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 /* app-header position handled above */
 .cat-add-btn{background:none;border:1.5px solid var(--border);border-radius:20px;color:var(--muted);font-size:12px;font-weight:700;padding:6px 12px;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;-webkit-tap-highlight-color:transparent}
 .cat-add-btn:active{background:var(--surface2);color:var(--text)}
-.hamburger-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:38px;height:38px}
+.hamburger-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:38px;height:38px;background:none!important;border:none!important}
 .ham-line{width:18px;height:2px;background:var(--text);border-radius:2px;transition:transform .25s,opacity .25s}
 .hamburger-btn.active .ham-line:nth-child(1){transform:translateY(7px) rotate(45deg)}
 .hamburger-btn.active .ham-line:nth-child(2){opacity:0}
@@ -658,6 +659,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   100% { transform:scale(1); }
 }
 .hero-balance.animating { animation: balancePop .4s cubic-bezier(.34,1.56,.64,1); }
+.ozet-stat-val.animating { animation: balancePop .4s cubic-bezier(.34,1.56,.64,1); }
+.ozet-hero-balance.animating { animation: balancePop .5s cubic-bezier(.34,1.56,.64,1); }
 .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
 .chart-card-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px}
 .chart-card-title{font-size:13px;font-weight:800;color:var(--text);letter-spacing:-.2px}
@@ -828,25 +831,9 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   <div class="app-logo" onclick="switchTab('aylik', document.querySelector('.tab-btn'))" style="cursor:pointer" id="appLogo">Vault</div>
   <div class="header-actions">
     <button class="cat-add-btn" onclick="openCategories()">+ Kategori</button>
-    <button class="icon-btn hamburger-btn" onclick="toggleHamburger()" id="hamburgerBtn">
+    <button class="icon-btn hamburger-btn" onclick="openSettings()" id="hamburgerBtn">
       <span class="ham-line"></span><span class="ham-line"></span><span class="ham-line"></span>
     </button>
-  </div>
-  <!-- Hamburger Dropdown -->
-  <div class="hamburger-menu" id="hamburgerMenu">
-    <div class="ham-item" onclick="openSettings();closeHamburger()">
-      <span class="ham-item-icon">⚙️</span>Ayarlar
-    </div>
-    <div class="ham-item" onclick="exportData();closeHamburger()">
-      <span class="ham-item-icon">📤</span>Dışa Aktar
-    </div>
-    <div class="ham-item" onclick="document.getElementById('importFile').click();closeHamburger()">
-      <span class="ham-item-icon">📥</span>İçe Aktar
-    </div>
-    <div class="ham-divider"></div>
-    <div class="ham-item danger" onclick="resetAll();closeHamburger()">
-      <span class="ham-item-icon">🗑</span>Sıfırla
-    </div>
   </div>
 </div>
 
@@ -1231,7 +1218,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 <div class="modal-overlay" id="catModal" onclick="if(event.target===this)closeCatModal()">
   <div class="modal-sheet" style="position:relative">
     <button class="modal-close" onclick="closeCatModal()">×</button>
-    <div class="modal-title">🏷️ Kategoriler</div>
+    <div class="modal-title">Kategoriler</div>
     <div id="catList"></div>
 
     <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--border)">
@@ -1823,9 +1810,14 @@ function switchTab(id, btn) {
     renderOzetStats();
     Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
     charts = {};
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      setTimeout(() => { renderCharts(); renderYillik(); }, 60);
-    }));
+    requestAnimationFrame(() => {
+      ['barChart','doughnutChart','lineChart'].forEach(cid => {
+        const el = document.getElementById(cid);
+        if (el) { const f = document.createElement('canvas'); f.id = cid; el.parentNode.replaceChild(f, el); }
+      });
+      setupChartObservers();
+      renderYillik();
+    });
   }
 }
 
@@ -2225,12 +2217,12 @@ let _carouselItems = [];
 let _overlayAnim = null;
 const CAROUSEL_DURATION = 10000;
 
-function animateCount(el, fromVal, toVal, duration = 2500) {
+function animateCount(el, fromVal, toVal, duration = 2500, keepColor = false) {
   if (!el) return;
   const startTime = performance.now();
-  const color = toVal >= 0 ? 'var(--accent)' : 'var(--danger)';
+  const fixedColor = keepColor ? el.style.color : null;
+  const endColor = fixedColor || (toVal >= 0 ? 'var(--accent)' : 'var(--danger)');
 
-  // Pop animasyonu
   el.classList.remove('animating');
   void el.offsetWidth;
   el.classList.add('animating');
@@ -2238,16 +2230,14 @@ function animateCount(el, fromVal, toVal, duration = 2500) {
   function step(now) {
     const elapsed = now - startTime;
     const progress = Math.min(elapsed / duration, 1);
-    // easeOutExpo: hızlı başlar, sonlara doğru belirgin yavaşlar
     const ease = progress === 1 ? 1 : 1 - Math.pow(2, -12 * progress);
-    // fromVal → toVal arasında doğrusal interpolasyon (işaret dahil)
     const current = Math.round(fromVal + (toVal - fromVal) * ease);
     el.textContent = fmtTL(current);
-    el.style.color = current >= 0 ? 'var(--accent)' : 'var(--danger)';
+    if (!keepColor) el.style.color = current >= 0 ? 'var(--accent)' : 'var(--danger)';
     if (progress < 1) requestAnimationFrame(step);
     else {
       el.textContent = fmtTL(toVal);
-      el.style.color = color;
+      el.style.color = endColor;
       el.classList.remove('animating');
     }
   }
@@ -2525,8 +2515,8 @@ function showCarouselItem(idx) {
   if (!el || !_carouselItems.length) return;
   const item = _carouselItems[idx];
   const total = _carouselItems.length;
-  const darkColor  = item.cls === 'good' ? 'rgba(45,184,102,.28)'  : item.cls === 'warn' ? 'rgba(255,214,10,.24)'  : 'rgba(255,69,58,.28)';
-  const lightColor = item.cls === 'good' ? 'rgba(180,255,215,.22)' : item.cls === 'warn' ? 'rgba(255,248,180,.20)' : 'rgba(255,200,195,.22)';
+  const darkColor  = item.cls === 'good' ? 'rgba(28,40,33,1)'  : item.cls === 'warn' ? 'rgba(38,34,16,1)'  : 'rgba(38,20,18,1)';
+  const lightColor = item.cls === 'good' ? 'rgba(40,58,46,.9)' : item.cls === 'warn' ? 'rgba(58,50,18,.9)' : 'rgba(58,28,24,.9)';
 
   el.className = 'insight-carousel';
   el.innerHTML = `
@@ -2545,12 +2535,11 @@ function showCarouselItem(idx) {
   if (_overlayAnim) { cancelAnimationFrame(_overlayAnim); _overlayAnim = null; }
   const overlay = document.getElementById('insightOverlay');
   if (overlay) {
-    overlay.style.background = darkColor; // koyu zemin hemen görünsün
+    overlay.style.background = darkColor;
     const startTime = performance.now();
     function animOverlay(now) {
       const progress = Math.min((now - startTime) / CAROUSEL_DURATION, 1);
-      // Açık renk sağa ilerliyor; band 80% genişliğinde — yumuşak yayılım
-      const front = progress * 130 - 15; // -15 → 115
+      const front = progress * 130 - 15;
       const tail  = front - 80;
       overlay.style.background = `linear-gradient(to right,
         ${darkColor} 0%,
@@ -3074,8 +3063,8 @@ function renderDailyLimit() {
           <!-- Limit spline çizgisi -->
           <path d="${limitPath}" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="1.2" stroke-dasharray="5,4"/>
           <!-- Harcama fill + çizgi -->
-          ${spentFill ? `<path d="${spentFill}" fill="url(#dlg)"/>` : ''}
-          ${spentPath ? `<path d="${spentPath}" fill="none" stroke="${lc}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
+          ${spentFill ? `<path d="${spentFill}" fill="url(#dlg)" opacity="0" style="animation:dlFillIn .8s cubic-bezier(.4,0,.2,1) .1s forwards"/>` : ''}
+          ${spentPath ? `<path id="dlSpentLine" d="${spentPath}" fill="none" stroke="${lc}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
           <!-- Bugün noktası -->
           <circle cx="${lx}" cy="${ly}" r="4.5" fill="${lc}" stroke="#0A0A0D" stroke-width="2"/>
           <!-- X ekseni -->
@@ -3105,6 +3094,25 @@ function renderDailyLimit() {
     </div>`;
 
   requestAnimationFrame(() => {
+    // Çizgi animasyonu — sıfırdan çiz
+    setTimeout(() => {
+      const line = document.getElementById('dlSpentLine');
+      if (line) {
+        const len = line.getTotalLength();
+        if (len > 0) {
+          line.style.strokeDasharray = len;
+          line.style.strokeDashoffset = len;
+          line.style.transition = 'none';
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              line.style.transition = 'stroke-dashoffset 1s cubic-bezier(.4,0,.2,1)';
+              line.style.strokeDashoffset = '0';
+            });
+          });
+        }
+      }
+    }, 80);
+
     const svg = document.getElementById('dlSvg');
     const tt = document.getElementById('dlTT');
     const hl = document.getElementById('dlHL');
@@ -4069,15 +4077,18 @@ function renderOzetStats() {
   if (subEl) subEl.innerHTML = `Bu ay <strong style="color:${net>=0?'var(--accent)':'var(--danger)'}">${net>=0?'+':''}${fmtTL(net)}</strong> net değişim`;
 
   // 4-card stats (2x2)
-  const savRate = income > 0 ? Math.round(((income - expense) / income) * 100) : 0;
-  const savColor = savRate >= 20 ? 'var(--accent)' : savRate >= 0 ? 'var(--warning)' : 'var(--danger)';
+  const goals = data.savingsGoals || [];
+  const totalTarget = goals.reduce((s,g) => s + (g.target||0), 0);
+  const totalSaved = goals.reduce((s,g) => s + (g.deposits||[]).reduce((a,d) => a + (d.amount||0), 0), 0);
+  const savPct = totalTarget > 0 ? Math.min(100, Math.round((totalSaved/totalTarget)*100)) : null;
+  const savColor = savPct === null ? 'var(--muted)' : savPct >= 75 ? 'var(--accent)' : savPct >= 30 ? 'var(--warning)' : 'var(--danger)';
   const statsEl = document.getElementById('ozetStatsRow');
   if (statsEl) {
     statsEl.innerHTML = `
       <div class="ozet-stat-card"><div class="ozet-stat-label">Gelir</div><div class="ozet-stat-val" style="color:var(--accent)">${fmtTL(income)}</div></div>
       <div class="ozet-stat-card"><div class="ozet-stat-label">Gider</div><div class="ozet-stat-val" style="color:var(--danger)">${fmtTL(expense)}</div></div>
       <div class="ozet-stat-card"><div class="ozet-stat-label">Kalan</div><div class="ozet-stat-val" style="color:${fb.remaining>=0?'var(--accent)':'var(--danger)'}">${fmtTL(Math.round(fb.remaining))}</div></div>
-      <div class="ozet-stat-card highlight"><div class="ozet-stat-label">Tasarruf Oranı</div><div class="ozet-stat-val" style="color:${savColor}">${income > 0 ? '%' + savRate : '—'}</div></div>`;
+      <div class="ozet-stat-card highlight"><div class="ozet-stat-label">Birikim</div><div class="ozet-stat-val" style="color:${totalSaved > 0 ? 'var(--accent)' : 'var(--muted)'}">${totalSaved > 0 ? fmtTL(totalSaved) : '—'}</div></div>`;
   }
 
 
@@ -4174,17 +4185,8 @@ function renderDailyStats() {
   const vsColor = vsLastMonth === null ? 'var(--muted)' : vsLastMonth <= 0 ? 'var(--accent)' : 'var(--danger)';
   const vsText = vsLastMonth === null ? '—' : (vsLastMonth > 0 ? '+' : '') + fmtTL(vsLastMonth);
 
-  // Mini bar chart
+  // Mini bar chart — Chart.js ile
   const maxBar = Math.max(...dayBars.map(b => b.daySpent), baseDaily, 1);
-  const barHtml = dayBars.map(b => {
-    const h = Math.round((b.daySpent / maxBar) * 40);
-    const limitH = Math.round((b.limit / maxBar) * 40);
-    const col = b.status === 'green' ? 'var(--accent)' : b.status === 'red' ? 'var(--danger)' : 'rgba(255,255,255,.08)';
-    const isToday = b.d === todayD;
-    return `<div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:44px;gap:2px;position:relative;flex:1;min-width:0">
-      <div style="width:100%;max-width:10px;height:${Math.max(h,2)}px;background:${col};border-radius:2px 2px 0 0;transition:height .4s ease${isToday?';outline:1.5px solid rgba(255,255,255,.3);outline-offset:1px':''}"></div>
-    </div>`;
-  }).join('');
 
   // Limit çizgisi oranı
   const limitLineH = Math.round((baseDaily / maxBar) * 40);
@@ -4198,19 +4200,26 @@ function renderDailyStats() {
           <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px">Bu Ay</div>
           <div style="font-size:17px;font-weight:900;letter-spacing:-.3px;color:var(--text)">Günlük Limit Analizi</div>
         </div>
-        <div style="text-align:right">
-          <div style="font-size:24px;font-weight:900;color:${scoreColor};letter-spacing:-1px">%${scorePct}</div>
-          <div style="font-size:10px;font-weight:700;color:var(--muted);margin-top:1px">${scoreLabel}</div>
+        <!-- Circular ring score -->
+        <div style="position:relative;width:64px;height:64px;flex-shrink:0">
+          <svg width="64" height="64" viewBox="0 0 64 64" style="transform:rotate(-90deg)">
+            <circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="8"/>
+            <circle id="dlScoreRing" cx="32" cy="32" r="24" fill="none"
+              stroke="${scoreColor}" stroke-width="8"
+              stroke-linecap="round"
+              stroke-dasharray="${2*Math.PI*24}"
+              stroke-dashoffset="${2*Math.PI*24}"
+              style="transition:stroke-dashoffset 2s cubic-bezier(.4,0,.2,1)"/>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+            <div style="font-size:15px;font-weight:900;color:${scoreColor};letter-spacing:-.5px">%${scorePct}</div>
+          </div>
         </div>
       </div>
 
       <!-- Mini bar chart -->
-      <div style="position:relative;margin-bottom:18px">
-        <div style="display:flex;align-items:flex-end;gap:2px;height:44px;padding-bottom:0">
-          ${barHtml}
-        </div>
-        <!-- Limit line -->
-        <div style="position:absolute;bottom:${limitLineH}px;left:0;right:0;border-top:1.5px dashed rgba(255,255,255,.15);pointer-events:none"></div>
+      <div style="position:relative;margin-bottom:18px;height:60px">
+        <canvas id="dlMiniChart"></canvas>
       </div>
 
       <!-- 2-col stat satırları -->
@@ -4238,8 +4247,15 @@ function renderDailyStats() {
           <span style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Limit Uyumu</span>
           <span style="font-size:11px;font-weight:800;color:var(--muted)">${todayD - emptyDays} aktif gün</span>
         </div>
-        <div style="display:flex;gap:3px;height:6px;border-radius:4px;overflow:hidden;margin-bottom:8px">
-          ${dayBars.filter(b=>b.status!=='empty'&&b.status!=='future').map(b=>`<div style="flex:1;background:${b.status==='green'?'var(--accent)':'var(--danger)'};border-radius:1px;opacity:${b.d===todayD?'1':'.75'}"></div>`).join('')}
+        <div id="luSegWrap" style="display:flex;gap:3px;height:6px;border-radius:4px;overflow:visible;margin-bottom:8px;position:relative">
+          ${(() => {
+            const active = dayBars.filter(b=>b.status!=='empty'&&b.status!=='future');
+            const total = active.length;
+            return active.map((b, i) => {
+              const delay = Math.round((i / total) * 800);
+              return `<div class="lu-seg" style="flex:1;background:${b.status==='green'?'var(--accent)':'var(--danger)'};border-radius:1px;transform:scaleX(0);transform-origin:left;transition:transform .7s cubic-bezier(.4,0,.2,1) ${delay}ms"></div>`;
+            }).join('');
+          })()}
         </div>
         <div style="display:flex;justify-content:space-between">
           <span style="font-size:11px;font-weight:700;color:var(--accent)">✓ ${greenDays} gün limitin altında</span>
@@ -4266,7 +4282,76 @@ function renderDailyStats() {
       </div>
 
     </div>`;
+
+  // Mini bar chart — Chart.js
+  setTimeout(() => {
+    const ctx = document.getElementById('dlMiniChart')?.getContext('2d');
+    if (!ctx) return;
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: dayBars.map(b => b.d),
+        datasets: [
+          {
+            data: dayBars.map(b => b.daySpent),
+            backgroundColor: dayBars.map(b => b.status === 'green' ? 'rgba(45,184,102,.85)' : b.status === 'red' ? 'rgba(255,69,58,.85)' : 'rgba(255,255,255,.08)'),
+            borderRadius: 3,
+            borderSkipped: false,
+            barPercentage: 0.85,
+          },
+          {
+            data: dayBars.map(b => b.limit),
+            type: 'line',
+            borderColor: 'rgba(255,255,255,.18)',
+            borderWidth: 1.5,
+            borderDash: [4, 3],
+            pointRadius: 0,
+            fill: false,
+            tension: 0,
+          }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        animation: { duration: 2000, easing: 'easeOutQuart' },
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: {
+          x: { display: false },
+          y: { display: false, min: 0 }
+        }
+      }
+    });
+  }, 80);
+
+  // IntersectionObserver: kart ekrana girince ring + barlar animasyonla açılır
+  const scroll = document.getElementById('appWrap');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      obs.disconnect();
+      // Ring animasyonu
+      const ring = document.getElementById('dlScoreRing');
+      if (ring) {
+        const circ = 2 * Math.PI * 24;
+        const target = circ * (1 - scorePct / 100);
+        const startOffset = circ * (1 - Math.max(0, scorePct - 15) / 100);
+        ring.style.strokeDashoffset = startOffset;
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            ring.style.strokeDashoffset = target;
+          });
+        });
+      }
+      // Limit uyumu bar animasyonu
+      document.querySelectorAll('#luSegWrap .lu-seg').forEach(seg => {
+        seg.style.transform = 'scaleX(1)';
+      });
+    });
+  }, { root: scroll, threshold: 0.3 });
+  const card = el.querySelector('.card');
+  if (card) obs.observe(card);
 }
+
 function renderDebtSummaryCard() {
   const el = document.getElementById('debtSummaryCard');
   if (!el) return;
@@ -4369,16 +4454,21 @@ function renderDebtSummaryCard() {
     </div>`;
 }
 
-function renderCharts() {
-  ['barChart','doughnutChart','lineChart'].forEach(id => {
-    const el = document.getElementById(id);
+function setupChartObservers() {
+  const scroll = document.getElementById('appWrap');
+  const observe = (canvasId, renderFn) => {
+    const el = document.getElementById(canvasId);
     if (!el) return;
-    const fresh = document.createElement('canvas');
-    fresh.id = id;
-    el.parentNode.replaceChild(fresh, el);
-  });
-  Object.values(charts).forEach(ch => { try{ ch.destroy(); }catch(e){} });
-  charts = {};
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          obs.disconnect();
+          renderFn();
+        }
+      });
+    }, { root: scroll, threshold: 0.25 });
+    obs.observe(el);
+  };
 
   const months = [];
   const now = new Date();
@@ -4392,177 +4482,75 @@ function renderCharts() {
   });
   const incomes  = months.map(mk => calcMonthData(mk).income);
   const expenses = months.map(mk => calcMonthData(mk).expense);
-
-  // ── Ortak opsiyonlar ──
   const baseScales = {
-    x: {
-      ticks: { color: '#6B6A72', font: { family: 'Montserrat', size: 11, weight: '600' }, maxRotation: 0 },
-      grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false }
-    },
-    y: {
-      ticks: { color: '#6B6A72', font: { family: 'Montserrat', size: 11 }, callback: v => fmtNum(v) + '₺', maxTicksLimit: 5 },
-      grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
-      border: { dash: [3,3] }
-    }
+    x: { ticks: { color: '#6B6A72', font: { family: 'Montserrat', size: 11, weight: '600' }, maxRotation: 0 }, grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false } },
+    y: { ticks: { color: '#6B6A72', font: { family: 'Montserrat', size: 11 }, callback: v => fmtNum(v) + '₺', maxTicksLimit: 5 }, grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false }, border: { dash: [3,3] } }
   };
-  const noLegend = { legend: { display: false } };
-  const animConfig = { duration: 900, easing: 'easeOutQuart' };
+  const animConfig = { duration: 2200, easing: 'easeOutQuart' };
 
-  // ── BAR CHART ──
-  const bCtx = document.getElementById('barChart')?.getContext('2d');
-  if (bCtx) {
-    // Gradient fills
-    const gIncome = bCtx.createLinearGradient(0, 0, 0, 200);
-    gIncome.addColorStop(0, 'rgba(74,222,128,0.85)');
-    gIncome.addColorStop(1, 'rgba(74,222,128,0.35)');
-    const gExpense = bCtx.createLinearGradient(0, 0, 0, 200);
-    gExpense.addColorStop(0, 'rgba(248,113,113,0.85)');
-    gExpense.addColorStop(1, 'rgba(248,113,113,0.35)');
-
+  observe('barChart', () => {
+    const bCtx = document.getElementById('barChart')?.getContext('2d');
+    if (!bCtx) return;
     charts.bar = new Chart(bCtx, {
       type: 'bar',
       data: {
         labels,
         datasets: [
-          { label: 'Gelir',  data: incomes,  backgroundColor: gIncome,  borderRadius: 8, borderSkipped: false },
-          { label: 'Gider', data: expenses, backgroundColor: gExpense, borderRadius: 8, borderSkipped: false }
+          { label: 'Gelir',  data: incomes,  backgroundColor: 'rgba(74,222,128,0.75)',  borderRadius: 8, borderSkipped: false },
+          { label: 'Gider', data: expenses, backgroundColor: 'rgba(248,113,113,0.75)', borderRadius: 8, borderSkipped: false }
         ]
       },
       options: {
         responsive: true, maintainAspectRatio: false,
         animation: animConfig,
         plugins: {
-          legend: {
-            labels: { color: '#F0EFE8', font: { family: 'Montserrat', weight: '700', size: 12 }, boxWidth: 12, boxHeight: 12, borderRadius: 4, useBorderRadius: true, padding: 16 }
-          },
-          tooltip: {
-            backgroundColor: 'rgba(24,24,28,0.95)', borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1,
-            titleFont: { family: 'Montserrat', weight: '800' }, bodyFont: { family: 'Montserrat' },
-            callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + fmtNum(ctx.raw) + '₺' }
-          }
+          legend: { labels: { color: '#F0EFE8', font: { family: 'Montserrat', weight: '700', size: 12 }, boxWidth: 12, boxHeight: 12, borderRadius: 4, useBorderRadius: true, padding: 16 } },
+          tooltip: { backgroundColor: 'rgba(24,24,28,0.95)', borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1, titleFont: { family: 'Montserrat', weight: '800' }, bodyFont: { family: 'Montserrat' }, callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + fmtNum(ctx.raw) + '₺' } }
         },
         scales: baseScales
       }
     });
-  }
-
-  // ── DONUT CHART ──
-  const mk = currentMonth;
-  const txs = data.transactions.filter(t => monthKey(t.date) === mk && t.type === 'expense');
-  const bycat = {};
-  txs.forEach(t => { bycat[t.category] = (bycat[t.category] || 0) + t.amount; });
-  const catEntries = Object.entries(bycat).sort((a,b) => b[1]-a[1]).slice(0,6);
-  const totalExp = catEntries.reduce((s,[,v]) => s+v, 0);
-
-  const dCtx = document.getElementById('doughnutChart')?.getContext('2d');
-  const doughnutSub = document.getElementById('doughnutTotal');
-  if (!catEntries.length) {
-    if (doughnutSub) doughnutSub.textContent = 'Veri yok';
-    const dLegend = document.getElementById('doughnutLegend');
-    if (dLegend) dLegend.innerHTML = '';
-  }
-  if (dCtx && catEntries.length) {
-    charts.doughnut = new Chart(dCtx, {
-      type: 'doughnut',
-      data: {
-        labels: catEntries.map(([id]) => getCat(id).name),
-        datasets: [{
-          data: catEntries.map(([,v]) => v),
-          backgroundColor: catEntries.map(([id]) => getCat(id).color),
-          borderWidth: 3,
-          borderColor: '#18181C',
-          hoverOffset: 8
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        animation: { ...animConfig, animateRotate: true, animateScale: false },
-        cutout: '68%',
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: 'rgba(24,24,28,0.95)', borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1,
-            titleFont: { family: 'Montserrat', weight: '800' }, bodyFont: { family: 'Montserrat' },
-            callbacks: {
-              label: ctx => {
-                const pct = Math.round((ctx.raw / totalExp) * 100);
-                return ' ' + fmtNum(ctx.raw) + '₺  %' + pct;
-              }
-            }
-          }
-        }
-      }
-    });
-
-    // Toplam tutar sub
-    if (doughnutSub) doughnutSub.textContent = fmtNum(Math.round(totalExp)) + '₺ toplam';
-
-    // Custom legend
-    const legend = document.getElementById('doughnutLegend');
-    if (legend) {
-      legend.innerHTML = '<div class="donut-legend">' +
-        catEntries.map(([id, amt]) => {
-          const cat = getCat(id);
-          const pct = Math.round((amt / totalExp) * 100);
-          return `<div class="donut-legend-item">
-            <div class="donut-legend-dot" style="background:${cat.color}"></div>
-            <span class="donut-legend-name">${cat.name}</span>
-            <span class="donut-legend-amt">%${pct}</span>
-          </div>`;
-        }).join('') +
-      '</div>';
-    }
-  }
-
-  // ── LINE CHART — Sadece goal deposit'ler kümülatif ──
-  const cumulativeNets = months.map(mk => {
-    const allUntil = data.transactions.filter(t => t.isGoalDeposit && monthKey(t.date) <= mk);
-    return allUntil.reduce((s, t) => s + t.amount, 0);
   });
 
-  const lCtx = document.getElementById('lineChart')?.getContext('2d');
-  if (lCtx) {
-    const gLine = lCtx.createLinearGradient(0, 0, 0, 200);
-    gLine.addColorStop(0, 'rgba(74,222,128,0.25)');
-    gLine.addColorStop(1, 'rgba(74,222,128,0.0)');
+  observe('doughnutChart', () => {
+    const mk = currentMonth;
+    const txs = data.transactions.filter(t => monthKey(t.date) === mk && t.type === 'expense');
+    const bycat = {};
+    txs.forEach(t => { bycat[t.category] = (bycat[t.category] || 0) + t.amount; });
+    const catEntries = Object.entries(bycat).sort((a,b) => b[1]-a[1]).slice(0,6);
+    const totalExp = catEntries.reduce((s,[,v]) => s+v, 0);
+    const dCtx = document.getElementById('doughnutChart')?.getContext('2d');
+    const doughnutSub = document.getElementById('doughnutTotal');
+    if (!catEntries.length) { if (doughnutSub) doughnutSub.textContent = 'Veri yok'; const dLegend = document.getElementById('doughnutLegend'); if (dLegend) dLegend.innerHTML = ''; return; }
+    if (dCtx && catEntries.length) {
+      charts.doughnut = new Chart(dCtx, {
+        type: 'doughnut',
+        data: { labels: catEntries.map(([id]) => getCat(id).name), datasets: [{ data: catEntries.map(([,v]) => v), backgroundColor: catEntries.map(([id]) => getCat(id).color), borderWidth: 3, borderColor: '#18181C', hoverOffset: 8 }] },
+        options: { responsive: true, maintainAspectRatio: false, animation: { duration: 1800, easing: 'easeOutQuart', animateRotate: true, animateScale: false }, cutout: '68%', plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(24,24,28,0.95)', borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1, titleFont: { family: 'Montserrat', weight: '800' }, bodyFont: { family: 'Montserrat' }, callbacks: { label: ctx => { const pct = Math.round((ctx.raw / totalExp) * 100); return ' ' + fmtNum(ctx.raw) + '₺  %' + pct; } } } } }
+      });
+      if (doughnutSub) doughnutSub.textContent = fmtNum(Math.round(totalExp)) + '₺ toplam';
+      const legend = document.getElementById('doughnutLegend');
+      if (legend) { legend.innerHTML = '<div class="donut-legend">' + catEntries.map(([id, amt]) => { const cat = getCat(id); const pct = Math.round((amt / totalExp) * 100); return `<div class="donut-legend-item"><div class="donut-legend-dot" style="background:${cat.color}"></div><span class="donut-legend-name">${cat.name}</span><span class="donut-legend-amt">%${pct}</span></div>`; }).join('') + '</div>'; }
+    }
+  });
 
+  observe('lineChart', () => {
+    const cumulativeNets = months.map(mk => {
+      const allUntil = data.transactions.filter(t => t.isGoalDeposit && monthKey(t.date) <= mk);
+      return allUntil.reduce((s, t) => s + t.amount, 0);
+    });
+    const lCtx = document.getElementById('lineChart')?.getContext('2d');
+    if (!lCtx) return;
     charts.line = new Chart(lCtx, {
       type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          label: 'Birikim',
-          data: cumulativeNets,
-          borderColor: '#4ADE80',
-          borderWidth: 2.5,
-          backgroundColor: gLine,
-          tension: 0.45,
-          fill: true,
-          pointBackgroundColor: '#4ADE80',
-          pointBorderColor: '#18181C',
-          pointBorderWidth: 2,
-          pointRadius: 5,
-          pointHoverRadius: 7
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        animation: animConfig,
-        plugins: {
-          ...noLegend,
-          tooltip: {
-            backgroundColor: 'rgba(24,24,28,0.95)', borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1,
-            titleFont: { family: 'Montserrat', weight: '800' }, bodyFont: { family: 'Montserrat' },
-            callbacks: { label: ctx => ' Birikim: ' + fmtNum(ctx.raw) + '₺' }
-          }
-        },
-        scales: {
-          ...baseScales,
-          y: { ...baseScales.y, min: 0 }
-        }
-      }
+      data: { labels, datasets: [{ label: 'Birikim', data: cumulativeNets, borderColor: '#4ADE80', borderWidth: 2.5, backgroundColor: 'rgba(74,222,128,0.15)', tension: 0.45, fill: true, pointBackgroundColor: '#4ADE80', pointBorderColor: '#18181C', pointBorderWidth: 2, pointRadius: 5, pointHoverRadius: 7 }] },
+      options: { responsive: true, maintainAspectRatio: false, animation: { duration: 2200, easing: 'easeOutQuart', x: { duration: 0 }, y: { duration: 2200, easing: 'easeOutQuart', from: (ctx) => ctx.chart.scales.y.bottom } }, plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(24,24,28,0.95)', borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1, titleFont: { family: 'Montserrat', weight: '800' }, bodyFont: { family: 'Montserrat' }, callbacks: { label: ctx => ' Birikim: ' + fmtNum(ctx.raw) + '₺' } } }, scales: { ...baseScales, y: { ...baseScales.y, min: 0 } } }
     });
-  }
+  });
+}
+
+function renderCharts() {
+  // Artık setupChartObservers() kullanılıyor — bu fonksiyon geriye dönük uyumluluk için boş bırakıldı
 }
 
 
