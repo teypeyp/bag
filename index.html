@@ -2851,8 +2851,9 @@ function updateTxSectionSummary(txs) {
   el.textContent = txs.length + ' işlem · ' + fmtTL(Math.round(totalExp)) + ' gider';
 }
 
-function renderTxList(container, txs, limitTo5) {
+function renderTxList(container, txs, limitTo5, prefix) {
   if (!container) return;
+  const pfx = prefix || '';
   if (!txs.length) {
     container.innerHTML = `<div class="empty-state">
       <div class="empty-state-text">Henüz işlem yok</div>
@@ -2879,15 +2880,16 @@ function renderTxList(container, txs, limitTo5) {
       const cat = getCat(t.category);
       const iconBg = t.type === 'income' ? 'rgba(45,184,102,.22)' : 'rgba(255,255,255,.06)';
       const rowBg = t.type === 'income' ? 'rgba(45,184,102,.07)' : 'rgba(191,90,242,.07)';
-      itemsHtml += `<div class="tx-item stagger-item" id="tx_${t.id}" onclick="toggleTxDelete('${t.id}')" style="background:${rowBg}">
+      const domId = pfx + t.id;
+      itemsHtml += `<div class="tx-item stagger-item" id="tx_${domId}" onclick="toggleTxDelete('${t.id}','${pfx}')" style="background:${rowBg}">
         <div class="tx-icon ${t.type}" style="background:${iconBg}">${catIconSvg(cat,18)}</div>
         <div class="tx-info">
           <div class="tx-desc">${esc(t.desc)}</div>
         </div>
         <div class="tx-right">
           <div class="tx-amount ${t.type}">${t.type==='income' ? '+' : '−'}${fmtTL(t.amount)}</div>
-          <button class="tx-action-btn edit-btn" id="txedit_${t.id}" onclick="event.stopPropagation();openEditTx('${t.id}')">Düzenle</button>
-          <button class="tx-action-btn del-btn" id="txdel_${t.id}" onclick="event.stopPropagation();deleteTx('${t.id}')">Sil</button>
+          <button class="tx-action-btn edit-btn" id="txedit_${domId}" onclick="event.stopPropagation();openEditTx('${t.id}')">Düzenle</button>
+          <button class="tx-action-btn del-btn" id="txdel_${domId}" onclick="event.stopPropagation();deleteTx('${t.id}','${pfx}')">Sil</button>
         </div>
       </div>`;
       shownCount++;
@@ -2989,13 +2991,16 @@ function _wasTap() {
   return dy < 12 && dx < 12;
 }
 
-function toggleTxDelete(id) {
-  if (!_wasTap()) return;
-  const delBtn = document.getElementById('txdel_' + id);
-  const editBtn = document.getElementById('txedit_' + id);
-  const item = document.getElementById('tx_' + id);
+function toggleTxDelete(id, pfx) {
+  const domId = (pfx || '') + id;
+  const item = document.getElementById('tx_' + domId);
   if (!item) return;
-  if (expandedTx && expandedTx !== id) {
+  const inHistory = !!item.closest('#historyOverlay');
+  if (!inHistory && !_wasTap()) return;
+  const delBtn = document.getElementById('txdel_' + domId);
+  const editBtn = document.getElementById('txedit_' + domId);
+  // Önceki expanded'ı kapat (aynı prefix'te)
+  if (expandedTx && expandedTx !== domId) {
     const prevDel = document.getElementById('txdel_' + expandedTx);
     const prevEdit = document.getElementById('txedit_' + expandedTx);
     const prevItem = document.getElementById('tx_' + expandedTx);
@@ -3007,7 +3012,7 @@ function toggleTxDelete(id) {
   if (delBtn) delBtn.classList.toggle('show', !isOpen);
   if (editBtn) editBtn.classList.toggle('show', !isOpen);
   item.classList.toggle('tx-expanded', !isOpen);
-  expandedTx = isOpen ? null : id;
+  expandedTx = isOpen ? null : domId;
 }
 
 // Genel item expand/collapse — rec/debt/goal/wish için
@@ -3059,6 +3064,14 @@ function saveTxEdit() {
   if (date) tx.date = date;
   tx.category = category;
   save(); closeTxEdit(); renderAll();
+  const histOverlay = document.getElementById('historyOverlay');
+  if (histOverlay && histOverlay.style.display === 'flex') {
+    const listEl = document.getElementById('historyTxList');
+    const subEl = document.getElementById('historySubtitle');
+    const all = data.transactions.slice().sort((a,b) => b.date.localeCompare(a.date));
+    if (subEl) subEl.textContent = all.length + ' işlem';
+    renderTxList(listEl, all, false, 'h_');
+  }
   showToast('✅ İşlem güncellendi');
 }
 function deleteTx(id) {
@@ -3093,7 +3106,7 @@ function deleteTx(id) {
     const subEl = document.getElementById('historySubtitle');
     const all = data.transactions.slice().sort((a,b) => b.date.localeCompare(a.date));
     if (subEl) subEl.textContent = all.length + ' işlem';
-    renderTxList(listEl, all);
+    renderTxList(listEl, all, false, 'h_');
   }
   showToast('🗑 İşlem silindi');
 }
@@ -5205,7 +5218,7 @@ function openHistory() {
   const all = data.transactions.slice().sort((a,b) => b.date.localeCompare(a.date));
   if (titleEl) titleEl.textContent = 'Tüm İşlemler';
   if (subEl) subEl.textContent = all.length + ' işlem';
-  renderTxList(listEl, all);
+  renderTxList(listEl, all, false, 'h_');
 }
 
 function closeHistory() {
