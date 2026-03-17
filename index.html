@@ -151,42 +151,54 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   inherits: false;
   initial-value: 0deg;
 }
+@property --hero-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
 @keyframes insightIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes insightOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
 @keyframes rotateBorder{from{--border-angle:90deg}to{--border-angle:450deg}}
+@keyframes rotateHero{from{--hero-angle:90deg}to{--hero-angle:450deg}}
 
+/* ── Carousel: gradient animasyon, stroke yok ── */
 .insight-carousel{
   border-radius:var(--radius-sm);
   margin-bottom:12px;
   height:58px;
   position:relative;
-  padding:1.5px;
-  animation:rotateBorder 6s linear infinite;
+  overflow:hidden;
 }
-.insight-carousel.good{
-  background:conic-gradient(from var(--border-angle),
-    var(--border) 0%, var(--border) 82%,
-    rgba(45,184,102,.9) 88%, rgba(45,184,102,1) 90%, rgba(45,184,102,.9) 92%,
-    var(--border) 98%, var(--border) 100%);
-}
-.insight-carousel.warn{
-  background:conic-gradient(from var(--border-angle),
-    var(--border) 0%, var(--border) 82%,
-    rgba(255,214,10,.9) 88%, rgba(255,214,10,1) 90%, rgba(255,214,10,.9) 92%,
-    var(--border) 98%, var(--border) 100%);
-}
-.insight-carousel.bad{
-  background:conic-gradient(from var(--border-angle),
-    var(--border) 0%, var(--border) 82%,
-    rgba(255,69,58,.9) 88%, rgba(255,69,58,1) 90%, rgba(255,69,58,.9) 92%,
-    var(--border) 98%, var(--border) 100%);
-}
+.insight-carousel.good{ background:color-mix(in srgb,var(--surface2) 85%,var(--accent) 15%); }
+.insight-carousel.warn{ background:color-mix(in srgb,var(--surface2) 85%,var(--warning) 15%); }
+.insight-carousel.bad{  background:color-mix(in srgb,var(--surface2) 85%,var(--danger) 15%);  }
 
-.insight-card{padding:0;display:flex;flex-direction:column;height:100%;border-radius:calc(var(--radius-sm) - 1.5px);overflow:hidden;}
+.insight-card{padding:0;display:flex;flex-direction:column;height:58px;overflow:hidden;position:relative;}
 .insight-card.good{background:color-mix(in srgb,var(--surface2) 85%,var(--accent) 15%)}
 .insight-card.warn{background:color-mix(in srgb,var(--surface2) 85%,var(--warning) 15%)}
 .insight-card.bad{background:color-mix(in srgb,var(--surface2) 85%,var(--danger) 15%)}
-.insight-card-inner{padding:7px 12px 6px;flex:1;display:flex;align-items:center;gap:10px;animation:insightIn .3s ease;overflow:hidden}
+
+/* Sweep gradient overlay */
+.insight-card::after{
+  content:'';
+  position:absolute;inset:0;
+  pointer-events:none;
+  z-index:1;
+  opacity:0;
+  animation:sweepLight 12s linear infinite;
+}
+.insight-card.good::after{ background:linear-gradient(90deg,transparent 0%,rgba(45,184,102,.18) 50%,transparent 100%); }
+.insight-card.warn::after{ background:linear-gradient(90deg,transparent 0%,rgba(255,214,10,.15) 50%,transparent 100%); }
+.insight-card.bad::after{  background:linear-gradient(90deg,transparent 0%,rgba(255,69,58,.15) 50%,transparent 100%);  }
+
+@keyframes sweepLight{
+  0%  { opacity:0; transform:translateX(-100%); }
+  10% { opacity:1; }
+  60% { opacity:1; transform:translateX(100%); }
+  61%,100%{ opacity:0; transform:translateX(100%); }
+}
+
+.insight-card-inner{padding:7px 12px 6px;flex:1;display:flex;align-items:center;gap:10px;animation:insightIn .3s ease;overflow:hidden;position:relative;z-index:2}
 .insight-title{font-size:13px;font-weight:800;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .insight-sub{font-size:11px;font-weight:600;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .insight-card-inner.leaving{animation:insightOut .25s ease forwards}
@@ -195,6 +207,20 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .insight-card.good .insight-title{color:var(--accent)}
 .insight-card.warn .insight-title{color:var(--warning)}
 .insight-card.bad .insight-title{color:var(--danger)}
+
+/* ── Hero card: dönen conic border, 12s ── */
+.wallet-hero-combined{
+  position:relative;
+  background:var(--surface);
+  border-radius:28px;overflow:hidden;margin-bottom:16px;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+  padding:1.5px;
+  animation:rotateHero 34s linear infinite;
+  background:conic-gradient(from var(--hero-angle),
+    transparent 0%, transparent 80%,
+    rgba(45,184,102,.4) 83%, rgba(45,184,102,1) 88%, rgba(45,184,102,1) 97%, rgba(45,184,102,.4) 99%,
+    transparent 100%);
+}
 
 /* ===== TX LIST ===== */
 .tx-date-group{margin-bottom:12px;animation:cardIn .25s ease}
@@ -555,27 +581,23 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   .ozet-hero-balance{font-size:42px}
 }
 
-/* ===== COMBINED WALLET HERO ===== */
-.wallet-hero-combined{
+/* ===== COMBINED WALLET HERO inner ===== */
+.wallet-hero-combined::before{ display:none; }
+.wallet-hero-combined::after{ display:none; }
+.wallet-hero-inner{
+  background:#0A0A0D;
+  border-radius:26.5px;
+  overflow:hidden;
   position:relative;
-  background:var(--surface);
-  border-radius:28px;overflow:hidden;margin-bottom:16px;
-  box-shadow:0 2px 8px rgba(0,0,0,.15);
-  border:1px solid var(--border);
 }
-.wallet-hero-combined::before{
+.wallet-hero-inner::before{
   content:'';position:absolute;inset:0;
   background:
     radial-gradient(ellipse 120% 80% at 80% -20%, rgba(45,184,102,.22) 0%, transparent 55%),
     linear-gradient(180deg, rgba(45,184,102,.06) 0%, transparent 40%);
   pointer-events:none;z-index:0;
 }
-.wallet-hero-combined::after{
-  content:'';position:absolute;
-  top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg, transparent 0%, rgba(45,184,102,.8) 40%, rgba(45,184,102,.35) 100%);
-  z-index:1;
-}
+.wallet-hero-inner::after{ display:none; }
 .hero-top{padding:30px 24px 24px;position:relative;overflow:hidden;z-index:2}
 .hero-top::before{display:none}
 .hero-top::after{display:none}
@@ -2690,11 +2712,13 @@ function renderWalletHero(balance, income, expense, fb) {
 
   el.innerHTML = `
     <div class="wallet-hero-combined">
-      <div class="hero-top" style="padding-bottom:28px">
-        <div style="width:100%">
-          <div class="hero-label">Toplam Varlığın</div>
-          <div class="hero-balance" style="color:${balColor}">${fmtTL(balance)}</div>
-          ${dailySection}
+      <div class="wallet-hero-inner">
+        <div class="hero-top" style="padding-bottom:28px">
+          <div style="width:100%">
+            <div class="hero-label">Toplam Varlığın</div>
+            <div class="hero-balance" style="color:${balColor}">${fmtTL(balance)}</div>
+            ${dailySection}
+          </div>
         </div>
       </div>
     </div>`;
@@ -3929,39 +3953,36 @@ function openDepositModal(goalId) {
 }
 function closeDepositModal() {
   document.getElementById('depositModal').classList.remove('show');
-  _depositGoalId = null;
+  // _depositGoalId'yi burada sıfırlamıyoruz, saveDepositModal'da kullanılıyor
 }
 function saveDepositModal() {
   const g = data.savingsGoals.find(g => g.id === _depositGoalId);
   if (!g) return;
   const amount = parseNum(document.getElementById('depositAmount').value);
   if (!amount) { showToast('⚠️ Tutar giriniz'); return; }
+
   g.deposits.push({ id: uid(), amount, date: today(), note: 'Manuel' });
   data.transactions.push({ id: uid(), type: 'expense', desc: g.emoji + ' ' + g.name, amount, date: today(), category: 'diger', isGoalDeposit: true, goalId: _depositGoalId });
-  save(); closeDepositModal(); renderAll();
 
   const total = g.deposits.reduce((s,d) => s + d.amount, 0);
   const pct = Math.min(100, Math.round((total / g.target) * 100));
+  const celebData = total >= g.target ? {
+    emoji: g.emoji || '🏆',
+    title: 'Hedefe Ulaştın!',
+    sub: `${g.name} için ${fmtTL(g.target)} biriktirdin.\nTebrikler, harika iş çıkardın! 🎉`,
+    tag: 'Tamamlandı'
+  } : {
+    emoji: g.emoji || '💰',
+    title: `${fmtTL(amount)} Eklendi!`,
+    sub: `${g.name} — %${pct} tamamlandı.\n${fmtTL(g.target - total)} kaldı.`,
+    tag: 'Birikim'
+  };
 
-  if (total >= g.target) {
-    // Hedef tamamlandı
-    showCelebration({
-      emoji: g.emoji || '🏆',
-      title: 'Hedefe Ulaştın!',
-      sub: `${g.name} için ${fmtTL(g.target)} biriktirdin.\nTebrikler, harika iş çıkardın! 🎉`,
-      tag: 'Tamamlandı',
-      color: 'var(--accent)'
-    });
-  } else {
-    // Para eklendi kutlaması
-    showCelebration({
-      emoji: g.emoji || '💰',
-      title: `${fmtTL(amount)} Eklendi!`,
-      sub: `${g.name} — %${pct} tamamlandı.\n${fmtTL(g.target - total)} kaldı.`,
-      tag: 'Birikim',
-      color: 'var(--blue)'
-    });
-  }
+  save();
+  document.getElementById('depositModal').classList.remove('show');
+  _depositGoalId = null;
+  renderAll();
+  setTimeout(() => showCelebration(celebData), 150);
 }
 
 function deleteGoal(id) {
