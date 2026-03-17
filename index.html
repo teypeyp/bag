@@ -105,6 +105,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
 .form-select{width:100%;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;outline:none;appearance:none;cursor:pointer;-webkit-appearance:none}
 .form-input[type="date"]{color-scheme:dark;color:var(--text)}
+.form-input[type="date"]::-webkit-calendar-picker-indicator{display:none !important}
+.form-input[type="month"]::-webkit-calendar-picker-indicator{display:none !important}
+.form-input[type="date"]::-webkit-inner-spin-button,.form-input[type="date"]::-webkit-outer-spin-button{display:none}
+.form-input[type="month"]::-webkit-inner-spin-button,.form-input[type="month"]::-webkit-outer-spin-button{display:none}
 .form-input::placeholder{color:rgba(255,255,255,.35);font-weight:700}
 
 /* BUTTONS */
@@ -136,6 +140,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 @keyframes insightIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes insightOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
 @keyframes rotateHero{from{--hero-angle:90deg}to{--hero-angle:450deg}}
+@keyframes rotateHeroFallback{0%{opacity:.3}50%{opacity:.7}100%{opacity:.3}}
 
 .insight-carousel{
   border-radius:var(--radius-sm);
@@ -153,30 +158,32 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .insight-card.warn{background:color-mix(in srgb,var(--surface2) 85%,var(--warning) 15%)}
 .insight-card.bad{background:color-mix(in srgb,var(--surface2) 85%,var(--danger) 15%)}
 
-.insight-card::after{
-  content:'';
-  position:absolute;inset:0;
-  pointer-events:none;
-  z-index:1;
-  opacity:0;
-  animation:sweepLight 18s linear infinite;
-}
-.insight-card.good::after{ background:linear-gradient(90deg,transparent 0%,rgba(45,184,102,.18) 50%,transparent 100%); }
-.insight-card.warn::after{ background:linear-gradient(90deg,transparent 0%,rgba(255,214,10,.15) 50%,transparent 100%); }
-.insight-card.bad::after{  background:linear-gradient(90deg,transparent 0%,rgba(255,69,58,.15) 50%,transparent 100%);  }
-
 @keyframes sweepLight{
   0%  { opacity:0; transform:translateX(-100%); }
   10% { opacity:1; }
   60% { opacity:1; transform:translateX(100%); }
   61%,100%{ opacity:0; transform:translateX(100%); }
 }
+/* Sweep overlay — kalıcı div, innerHTML sıfırlanmaz, animasyon kesintisiz */
+.insight-sweep{
+  position:absolute;inset:0;
+  pointer-events:none;
+  z-index:3;
+  opacity:0;
+  animation:sweepLight 18s linear infinite;
+}
+.insight-carousel.good .insight-sweep{ background:linear-gradient(90deg,transparent 0%,rgba(45,184,102,.18) 50%,transparent 100%); }
+.insight-carousel.warn .insight-sweep{ background:linear-gradient(90deg,transparent 0%,rgba(255,214,10,.15) 50%,transparent 100%); }
+.insight-carousel.bad  .insight-sweep{ background:linear-gradient(90deg,transparent 0%,rgba(255,69,58,.15) 50%,transparent 100%); }
 
 .insight-card-inner{padding:7px 12px 6px;flex:1;display:flex;align-items:center;gap:10px;animation:insightIn .3s ease;overflow:hidden;position:relative;z-index:2}
 .insight-title{font-size:13px;font-weight:800;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .insight-sub{font-size:11px;font-weight:600;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .insight-card-inner.leaving{animation:insightOut .25s ease forwards}
-.insight-icon{font-size:18px;flex-shrink:0}
+.insight-icon{font-size:27px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.insight-card.good .insight-icon svg{stroke:var(--accent)}
+.insight-card.warn .insight-icon svg{stroke:var(--warning)}
+.insight-card.bad  .insight-icon svg{stroke:var(--danger)}
 .insight-text{flex:1;min-width:0;overflow:hidden}
 .insight-card.good .insight-title{color:var(--accent)}
 .insight-card.warn .insight-title{color:var(--warning)}
@@ -187,11 +194,18 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   border-radius:28px;overflow:hidden;margin-bottom:16px;
   box-shadow:0 2px 8px rgba(0,0,0,.15);
   padding:1.5px;
-  animation:rotateHero 34s linear infinite;
-  background:conic-gradient(from var(--hero-angle),
-    transparent 0%, transparent 80%,
-    rgba(45,184,102,.4) 83%, rgba(45,184,102,.85) 88%, rgba(45,184,102,.85) 97%, rgba(45,184,102,.4) 99%,
-    transparent 100%);
+  /* Fallback for browsers without @property support */
+  background:linear-gradient(135deg,rgba(45,184,102,.35),rgba(45,184,102,.8) 50%,rgba(45,184,102,.35));
+  animation:rotateHeroFallback 6s ease-in-out infinite;
+}
+@supports (background: conic-gradient(from 1deg, red, blue)) {
+  .wallet-hero-combined {
+    animation:rotateHero 34s linear infinite;
+    background:conic-gradient(from var(--hero-angle),
+      transparent 0%, transparent 80%,
+      rgba(45,184,102,.4) 83%, rgba(45,184,102,.85) 88%, rgba(45,184,102,.85) 97%, rgba(45,184,102,.4) 99%,
+      transparent 100%);
+  }
 }
 
 /* ===== TX LIST ===== */
@@ -203,7 +217,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .tx-items-wrap{display:flex;flex-direction:column;gap:4px}
 .tx-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:rgba(191,90,242,.09);border-radius:12px;transition:opacity .1s}
 .tx-item:active{opacity:.7}
-.tx-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.tx-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .tx-icon.income{background:rgba(45,184,102,.2)}
 .tx-icon.expense{background:var(--surface2)}
 .tx-info{flex:1;min-width:0}
@@ -342,7 +356,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 }
 .rec-item.paid-item::before{background:var(--accent)}
 
-.rec-icon{width:38px;height:38px;border-radius:10px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:background .2s}
+.rec-icon{width:38px;height:38px;border-radius:10px;background:var(--surface3);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s}
 .rec-info{flex:1;min-width:0}
 .rec-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .2s}
 .rec-meta{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
@@ -387,13 +401,15 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .wish-challenge-btn:active{background:rgba(191,90,242,.22);}
 
 .wish-priority-badge{
-  display:inline-flex;align-items:center;gap:3px;
+  display:inline-flex;align-items:center;
   font-size:10px;font-weight:800;letter-spacing:.3px;
-  padding:2px 7px;border-radius:20px;
+  padding:2px 8px;border-radius:20px;
 }
-.wish-priority-badge.high{background:rgba(255,69,58,.12);color:var(--danger)}
-.wish-priority-badge.mid{background:rgba(191,90,242,.12);color:var(--purple)}
-.wish-priority-badge.low{background:var(--surface3);color:var(--muted)}
+.wish-priority-badge.critical {background:rgba(255,69,58,.14); color:#FF453A}
+.wish-priority-badge.high     {background:rgba(255,149,0,.12);  color:#FF9500}
+.wish-priority-badge.mid      {background:rgba(191,90,242,.12); color:var(--purple)}
+.wish-priority-badge.low      {background:rgba(10,132,255,.10); color:#0A84FF}
+.wish-priority-badge.someday  {background:var(--surface3);      color:var(--muted)}
 
 .wish-tick-btn{
   width:32px;height:32px;border-radius:10px;border:1.5px solid rgba(45,184,102,.3);
@@ -481,14 +497,11 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .datepicker-trigger{width:100%;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between}
 
 /* MODALS */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:200;display:none;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
-.modal-overlay.show{display:flex;opacity:1;pointer-events:auto}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;visibility:hidden;transition:opacity .25s,visibility .25s}
+.modal-overlay.show{opacity:1;pointer-events:auto;visibility:visible}
 .modal-sheet{background:var(--surface);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:28px 20px 48px;width:100%;max-width:520px;display:flex;flex-direction:column;gap:14px;max-height:92vh;overflow-y:auto;transform:translateY(40px);transition:transform .3s cubic-bezier(.34,1.2,.64,1)}
 .modal-overlay.show .modal-sheet{transform:translateY(0)}
 .modal-close{position:absolute;top:18px;right:18px;background:var(--surface2);border:1px solid var(--border);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--muted);line-height:1;font-family:'Montserrat',sans-serif}
-
-/* LIMIT WARNING */
-#limitWarning{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;z-index:85;padding:10px 18px;background:var(--danger-dim);border-bottom:1px solid rgba(255,69,58,.3);font-size:13px;font-weight:700;color:var(--danger);display:none}
 
 /* CONFIRM */
 .confirm-modal{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(16px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
@@ -506,7 +519,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 /* CAT LIST in modal */
 .cat-item{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border)}
 .cat-item:last-child{border-bottom:none}
-.cat-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
 
 /* MOBILE */
 @media(max-width:400px){
@@ -536,11 +548,13 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .tx-item.tx-expanded .tx-amount{color:var(--muted)!important}
 
 /* ===== SETTINGS APPLE STYLE ===== */
-.settings-sheet{padding-bottom:40px!important}
-.settings-section-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin:20px 0 6px 4px}
-.settings-group{background:var(--surface2);border-radius:16px;overflow:hidden;border:1px solid var(--border)}
+.settings-sheet{padding-bottom:40px!important;gap:8px!important}
+.settings-section-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin:6px 0 0 4px}
+.settings-group{background:var(--surface2);border-radius:16px;border:1px solid var(--border);overflow:hidden}
 .settings-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;gap:12px;border-bottom:1px solid rgba(44,44,53,.5)}
 .settings-row:last-child{border-bottom:none}
+.settings-row:first-child{border-radius:15px 15px 0 0}
+.settings-row:last-child{border-radius:0 0 15px 15px}
 .settings-row.tappable{cursor:pointer;transition:background .15s;-webkit-tap-highlight-color:transparent}
 .settings-row.tappable:active{background:rgba(255,255,255,.04)}
 .settings-row.danger-row .settings-row-title{color:var(--danger)}
@@ -549,6 +563,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .settings-row-sub{font-size:12px;color:var(--muted);margin-top:2px}
 .settings-chevron{font-size:20px;color:var(--muted);line-height:1}
 .settings-inline-input{background:transparent;border:none;color:var(--accent);font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;text-align:right;width:100px;outline:none}
+.settings-inline-input::placeholder{color:var(--muted);opacity:1}
 
 .cat-add-btn{background:none;border:1.5px solid var(--border);border-radius:20px;color:var(--muted);font-size:12px;font-weight:700;padding:6px 12px;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;-webkit-tap-highlight-color:transparent}
 .cat-add-btn:active{background:var(--surface2);color:var(--text)}
@@ -634,8 +649,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .year-month-net{font-size:14px;font-weight:800;flex-shrink:0}
 .year-month-sav{font-size:11px;font-weight:700;flex-shrink:0;min-width:36px;text-align:right}
 .year-month-chevron{font-size:13px;color:var(--muted);transition:transform .25s;flex-shrink:0;margin-left:4px}
-.year-month-body{max-height:0;overflow:hidden;transition:max-height .3s cubic-bezier(.4,0,.2,1)}
-.year-month-body.open{max-height:160px}
+.year-month-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}
+.year-month-body.open{max-height:400px}
 .year-month-detail{padding:0 4px 14px;display:flex;flex-direction:column;gap:10px}
 .ymb-bars{display:flex;flex-direction:column;gap:6px}
 .ymb-bar-row{display:flex;align-items:center;gap:8px}
@@ -763,7 +778,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 <div id="appWrap">
 
 <div id="toast"></div>
-<div id="limitWarning"><span id="limitWarningText"></span></div>
 
 <!-- KUTLAMA OVERLAY -->
 <div id="celebrationOverlay">
@@ -810,7 +824,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;
         cursor:pointer;letter-spacing:.2px;
         box-shadow:0 4px 20px rgba(45,184,102,.3);
-      ">Harika! 🙌</button>
+      " style="display:inline-flex;align-items:center;gap:6px">Harika! <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg></button>
     </div>
   </div>
 </div>
@@ -826,7 +840,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
           <div class="ob-ring ob-ring-2"></div>
           <div class="ob-ring ob-ring-3"></div>
           <div class="ob-ring-center">
-            <span class="ob-ring-icon" id="obHeroEmoji" style="transition:opacity .25s,transform .25s">💰</span>
+            <span class="ob-ring-icon" id="obHeroEmoji" style="transition:opacity .25s,transform .25s;display:flex;align-items:center;justify-content:center"><svg width="26" height="26" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/></svg></span>
           </div>
         </div>
         <div class="ob-tag">Hoş geldin</div>
@@ -859,12 +873,12 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       <div class="splash-slide" data-idx="2">
         <div class="ob-goals-visual">
           <div class="ob-goal-card ob-goal-card-1">
-            <div class="ob-gc-name">🏠 Kira</div>
+            <div class="ob-gc-name" style="display:flex;align-items:center;gap:6px"><svg width="14" height="14" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#A78BFA" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg> Kira</div>
             <div class="ob-gc-bar"><div class="ob-gc-fill" style="--bar-w:100%"></div></div>
             <div class="ob-gc-pct">₺12.000 / ay</div>
           </div>
           <div class="ob-goal-card ob-goal-card-2">
-            <div class="ob-gc-name">📱 Abonelikler</div>
+            <div class="ob-gc-name" style="display:flex;align-items:center;gap:6px"><svg width="14" height="14" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#60A5FA" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 5m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"/><path d="M11 4h2"/><path d="M12 17v.01"/></svg> Abonelikler</div>
             <div class="ob-gc-bar"><div class="ob-gc-fill" style="--bar-w:100%"></div></div>
             <div class="ob-gc-pct">₺850 / ay</div>
           </div>
@@ -878,12 +892,12 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       <div class="splash-slide" data-idx="3">
         <div class="ob-goals-visual">
           <div class="ob-goal-card ob-goal-card-1">
-            <div class="ob-gc-name">✈️ İtalya tatili</div>
+            <div class="ob-gc-name" style="display:flex;align-items:center;gap:6px"><svg width="14" height="14" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FBBF24" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16 10h4a2 2 0 0 1 0 4h-4l-4 7h-3l2 -7h-4l-2 2h-3l2 -4l-2 -4h3l2 2h4l-2 -7h3z"/></svg> İtalya tatili</div>
             <div class="ob-gc-bar"><div class="ob-gc-fill" style="--bar-w:68%"></div></div>
             <div class="ob-gc-pct">%68 · 2 ay kaldı</div>
           </div>
           <div class="ob-goal-card ob-goal-card-2">
-            <div class="ob-gc-name">🚗 Araba peşinatı</div>
+            <div class="ob-gc-name" style="display:flex;align-items:center;gap:6px"><svg width="14" height="14" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#F59E0B" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M5 17h-2v-6l2 -5h9l4 5h1a2 2 0 0 1 2 2v4h-2m-4 0h-6m-6 -6h15m-6 0v-5"/></svg> Araba peşinatı</div>
             <div class="ob-gc-bar"><div class="ob-gc-fill" style="--bar-w:34%"></div></div>
             <div class="ob-gc-pct">%34 · 5 ay kaldı</div>
           </div>
@@ -901,7 +915,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         <div class="ob-input-section">
           <div class="ob-input-row">
             <span class="ob-currency">₺</span>
-            <input type="text" id="onboardBalance" class="form-input" placeholder="0" inputmode="numeric" onkeydown="obNumKey(event)" style="padding-left:38px!important;font-size:32px!important;font-weight:900!important;border-radius:14px!important;letter-spacing:-1px">
+            <input type="text" id="onboardBalance" class="form-input" placeholder="0" inputmode="numeric" onkeydown="obNumKey(event)" oninput="fmtInput(this)" style="padding-left:38px!important;font-size:32px!important;font-weight:900!important;border-radius:14px!important;letter-spacing:-1px">
           </div>
           <div class="ob-hint">Sonradan ayarlardan güncelleyebilirsin.</div>
         </div>
@@ -1018,7 +1032,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
     <div class="card-collapse-header" onclick="toggleSection('rec')">
       <div class="collapse-left">
-        <div class="collapse-icon-wrap" style="background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.25);font-size:18px">🗓</div>
+        <div class="collapse-icon-wrap" style="background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.25);display:flex;align-items:center;justify-content:center"><svg width="20" height="20" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#818CF8" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/><path d="M11 15h1"/><path d="M12 15v3"/></svg></div>
         <div>
           <div class="collapse-title">Ödemeler</div>
           <div class="collapse-summary" id="recSummary"></div>
@@ -1054,7 +1068,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
     <div class="card-collapse-header" onclick="toggleSection('debt')">
       <div class="collapse-left">
-        <div class="collapse-icon-wrap" style="background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.2)">💳</div>
+        <div class="collapse-icon-wrap" style="background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.2);display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF453A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg></div>
         <div>
           <div class="collapse-title">Borçlar</div>
           <div class="collapse-summary" id="debtSummaryLabel"></div>
@@ -1095,7 +1109,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
     <div class="card-collapse-header" onclick="toggleSection('goal')">
       <div class="collapse-left">
-        <div class="collapse-icon-wrap" style="background:rgba(45,184,102,.12);border:1px solid rgba(45,184,102,.2)">🪙</div>
+        <div class="collapse-icon-wrap" style="background:rgba(45,184,102,.12);border:1px solid rgba(45,184,102,.2);display:flex;align-items:center;justify-content:center"><svg width="20" height="20" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#34D399" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 8v-1a4 4 0 0 0 -4 -4h-2a4 4 0 0 0 -4 4v1"/><path d="M7 8h12a1 1 0 0 1 1 1v3a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -6 -6v-3a1 1 0 0 1 1 -1z"/><path d="M20 12h1a1 1 0 0 0 1 -1v-1a1 1 0 0 0 -1 -1h-1"/><path d="M9 17v2"/><path d="M15 17v2"/><path d="M11 12h2"/></svg></div>
         <div>
           <div class="collapse-title">Birikim</div>
           <div class="collapse-summary" id="goalSummaryLabel"></div>
@@ -1108,7 +1122,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <div class="collapsible-body collapsed" id="goalBody"><div class="collapsible-inner">
       <div id="goalForm" style="display:none;margin-bottom:14px;padding:12px;background:var(--surface2);border-radius:var(--radius-sm)">
         <div id="emojiGrid" class="emoji-grid"></div>
-        <input type="hidden" id="goalEmoji" value="🎯">
+        <input type="hidden" id="goalEmoji" value="target">
         <div class="form-group">
           <label class="form-label">Birikim Adı</label>
           <input type="text" id="goalName" class="form-input" onkeydown="if(event.key==='Enter')addGoal()" placeholder="Tatil, araba, acil fon...">
@@ -1141,7 +1155,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
     <div class="card-collapse-header" onclick="toggleSection('wish')">
       <div class="collapse-left">
-        <div class="collapse-icon-wrap" style="background:rgba(191,90,242,.12);border:1px solid rgba(191,90,242,.22);font-size:18px">🎯</div>
+        <div class="collapse-icon-wrap" style="background:rgba(191,90,242,.12);border:1px solid rgba(191,90,242,.22);display:flex;align-items:center;justify-content:center"><svg width="20" height="20" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg></div>
         <div>
           <div class="collapse-title">Hedefler</div>
           <div class="collapse-summary" id="wishSummaryLabel"></div>
@@ -1165,15 +1179,17 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
           <div class="form-group" style="flex:1">
             <label class="form-label">Öncelik</label>
             <select id="wishPriority" class="form-select">
-              <option value="high">🔥 Acil</option>
-              <option value="mid" selected>⭐ İstersen</option>
-              <option value="low">💭 Rüya</option>
+              <option value="critical">Kritik</option>
+              <option value="high">Öncelikli</option>
+              <option value="mid" selected>İstenir</option>
+              <option value="low">Düşük</option>
+              <option value="someday">Bir gün</option>
             </select>
           </div>
         </div>
         <div class="form-group">
           <label class="form-label">Emoji</label>
-          <input type="hidden" id="wishEmojiHidden" value="🎯">
+          <input type="hidden" id="wishEmojiHidden" value="target">
           <div id="wishEmojiPicker" style="display:flex;flex-wrap:wrap;gap:6px;padding:8px;background:var(--surface3);border-radius:var(--radius-xs);border:1.5px solid var(--border)"></div>
         </div>
         <button class="btn btn-primary btn-full" style="background:var(--purple);box-shadow:0 4px 16px rgba(191,90,242,.25)" onclick="addWish()">Ekle</button>
@@ -1273,7 +1289,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   <div class="modal-sheet settings-sheet" style="position:relative">
     <button class="modal-close" onclick="closeSettings()">×</button>
     <div class="modal-title" style="margin-bottom:4px">Ayarlar</div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:20px">Vault · Kişisel Bütçe Yöneticisi</div>
+    <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:20px">Vault · Kişisel Bütçe Yöneticisi</div>
 
     <!-- Cüzdan -->
     <div class="settings-section-label">Cüzdan</div>
@@ -1351,12 +1367,13 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       <div style="display:flex;gap:8px">
         <div class="form-group" style="flex:1">
           <label class="form-label">Renk</label>
-          <input type="color" id="newCatColor" class="form-input" value="#4ADE80" style="height:44px;padding:4px">
+          <input type="color" id="newCatColor" class="form-input" value="#4ADE80" style="height:44px;padding:4px" oninput="updateNewCatIconColor(this.value)">
         </div>
-        <div class="form-group" style="flex:1">
-          <label class="form-label">Emoji</label>
-          <input type="text" id="newCatEmoji" class="form-input" placeholder="🛍" maxlength="2">
-        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">İkon</label>
+        <input type="hidden" id="newCatEmoji" value="tag">
+        <div id="newCatIconPicker" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--surface2);border-radius:var(--radius-sm);border:1.5px solid var(--border)"></div>
       </div>
       <div class="form-group" style="margin-top:6px">
         <label class="form-label" style="color:var(--muted);opacity:.7">Anahtar Kelimeler <span style="font-weight:500;text-transform:none;letter-spacing:0">(virgülle ayır — isteğe bağlı)</span></label>
@@ -1372,10 +1389,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   <div class="modal-sheet" style="position:relative">
     <button class="modal-close" onclick="closeKeywordModal()">×</button>
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
-      <div id="keywordModalEmoji" style="width:48px;height:48px;border-radius:14px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;border:1.5px solid var(--border)" onclick="toggleEmojiPickerModal()" title="Emoji değiştir"></div>
+      <div id="keywordModalEmoji" style="width:48px;height:48px;border-radius:14px;background:var(--surface2);display:flex;align-items:center;justify-content:center;cursor:default;border:1.5px solid var(--border)"></div>
       <div>
         <div id="keywordModalTitle" style="font-size:17px;font-weight:800"></div>
-        <div style="font-size:11px;color:var(--muted);margin-top:2px">Emojiye tıklayarak değiştirebilirsin</div>
+        
       </div>
     </div>
 
@@ -1494,7 +1511,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 <div class="modal-overlay" id="goalEditModal" onclick="if(event.target===this)closeGoalEdit()">
   <div class="modal-sheet" style="position:relative">
     <button class="modal-close" onclick="closeGoalEdit()">×</button>
-    <div class="modal-title">Birikiimi Düzenle</div>
+    <div class="modal-title">Birikimi Düzenle</div>
     <div class="form-group">
       <label class="form-label">Birikim adı</label>
       <input type="text" id="editGoalName" class="form-input">
@@ -1518,7 +1535,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   <div class="modal-sheet" style="position:relative">
     <button class="modal-close" onclick="closeWishEdit()">×</button>
     <div class="modal-title">Hedefi Düzenle</div>
-    <input type="hidden" id="editWishEmoji" value="🎯">
+    <input type="hidden" id="editWishEmoji" value="target">
     <div class="form-group">
       <label class="form-label">Ne almak istiyorsun?</label>
       <input type="text" id="editWishName" class="form-input">
@@ -1531,9 +1548,11 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       <div class="form-group" style="flex:1">
         <label class="form-label">Öncelik</label>
         <select id="editWishPriority" class="form-select">
-          <option value="high">🔥 Acil</option>
-          <option value="mid">⭐ İstersen</option>
-          <option value="low">💭 Rüya</option>
+          <option value="critical">Kritik</option>
+          <option value="high">Öncelikli</option>
+          <option value="mid">İstenir</option>
+          <option value="low">Düşük</option>
+          <option value="someday">Bir gün</option>
         </select>
       </div>
     </div>
@@ -1590,6 +1609,40 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 // =================== GLOBALS ===================
 const SVG_EDIT = `<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
 const SVG_TRASH = `<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
+
+// =================== CATEGORY ICONS ===================
+const CAT_ICONS = {
+  market:    '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 17h-11v-14h-2"/><path d="M6 5l14 1l-1 7h-13"/></svg>',
+  fatura:    '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 3l-9 11h8l-1 7l9 -11h-8l1 -7z"/></svg>',
+  kira:      '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0"/><path d="M9 8l1 0"/><path d="M9 12l1 0"/><path d="M9 16l1 0"/><path d="M14 8l1 0"/><path d="M14 12l1 0"/><path d="M14 16l1 0"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/></svg>',
+  ulasim:    '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M5 17h-2v-11a1 1 0 0 1 1 -1h14a5 7 0 0 1 5 7v5h-2m-4 0h-8"/><path d="M16 5l1.5 7l4.5 0"/><path d="M2 10l15 0"/><path d="M7 5l0 5"/><path d="M12 5l0 5"/></svg>',
+  yemek:     '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 2v7a4 4 0 0 0 4 4h1v9"/><path d="M7 2v20"/><path d="M21 15v-7a4 4 0 0 0 -4 -4h-2v13"/><path d="M21 15h-6"/></svg>',
+  saglik:    '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4h-1a2 2 0 0 0 -2 2v3.5h0a5.5 5.5 0 0 0 11 0v-3.5a2 2 0 0 0 -2 -2h-1"/><path d="M8 15a6 6 0 1 0 12 0v-3"/><path d="M11 3v2"/><path d="M6 3v2"/><path d="M20 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/></svg>',
+  giyim:     '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 4l6 2l-2 14h-14l-2 -14l6 -2"/><path d="M9 4a3 3 0 0 0 6 0"/></svg>',
+  eglence:   '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M2 6l10 -2l10 2v3.5c0 5.523 -4.477 10 -10 10s-10 -4.477 -10 -10z"/><path d="M7 10h2v4"/><path d="M7 14h4"/><path d="M15 10v.01"/><path d="M17 12v.01"/></svg>',
+  egitim:    '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 9l-10 -4l-10 4l10 4l10 -4v6"/><path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4"/></svg>',
+  ev:        '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v4h-20v-4z"/><path d="M5 14v3"/><path d="M19 14v3"/><path d="M3 18h18"/><path d="M5 8v-3a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v3"/></svg>',
+  arac:      '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M5 17h-2v-6l2 -5h9l4 5h1a2 2 0 0 1 2 2v4h-2m-4 0h-6m-6 -6h15m-6 0v-5"/></svg>',
+  teknoloji: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 19l18 0"/><path d="M5 6m0 1a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1z"/></svg>',
+  evcil:     '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14.7 13.5c-1.1 -2 -1.441 -2.5 -2.7 -2.5c-1.259 0 -1.736 .61 -2.7 2.5c-.827 1.612 -1.831 2.812 -2.8 3.5c-1.086 .752 -1.931 1 -3.5 1l0 1.5c2 0 3.5 -.5 5.5 -2c.5 .5 1 1 3.5 1s3 -.5 3.5 -1c2 1.5 3.5 2 5.5 2l0 -1.5c-1.787 0 -2.67 -.259 -3.737 -1.003c-.936 -.655 -1.917 -1.847 -2.563 -3.497z"/><path d="M9.5 8.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"/><path d="M4 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M20 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M14.5 8.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"/></svg>',
+  hediye:    '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 8m0 1a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z"/><path d="M12 8l0 13"/><path d="M19 12v7a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0 -5a4.8 8 0 0 1 4.5 5a4.8 8 0 0 1 4.5 -5a2.5 2.5 0 0 1 0 5"/></svg>',
+  diger:     '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12m0 .5a.5 .5 0 1 0 0 -1a.5 .5 0 0 0 0 1"/><path d="M12 12m0 .5a.5 .5 0 1 0 0 -1a.5 .5 0 0 0 0 1"/><path d="M15 12m0 .5a.5 .5 0 1 0 0 -1a.5 .5 0 0 0 0 1"/></svg>',
+  gelir:     '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l4 -4l4 4l4 -6l4 4"/><path d="M14 7l3 0l0 3"/></svg>',
+};
+const CAT_ICON_BORC = '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg>';
+
+function catIconSvg(cat, size) {
+  const sz = size || 20;
+  const raw = CAT_ICONS[cat.id] || CAT_ICONS.diger;
+  const stroke = cat.color || 'currentColor';
+  return raw.replace('<svg ', `<svg width="${sz}" height="${sz}" style="flex-shrink:0" `).replace(/stroke-width="1\.5"/g, `stroke-width="1.5" stroke="${stroke}"`);
+}
+
+function borcIconSvg(size) {
+  const sz = size || 20;
+  return CAT_ICON_BORC.replace('<svg ', `<svg width="${sz}" height="${sz}" style="flex-shrink:0" `).replace(/stroke-width="1\.5"/g, `stroke-width="1.5" stroke="#FF453A"`);
+}
+
 let charts = {};
 let viewYear = new Date().getFullYear();
 
@@ -1729,7 +1782,24 @@ const DEFAULT_CATS = [
   ]},
 ];
 
-const GOAL_EMOJIS = ['🎯','✈️','🏠','🚗','💍','📱','💻','🎓','👶','🌴','🏋️','🎸','📷','🐕','🌱','💰'];
+const GOAL_ICONS = [
+  {id:'target',    svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>'},
+  {id:'plane',     svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16 10h4a2 2 0 0 1 0 4h-4l-4 7h-3l2 -7h-4l-2 2h-3l2 -4l-2 -4h3l2 2h4l-2 -7h3z"/></svg>'},
+  {id:'home',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg>'},
+  {id:'car',       svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M5 17h-2v-6l2 -5h9l4 5h1a2 2 0 0 1 2 2v4h-2m-4 0h-6m-6 -6h15m-6 0v-5"/></svg>'},
+  {id:'ring',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7.5 7.5m-4.5 0a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0"/><path d="M12 12l3.5 3.5m2 2l2.5 2.5"/><path d="M18 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/></svg>'},
+  {id:'phone',     svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 5m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"/><path d="M11 4h2"/><path d="M12 17v.01"/></svg>'},
+  {id:'laptop',    svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 19l18 0"/><path d="M5 6m0 1a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1z"/></svg>'},
+  {id:'school',    svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 9l-10 -4l-10 4l10 4l10 -4v6"/><path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4"/></svg>'},
+  {id:'baby',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/><path d="M12 3c4.97 0 9 4.03 9 9s-4.03 9 -9 9s-9 -4.03 -9 -9s4.03 -9 9 -9z"/></svg>'},
+  {id:'tree',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l4 4l-2 0l4 4l-3 0l3 4l-4 0l0 3l-4 0l0 -3l-4 0l3 -4l-3 0l4 -4l-2 0z"/></svg>'},
+  {id:'barbell',   svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M2 12h1"/><path d="M6 8h-2a1 1 0 0 0 -1 1v6a1 1 0 0 0 1 1h2"/><path d="M6 7v10a1 1 0 0 0 1 1h1a1 1 0 0 0 1 -1v-10a1 1 0 0 0 -1 -1h-1a1 1 0 0 0 -1 1z"/><path d="M22 12h-1"/><path d="M18 8h2a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-2"/><path d="M18 7v10a1 1 0 0 1 -1 1h-1a1 1 0 0 1 -1 -1v-10a1 1 0 0 1 1 -1h1a1 1 0 0 1 1 1z"/><path d="M10 12h4"/></svg>'},
+  {id:'guitar',    svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4.5 19.5l4.5 -4.5"/><path d="M14 6l4 4"/><path d="M15.5 4.5l4 4l-6.5 6.5c-.667 1.557 -1.167 2.724 -.5 4c.667 1.276 -.056 3.064 -2.5 3.5c-2 .333 -3.833 -.833 -3.5 -3c.333 -2.167 1.556 -3.278 3.5 -3.5l-1.5 -4.5z"/></svg>'},
+  {id:'camera',    svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2"/><path d="M12 13m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/></svg>'},
+  {id:'paw',       svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14.7 13.5c-1.1 -2 -1.441 -2.5 -2.7 -2.5c-1.259 0 -1.736 .61 -2.7 2.5c-.827 1.612 -1.831 2.812 -2.8 3.5c-1.086 .752 -1.931 1 -3.5 1l0 1.5c2 0 3.5 -.5 5.5 -2c.5 .5 1 1 3.5 1s3 -.5 3.5 -1c2 1.5 3.5 2 5.5 2l0 -1.5c-1.787 0 -2.67 -.259 -3.737 -1.003c-.936 -.655 -1.917 -1.847 -2.563 -3.497z"/><path d="M9.5 8.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"/><path d="M4 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M20 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M14.5 8.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"/></svg>'},
+  {id:'seedling',  svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 10a6 6 0 0 0 -6 -6h-3v2a6 6 0 0 0 6 6h3"/><path d="M12 14a6 6 0 0 1 6 -6h3v1a6 6 0 0 1 -6 6h-3"/><path d="M12 20l0 -10"/></svg>'},
+  {id:'coin',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0 4h-2a2 2 0 0 0 -1.8 -1"/><path d="M12 7v10"/></svg>'},
+];
 const MONTH_NAMES=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
 
 // =================== STORAGE ===================
@@ -1817,25 +1887,11 @@ function daysInMonth(mk) {
 
 function obNumKey(e) {
   if (e.key === 'Enter') { nextSplash(); return; }
-  // Silme tuşlarında sadece ham rakamı sil, yeniden formatlama
-  if (e.key === 'Backspace' || e.key === 'Delete') {
-    setTimeout(() => {
-      const el = e.target;
-      const raw = el.value.replace(/[^0-9]/g, '');
-      if (!raw) { el.value = ''; return; }
-      el.value = raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    }, 0);
-    return;
-  }
-  const allowed = ['Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'];
+  // Formatlama oninput=fmtInput tarafından yapılır (mobil + masaüstü uyumlu)
+  // Sadece geçersiz karakter girişini engelle
+  const allowed = ['Backspace','Delete','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'];
   if (allowed.includes(e.key) || e.ctrlKey || e.metaKey) return;
   if (!/^[0-9]$/.test(e.key)) { e.preventDefault(); return; }
-  setTimeout(() => {
-    const el = e.target;
-    const raw = el.value.replace(/[^0-9]/g, '');
-    if (!raw) { el.value = ''; return; }
-    el.value = raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  }, 0);
 }
 function fmtInput(el) {
   const raw = el.value.replace(/[^\d,]/g, '');
@@ -1901,7 +1957,7 @@ function initSplash() {
   updateSplashDots();
   updateSplashBtn();
   // Hero emoji rotasyonu
-  const heroEmojis = ['💰', '🏆', '🎯', '⭐'];
+  const heroEmojis = ['<svg width="28" height="28" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/></svg>', '<svg width="28" height="28" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>', '<svg width="28" height="28" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>', '<svg width="28" height="28" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>'];
   let heroIdx = 0;
   setInterval(() => {
     const el = document.getElementById('obHeroEmoji');
@@ -1910,7 +1966,7 @@ function initSplash() {
     el.style.transform = 'scale(0.5)';
     setTimeout(() => {
       heroIdx = (heroIdx + 1) % heroEmojis.length;
-      el.textContent = heroEmojis[heroIdx];
+      el.innerHTML = heroEmojis[heroIdx];
       el.style.opacity = '1';
       el.style.transform = 'scale(1)';
     }, 250);
@@ -2047,7 +2103,6 @@ function toggleSection(name) {
   const chevron = document.getElementById(name + 'Chevron');
   if (body) body.classList.toggle('collapsed', !sectionState[name]);
   if (chevron) chevron.classList.toggle('open', sectionState[name]);
-  if (name === 'chart' && sectionState[name]) setTimeout(() => setupChartObservers(), 380);
   if (name === 'yillik' && sectionState[name]) setTimeout(() => renderYillik(), 50);
 }
 
@@ -2141,20 +2196,20 @@ function calcStreakData() {
   // Milestone
   let milestone = null;
   const milestones = [
-    {days:3,  emoji:'🌱', title:'3 gün limit altında!',    sub:'Günlük limitin yükseliyor.'},
-    {days:7,  emoji:'🔥', title:'7 gün limit altında!',    sub:'Bir haftadır bütçen büyüyor.'},
-    {days:14, emoji:'⚡', title:'14 gün limit altında!',   sub:'İki haftadır limit disiplini.'},
-    {days:21, emoji:'💎', title:'21 gün limit altında!',   sub:'Bu artık bir alışkanlık.'},
-    {days:30, emoji:'👑', title:'Tam ay limit altında!',   sub:'Efsanevi bütçe kontrolü.'},
+    {days:3,  emoji:'<svg width="16" height="16" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#4ADE80" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 10a6 6 0 0 0 -6 -6h-3v2a6 6 0 0 0 6 6h3"/><path d="M12 14a6 6 0 0 1 6 -6h3v1a6 6 0 0 1 -6 6h-3"/><path d="M12 20l0 -10"/></svg>', title:'3 gün limit altında!',    sub:'Günlük limitin yükseliyor.'},
+    {days:7,  emoji:'<svg width="16" height="16" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>', title:'7 gün limit altında!',    sub:'Bir haftadır bütçen büyüyor.'},
+    {days:14, emoji:'<svg width="16" height="16" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 3l-9 11h8l-1 7l9 -11h-8l1 -7z"/></svg>', title:'14 gün limit altında!',   sub:'İki haftadır limit disiplini.'},
+    {days:21, emoji:'<svg width="16" height="16" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 5h12l3 5l-8.5 9.5a.7 .7 0 0 1 -1 0l-8.5 -9.5l3 -5"/><path d="M10 12l-2 -2.2l.6 -1"/></svg>', title:'21 gün limit altında!',   sub:'Bu artık bir alışkanlık.'},
+    {days:30, emoji:'<svg width="16" height="16" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4z"/></svg>', title:'Tam ay limit altında!',   sub:'Efsanevi bütçe kontrolü.'},
   ];
   milestones.forEach(ms => { if (streak === ms.days) milestone = ms; });
 
   // Ay sonu rozeti
   let monthBadge = null;
   if (todayD === dim || mk < monthKey()) {
-    if (score >= 90) monthBadge = { cls:'legendary', emoji:'👑', title:'Efsane Ay', sub:`%${score} yeşil gün — mükemmel bütçe kontrolü` };
-    else if (score >= 70) monthBadge = { cls:'disciplined', emoji:'🏅', title:'Disiplinli Ay', sub:`%${score} yeşil gün — harika iş` };
-    else monthBadge = { cls:'trying', emoji:'📈', title:'Gelişiyorsun', sub:`%${score} yeşil gün — devam et` };
+    if (score >= 90) monthBadge = { cls:'legendary', emoji:'<svg width="20" height="20" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4z"/></svg>', title:'Efsane Ay', sub:`%${score} yeşil gün — mükemmel bütçe kontrolü` };
+    else if (score >= 70) monthBadge = { cls:'disciplined', emoji:'<svg width="20" height="20" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 15m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M12 12v-8"/><path d="M8 4h8"/><path d="M9 4l3 4l3 -4"/></svg>', title:'Disiplinli Ay', sub:`%${score} yeşil gün — harika iş` };
+    else monthBadge = { cls:'trying', emoji:'<svg width="20" height="20" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#34D399" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l4 -4l4 4l4 -6l4 4"/><path d="M14 7l3 0l0 3"/></svg>', title:'Gelişiyorsun', sub:`%${score} yeşil gün — devam et` };
   }
 
   if (_needsSave) save();
@@ -2184,16 +2239,16 @@ function renderStreakCard(sd) {
 
   const shieldsHtml = Array.from({length: data.streak.freezeTotal || 2}, (_,i) => {
     const used = i >= freezesLeft;
-    return `<div class="freeze-shield ${used?'used':'active'}">🛡️</div>`;
+    return `<div class="freeze-shield ${used?'used':'active'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="${used?'rgba(255,255,255,.15)':'#0A84FF'}" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg></div>`;
   }).join('');
 
   const dotsHtml = days.map((day, i) => {
     const isToday = day.d === todayD;
     const delay = i * 15;
     let icon = '';
-    if (day.status === 'green') icon = '✓';
-    else if (day.status === 'red') icon = '✕';
-    else if (day.status === 'frozen') icon = '❄';
+    if (day.status === 'green') icon = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg>';
+    else if (day.status === 'red') icon = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg>';
+    else if (day.status === 'frozen') icon = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l0 18"/><path d="M3 12l18 0"/><path d="M12 3l3 3"/><path d="M12 3l-3 3"/><path d="M12 21l3 -3"/><path d="M12 21l-3 -3"/><path d="M3 12l3 -3"/><path d="M3 12l3 3"/><path d="M21 12l-3 3"/><path d="M21 12l-3 -3"/></svg>';
     // future ve empty: boş
     return `<div class="day-dot ${day.status}${isToday?' today':''} day-dot-pop" style="animation-delay:${delay}ms" title="${day.dateStr}">${icon}</div>`;
   }).join('');
@@ -2218,13 +2273,13 @@ function renderStreakCard(sd) {
 
   const noIncomeHint = !hasIncome ? `
     <div style="margin:0 16px 12px;padding:10px 14px;background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.07)">
-      <div style="font-size:12px;font-weight:700;color:var(--muted)">💡 Bu ay gelir kaydı ekle, limit takibini başlat.</div>
+      <div style="font-size:12px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px"><svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0 4h-2a2 2 0 0 0 -1.8 -1"/><path d="M12 7v10"/></svg> Bu ay gelir kaydı ekle, limit takibini başlat.</div>
     </div>` : '';
 
   return `
   <div class="streak-card">
     <div class="streak-header">
-      <span class="streak-flame${isDead?' dead':''}">🔥</span>
+      <span class="streak-flame${isDead?' dead':''}">${isDead ? '<svg width="28" height="28" style="flex-shrink:0;filter:grayscale(1);opacity:.35" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#888" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>' : '<svg width="28" height="28" style="flex-shrink:0;animation:streakFlame 2.6s ease-in-out infinite;filter:drop-shadow(0 0 10px rgba(255,140,0,.55))" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>'}</span>
       <div class="streak-main">
         <div class="streak-count${isDead?' dead':''}">${streak}</div>
         <div class="streak-meta${isDead?' dead':''}">
@@ -2244,7 +2299,7 @@ function renderStreakCard(sd) {
 
     <div class="streak-freeze-row">
       <div class="freeze-shields">${shieldsHtml}</div>
-      <button class="freeze-btn" onclick="useFreeze()" ${freezesLeft<=0?'disabled':''}>❄️</button>
+      <button class="freeze-btn" onclick="useFreeze()" ${freezesLeft<=0?'disabled':''}><svg width="15" height="15" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l0 18"/><path d="M3 12l18 0"/><path d="M12 3l3 3"/><path d="M12 3l-3 3"/><path d="M12 21l3 -3"/><path d="M12 21l-3 -3"/><path d="M3 12l3 -3"/><path d="M3 12l3 3"/><path d="M21 12l-3 3"/><path d="M21 12l-3 -3"/></svg></button>
     </div>
   </div>`;
 }
@@ -2549,13 +2604,13 @@ function buildCarouselItems(fb) {
 
   // 1. Temel bütçe durumu
   if (fb.remaining < 0) {
-    items.push({ cls:'bad', icon:'🩸', title:`Bütçeyi ${fmtTL(Math.round(-fb.remaining))} aştın`, sub:'Harcamalarını kıs, günlük limit düştü.' });
+    items.push({ cls:'bad', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l5 5a7 7 0 1 1 -10 0z"/></svg>', title:`Bütçeyi ${fmtTL(Math.round(-fb.remaining))} aştın`, sub:'Harcamalarını kıs, günlük limit düştü.' });
   } else if (fb.daily < 100) {
-    items.push({ cls:'warn', icon:'🧨', title:'Günlük limitin çok düştü', sub:`${fb.daysLeft} gün için günlük sadece ${fmtTL(Math.round(fb.daily))} var.` });
+    items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg>', title:'Günlük limitin çok düştü', sub:`${fb.daysLeft} gün için günlük sadece ${fmtTL(Math.round(fb.daily))} var.` });
   } else if (fb.remaining > 0) {
-    items.push({ cls:'good', icon:'🫀', title:'Bütçen kontrol altında', sub:`${fmtTL(Math.round(fb.remaining))} kaldı · günlük ${fmtTL(Math.round(fb.daily))} limitin var.` });
+    items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>', title:'Bütçen kontrol altında', sub:`${fmtTL(Math.round(fb.remaining))} kaldı · günlük ${fmtTL(Math.round(fb.daily))} limitin var.` });
   } else {
-    items.push({ cls:'bad', icon:'🔴', title:'Bu ay giderin gelirini geçti', sub:'Sabit gider ve borçlarını gözden geçir.' });
+    items.push({ cls:'bad', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg>', title:'Bu ay giderin gelirini geçti', sub:'Sabit gider ve borçlarını gözden geçir.' });
   }
 
   // Harca azalt / biriktir motivasyonu
@@ -2563,7 +2618,7 @@ function buildCarouselItems(fb) {
     const savePerDay = Math.round(fb.daily * 0.2);
     const potentialSaving = savePerDay * fb.daysLeft;
     if (potentialSaving > 100) {
-      items.push({ cls:'good', icon:'💡', title:`Günde ${fmtTL(savePerDay)} az harcarsan`, sub:`Ay sonuna ${fmtTL(potentialSaving)} daha birikir.` });
+      items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0 4h-2a2 2 0 0 0 -1.8 -1"/><path d="M12 7v10"/></svg>', title:`Günde ${fmtTL(savePerDay)} az harcarsan`, sub:`Ay sonuna ${fmtTL(potentialSaving)} daha birikir.` });
     }
   }
 
@@ -2571,7 +2626,7 @@ function buildCarouselItems(fb) {
   if (avgDailySpent > 0 && todayD >= 3) {
     const overSpeed = avgDailySpent > fb.baseDaily && fb.baseDaily > 0;
     const diff = Math.abs(Math.round(fb.baseDaily - avgDailySpent));
-    items.push({ cls: overSpeed ? 'bad' : 'good', icon: overSpeed ? '🌡️' : '🧊',
+    items.push({ cls: overSpeed ? 'bad' : 'good', icon: overSpeed ? '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 13.5a4 4 0 1 0 4 0v-8.5a2 2 0 0 0 -4 0v8.5"/><path d="M10 9l4 0"/></svg>' : '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l0 18"/><path d="M3 12l18 0"/><path d="M12 3l3 3"/><path d="M12 3l-3 3"/><path d="M12 21l3 -3"/><path d="M12 21l-3 -3"/><path d="M3 12l3 -3"/><path d="M3 12l3 3"/><path d="M21 12l-3 3"/><path d="M21 12l-3 -3"/></svg>',
       title: overSpeed
         ? `Günlük baz limiti ortalama ${fmtTL(diff)} aşıyorsun`
         : `Günlük baz limitinin ${fmtTL(diff)} altındasın`,
@@ -2585,11 +2640,11 @@ function buildCarouselItems(fb) {
     const projectedVarTotal = fb.varSpent + avgDailySpent * fb.daysLeft;
     const projectedVsAvail = Math.round(fb.available - projectedVarTotal);
     if (projectedVsAvail > 0) {
-      items.push({ cls:'good', icon:'🔭',
+      items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#818CF8" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 21l6 -5l6 5"/><path d="M12 13v3"/><path d="M3 7l5 1.5"/><path d="M8 8.5l8 2.5"/><path d="M16 11l5 -4"/><path d="M3.5 6.5l5 -4"/></svg>',
         title:`Bu hızda ay sonu ${fmtTL(projectedVsAvail)} artı kaparsın`,
         sub:`Ort. günlük: ${fmtTL(Math.round(avgDailySpent))}.` });
     } else {
-      items.push({ cls:'warn', icon:'🔭',
+      items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#818CF8" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 21l6 -5l6 5"/><path d="M12 13v3"/><path d="M3 7l5 1.5"/><path d="M8 8.5l8 2.5"/><path d="M16 11l5 -4"/><path d="M3.5 6.5l5 -4"/></svg>',
         title:`Bu hızda ay sonu ${fmtTL(Math.abs(projectedVsAvail))} açık verir`,
         sub:`Günlük ${fmtTL(Math.round(fb.daily))} altında tut.` });
     }
@@ -2598,11 +2653,11 @@ function buildCarouselItems(fb) {
   // 4. Streak
   const streak = data.streak.current || 0;
   if (streak >= 2) {
-    items.push({ cls:'good', icon:'🔥',
+    items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>',
       title:`${streak} gün üst üste limit altındasın`,
       sub: streak >= 7 ? 'Mükemmel disiplin!' : 'Her yeşil gün limiti artırıyor.' });
   } else if (streak === 0 && todayD > 3) {
-    items.push({ cls:'warn', icon:'💡',
+    items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0 4h-2a2 2 0 0 0 -1.8 -1"/><path d="M12 7v10"/></svg>',
       title:'Limitte kal, streaki başlat',
       sub:'Günlük limitini aşmayan her gün zinciri uzatır.' });
   }
@@ -2612,12 +2667,12 @@ function buildCarouselItems(fb) {
   if (goalsWithMonthly.length > 0) {
     const paidGoals = goalsWithMonthly.filter(g => (g.paidMonths||[]).includes(mk)).length;
     if (paidGoals === goalsWithMonthly.length) {
-      items.push({ cls:'good', icon:'🎯',
+      items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
         title:`Bu ay tüm birikim hedeflerini karşıladın`,
         sub:'Harika, devam et!' });
     } else {
       const unpaid = goalsWithMonthly.length - paidGoals;
-      items.push({ cls:'warn', icon:'🎯',
+      items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
         title:`${unpaid} birikim hedefin bu ay henüz ödenmedi`,
         sub:'Giderler sekmesinden ekle.' });
     }
@@ -2627,7 +2682,7 @@ function buildCarouselItems(fb) {
   if (fb.remaining > 0 && avgDailySpent > 0) {
     const extraDays = Math.floor(fb.remaining / avgDailySpent);
     if (extraDays > 0 && extraDays < 90) {
-      items.push({ cls:'good', icon:'⌛',
+      items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#818CF8" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.5 7h11"/><path d="M6.5 17h11"/><path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"/><path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"/></svg>',
         title:`Bu hızda bütçen ${extraDays} gün daha yetişir`,
         sub:'Limitin altında kal.' });
     }
@@ -2648,7 +2703,7 @@ function buildCarouselItems(fb) {
     });
     if (topCat) {
       const cat=getCat(topCat.id);
-      items.push({cls:'warn',icon:'🔬',
+      items.push({cls:'warn',icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#60A5FA" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 13a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M9 13v-8h6v8"/><path d="M9 5h6"/><path d="M5 21h14"/><path d="M12 17v4"/></svg>',
         title:`${cat.name} harcaman geçen aya göre %${topCat.pct} arttı`,
         sub:'Bu kategori limiti düşürüyor.'});
     }
@@ -2661,11 +2716,11 @@ function buildCarouselItems(fb) {
     const debtToIncomeRatio = fb.income > 0 ? monthlyDebtLoad / fb.income : 0;
     const debtPct = Math.round(debtToIncomeRatio * 100);
     if (debtToIncomeRatio > 0.4) {
-      items.push({ cls:'bad', icon:'💳',
+      items.push({ cls:'bad', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg>',
         title:`Borç yükün gelirinin %${debtPct}'i — kritik`,
         sub:`%30 sınırını aşıyorsun.` });
     } else if (debtToIncomeRatio > 0.2) {
-      items.push({ cls:'warn', icon:'💳',
+      items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg>',
         title:`Borç yükün gelirinin %${debtPct}'i`,
         sub:`Yeni borç alma.` });
     }
@@ -2673,19 +2728,19 @@ function buildCarouselItems(fb) {
       const smallest = [...activeDebts].sort((a,b) =>
         (a.totalAmount - a.paidCount*a.monthlyAmount) - (b.totalAmount - b.paidCount*b.monthlyAmount))[0];
       const left = Math.round(smallest.totalAmount - smallest.paidCount * smallest.monthlyAmount);
-      if (left > 0) items.push({ cls:'warn', icon:'🎯',
+      if (left > 0) items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
         title:`En küçük borcu önce bitir: ${esc(smallest.name)}`,
         sub:`${fmtTL(left)} kaldı — bitince diğerine ekstra öde.` });
     }
   } else if (fb.income > 0) {
-    items.push({ cls:'good', icon:'🫶',
+    items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>',
       title:'Aktif borcun yok',
       sub:'Şimdi biriktirme vakti!' });
   }
 
   // 9. Hedefler (wishlist) projeksiyon insight'ları
   if (data.wishlist && data.wishlist.length > 0) {
-    const priorityOrder = { high: 0, mid: 1, low: 2 };
+    const priorityOrder = { critical: 0, high: 1, mid: 2, low: 3, someday: 4 };
     const sorted = [...data.wishlist].sort((a, b) =>
       (priorityOrder[a.priority] || 1) - (priorityOrder[b.priority] || 1)
     );
@@ -2693,23 +2748,17 @@ function buildCarouselItems(fb) {
     sorted.slice(0, 2).forEach(w => {
       const proj = calcWishProjection(w, fb);
       if (proj.canAfford) {
-        items.push({ cls: 'good', icon: '🎯',
+        items.push({ cls: 'good', icon: '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
           title: `${esc(w.name)} için bütçen yeterli!`,
           sub: `Bu ay alabilirsin — ${fmtTL(w.price)}.` });
       } else if (proj.monthsAway !== null && proj.monthsAway <= 3) {
-        items.push({ cls: 'good', icon: '🎯',
+        items.push({ cls: 'good', icon: '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
           title: `${esc(w.name)} — ${proj.monthsAway === 1 ? 'gelecek ay' : proj.monthsAway + ' ay sonra'}`,
           sub: proj.subText });
       } else if (proj.monthsAway !== null) {
-        items.push({ cls: 'warn', icon: '🎯',
+        items.push({ cls: 'warn', icon: '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
           title: `${esc(w.name)} — ~${proj.monthsAway} ay kaldı`,
-          sub: proj.tipText || proj.subText });
-      }
-      if (proj.trendText) {
-        items.push({ cls: proj.trendText.includes('uzaklaş') ? 'bad' : 'good',
-          icon: '🎯',
-          title: `${esc(w.name)} hedefin`,
-          sub: proj.trendText.replace(/^[📈📉]\s*/, '') });
+          sub: proj.subText });
       }
     });
   }
@@ -2728,7 +2777,9 @@ function renderFeedbackPill(fb) {
 
   _carouselIndex = 0;
   el.innerHTML = `
-    <div class="insight-carousel" id="insightCarousel"></div>`;
+    <div class="insight-carousel" id="insightCarousel">
+      <div class="insight-sweep"></div>
+    </div>`;
   showCarouselItem(0);
   startCarousel();
 }
@@ -2738,17 +2789,24 @@ function showCarouselItem(idx) {
   if (!el || !_carouselItems.length) return;
   const item = _carouselItems[idx];
   el.className = `insight-carousel ${item.cls}`;
-  el.innerHTML = `
-    <div class="insight-card ${item.cls}" style="cursor:pointer" onclick="carouselNav(1)">
+  // Sadece card div'ini güncelle — sweep div'e dokunma
+  let card = document.getElementById('insightCard');
+  if (!card) {
+    card = document.createElement('div');
+    card.id = 'insightCard';
+    el.appendChild(card);
+  }
+  card.className = `insight-card ${item.cls}`;
+  card.style.cursor = 'pointer';
+  card.onclick = () => carouselNav(1);
+  card.innerHTML = `
       <div class="insight-card-inner" style="position:relative;z-index:1">
         <div class="insight-icon">${item.icon}</div>
         <div class="insight-text">
           <div class="insight-title">${item.title}</div>
           <div class="insight-sub">${item.sub}</div>
         </div>
-      </div>
-    </div>`;
-
+      </div>`;
 }
 
 function carouselNav(dir) {
@@ -2784,12 +2842,6 @@ function stopCarousel() {
   if (_carouselTimer) { clearInterval(_carouselTimer); _carouselTimer = null; }
 }
 
-let _txListExpanded = false; // false = son 5, true = tümü
-
-function toggleTxSection() {
-  _txListExpanded = !_txListExpanded;
-  renderMonthly();
-}
 
 function updateTxSectionSummary(txs) {
   const el = document.getElementById('txSectionSummary');
@@ -2823,12 +2875,12 @@ function renderTxList(container, txs, limitTo5) {
     const totalStr = (dayTotal >= 0 ? '+' : '−') + fmtTL(Math.abs(dayTotal));
     let itemsHtml = '';
     for (const t of grouped[date]) {
-      if (limitTo5 && !_txListExpanded && shownCount >= MAX_ITEMS) break;
+      if (limitTo5 && shownCount >= MAX_ITEMS) break;
       const cat = getCat(t.category);
       const iconBg = t.type === 'income' ? 'rgba(45,184,102,.22)' : 'rgba(255,255,255,.06)';
       const rowBg = t.type === 'income' ? 'rgba(45,184,102,.07)' : 'rgba(191,90,242,.07)';
-      itemsHtml += `<div class="tx-item tx-deletable stagger-item" id="tx_${t.id}" onclick="toggleTxDelete('${t.id}')" style="background:${rowBg}">
-        <div class="tx-icon ${t.type}" style="background:${iconBg}">${cat.emoji}</div>
+      itemsHtml += `<div class="tx-item stagger-item" id="tx_${t.id}" onclick="toggleTxDelete('${t.id}')" style="background:${rowBg}">
+        <div class="tx-icon ${t.type}" style="background:${iconBg}">${catIconSvg(cat,18)}</div>
         <div class="tx-info">
           <div class="tx-desc">${esc(t.desc)}</div>
         </div>
@@ -2891,7 +2943,7 @@ document.addEventListener('touchend', e => {
   if (_touchOnInteractive) return;
 
   // Modal/overlay açıksa swipe yapma
-  const anyModalOpen = document.querySelector('.modal-overlay.show, .confirm-modal.show, #celebrationOverlay.show, #onboarding[style*="flex"]');
+  const anyModalOpen = document.querySelector('.modal-overlay.show, .confirm-modal.show, #celebrationOverlay.show, #onboarding[style*="flex"], #historyOverlay[style*="flex"]');
   if (anyModalOpen) return;
 
   const dx = _touchEndX - _touchStartX;
@@ -3434,7 +3486,7 @@ function renderRecList() {
   if (!el) return;
   const items = data.recurring.filter(r => r.active);
   if (!items.length) {
-    el.innerHTML = `<div class="empty-state" style="padding:24px 0"><span class="empty-state-icon">📋</span><div class="empty-state-text">Sabit gider yok</div><div class="empty-state-sub">Kira, abonelik gibi düzenli giderleri ekle.</div></div>`;
+    el.innerHTML = `<div class="empty-state" style="padding:24px 0"><span class="empty-state-icon" style="font-size:0"><svg width="44" height="44" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"/><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"/><path d="M9 12h6"/><path d="M9 16h6"/></svg></span><div class="empty-state-text">Sabit gider yok</div><div class="empty-state-sub">Kira, abonelik gibi düzenli giderleri ekle.</div></div>`;
     return;
   }
   el.innerHTML = items.map(r => {
@@ -3442,13 +3494,13 @@ function renderRecList() {
     const cat = getCat(r.category);
     return `<div class="rec-item ${paid?'paid-item':''}" id="recitem_${r.id}" onclick="toggleItemExpand('recitem_${r.id}')">
       <div style="flex:1;display:flex;align-items:center;gap:12px">
-        <div class="rec-icon" style="background:${paid?'rgba(45,184,102,.12)':'var(--surface3)'}; transition:background .2s" onclick="event.stopPropagation();togglePaidRecurring('${r.id}')">${cat.emoji}</div>
+        <div class="rec-icon" style="background:${paid?'rgba(45,184,102,.12)':'var(--surface3)'}; transition:background .2s" onclick="event.stopPropagation();togglePaidRecurring('${r.id}')">${catIconSvg(cat,20)}</div>
         <div class="rec-info" style="flex:1;min-width:0;pointer-events:none">
           <div class="rec-name" style="opacity:${paid?'0.5':'1'};text-decoration:${paid?'line-through':'none'}">${esc(r.desc)}</div>
           <div class="rec-meta">${cat.name} · ${fmtTL(r.amount)}/ay</div>
         </div>
         <div class="rec-status" onclick="event.stopPropagation();togglePaidRecurring('${r.id}')">
-          <div class="rec-status-badge ${paid?'paid':'unpaid'}">${paid?'✓ Ödendi':'Öde'}</div>
+          <div class="rec-status-badge ${paid?'paid':'unpaid'}">${paid?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> Ödendi':'Öde'}</div>
           <div class="rec-status-amount" style="color:${paid?'var(--accent)':'var(--text)'}">${fmtTL(r.amount)}</div>
         </div>
       </div>
@@ -3520,7 +3572,7 @@ function renderDebtList() {
   const allDebts = data.debts;
   const activeDebts = allDebts.filter(d => d.active);
   if (!allDebts.length) {
-    el.innerHTML = `<div class="empty-state" style="padding:24px 0"><span class="empty-state-icon">🎉</span><div class="empty-state-text">Ödeme yok!</div><div class="empty-state-sub">Harika — tüm ödemeler temiz.</div></div>`;
+    el.innerHTML = `<div class="empty-state" style="padding:24px 0"><span class="empty-state-icon" style="font-size:0"><svg width="44" height="44" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h2"/><path d="M5 4v2"/><path d="M11.5 4l-.5 2"/><path d="M18 5h2"/><path d="M19 4v2"/><path d="M15 9l-1 1"/><path d="M18 13l2 -.5"/><path d="M18 19h2"/><path d="M19 18v2"/><path d="M14 16.518l-6.518 -6.518l-4.39 9.58a1 1 0 0 0 1.329 1.329l9.579 -4.39z"/></svg></span><div class="empty-state-text">Ödeme yok!</div><div class="empty-state-sub">Harika — tüm ödemeler temiz.</div></div>`;
     if (sumEl) sumEl.innerHTML = '';
     return;
   }
@@ -3532,7 +3584,7 @@ function renderDebtList() {
     return `<div class="rec-item debt-item ${paid?'paid-item':''}" id="debtitem_${d.id}" style="${done?'opacity:.55':''}" onclick="toggleItemExpand('debtitem_${d.id}')">
       <div style="flex:1;display:flex;align-items:center;gap:12px">
         <div class="rec-icon" style="background:${done?'rgba(45,184,102,.12)':paid?'rgba(45,184,102,.12)':'rgba(255,69,58,.08)'};cursor:${future||done?'default':'pointer'}" onclick="event.stopPropagation();${!future&&!done?`togglePaidDebt('${d.id}')`:''}"
->💳</div>
+>${borcIconSvg(20)}</div>
         <div class="rec-info" style="flex:1;min-width:0;pointer-events:none">
           <div class="rec-name" style="opacity:${(paid||done)?'0.5':'1'};text-decoration:${paid||done?'line-through':'none'}">${esc(d.name)}</div>
           <div class="rec-meta">${d.paidCount}/${d.installments} taksit · ${fmtTL(d.monthlyAmount)}/ay</div>
@@ -3540,11 +3592,11 @@ function renderDebtList() {
             <div style="width:${pct}%;height:100%;background:${done?'var(--accent)':paid?'var(--accent)':'rgba(255,69,58,.5)'};border-radius:2px;transition:width .5s ease"></div>
           </div>
           ${future?`<div style="font-size:10px;color:var(--warning);margin-top:3px;font-weight:800">⏳ ${d.startMonth} ayında başlıyor</div>`:''}
-          ${done?`<div style="font-size:10px;color:var(--accent);margin-top:3px;font-weight:800">✓ Tamamlandı</div>`:''}
+          ${done?`<div style="font-size:10px;color:var(--accent);margin-top:3px;font-weight:800"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> Tamamlandı</div>`:''}
         </div>
         <div class="rec-status" style="cursor:${future||done?'default':'pointer'}" onclick="event.stopPropagation();${!future&&!done?`togglePaidDebt('${d.id}')`:''}"
 >
-          <div class="rec-status-badge ${done?'paid':paid?'paid':'unpaid'}">${done?'Bitti 🎉':future?'Bekliyor':paid?'✓ Ödendi':'Öde'}</div>
+          <div class="rec-status-badge ${done?'paid':paid?'paid':'unpaid'}">${done?'Bitti <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h2"/><path d="M5 4v2"/><path d="M11.5 4l-.5 2"/><path d="M18 5h2"/><path d="M19 4v2"/><path d="M15 9l-1 1"/><path d="M18 13l2 -.5"/><path d="M18 19h2"/><path d="M19 18v2"/><path d="M14 16.518l-6.518 -6.518l-4.39 9.58a1 1 0 0 0 1.329 1.329l9.579 -4.39z"/></svg>':future?'Bekliyor':paid?'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> Ödendi':'Öde'}</div>
           <div class="rec-status-amount" style="color:${done||paid?'var(--accent)':'var(--danger)'}">${fmtTL(d.monthlyAmount)}</div>
         </div>
       </div>
@@ -3648,12 +3700,25 @@ function deleteDebt(id) {
 function buildEmojiGrid() {
   const el = document.getElementById('emojiGrid');
   if (!el) return;
-  el.innerHTML = GOAL_EMOJIS.map(e => `<div class="emoji-opt${document.getElementById('goalEmoji').value===e?' selected':''}" onclick="selectEmoji('${e}')">${e}</div>`).join('');
+  const cur = document.getElementById('goalEmoji').value || 'target';
+  el.innerHTML = GOAL_ICONS.map(ic => {
+    const sel = ic.id === cur;
+    const strokeColor = sel ? 'var(--accent)' : 'var(--muted)';
+    const svgStyled = ic.svg
+      .replace('<svg ', `<svg width="22" height="22" style="flex-shrink:0" `)
+      .replace('stroke-width="1.5"', `stroke-width="1.5" stroke="${strokeColor}"`);
+    return `<div class="emoji-opt${sel?' selected':''}" onclick="selectEmoji('${ic.id}')" data-icon="${ic.id}">${svgStyled}</div>`;
+  }).join('');
 }
 
-function selectEmoji(e) {
-  document.getElementById('goalEmoji').value = e;
-  document.querySelectorAll('.emoji-opt').forEach(el => el.classList.toggle('selected', el.textContent === e));
+function selectEmoji(id) {
+  document.getElementById('goalEmoji').value = id;
+  document.querySelectorAll('#emojiGrid .emoji-opt').forEach(el => {
+    const sel = el.dataset.icon === id;
+    el.classList.toggle('selected', sel);
+    const svg = el.querySelector('svg');
+    if (svg) svg.setAttribute('stroke', sel ? 'var(--accent)' : 'var(--muted)');
+  });
 }
 
 function toggleGoalForm() {
@@ -3706,7 +3771,7 @@ function addGoal() {
   const target = parseNum(document.getElementById('goalTarget').value);
   const monthly = parseNum(document.getElementById('goalMonthly').value);
   const note = document.getElementById('goalNote')?.value.trim() || '';
-  const emoji = document.getElementById('goalEmoji').value || '🎯';
+  const emoji = document.getElementById('goalEmoji').value || 'target';
   if (!name || !target) { showToast('⚠️ Ad ve hedef tutar gerekli'); return; }
   data.savingsGoals.push({ id: uid(), name, emoji, target, monthly, note, deposits: [], paidMonths: [] });
   save();
@@ -3724,7 +3789,7 @@ function renderGoalsList() {
   const el = document.getElementById('goalsList');
   if (!el) return;
   if (!data.savingsGoals.length) {
-    el.innerHTML = `<div class="empty-state" style="padding:24px 0"><span class="empty-state-icon">🪙</span><div class="empty-state-text">Henüz birikim yok</div><div class="empty-state-sub">Tatil, araba, acil fon — hayalini ekle.</div></div>`;
+    el.innerHTML = `<div class="empty-state" style="padding:24px 0"><span class="empty-state-icon" style="font-size:0"><svg width="44" height="44" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 8v-1a4 4 0 0 0 -4 -4h-2a4 4 0 0 0 -4 4v1"/><path d="M7 8h12a1 1 0 0 1 1 1v3a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -6 -6v-3a1 1 0 0 1 1 -1z"/><path d="M20 12h1a1 1 0 0 0 1 -1v-1a1 1 0 0 0 -1 -1h-1"/><path d="M9 17v2"/><path d="M15 17v2"/><path d="M11 12h2"/></svg></span><div class="empty-state-text">Henüz birikim yok</div><div class="empty-state-sub">Tatil, araba, acil fon — hayalini ekle.</div></div>`;
     return;
   }
   el.innerHTML = data.savingsGoals.map(g => {
@@ -3734,7 +3799,7 @@ function renderGoalsList() {
     const barColor = pct>=100?'var(--accent)':pct>=60?'var(--warning)':'var(--blue)';
     return `<div class="goal-card" id="goalitem_${g.id}" onclick="toggleItemExpand('goalitem_${g.id}')">
       <div class="goal-header" style="pointer-events:none;user-select:none">
-        <div class="goal-emoji-wrap">${g.emoji}</div>
+        <div class="goal-emoji-wrap">${(()=>{const ic=(GOAL_ICONS||[]).find(x=>x.id===g.emoji)||GOAL_ICONS[0];return ic.svg.replace('<svg ','<svg width="24" height="24" style="flex-shrink:0" ').replace('stroke-width="1.5"','stroke-width="1.5" stroke="var(--accent)"');})()}</div>
         <div style="flex:1">
           <div class="goal-title">${esc(g.name)}</div>
           <div class="goal-subtitle">${fmtTL(total)} / ${fmtTL(g.target)} · ${pct}%</div>
@@ -3748,9 +3813,9 @@ function renderGoalsList() {
         <div class="goal-bar"><div class="goal-bar-fill" style="width:${pct}%;background:${barColor}"></div></div>
       </div>
       ${g.monthly?`<div class="monthly-tick-row ${isMonthlyPaid?'paid':''}" onclick="event.stopPropagation();toggleGoalMonthly('${g.id}')">
-        <div class="monthly-tick-check">${isMonthlyPaid?'✓':''}</div>
+        <div class="monthly-tick-check">${isMonthlyPaid ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg>' : ''}</div>
         <div class="monthly-tick-info">
-          <div class="monthly-tick-label" style="color:${isMonthlyPaid?'var(--accent)':'var(--text)'}">${isMonthlyPaid?'Bu ay biriktirildi ✓':'Bu ay biriktir'}</div>
+          <div class="monthly-tick-label" style="color:${isMonthlyPaid?'var(--accent)':'var(--text)'}">${isMonthlyPaid?'Bu ay biriktirildi <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg>':'Bu ay biriktir'}</div>
           <div class="monthly-tick-amount">${fmtTL(g.monthly)} · ${mk}</div>
         </div>
       </div>`:''}
@@ -3779,7 +3844,7 @@ function toggleGoalMonthly(goalId) {
     g.paidMonths.push(mk);
     const depId = uid();
     g.deposits.push({ id: depId, amount: g.monthly, date: today(), note: 'Aylık otomatik', goalMonthlyId: goalId });
-    data.transactions.push({ id: uid(), type: 'expense', desc: g.emoji + ' ' + g.name + ' (aylık)', amount: g.monthly, date: today(), category: 'diger', goalMonthlyId: goalId, isGoalDeposit: true, goalId: goalId });
+    data.transactions.push({ id: uid(), type: 'expense', desc: g.name + ' (aylık)', amount: g.monthly, date: today(), category: 'diger', goalMonthlyId: goalId, isGoalDeposit: true, goalId: goalId });
     showToast('✅ ' + g.name + ' — ' + fmtTL(g.monthly) + ' eklendi');
   }
   save(); renderAll();
@@ -3791,7 +3856,7 @@ function openDepositModal(goalId) {
   if (!g) return;
   _depositGoalId = goalId;
   const nameEl = document.getElementById('depositModalGoalName');
-  if (nameEl) nameEl.textContent = g.emoji + ' ' + g.name;
+  if (nameEl) nameEl.textContent = g.name;
   const amtEl = document.getElementById('depositAmount');
   if (amtEl) amtEl.value = '';
   document.getElementById('depositModal').classList.add('show');
@@ -3808,17 +3873,17 @@ function saveDepositModal() {
   if (!amount) { showToast('⚠️ Tutar giriniz'); return; }
 
   g.deposits.push({ id: uid(), amount, date: today(), note: 'Manuel' });
-  data.transactions.push({ id: uid(), type: 'expense', desc: g.emoji + ' ' + g.name, amount, date: today(), category: 'diger', isGoalDeposit: true, goalId: _depositGoalId });
+  data.transactions.push({ id: uid(), type: 'expense', desc: g.name, amount, date: today(), category: 'diger', isGoalDeposit: true, goalId: _depositGoalId });
 
   const total = g.deposits.reduce((s,d) => s + d.amount, 0);
   const pct = Math.min(100, g.target > 0 ? Math.round((total / g.target) * 100) : 0);
   const celebData = total >= g.target ? {
-    emoji: g.emoji || '🏆',
+    emoji: '🏆',
     title: 'Hedefe Ulaştın!',
     sub: `${g.name} için ${fmtTL(g.target)} biriktirdin.\nTebrikler, harika iş çıkardın! 🎉`,
     tag: 'Tamamlandı'
   } : {
-    emoji: g.emoji || '💰',
+    emoji: '💰',
     title: `${fmtTL(amount)} Eklendi!`,
     sub: `${g.name} — %${pct} tamamlandı.\n${fmtTL(g.target - total)} kaldı.`,
     tag: 'Birikim'
@@ -3863,7 +3928,7 @@ function saveGoalEdit() {
 }
 
 // =================== HEDEFLer (WISHLIST) ===================
-const WISH_PRIORITY_LABEL = { high: '🔥 Acil', mid: '⭐ İstersen', low: '💭 Rüya' };
+const WISH_PRIORITY_LABEL = { critical: 'Kritik', high: 'Öncelikli', mid: 'İstenir', low: 'Düşük', someday: 'Bir gün' };
 
 function toggleWishForm() {
   if (!sectionState.wish) {
@@ -3877,8 +3942,8 @@ function toggleWishForm() {
   const isOpen = f.style.display === 'block';
   f.style.display = isOpen ? 'none' : 'block';
   if (!isOpen) {
-    buildWishEmojiPicker('wishEmojiPicker', 'wishEmojiHidden', '🎯');
-    document.getElementById('wishEmojiHidden').value = '🎯';
+    buildWishEmojiPicker('wishEmojiPicker', 'wishEmojiHidden', 'target');
+    document.getElementById('wishEmojiHidden').value = 'target';
     setTimeout(() => document.getElementById('wishName')?.focus(), 100);
   }
 }
@@ -3887,7 +3952,7 @@ function addWish() {
   const name = document.getElementById('wishName').value.trim();
   const price = parseNum(document.getElementById('wishPrice').value);
   const priority = document.getElementById('wishPriority').value || 'mid';
-  const emoji = document.getElementById('wishEmojiHidden')?.value || '🎯';
+  const emoji = document.getElementById('wishEmojiHidden')?.value || 'target';
   if (!name || !price) { showToast('⚠️ Ad ve fiyat gerekli'); return; }
   data.wishlist.push({ id: uid(), name, price, priority, emoji, createdAt: today() });
   save();
@@ -3901,27 +3966,61 @@ function addWish() {
 function deleteWish(id) {
   showConfirm('Bu hedefi silmek istiyor musunuz?', () => {
     data.wishlist = data.wishlist.filter(w => w.id !== id);
+    // İlişkili savingsGoals kaydını da temizle (orphan önleme)
+    data.savingsGoals = data.savingsGoals.filter(g => g.wishId !== id);
     save(); renderAll();
   });
 }
 
-const WISH_EMOJIS = ['✈️','🚗','🏠','💻','📱','👟','🎮','🎸','📷','🏋️','🌴','💍','🎁','🛋️','📚','🎬','🚲','⌚','🏖️','🎯','🐾','🎨','🏕️','⛵','🎻','🧳','🏂','🎺','🚀','💎'];
+const WISH_ICONS = [
+  {id:'plane',     svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16 10h4a2 2 0 0 1 0 4h-4l-4 7h-3l2 -7h-4l-2 2h-3l2 -4l-2 -4h3l2 2h4l-2 -7h3z"/></svg>'},
+  {id:'car',       svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M5 17h-2v-6l2 -5h9l4 5h1a2 2 0 0 1 2 2v4h-2m-4 0h-6m-6 -6h15m-6 0v-5"/></svg>'},
+  {id:'home',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg>'},
+  {id:'laptop',    svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 19l18 0"/><path d="M5 6m0 1a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1z"/></svg>'},
+  {id:'phone',     svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 5m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"/><path d="M11 4h2"/><path d="M12 17v.01"/></svg>'},
+  {id:'shoe',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 16l1 -9l4 3l3 -6l6 4c1.5 .667 2.167 1.667 2 3l-1 5c-.333 .667 -1.167 1 -2.5 1h-11.5a1 1 0 0 1 -1 -1z"/></svg>'},
+  {id:'gamepad',   svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M2 6l10 -2l10 2v3.5c0 5.523 -4.477 10 -10 10s-10 -4.477 -10 -10z"/><path d="M7 10h2v4"/><path d="M7 14h4"/><path d="M15 10v.01"/><path d="M17 12v.01"/></svg>'},
+  {id:'guitar',    svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4.5 19.5l4.5 -4.5"/><path d="M14 6l4 4"/><path d="M15.5 4.5l4 4l-6.5 6.5c-.667 1.557 -1.167 2.724 -.5 4c.667 1.276 -.056 3.064 -2.5 3.5c-2 .333 -3.833 -.833 -3.5 -3c.333 -2.167 1.556 -3.278 3.5 -3.5l-1.5 -4.5z"/></svg>'},
+  {id:'camera',    svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2"/><path d="M12 13m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/></svg>'},
+  {id:'barbell',   svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M2 12h1"/><path d="M6 8h-2a1 1 0 0 0 -1 1v6a1 1 0 0 0 1 1h2"/><path d="M6 7v10a1 1 0 0 0 1 1h1a1 1 0 0 0 1 -1v-10a1 1 0 0 0 -1 -1h-1a1 1 0 0 0 -1 1z"/><path d="M22 12h-1"/><path d="M18 8h2a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-2"/><path d="M18 7v10a1 1 0 0 1 -1 1h-1a1 1 0 0 1 -1 -1v-10a1 1 0 0 1 1 -1h1a1 1 0 0 1 1 1z"/><path d="M10 12h4"/></svg>'},
+  {id:'tree',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l4 4l-2 0l4 4l-3 0l3 4l-4 0l0 3l-4 0l0 -3l-4 0l3 -4l-3 0l4 -4l-2 0z"/></svg>'},
+  {id:'ring',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7.5 7.5m-4.5 0a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0"/><path d="M12 12l3.5 3.5m2 2l2.5 2.5"/><path d="M18 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/></svg>'},
+  {id:'gift',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 8m0 1a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z"/><path d="M12 8l0 13"/><path d="M19 12v7a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0 -5a4.8 8 0 0 1 4.5 5a4.8 8 0 0 1 4.5 -5a2.5 2.5 0 0 1 0 5"/></svg>'},
+  {id:'sofa',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 10a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v4h-20v-4z"/><path d="M5 14v3"/><path d="M19 14v3"/><path d="M3 18h18"/><path d="M5 8v-3a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v3"/></svg>'},
+  {id:'book',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6l0 13"/><path d="M12 6l0 13"/><path d="M21 6l0 13"/></svg>'},
+  {id:'movie',     svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M8 4l0 16"/><path d="M16 4l0 16"/><path d="M4 8l4 0"/><path d="M4 16l4 0"/><path d="M4 12l16 0"/><path d="M16 8l4 0"/><path d="M16 16l4 0"/></svg>'},
+  {id:'bike',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M19 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M12 19h-4.5l-2.5 -7l3 -3h5l1 4h2l2 -3"/><path d="M17 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M15 6l-3 3"/></svg>'},
+  {id:'watch',     svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M12 8v-3"/><path d="M12 16v3"/><path d="M15.5 9.5l2 -2"/><path d="M6.5 17.5l2 -2"/><path d="M8.5 9.5l-2 -2"/><path d="M17.5 17.5l-2 -2"/></svg>'},
+  {id:'beach',     svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17.553 16.75a7.5 7.5 0 0 0 -10.606 0"/><path d="M18 3.804a6 6 0 0 0 -8.196 2.196l10.392 6a6 6 0 0 0 -2.196 -8.196z"/><path d="M16.732 10c1.658 -2.87 2.225 -5.644 1.268 -6.196c-1.239 -.714 -3.856 1.983 -5.803 5.985"/><path d="M15 9l-3 5.196"/><path d="M3 19.25a2.4 2.4 0 0 1 1 -.25a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 1 .25"/></svg>'},
+  {id:'target',    svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>'},
+  {id:'paw',       svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14.7 13.5c-1.1 -2 -1.441 -2.5 -2.7 -2.5c-1.259 0 -1.736 .61 -2.7 2.5c-.827 1.612 -1.831 2.812 -2.8 3.5c-1.086 .752 -1.931 1 -3.5 1l0 1.5c2 0 3.5 -.5 5.5 -2c.5 .5 1 1 3.5 1s3 -.5 3.5 -1c2 1.5 3.5 2 5.5 2l0 -1.5c-1.787 0 -2.67 -.259 -3.737 -1.003c-.936 -.655 -1.917 -1.847 -2.563 -3.497z"/><path d="M9.5 8.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"/><path d="M4 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M20 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M14.5 8.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"/></svg>'},
+  {id:'palette',   svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 21a9 9 0 0 1 0 -18c4.97 0 9 3.582 9 8c0 1.06 -.474 2.078 -1.318 2.828c-.844 .75 -1.989 1.172 -3.182 1.172h-2.5a2 2 0 0 0 -1 3.75a1.3 1.3 0 0 1 -1 2.25"/><path d="M8.5 10.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M16.5 10.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>'},
+  {id:'tent',      svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 21l4 -12l4 6l4 -3l4 9"/><path d="M3 21h18"/></svg>'},
+  {id:'rocket',    svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 13a8 8 0 0 1 7 7a6 6 0 0 0 3 -5a9 9 0 0 0 6 -8a3 3 0 0 0 -3 -3a9 9 0 0 0 -8 6a6 6 0 0 0 -5 3"/><path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3"/><path d="M15 9m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>'},
+  {id:'gem',       svg:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 5h12l3 5l-8.5 9.5a.7 .7 0 0 1 -1 0l-8.5 -9.5l3 -5"/><path d="M10 12l-2 -2.2l.6 -1"/></svg>'},
+];
 
-function selectWishEmoji(e, el, pickerId, hiddenId) {
-  document.getElementById(hiddenId).value = e;
-  document.querySelectorAll('#' + pickerId + ' [data-emoji]').forEach(d => {
-    const isSelected = d.dataset.emoji === e;
-    d.style.background = isSelected ? 'var(--accent-dim)' : 'var(--surface3)';
-    d.style.borderColor = isSelected ? 'var(--accent)' : 'var(--border)';
+function selectWishEmoji(id, pickerId, hiddenId) {
+  document.getElementById(hiddenId).value = id;
+  document.querySelectorAll('#' + pickerId + ' [data-icon]').forEach(d => {
+    const sel = d.dataset.icon === id;
+    d.style.background = sel ? 'var(--accent-dim)' : 'var(--surface3)';
+    d.style.borderColor = sel ? 'var(--accent)' : 'var(--border)';
+    const svg = d.querySelector('svg');
+    if (svg) svg.setAttribute('stroke', sel ? 'var(--accent)' : 'var(--muted)');
   });
 }
 
-function buildWishEmojiPicker(pickerId, hiddenId, currentEmoji) {
+function buildWishEmojiPicker(pickerId, hiddenId, currentId) {
   const container = document.getElementById(pickerId);
   if (!container) return;
-  container.innerHTML = WISH_EMOJIS.map(e => {
-    const sel = e === currentEmoji;
-    return `<div onclick="selectWishEmoji('${e}',this,'${pickerId}','${hiddenId}')" data-emoji="${e}" style="width:36px;height:36px;border-radius:9px;background:${sel?'var(--accent-dim)':'var(--surface3)'};border:1.5px solid ${sel?'var(--accent)':'var(--border)'};display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:all .15s">${e}</div>`;
+  container.innerHTML = WISH_ICONS.map(ic => {
+    const sel = ic.id === currentId;
+    const strokeColor = sel ? 'var(--accent)' : 'var(--muted)';
+    const svgStyled = ic.svg
+      .replace('<svg ', `<svg width="22" height="22" style="flex-shrink:0" `)
+      .replace('stroke-width="1.5"', `stroke-width="1.5" stroke="${strokeColor}"`);
+    return `<div onclick="selectWishEmoji('${ic.id}','${pickerId}','${hiddenId}')" data-icon="${ic.id}" style="width:38px;height:38px;border-radius:9px;background:${sel?'var(--accent-dim)':'var(--surface3)'};border:1.5px solid ${sel?'var(--accent)':'var(--border)'};display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s">${svgStyled}</div>`;
   }).join('');
 }
 
@@ -3934,8 +4033,8 @@ function openWishEdit(id) {
   document.getElementById('editWishPrice').value = fmtTL(w.price).replace('₺','');
   document.getElementById('editWishPriority').value = w.priority || 'mid';
   document.getElementById('editWishNote').value = w.note || '';
-  document.getElementById('editWishEmoji').value = w.emoji || '🎯';
-  buildWishEmojiPicker('editWishEmojiPicker', 'editWishEmoji', w.emoji || '🎯');
+  document.getElementById('editWishEmoji').value = w.emoji || 'target';
+  buildWishEmojiPicker('editWishEmojiPicker', 'editWishEmoji', w.emoji || 'target');
   document.getElementById('wishEditModal').classList.add('show');
 }
 function closeWishEdit() {
@@ -3949,7 +4048,7 @@ function saveWishEdit() {
   const price = parseNum(document.getElementById('editWishPrice').value);
   const priority = document.getElementById('editWishPriority').value;
   const note = document.getElementById('editWishNote').value;
-  const emoji = document.getElementById('editWishEmoji').value || w.emoji || '🎯';
+  const emoji = document.getElementById('editWishEmoji').value || w.emoji || 'target';
   w.name = name; w.price = price; w.priority = priority; w.note = note; w.emoji = emoji;
   save(); closeWishEdit(); renderAll();
   showToast('✅ Hedef güncellendi');
@@ -4001,7 +4100,7 @@ function renderWishSummaryCard() {
     .sort((a,b) => (a.proj.monthsAway||99) - (b.proj.monthsAway||99))[0];
 
   // Öncelik dağılımı
-  const priorityOrder = { high: 0, mid: 1, low: 2 };
+  const priorityOrder = { critical: 0, high: 1, mid: 2, low: 3, someday: 4 };
   const topActive = [...active]
     .sort((a,b) => (priorityOrder[a.priority]||1) - (priorityOrder[b.priority]||1))
     .slice(0, 3);
@@ -4034,7 +4133,7 @@ function renderWishSummaryCard() {
           </div>
           ${reachable.length > 0 ? `
             <div style="font-size:14px;font-weight:800;color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${reachable[0].name}</div>
-            <div style="font-size:10px;font-weight:700;color:var(--accent);margin-top:3px">Bütçen yeterli! 🎉</div>
+            <div style="font-size:10px;font-weight:700;color:var(--accent);margin-top:3px">Bütçen yeterli! <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h2"/><path d="M5 4v2"/><path d="M11.5 4l-.5 2"/><path d="M18 5h2"/><path d="M19 4v2"/><path d="M15 9l-1 1"/><path d="M18 13l2 -.5"/><path d="M18 19h2"/><path d="M19 18v2"/><path d="M14 16.518l-6.518 -6.518l-4.39 9.58a1 1 0 0 0 1.329 1.329l9.579 -4.39z"/></svg></div>
           ` : soonest ? `
             <div style="font-size:13px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(soonest.w.name)}</div>
             <div style="font-size:10px;font-weight:700;color:var(--purple);margin-top:3px">
@@ -4051,7 +4150,7 @@ function renderWishSummaryCard() {
         <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Aktif Hedefler</div>
         ${topActive.map(w => {
           const proj = calcWishProjection(w, fb);
-          const dotColor = w.priority === 'high' ? 'var(--danger)' : w.priority === 'mid' ? 'var(--purple)' : 'var(--muted)';
+          const dotColor = w.priority === 'critical' ? 'var(--danger)' : w.priority === 'high' ? '#FF9500' : w.priority === 'mid' ? 'var(--purple)' : w.priority === 'low' ? '#0A84FF' : 'var(--muted)';
           return `<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(44,44,53,.2)">
             <div style="width:6px;height:6px;border-radius:50%;background:${dotColor};flex-shrink:0"></div>
             <div style="flex:1;font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(w.name)}</div>
@@ -4084,12 +4183,6 @@ function calcWishProjection(wish, fb) {
   const avgMonthlyFree = hasPrevData
     ? Math.round(prevMonths.reduce((s,m) => s + m.free, 0) / prevMonths.length)
     : Math.round(fb.remaining);
-  const avgIncome = hasPrevData
-    ? Math.round(prevMonths.reduce((s,m) => s + m.income, 0) / prevMonths.length)
-    : fb.income;
-  const avgExpense = hasPrevData
-    ? Math.round(prevMonths.reduce((s,m) => s + m.expense, 0) / prevMonths.length)
-    : 0;
 
   // Trend: son 3 ay vs önceki 3 ay karşılaştırması
   let trendDir = 0;
@@ -4144,7 +4237,7 @@ function calcWishProjection(wish, fb) {
     : availableIfDebtFree * savingsRate;
   const capacityIfDebtFree = Math.round(capIfDebtFreeRaw);
 
-  const result = { trendText: null, trendDir, tipText: null, monthlyNeeded: null, tips: [] };
+  const result = { trendDir, monthlyNeeded: null, tips: [] };
 
   if (fb.income <= 0) {
     result.canAfford = false;
@@ -4293,7 +4386,7 @@ function renderWishList() {
   if (!el) return;
   if (!data.wishlist || !data.wishlist.length) {
     el.innerHTML = `<div class="empty-state" style="padding:24px 0">
-      <span class="empty-state-icon">🎯</span>
+      <span class="empty-state-icon" style="font-size:0"><svg width="44" height="44" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg></span>
       <div class="empty-state-text">Henüz hedef yok</div>
       <div class="empty-state-sub">Almak istediğin şeyleri ekle, bütçen ne zaman yeteceğini hesaplasın.</div>
     </div>`;
@@ -4303,14 +4396,14 @@ function renderWishList() {
   const mk = currentMonth;
   const fb = calcFreeBudget(mk);
 
-  const priorityOrder = { high: 0, mid: 1, low: 2 };
+  const priorityOrder = { critical: 0, high: 1, mid: 2, low: 3, someday: 4 };
   const sorted = [...data.wishlist].sort((a, b) =>
     (priorityOrder[a.priority] || 1) - (priorityOrder[b.priority] || 1)
   );
 
   el.innerHTML = sorted.map(w => {
     const proj = calcWishProjection(w, fb);
-    const priorityLabel = WISH_PRIORITY_LABEL[w.priority] || '⭐ İstersen';
+    const priorityLabel = WISH_PRIORITY_LABEL[w.priority] || 'İstenir';
     const isDone = !!w.boughtAt;
     const reachableClass = !isDone && proj.canAfford ? 'reachable' : '';
 
@@ -4330,7 +4423,7 @@ function renderWishList() {
     const alreadyGoal = data.savingsGoals && data.savingsGoals.some(g => g.wishId === w.id);
     const challengeBtn = (!isDone && proj.monthlyNeeded && !proj.canAfford && !alreadyGoal)
       ? `<button class="wish-challenge-btn" onclick="event.stopPropagation();acceptWishChallenge('${w.id}',${proj.monthlyNeeded},'${esc(w.name)}')">Kabul et</button>`
-      : (alreadyGoal && !isDone ? `<span style="font-size:10px;font-weight:700;color:var(--accent);flex-shrink:0">Eklendi ✓</span>` : '');
+      : (alreadyGoal && !isDone ? `<span style="font-size:10px;font-weight:700;color:var(--accent);flex-shrink:0">Eklendi <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg></span>` : '');
 
     const projectionHtml = isDone ? `
       <div class="wish-projection" style="${projBg}">
@@ -4364,9 +4457,9 @@ function renderWishList() {
       <div style="margin-top:8px;padding:9px 12px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:10px;font-size:12px;color:var(--muted);font-weight:500;line-height:1.5">${esc(w.note)}</div>` : '');
 
     return `
-    <div class="wish-card priority-${w.priority} ${reachableClass}${isDone?' done-item':''}" id="wish_${w.id}" style="${isDone?'opacity:.7':''}" onclick="toggleItemExpand('wish_${w.id}')">
+    <div class="wish-card priority-${w.priority} ${reachableClass}" id="wish_${w.id}" style="${isDone?'opacity:.7':''}" onclick="toggleItemExpand('wish_${w.id}')">
       <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;pointer-events:none;user-select:none">
-        <div class="wish-icon" style="${isDone?'background:rgba(45,184,102,.12)':''}">🎯</div>
+        <div class="wish-icon" style="${isDone?'background:rgba(45,184,102,.12)':''}"><svg width="18" height="18" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg></div>
         <div class="wish-info" style="flex:1;min-width:0">
           <div class="wish-name" style="${isDone?'text-decoration:line-through;opacity:.6':''}"> ${esc(w.name)}</div>
           <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
@@ -4431,27 +4524,27 @@ function renderFinancialAdvice() {
 
   // Gen-Z ikonlar: daha fresh, daha az klişe
   if (totalDebt === 0 && !activeDebts.length) {
-    tips.push({ icon:'🫶', cls:'good', title:'Borçsuz yaşıyorsun', sub:'Finansal özgürlüğün en sağlam temeli bu. Şimdi biriktir.' });
+    tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>', cls:'good', title:'Borçsuz yaşıyorsun', sub:'Finansal özgürlüğün en sağlam temeli bu. Şimdi biriktir.' });
   } else {
     const debtPct = Math.round(debtToIncomeRatio * 100);
     if (debtToIncomeRatio > 0.4) {
-      tips.push({ icon:'🫀', cls:'bad', title:`Borç yükün gelirinin %${debtPct}'i — kritik`, sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit gidiyor. %30 sınırını aşıyorsun, ekstra ödemeyi önceliklendır.` });
+      tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>', cls:'bad', title:`Borç yükün gelirinin %${debtPct}'i — kritik`, sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit gidiyor. %30 sınırını aşıyorsun, ekstra ödemeyi önceliklendır.` });
     } else if (debtToIncomeRatio > 0.2) {
-      tips.push({ icon:'👁', cls:'warn', title:`Borç yükün gelirinin %${debtPct}'i`, sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit gidiyor. Yönetiliyor ama yeni borç girme.` });
+      tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#60A5FA" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg>', cls:'warn', title:`Borç yükün gelirinin %${debtPct}'i`, sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit gidiyor. Yönetiliyor ama yeni borç girme.` });
     } else {
-      tips.push({ icon:'🧘', cls:'good', title:`Borç yükün gelirinin sadece %${debtPct}'i`, sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit — sağlıklı oran. Taksiplere sadık kal.` });
+      tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#34D399" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>', cls:'good', title:`Borç yükün gelirinin sadece %${debtPct}'i`, sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit — sağlıklı oran. Taksiplere sadık kal.` });
     }
     if (activeDebts.length > 1) {
       const smallest = [...activeDebts].sort((a,b)=>(a.totalAmount-a.paidCount*a.monthlyAmount)-(b.totalAmount-b.paidCount*b.monthlyAmount))[0];
       const left = smallest.totalAmount - smallest.paidCount * smallest.monthlyAmount;
-      tips.push({ icon:'🎯', cls:'warn', title:`En küçük borcu önce bitir: ${esc(smallest.name)}`, sub:`${fmtTL(Math.round(left))} kaldı — bitince diğerine ekstra öde. Çığ kartopu etkisi.` });
+      tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>', cls:'warn', title:`En küçük borcu önce bitir: ${esc(smallest.name)}`, sub:`${fmtTL(Math.round(left))} kaldı — bitince diğerine ekstra öde. Çığ kartopu etkisi.` });
     }
     const hasEmergencyFund = data.savingsGoals.some(g => g.name.toLowerCase().includes('acil') || g.name.toLowerCase().includes('fon'));
     if (!hasEmergencyFund) {
-      tips.push({ icon:'🛸', cls:'warn', title:'Acil fon yok', sub:'Borç öderken bile 3 aylık masrafı karşılayacak bir fon şart. Küçük başla.' });
+      tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#818CF8" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 13a8 8 0 0 1 7 7a6 6 0 0 0 3 -5a9 9 0 0 0 6 -8a3 3 0 0 0 -3 -3a9 9 0 0 0 -8 6a6 6 0 0 0 -5 3"/><path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3"/><path d="M15 9m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>', cls:'warn', title:'Acil fon yok', sub:'Borç öderken bile 3 aylık masrafı karşılayacak bir fon şart. Küçük başla.' });
     }
     if (debtToIncomeRatio > 0.3) {
-      tips.push({ icon:'🚫', cls:'bad', title:'Yeni borç alma', sub:'Mevcutlar kapanana kadar kredi kartı ve yeni kredi girişi durdur.' });
+      tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M5.7 5.7l12.6 12.6"/></svg>', cls:'bad', title:'Yeni borç alma', sub:'Mevcutlar kapanana kadar kredi kartı ve yeni kredi girişi durdur.' });
     }
   }
 
@@ -4700,8 +4793,8 @@ function renderDailyStats() {
           })()}
         </div>
         <div style="display:flex;justify-content:space-between">
-          <span style="font-size:11px;font-weight:700;color:var(--accent)">✓ ${greenDays} gün limitin altında</span>
-          <span style="font-size:11px;font-weight:700;color:${redDays>0?'var(--danger)':'var(--muted)'}">✕ ${redDays} gün üstünde</span>
+          <span style="font-size:11px;font-weight:700;color:var(--accent)" style="display:inline-flex;align-items:center;gap:4px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> ${greenDays} gün limitin altında</span>
+          <span style="font-size:11px;font-weight:700;color:${redDays>0?'var(--danger)':'var(--muted)'}" style="display:inline-flex;align-items:center;gap:4px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg> ${redDays} gün üstünde</span>
         </div>
       </div>
 
@@ -4832,7 +4925,7 @@ function renderDebtSummaryCard() {
       <div style="padding:10px 0;border-bottom:1px solid rgba(44,44,53,.25)">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
           <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1">
-            <div style="width:28px;height:28px;border-radius:8px;background:rgba(255,69,58,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">💳</div>
+            <div style="width:28px;height:28px;border-radius:8px;background:rgba(255,69,58,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">${borcIconSvg(16)}</div>
             <div style="min-width:0">
               <div style="font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(d.name)}</div>
               <div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:1px">${d.paidCount}/${d.installments} taksit · ${fmtTL(d.monthlyAmount)}/ay</div>
@@ -4840,7 +4933,7 @@ function renderDebtSummaryCard() {
           </div>
           <div style="text-align:right;flex-shrink:0;margin-left:10px">
             <div style="font-size:13px;font-weight:800;color:${rem===0?'var(--accent)':'var(--text)'}">${fmtTL(Math.round(rem))}</div>
-            <div style="font-size:10px;font-weight:700;color:${isPaid?'var(--accent)':'var(--muted)'};">${isPaid?'✓ Bu ay ödendi':'Bu ay bekleniyor'}</div>
+            <div style="font-size:10px;font-weight:700;color:${isPaid?'var(--accent)':'var(--muted)'};">${isPaid?'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> Bu ay ödendi':'Bu ay bekleniyor'}</div>
           </div>
         </div>
         <div style="height:4px;background:var(--surface3);border-radius:99px;overflow:hidden">
@@ -5148,6 +5241,7 @@ function populateCatSelects() {
 function openCategories() {
   renderCatList();
   document.getElementById('catModal').classList.add('show');
+  buildNewCatIconPicker();
 }
 
 function closeCatModal() {
@@ -5158,24 +5252,56 @@ function renderCatList() {
   const el = document.getElementById('catList');
   if (!el) return;
   el.innerHTML = allCategories().map(c => `<div class="cat-item">
-    <div class="cat-dot" style="background:${c.color}"></div>
-    <span style="font-size:16px">${c.emoji}</span>
-    <span style="flex:1;font-size:13px;font-weight:700">${c.name}</span>
+    <span style="display:flex;align-items:center">${catIconSvg(c,20)}</span>
+    <span style="flex:1;font-size:13px;font-weight:700;color:${c.color}">${c.name}</span>
     <button class="btn btn-ghost btn-sm" style="padding:4px 8px;font-size:11px" onclick="openKeywordEdit('${c.id}')">Kelimeler</button>
     ${c.default ? '' : `<button class="btn btn-ghost btn-sm" style="padding:4px 10px;color:var(--danger)" onclick="deleteCustomCat('${c.id}')">Sil</button>`}
   </div>`).join('');
 }
 
+function buildNewCatIconPicker() {
+  const container = document.getElementById('newCatIconPicker');
+  if (!container) return;
+  // Kategoriler için ikon seti: CAT_ICONS + GOAL_ICONS birleşimi (unique id)
+  const PICKER_ICONS = [
+    ...Object.entries(CAT_ICONS).map(([id, svg]) => ({id, svg})),
+    ...(typeof GOAL_ICONS !== 'undefined' ? GOAL_ICONS.filter(ic => !CAT_ICONS[ic.id]) : []),
+  ];
+  const currentId = document.getElementById('newCatEmoji')?.value || 'tag';
+  container.innerHTML = PICKER_ICONS.map(({id, svg}) => {
+    const sel = id === currentId;
+    const stroke = sel ? 'var(--accent)' : 'var(--muted)';
+    const svgStyled = svg
+      .replace('<svg ', `<svg width="20" height="20" style="flex-shrink:0" `)
+      .replace('stroke-width="1.5"', `stroke-width="1.5" stroke="${stroke}"`);
+    return `<div onclick="selectNewCatIcon('${id}')" data-icon="${id}" style="width:36px;height:36px;border-radius:8px;background:${sel?'var(--accent-dim)':'var(--surface3)'};border:1.5px solid ${sel?'var(--accent)':'var(--border)'};display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s">${svgStyled}</div>`;
+  }).join('');
+}
+
+function selectNewCatIcon(id) {
+  const hidden = document.getElementById('newCatEmoji');
+  if (hidden) hidden.value = id;
+  const color = document.getElementById('newCatColor')?.value || 'var(--accent)';
+  document.querySelectorAll('#newCatIconPicker [data-icon]').forEach(d => {
+    const sel = d.dataset.icon === id;
+    d.style.background = sel ? 'var(--accent-dim)' : 'var(--surface3)';
+    d.style.borderColor = sel ? color : 'var(--border)';
+    const svg = d.querySelector('svg');
+    if (svg) svg.setAttribute('stroke', sel ? color : 'var(--muted)');
+  });
+}
+
 function addCategory() {
   const name = document.getElementById('newCatName').value.trim();
   const color = document.getElementById('newCatColor').value;
-  const emoji = document.getElementById('newCatEmoji').value || '📦';
+  const emoji = document.getElementById('newCatEmoji').value || 'tag';
   const keywords = document.getElementById('newCatKeywords').value.split(',').map(k => k.trim().toLowerCase()).filter(Boolean);
   if (!name) { showToast('⚠️ Kategori adı gerekli'); return; }
   data.categories.push({ id: 'cat_' + uid(), name, color, emoji, keywords });
   save();
   document.getElementById('newCatName').value = '';
-  document.getElementById('newCatEmoji').value = '';
+  document.getElementById('newCatEmoji').value = 'tag';
+  buildNewCatIconPicker();
   document.getElementById('newCatKeywords').value = '';
   renderCatList();
   populateCatSelects();
@@ -5336,8 +5462,8 @@ function openKeywordEdit(catId) {
   const inputEl = document.getElementById('keywordEditInput');
   const pickerEl = document.getElementById('emojiPickerModal');
 
-  if (emojiEl) emojiEl.textContent = cat.emoji;
-  if (emojiEl) emojiEl.dataset.current = cat.emoji;
+  if (emojiEl) { emojiEl.innerHTML = catIconSvg(cat, 24); emojiEl.dataset.current = cat.id; }
+  // emoji alanı: dataset.current artık cat.id saklar
   if (titleEl) titleEl.textContent = cat.name;
   if (inputEl) inputEl.value = (cat.keywords || []).join(', ');
   if (pickerEl) pickerEl.style.display = 'none';
@@ -5348,17 +5474,7 @@ function openKeywordEdit(catId) {
 }
 
 function buildEmojiPickerModal(currentEmoji) {
-  const grid = document.getElementById('emojiPickerGrid');
-  if (!grid) return;
-  grid.innerHTML = CAT_EMOJIS.map(e => `
-    <div onclick="selectCatEmoji('${e}')" style="
-      width:40px;height:40px;border-radius:10px;
-      background:${e===currentEmoji?'var(--accent-dim)':'var(--surface2)'};
-      border:1.5px solid ${e===currentEmoji?'var(--accent)':'var(--border)'};
-      display:flex;align-items:center;justify-content:center;
-      font-size:20px;cursor:pointer;transition:all .15s
-    ">${e}</div>
-  `).join('');
+  // Emoji picker devre dışı — kategoriler artık SVG ikon kullanıyor
 }
 
 function selectCatEmoji(e) {
@@ -5384,12 +5500,10 @@ function saveKeywords() {
   const words = document.getElementById('keywordEditInput').value
     .split(',').map(w => w.trim().toLowerCase()).filter(Boolean);
 
-  // Emoji güncelle
-  const newEmoji = document.getElementById('keywordModalEmoji')?.dataset.current;
   const dc = DEFAULT_CATS.find(c => c.id === editingKeywordCat);
-  if (dc) { dc.keywords = words; if (newEmoji) dc.emoji = newEmoji; }
+  if (dc) { dc.keywords = words; }
   const uc = data.categories.find(c => c.id === editingKeywordCat);
-  if (uc) { uc.keywords = words; if (newEmoji) uc.emoji = newEmoji; }
+  if (uc) { uc.keywords = words; }
 
   if (!data.categoryKeywordOverrides) data.categoryKeywordOverrides = {};
   data.categoryKeywordOverrides[editingKeywordCat] = words;
