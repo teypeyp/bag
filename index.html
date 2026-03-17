@@ -185,7 +185,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   pointer-events:none;
   z-index:1;
   opacity:0;
-  animation:sweepLight 12s linear infinite;
+  animation:sweepLight 18s linear infinite;
 }
 .insight-card.good::after{ background:linear-gradient(90deg,transparent 0%,rgba(45,184,102,.18) 50%,transparent 100%); }
 .insight-card.warn::after{ background:linear-gradient(90deg,transparent 0%,rgba(255,214,10,.15) 50%,transparent 100%); }
@@ -218,7 +218,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   animation:rotateHero 34s linear infinite;
   background:conic-gradient(from var(--hero-angle),
     transparent 0%, transparent 80%,
-    rgba(45,184,102,.4) 83%, rgba(45,184,102,1) 88%, rgba(45,184,102,1) 97%, rgba(45,184,102,.4) 99%,
+    rgba(45,184,102,.55) 83%, rgba(45,184,102,1) 88%, rgba(45,184,102,1) 97%, rgba(45,184,102,.55) 99%,
     transparent 100%);
 }
 
@@ -545,8 +545,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .history-body{flex:1;overflow-y:auto;padding:16px 18px}
 
 /* MODALS */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
-.modal-overlay.show{opacity:1;pointer-events:all}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:200;display:none;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.show{display:flex;opacity:1;pointer-events:all}
 .modal-sheet{background:var(--surface);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:28px 20px 48px;width:100%;max-width:520px;display:flex;flex-direction:column;gap:14px;max-height:92vh;overflow-y:auto;transform:translateY(40px);transition:transform .3s cubic-bezier(.34,1.2,.64,1)}
 .modal-overlay.show .modal-sheet{transform:translateY(0)}
 .modal-close{position:absolute;top:18px;right:18px;background:var(--surface2);border:1px solid var(--border);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--muted);line-height:1;font-family:'Montserrat',sans-serif}
@@ -3982,7 +3982,7 @@ function saveDepositModal() {
   document.getElementById('depositModal').classList.remove('show');
   _depositGoalId = null;
   renderAll();
-  setTimeout(() => showCelebration(celebData), 150);
+  setTimeout(() => showCelebration(celebData), 350);
 }
 
 function deleteGoal(id) {
