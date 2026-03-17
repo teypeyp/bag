@@ -959,10 +959,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         <label class="form-label">Tutar</label>
         <input type="text" id="txAmount" class="form-input" placeholder="0" oninput="fmtInput(this)" inputmode="numeric" onkeydown="if(event.key==='Enter'){event.preventDefault();addTransaction();}" autocomplete="off" enterkeyhint="done">
       </div>
-      <div class="form-group" style="flex:1">
-        <label class="form-label">Tarih</label>
-        <input type="date" id="txDate" class="form-input" onchange="updateTxDateLabel()">
-      </div>
     </div>
     <div class="form-group">
       <label class="form-label">Kategori</label>
@@ -3035,7 +3031,7 @@ function setType(type) {
 function addTransaction() {
   const desc = document.getElementById('txDesc').value.trim();
   const amount = parseNum(document.getElementById('txAmount').value);
-  const date = document.getElementById('txDate').value || today();
+  const date = today();
   const category = document.getElementById('txCategory').value || 'diger';
   const btn = document.getElementById('addTxBtn');
 
@@ -3050,7 +3046,6 @@ function addTransaction() {
   save();
   document.getElementById('txDesc').value = '';
   document.getElementById('txAmount').value = '';
-  document.getElementById('txDate').value = today();
 
   document.getElementById('txCategory').value = currentType === 'income' ? 'gelir' : 'market';
   setType(currentType);
@@ -5357,8 +5352,6 @@ function saveKeywords() {
 // ===== DRAG & DROP SECTIONS =====
 function init() {
   load();
-  const dateEl = document.getElementById('txDate');
-  if (dateEl) dateEl.value = today();
   populateCatSelects();
   updateAppLogo();
   const initCat = document.getElementById('txCategory');
