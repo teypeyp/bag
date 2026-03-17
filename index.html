@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>BAGIT v3</title>
+<title>VAULT V4</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BAGIT">
@@ -154,19 +154,21 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .insight-card.bad .insight-progress-fill{background:var(--danger)}
 
 /* ===== TX LIST ===== */
-.tx-date-group{margin-bottom:8px;animation:cardIn .25s ease}
+.tx-date-group{margin-bottom:12px;animation:cardIn .25s ease}
 #txList{scrollbar-width:none;-ms-overflow-style:none}#txList::-webkit-scrollbar{display:none}
-.tx-date-label{display:flex;justify-content:space-between;align-items:baseline;font-size:11px;font-weight:800;color:var(--text);opacity:1;text-transform:uppercase;letter-spacing:.5px;padding:4px 0 7px;border-bottom:1px solid rgba(44,44,53,.5);margin-bottom:0}
-.tx-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(44,44,53,.25);transition:background .1s}
+.tx-date-label{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;padding:6px 0 6px;margin-bottom:2px}
+.tx-date-label .tx-date-total{font-size:10px;font-weight:700;letter-spacing:-.1px;opacity:.6}
+.tx-items-wrap{padding-left:4px;border-left:1.5px solid rgba(44,44,53,.4)}
+.tx-item{display:flex;align-items:center;gap:10px;padding:7px 0 7px 8px;border-bottom:1px solid rgba(44,44,53,.2);transition:background .1s}
 .tx-item:last-child{border-bottom:none}
-.tx-item:active{background:var(--surface2);border-radius:var(--radius-sm);margin:0 -4px;padding:8px 8px}
-.tx-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.tx-item:active{background:var(--surface2);border-radius:var(--radius-sm);margin:0 -4px;padding:8px 12px 8px 12px}
+.tx-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
 .tx-icon.income{background:var(--accent-dim)}
 .tx-icon.expense{background:var(--surface2)}
 .tx-info{flex:1;min-width:0}
-.tx-desc{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-desc{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tx-cat{font-size:10px;color:var(--muted);font-weight:600;margin-top:1px}
-.tx-amount{font-size:12px;font-weight:700;flex-shrink:0;letter-spacing:-.2px}
+.tx-amount{font-size:13px;font-weight:800;flex-shrink:0;letter-spacing:-.3px}
 .tx-amount.income{color:var(--accent)}
 .tx-amount.expense{color:var(--muted)}
 /* Sadece alarm durumlar kırmızı */
@@ -286,11 +288,11 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .collapse-title{font-size:15px;font-weight:800;letter-spacing:-.1px}
 .collapse-summary{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
 .collapse-right{display:flex;align-items:center;gap:8px}
-.collapse-chevron{font-size:20px;color:var(--muted);transition:transform .25s cubic-bezier(.4,0,.2,1);display:inline-block;line-height:1}
+.collapse-chevron{font-size:20px;color:var(--muted);transition:transform .28s cubic-bezier(.4,0,.2,1);display:inline-block;line-height:1}
 .collapse-chevron.open{transform:rotate(90deg)}
 .collapse-add-btn{padding:6px 12px;font-size:11px;border-radius:8px}
-.collapsible-body{display:grid;grid-template-rows:1fr;overflow:hidden;transition:grid-template-rows .3s cubic-bezier(.4,0,.2,1),opacity .25s ease;opacity:1;touch-action:pan-y}
-.collapsible-body > .collapsible-inner{padding:8px 12px 12px;min-height:0}
+.collapsible-body{display:grid;grid-template-rows:1fr;overflow:hidden;opacity:1;touch-action:pan-y;transition:grid-template-rows .3s ease,opacity .25s ease}
+.collapsible-body > .collapsible-inner{padding:8px 12px 12px;min-height:0;transition:padding .3s ease}
 .collapsible-body.collapsed{grid-template-rows:0fr;opacity:0;pointer-events:none}
 .collapsible-body.collapsed > .collapsible-inner{padding:0}
 
@@ -379,6 +381,17 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .wish-priority-badge.high{background:rgba(255,69,58,.12);color:var(--danger)}
 .wish-priority-badge.mid{background:rgba(191,90,242,.12);color:var(--purple)}
 .wish-priority-badge.low{background:var(--surface3);color:var(--muted)}
+
+/* Wish tik butonu — sağ üst köşe */
+.wish-tick-btn{
+  width:32px;height:32px;border-radius:10px;border:1.5px solid rgba(45,184,102,.3);
+  background:rgba(45,184,102,.08);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;transition:all .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.wish-tick-btn:active{transform:scale(.88);background:rgba(45,184,102,.2)}
+.wish-tick-btn.done{border-color:rgba(255,214,10,.25);background:rgba(255,214,10,.08);color:var(--warning)}
 
 /* ===== GOAL CARDS ===== */
 .goal-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s}
@@ -725,7 +738,30 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 <div id="toast"></div>
 <div id="limitWarning"><span id="limitWarningText"></span></div>
 
-<!-- ONBOARDING -->
+<!-- KUTLAMA OVERLAY -->
+<div id="celebrationOverlay" style="display:none;position:fixed;inset:0;z-index:999;pointer-events:none">
+  <canvas id="confettiCanvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
+  <div id="celebrationCard" style="
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(.6);
+    background:linear-gradient(145deg,#141417,#1c1c23);
+    border:1px solid rgba(45,184,102,.3);
+    border-radius:28px;padding:36px 28px 32px;
+    min-width:280px;max-width:320px;text-align:center;
+    box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 0 1px rgba(45,184,102,.1);
+    opacity:0;transition:transform .45s cubic-bezier(.34,1.4,.64,1),opacity .3s ease;
+    pointer-events:auto;
+  ">
+    <div id="celebEmoji" style="font-size:72px;line-height:1;margin-bottom:16px;display:block"></div>
+    <div id="celebTitle" style="font-size:22px;font-weight:900;letter-spacing:-.5px;color:#F2F1EB;margin-bottom:8px"></div>
+    <div id="celebSub" style="font-size:14px;font-weight:600;color:rgba(242,241,235,.5);line-height:1.5;margin-bottom:24px"></div>
+    <button onclick="closeCelebration()" style="
+      width:100%;padding:14px;border-radius:14px;border:none;
+      background:var(--accent);color:#0A0A0D;
+      font-family:'Montserrat',sans-serif;font-size:14px;font-weight:800;
+      cursor:pointer;letter-spacing:.2px;
+    ">Harika! 🙌</button>
+  </div>
+</div>
 <div class="overlay" id="onboarding" style="display:none">
   <!-- Splash slaytları -->
   <div class="splash-wrap" id="splashWrap">
@@ -864,14 +900,12 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   <div class="card" id="txSection" style="margin-top:14px;background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.25);padding:0;border-radius:var(--radius)">
     <div class="card-collapse-header" onclick="toggleTxSection()" style="border-radius:var(--radius)">
       <div class="collapse-left">
-        <div class="collapse-icon-wrap" style="background:rgba(45,184,102,.12);border:1px solid rgba(45,184,102,.2);font-size:18px">📋</div>
         <div>
           <div class="collapse-title">Son İşlemler</div>
           <div class="collapse-summary" id="txSectionSummary"></div>
         </div>
       </div>
       <div class="collapse-right">
-        <span id="txExpandLabel" style="font-size:11px;font-weight:700;color:var(--muted)">Tümü</span>
         <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();openHistory()">Geçmiş →</button>
       </div>
     </div>
@@ -1376,6 +1410,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         </select>
       </div>
     </div>
+    <div class="form-group">
+      <label class="form-label">Not</label>
+      <textarea id="editWishNote" class="form-input" rows="2" placeholder="Neden istiyorsun, ne zaman almak istiyorsun?" style="resize:none;line-height:1.5"></textarea>
+    </div>
     <button class="btn btn-primary btn-full" style="margin-top:4px;background:var(--purple);box-shadow:0 4px 16px rgba(191,90,242,.25)" onclick="saveWishEdit()">Kaydet</button>
   </div>
 </div>
@@ -1782,19 +1820,7 @@ function switchTab(id, btn) {
   if (btn) btn.classList.add('active');
   currentTab = id;
   if (id === 'aylik') renderMonthly();
-  if (id === 'sabit') {
-    renderSabit(); updateCollapseSummaries();
-    // Tüm section'ları otomatik aç
-    ['rec','debt','goal','wish'].forEach(name => {
-      if (!sectionState[name]) {
-        sectionState[name] = true;
-        const body = document.getElementById(name + 'Body');
-        const chevron = document.getElementById(name + 'Chevron');
-        if (body) body.classList.remove('collapsed');
-        if (chevron) chevron.classList.add('open');
-      }
-    });
-  }
+  if (id === 'sabit') { renderSabit(); updateCollapseSummaries(); }
   if (id === 'ozet') {
     renderOzetStats();
     Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
@@ -1811,7 +1837,6 @@ function toggleSection(name) {
   const chevron = document.getElementById(name + 'Chevron');
   if (body) body.classList.toggle('collapsed', !sectionState[name]);
   if (chevron) chevron.classList.toggle('open', sectionState[name]);
-  // max-height transition bittikten sonra render et (350ms)
   if (name === 'chart' && sectionState[name]) setTimeout(() => renderCharts(), 380);
   if (name === 'yillik' && sectionState[name]) setTimeout(() => renderYillik(), 50);
 }
@@ -2019,6 +2044,110 @@ function renderStreakCard(sd) {
       <button class="freeze-btn" onclick="useFreeze()" ${freezesLeft<=0?'disabled':''}>❄️</button>
     </div>
   </div>`;
+}
+
+// =================== KUTLAMA ANİMASYONU ===================
+const _celebColors = ['#2DB866','#4ADE80','#FFD60A','#FF9500','#0A84FF','#BF5AF2','#FF453A','#30D158'];
+
+function showCelebration({ emoji, title, sub }) {
+  const overlay = document.getElementById('celebrationOverlay');
+  const card = document.getElementById('celebrationCard');
+  const canvas = document.getElementById('confettiCanvas');
+  if (!overlay || !card || !canvas) return;
+
+  document.getElementById('celebEmoji').textContent = emoji;
+  document.getElementById('celebTitle').textContent = title;
+  document.getElementById('celebSub').textContent = sub;
+
+  overlay.style.display = 'block';
+  overlay.style.pointerEvents = 'auto';
+
+  // Kart animasyonu
+  requestAnimationFrame(() => {
+    card.style.opacity = '1';
+    card.style.transform = 'translate(-50%,-50%) scale(1)';
+  });
+
+  // Konfeti başlat
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  _launchConfetti(canvas);
+}
+
+function closeCelebration() {
+  const overlay = document.getElementById('celebrationOverlay');
+  const card = document.getElementById('celebrationCard');
+  if (!overlay) return;
+  card.style.opacity = '0';
+  card.style.transform = 'translate(-50%,-50%) scale(.85)';
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    overlay.style.pointerEvents = 'none';
+    card.style.transform = 'translate(-50%,-50%) scale(.6)';
+    _stopConfetti();
+  }, 300);
+}
+
+let _confettiAnim = null;
+let _confettiPieces = [];
+
+function _launchConfetti(canvas) {
+  _stopConfetti();
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  _confettiPieces = Array.from({ length: 120 }, () => ({
+    x: Math.random() * W,
+    y: Math.random() * -H * .5,
+    r: Math.random() * 7 + 4,
+    d: Math.random() * 2 + 1.5,
+    color: _celebColors[Math.floor(Math.random() * _celebColors.length)],
+    tilt: Math.random() * 10 - 5,
+    tiltSpeed: (Math.random() - .5) * .15,
+    opacity: Math.random() * .6 + .4,
+    shape: Math.random() > .5 ? 'rect' : 'circle',
+    vx: (Math.random() - .5) * 2,
+  }));
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    _confettiPieces.forEach(p => {
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.fillStyle = p.color;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.tilt * Math.PI / 180);
+      if (p.shape === 'rect') {
+        ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 1.6);
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, p.r / 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+
+      p.y += p.d;
+      p.x += p.vx;
+      p.tilt += p.tiltSpeed;
+      p.opacity -= .003;
+
+      if (p.y > H || p.opacity <= 0) {
+        p.y = Math.random() * -60;
+        p.x = Math.random() * W;
+        p.opacity = Math.random() * .5 + .4;
+      }
+    });
+    _confettiAnim = requestAnimationFrame(draw);
+  }
+  draw();
+  // 4 saniye sonra dur
+  setTimeout(_stopConfetti, 4000);
+}
+
+function _stopConfetti() {
+  if (_confettiAnim) { cancelAnimationFrame(_confettiAnim); _confettiAnim = null; }
+  const canvas = document.getElementById('confettiCanvas');
+  if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  _confettiPieces = [];
 }
 
 // =================== CALCULATE ===================
@@ -2548,7 +2677,6 @@ function renderTxList(container, txs, limitTo5) {
         <div class="tx-icon ${t.type}" style="background:${iconBg}">${cat.emoji}</div>
         <div class="tx-info">
           <div class="tx-desc">${esc(t.desc)}</div>
-          <div class="tx-cat">${cat.name}</div>
         </div>
         <div class="tx-right">
           <div class="tx-amount ${t.type}">${t.type==='income' ? '+' : '−'}${fmtTL(t.amount)}</div>
@@ -2562,9 +2690,9 @@ function renderTxList(container, txs, limitTo5) {
     allDatesHtml += `<div class="tx-date-group">
       <div class="tx-date-label">
         <span>${label}</span>
-        <span style="font-size:10px;font-weight:700;color:${totalColor}">${totalStr}</span>
+        <span class="tx-date-total" style="color:${totalColor}">${totalStr}</span>
       </div>
-      ${itemsHtml}
+      <div class="tx-items-wrap">${itemsHtml}</div>
     </div>`;
   }
 
@@ -2589,6 +2717,23 @@ document.addEventListener('touchend', e => {
   _touchEndY = e.changedTouches[0].clientY;
   _touchEndX = e.changedTouches[0].clientX;
 }, { passive: true });
+
+// Form dışına tıklayınca boş formları kapat
+document.addEventListener('click', e => {
+  const forms = [
+    { id: 'recForm',  emptyCheck: () => !document.getElementById('recDesc')?.value.trim() && !document.getElementById('recAmount')?.value.trim() },
+    { id: 'debtForm', emptyCheck: () => !document.getElementById('debtName')?.value.trim() && !document.getElementById('debtTotal')?.value.trim() },
+    { id: 'goalForm', emptyCheck: () => !document.getElementById('goalName')?.value.trim() && !document.getElementById('goalTarget')?.value.trim() },
+    { id: 'wishForm', emptyCheck: () => !document.getElementById('wishName')?.value.trim() && !document.getElementById('wishPrice')?.value.trim() },
+  ];
+  forms.forEach(({ id, emptyCheck }) => {
+    const form = document.getElementById(id);
+    if (!form || form.style.display !== 'block') return;
+    if (form.contains(e.target)) return;
+    if (!emptyCheck()) return; // dolu form kapatılmasın
+    form.style.display = 'none';
+  });
+});
 
 function _wasTap() {
   const dy = Math.abs(_touchEndY - _touchStartY);
@@ -2798,37 +2943,235 @@ function renderDailyLimit() {
   const el = document.getElementById('dailyLimitBox');
   if (!el) return;
   if (!fb.income) { el.innerHTML = ''; return; }
-  const isNeg = fb.daily < 0;
-  const color = isNeg ? 'var(--danger)' : fb.daily < 150 ? 'var(--warning)' : 'var(--accent)';
 
-  const row = (label, val, labelColor, valColor) =>
-    `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0">
-      <span style="font-size:13px;font-weight:600;color:${labelColor}">${label}</span>
-      <span style="font-size:14px;font-weight:800;color:${valColor}">${val}</span>
+  const isNeg = fb.daily < 0;
+  const dailyColor = isNeg ? '#FF453A' : fb.daily < 150 ? '#FFD60A' : '#2DB866';
+  const remColor = fb.remaining >= 0 ? '#2DB866' : '#FF453A';
+  const lc = '#2DB866';
+
+  const dim = daysInMonth(mk);
+  const todayD = new Date().getDate();
+  const [y, m] = mk.split('-').map(Number);
+  const monthNames = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+
+  // Tüm ay: geçmiş = gerçek harcama, gelecek = null; limit her gün hesaplanır
+  const spent = [], limits = [], dates = [];
+  // Bugünün gerçek dinamik limitini hesapla (tek seferlik)
+  const todayDynLimit = fb.daily;
+
+  for (let d = 1; d <= dim; d++) {
+    const dateStr = y + '-' + String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    dates.push(dateStr);
+    spent.push(d <= todayD
+      ? data.transactions.filter(t => t.date === dateStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit).reduce((s,t) => s+t.amount, 0)
+      : null);
+
+    if (d > todayD) {
+      // Gelecek günler: bugünkü dinamik limiti göster (sabit)
+      limits.push(Math.max(0, todayDynLimit));
+      continue;
+    }
+
+    // Geçmiş günler: o günün dinamik limitini hesapla
+    const txsUntil = data.transactions.filter(t => t.date <= dateStr && monthKey(t.date) === mk);
+    const incomeUntil = txsUntil.filter(t => t.type === 'income').reduce((s,t) => s+t.amount, 0);
+    if (!incomeUntil) { limits.push(fb.baseDaily); continue; }
+    const expUntil = txsUntil.filter(t => t.type === 'expense').reduce((s,t) => s+t.amount, 0);
+    const recTotal = data.recurring.filter(r=>r.active).reduce((s,r)=>s+r.amount,0);
+    const debtTotal = data.debts.filter(dd=>dd.active&&(!dd.startMonth||dd.startMonth<=mk)).reduce((s,dd)=>s+dd.monthlyAmount,0);
+    const goalTotal = data.savingsGoals.filter(g=>g.monthly).reduce((s,g)=>s+g.monthly,0);
+    const savTarget = data.monthlyTargets[mk]||0;
+    const available = incomeUntil - recTotal - debtTotal - goalTotal - savTarget;
+    const base = available > 0 ? available / dim : 0;
+    const paidFixed = txsUntil.filter(t=>t.isRecurring||t.isDebt||t.isGoalDeposit).reduce((s,t)=>s+t.amount,0);
+    const daySpent = spent[d-1] || 0;
+    const varBefore = Math.max(0, expUntil - paidFixed - daySpent);
+    const pastDev = base * Math.max(0, d-1) - varBefore;
+    const dLeft = Math.max(1, dim - d + 1);
+    limits.push(Math.max(0, base + pastDev / dLeft));
+  }
+
+  const svgW = 320, svgH = 100;
+  const padL = 10, padR = 10, padT = 12, padB = 22;
+  const spentVals = spent.filter(v => v !== null);
+  const maxVal = Math.max(...spentVals, ...limits, 1);
+  const toX = i => padL + (i / (dim - 1)) * (svgW - padL - padR);
+  const toY = v => padT + (1 - Math.min(v, maxVal) / maxVal) * (svgH - padT - padB);
+
+  // Geçmiş harcama spline
+  function spline(pts) {
+    const idxs = pts.map((v,i) => v !== null ? i : null).filter(i => i !== null);
+    if (idxs.length < 2) return '';
+    let d = `M ${toX(idxs[0])} ${toY(pts[idxs[0]])}`;
+    for (let k = 0; k < idxs.length - 1; k++) {
+      const i = idxs[k], j = idxs[k+1];
+      const p0 = pts[idxs[Math.max(k-1,0)]], p1 = pts[i], p2 = pts[j], p3 = pts[idxs[Math.min(k+2,idxs.length-1)]];
+      const cp1x = toX(i) + (toX(j) - toX(idxs[Math.max(k-1,0)])) / 6;
+      const cp1y = toY(p1) + (toY(p2) - toY(p0)) / 6;
+      const cp2x = toX(j) - (toX(idxs[Math.min(k+2,idxs.length-1)]) - toX(i)) / 6;
+      const cp2y = toY(p2) - (toY(p3) - toY(p1)) / 6;
+      d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${toX(j)} ${toY(p2)}`;
+    }
+    return d;
+  }
+
+  // Limit çizgisi (smooth, tüm ay)
+  function limitSpline(lts) {
+    let d = `M ${toX(0)} ${toY(lts[0])}`;
+    for (let i = 0; i < lts.length - 1; i++) {
+      const cp1x = toX(i) + (toX(i+1) - toX(Math.max(i-1,0))) / 6;
+      const cp1y = toY(lts[i]) + (toY(lts[i+1]) - toY(lts[Math.max(i-1,0)])) / 6;
+      const cp2x = toX(i+1) - (toX(Math.min(i+2,lts.length-1)) - toX(i)) / 6;
+      const cp2y = toY(lts[i+1]) - (toY(lts[Math.min(i+2,lts.length-1)]) - toY(lts[i])) / 6;
+      d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${toX(i+1)} ${toY(lts[i+1])}`;
+    }
+    return d;
+  }
+
+  const spentPath = spline(spent);
+  const limitPath = limitSpline(limits);
+  const lastIdx = todayD - 1;
+  const lx = toX(lastIdx), ly = toY(spent[lastIdx] || 0);
+  const spentFill = spentPath ? spentPath + ` L ${lx} ${svgH-padB} L ${toX(0)} ${svgH-padB} Z` : '';
+
+  const xTicks = [0, Math.round(dim/4), Math.round(dim/2), Math.round(3*dim/4), dim-1];
+
+  const row = (label, val, col) =>
+    `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+      <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,.45)">${label}</span>
+      <span style="font-size:13px;font-weight:800;color:${col}">${val}</span>
     </div>`;
 
   el.innerHTML = `
-    <div class="daily-limit-box">
-      <div style="text-align:center;margin-bottom:16px">
-        <div class="daily-limit-label">Günlük Harcama Limiti</div>
-        <div class="daily-limit-amount" style="color:${color}">${isNeg?'−':''}${fmtTL(Math.abs(Math.round(fb.daily)))}</div>
-        <div class="daily-limit-sub">${fb.daysLeft} gün kaldı · toplam ${fmtTL(Math.round(fb.remaining))} kalan</div>
+    <div style="position:relative;overflow:hidden;background:#0A0A0D;border-radius:24px;
+      box-shadow:0 24px 80px rgba(0,0,0,.6),0 0 0 1px rgba(45,184,102,.12),inset 0 1px 0 rgba(255,255,255,.05)">
+      <div style="position:absolute;inset:0;pointer-events:none;z-index:0;
+        background:radial-gradient(ellipse 100% 80% at 80% -10%,rgba(45,184,102,.2) 0%,transparent 55%),
+                   radial-gradient(ellipse 70% 60% at -10% 110%,rgba(10,132,255,.1) 0%,transparent 50%)"></div>
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;z-index:1;
+        background:linear-gradient(90deg,transparent,rgba(45,184,102,.4),rgba(45,184,102,.15))"></div>
+
+      <div style="position:relative;z-index:2;padding:22px 20px 12px;display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-size:10px;font-weight:800;color:rgba(45,184,102,.6);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px">Günlük Limit</div>
+          <div style="font-size:42px;font-weight:900;letter-spacing:-2px;line-height:1;color:${dailyColor}">${isNeg?'−':''}${fmtTL(Math.abs(Math.round(fb.daily)))}</div>
+          ${fb.todayVarSpent > 0
+            ? `<div style="font-size:11px;font-weight:600;color:rgba(255,255,255,.4);margin-top:5px">${fmtTL(Math.round(fb.todayVarSpent))} bugün harcandı</div>`
+            : `<div style="font-size:11px;font-weight:600;color:rgba(255,255,255,.3);margin-top:5px">bugün harcama yok</div>`}
+          <!-- Gelir / Gider chip'leri -->
+          <div style="display:flex;gap:8px;margin-top:10px;position:relative">
+            <div style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;background:rgba(45,184,102,.12);border:1px solid rgba(45,184,102,.25);cursor:default;position:relative"
+              onmouseenter="document.getElementById('dlChipTT0').style.opacity='1'"
+              onmouseleave="document.getElementById('dlChipTT0').style.opacity='0'"
+              ontouchstart="document.getElementById('dlChipTT0').style.opacity='1'"
+              ontouchend="setTimeout(()=>document.getElementById('dlChipTT0').style.opacity='0',1800)">
+              <span style="font-size:11px;color:#2DB866">↑</span>
+              <span style="font-size:12px;font-weight:800;color:#2DB866">${fmtTL(fb.income)}</span>
+              <div id="dlChipTT0" style="position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);opacity:0;transition:opacity .15s;pointer-events:none;
+                background:rgba(15,15,18,.97);border:1px solid rgba(45,184,102,.25);border-radius:8px;padding:6px 10px;white-space:nowrap;z-index:99;font-family:'Montserrat',sans-serif;
+                font-size:11px;font-weight:700;color:rgba(255,255,255,.7)">Bu ay kasaya giren</div>
+            </div>
+            <div style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;background:rgba(255,69,58,.1);border:1px solid rgba(255,69,58,.22);cursor:default;position:relative"
+              onmouseenter="document.getElementById('dlChipTT1').style.opacity='1'"
+              onmouseleave="document.getElementById('dlChipTT1').style.opacity='0'"
+              ontouchstart="document.getElementById('dlChipTT1').style.opacity='1'"
+              ontouchend="setTimeout(()=>document.getElementById('dlChipTT1').style.opacity='0',1800)">
+              <span style="font-size:11px;color:#FF453A">↓</span>
+              <span style="font-size:12px;font-weight:800;color:#FF453A">${fmtTL(fb.recTotal + fb.debtTotal + fb.goalTotal + fb.savTarget + fb.varSpent)}</span>
+              <div id="dlChipTT1" style="position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);opacity:0;transition:opacity .15s;pointer-events:none;
+                background:rgba(15,15,18,.97);border:1px solid rgba(255,69,58,.22);border-radius:8px;padding:6px 10px;white-space:nowrap;z-index:99;font-family:'Montserrat',sans-serif;
+                font-size:11px;font-weight:700;color:rgba(255,255,255,.7)">Bu ay planlanan tüm çıkış</div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:9px;font-weight:800;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px">Kalan</div>
+          <div style="font-size:26px;font-weight:900;letter-spacing:-1px;line-height:1;color:${remColor}">${fmtTL(Math.round(fb.remaining))}</div>
+          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,.35);margin-top:4px">${fb.daysLeft} gün kaldı</div>
+        </div>
       </div>
-      <div style="border-top:1px solid var(--border);padding-top:10px">
-        ${row('Gelir', '+' + fmtTL(fb.income), 'var(--accent)', 'var(--accent)')}
-        ${fb.recTotal > 0 ? row('Sabit giderler', '−' + fmtTL(fb.recTotal), '#F97316', '#F97316') : ''}
-        ${fb.debtTotal > 0 ? row('Borçlar', '−' + fmtTL(fb.debtTotal), 'var(--danger)', 'var(--danger)') : ''}
-        ${fb.goalTotal > 0 ? row('Birikim hedefleri', '−' + fmtTL(fb.goalTotal), 'var(--muted)', 'var(--text)') : ''}
-        ${fb.savTarget > 0 ? row('Tasarruf hedefi', '−' + fmtTL(fb.savTarget), 'var(--muted)', 'var(--text)') : ''}
-        ${fb.varSpent > 0 ? row('Diğer harcamalar', '−' + fmtTL(fb.varSpent), 'var(--muted)', 'var(--text)') : ''}
-        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:10px;margin-top:4px">
-          <span style="font-size:14px;font-weight:800;color:var(--text)">Kalan para</span>
-          <span style="font-size:16px;font-weight:900;color:${fb.remaining>=0?'var(--accent)':'var(--danger)'}">${fmtTL(Math.round(fb.remaining))}</span>
+
+      <div style="position:relative;z-index:2;padding:0 4px 4px" id="dlChartWrap">
+        <svg width="100%" viewBox="0 0 ${svgW} ${svgH}" preserveAspectRatio="none" style="display:block;overflow:visible;cursor:crosshair" id="dlSvg">
+          <defs>
+            <linearGradient id="dlg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="${lc}" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="${lc}" stop-opacity="0.02"/>
+            </linearGradient>
+          </defs>
+          <!-- Limit spline çizgisi -->
+          <path d="${limitPath}" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="1.2" stroke-dasharray="5,4"/>
+          <!-- Harcama fill + çizgi -->
+          ${spentFill ? `<path d="${spentFill}" fill="url(#dlg)"/>` : ''}
+          ${spentPath ? `<path d="${spentPath}" fill="none" stroke="${lc}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
+          <!-- Bugün noktası -->
+          <circle cx="${lx}" cy="${ly}" r="4.5" fill="${lc}" stroke="#0A0A0D" stroke-width="2"/>
+          <!-- X ekseni -->
+          ${[...new Set(xTicks)].map(i => `<text x="${toX(i)}" y="${svgH-5}" text-anchor="middle" font-size="10" font-family="Montserrat,sans-serif" font-weight="700" fill="rgba(255,255,255,.35)">${i+1}</text>`).join('')}
+          <!-- Hover araçları -->
+          <line id="dlHL" x1="0" y1="${padT}" x2="0" y2="${svgH-padB}" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-dasharray="3,3" opacity="0"/>
+          <circle id="dlHD" r="5" fill="white" stroke="#0A0A0D" stroke-width="2" opacity="0"/>
+        </svg>
+        <div id="dlTT" style="position:absolute;pointer-events:none;opacity:0;transition:opacity .12s;background:rgba(15,15,18,.96);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:7px 12px;white-space:nowrap;font-family:'Montserrat',sans-serif;z-index:10;top:4px">
+          <div id="dlTTD" style="font-size:10px;font-weight:700;color:rgba(255,255,255,.45);margin-bottom:2px"></div>
+          <div id="dlTTV" style="font-size:14px;font-weight:900"></div>
+        </div>
+      </div>
+
+      <div style="position:relative;z-index:2;padding:12px 20px 18px;border-top:1px solid rgba(255,255,255,.06);margin-top:4px">
+        ${row('Gelir', '+' + fmtTL(fb.income), '#2DB866')}
+        ${fb.recTotal > 0 ? row('Sabit giderler', '−' + fmtTL(fb.recTotal), '#F97316') : ''}
+        ${fb.debtTotal > 0 ? row('Borçlar', '−' + fmtTL(fb.debtTotal), '#FF453A') : ''}
+        ${fb.goalTotal > 0 ? row('Birikim hedefleri', '−' + fmtTL(fb.goalTotal), 'rgba(255,255,255,.6)') : ''}
+        ${fb.savTarget > 0 ? row('Tasarruf hedefi', '−' + fmtTL(fb.savTarget), 'rgba(255,255,255,.6)') : ''}
+        ${fb.varSpent > 0 ? row('Diğer harcamalar', '−' + fmtTL(fb.varSpent), 'rgba(255,255,255,.6)') : ''}
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;margin-top:2px">
+          <span style="font-size:13px;font-weight:800;color:rgba(255,255,255,.8)">Kalan para</span>
+          <span style="font-size:15px;font-weight:900;color:${remColor}">${fmtTL(Math.round(fb.remaining))}</span>
         </div>
       </div>
     </div>`;
-}
 
+  requestAnimationFrame(() => {
+    const svg = document.getElementById('dlSvg');
+    const tt = document.getElementById('dlTT');
+    const hl = document.getElementById('dlHL');
+    const hd = document.getElementById('dlHD');
+    const ttD = document.getElementById('dlTTD');
+    const ttV = document.getElementById('dlTTV');
+    const wrap = document.getElementById('dlChartWrap');
+    if (!svg || !tt) return;
+
+    function onMove(clientX) {
+      const rect = svg.getBoundingClientRect();
+      const i = Math.max(0, Math.min(dim-1, Math.round((clientX - rect.left) / rect.width * (dim-1))));
+      const cx = toX(i);
+      const isFuture = spent[i] === null;
+      const val = isFuture ? limits[i] : spent[i];
+      const cy = toY(val);
+
+      hl.setAttribute('x1', cx); hl.setAttribute('x2', cx); hl.setAttribute('opacity', '1');
+      hd.setAttribute('cx', cx); hd.setAttribute('cy', cy); hd.setAttribute('opacity', '1');
+      hd.setAttribute('fill', isFuture ? 'rgba(255,255,255,.4)' : lc);
+
+      ttD.textContent = `${i+1} ${monthNames[m-1]}`;
+      ttV.textContent = isFuture ? `Limit: ${fmtTL(Math.round(val))}` : fmtTL(Math.round(val));
+      ttV.style.color = isFuture ? 'rgba(255,255,255,.5)' : lc;
+
+      const wRect = wrap.getBoundingClientRect();
+      const px = (cx / svgW) * rect.width;
+      const ttW = 130;
+      tt.style.left = Math.max(4, Math.min(wRect.width - ttW - 4, px - ttW/2)) + 'px';
+      tt.style.opacity = '1';
+    }
+    function onLeave() { hl.setAttribute('opacity','0'); hd.setAttribute('opacity','0'); tt.style.opacity='0'; }
+
+    svg.addEventListener('mousemove', e => onMove(e.clientX));
+    svg.addEventListener('mouseleave', onLeave);
+    svg.addEventListener('touchmove', e => { e.preventDefault(); onMove(e.touches[0].clientX); }, { passive: false });
+    svg.addEventListener('touchend', onLeave);
+  });
+}
 function toggleRecForm() {
   if (!sectionState.rec) { sectionState.rec = true; const b=document.getElementById('recBody'),cv=document.getElementById('recChevron'); if(b)b.classList.remove('collapsed'); if(cv)cv.classList.add('open'); }
   const f = document.getElementById('recForm');
@@ -3028,7 +3371,11 @@ function togglePaidDebt(id) {
     data.transactions.push({ id: uid(), type: 'expense', desc: d.name + ' taksit', amount: d.monthlyAmount, date: today(), category: 'diger', debtId: id, isDebt: true });
     if (d.paidCount >= d.installments) {
       d.active = false;
-      showToast('🎉 ' + d.name + ' tamamen bitti!');
+      showCelebration({
+        emoji: '💳',
+        title: 'Borç bitti!',
+        sub: `${esc(d.name)} tamamen kapandı. ${d.installments} taksiti başardın!`
+      });
     } else {
       showToast('✅ ' + d.name + ' — ' + d.paidCount + '/' + d.installments + '. taksit ödendi');
     }
@@ -3295,6 +3642,7 @@ function openWishEdit(id) {
   document.getElementById('editWishName').value = w.name;
   document.getElementById('editWishPrice').value = fmtTL(w.price).replace('₺','');
   document.getElementById('editWishPriority').value = w.priority || 'mid';
+  document.getElementById('editWishNote').value = w.note || '';
   document.getElementById('wishEditModal').classList.add('show');
 }
 function closeWishEdit() {
@@ -3307,10 +3655,18 @@ function saveWishEdit() {
   const name = document.getElementById('editWishName').value.trim();
   const price = parseNum(document.getElementById('editWishPrice').value);
   const priority = document.getElementById('editWishPriority').value;
+  const note = document.getElementById('editWishNote').value;
   if (!name || !price) { showToast('⚠️ İsim ve fiyat gerekli'); return; }
-  w.name = name; w.price = price; w.priority = priority;
+  w.name = name; w.price = price; w.priority = priority; w.note = note;
   save(); closeWishEdit(); renderAll();
   showToast('✅ Hedef güncellendi');
+}
+
+function saveWishNote(id, note) {
+  const w = data.wishlist.find(w => w.id === id);
+  if (!w) return;
+  w.note = note;
+  save();
 }
 
 function markWishDone(id) {
@@ -3318,7 +3674,11 @@ function markWishDone(id) {
   if (!w) return;
   w.boughtAt = today();
   save(); renderAll();
-  showToast('🎉 Tebrikler! ' + w.name + ' alındı olarak işaretlendi.');
+  showCelebration({
+    emoji: '🛍️',
+    title: 'Hedefe ulaştın!',
+    sub: `${esc(w.name)} için ${fmtTL(w.price)} biriktirdin. Tebrikler!`
+  });
 }
 function undoWishDone(id) {
   const w = data.wishlist.find(w => w.id === id);
@@ -3416,39 +3776,8 @@ function renderWishSummaryCard() {
 
 function calcWishProjection(wish, fb) {
   const mk = currentMonth;
-  const dim = daysInMonth(mk);
-  const todayD = new Date().getDate();
-  const daysLeft = Math.max(1, dim - todayD);
 
-  // ── Bugünkü harcama hızı ──
-  const todaySpent  = fb.todayVarSpent;   // bugün ne harcandı
-  const baseDaily   = fb.baseDaily;       // baz günlük limit
-
-  // Geçmiş günlerin ortalama günlük değişken harcaması (bugün hariç)
-  const pastTxs = data.transactions.filter(t => {
-    if (monthKey(t.date) !== mk) return false;
-    if (t.type !== 'expense') return false;
-    if (t.isRecurring || t.isDebt || t.isGoalDeposit) return false;
-    if (t.date === today()) return false;
-    return true;
-  });
-  const pastDays = Math.max(1, todayD - 1);
-  const pastVarTotal = pastTxs.reduce((s,t) => s + t.amount, 0);
-  const avgPastDaily = pastDays > 0 ? pastVarTotal / pastDays : baseDaily;
-
-  // Bugünün harcama hızı: bugün bir şey harcandıysa onu kullan, yoksa geçmiş ortalama
-  const effectiveDailyRate = todayD >= 1 && todaySpent > 0
-    ? todaySpent
-    : avgPastDaily > 0 ? avgPastDaily : baseDaily;
-
-  // ── Ay sonu projeksiyonu ──
-  // Bugüne kadar harcanan (değişken) + kalan günlerde bu hızda harcarsak
-  const varSpentSoFar = fb.varSpent;
-  const projectedVarTotal = varSpentSoFar + (effectiveDailyRate * daysLeft);
-  const projectedMonthEnd = Math.round(fb.available - projectedVarTotal);
-
-  // ── Hedef için ay başına düşen serbest para (projeksiyon bazlı) ──
-  // Geçen aylara da bakarak normalize et
+  // Geçmiş aylarda ortalama aylık serbest para
   const prevMonths = [];
   for (let i = 1; i <= 3; i++) {
     const d = new Date();
@@ -3457,99 +3786,64 @@ function calcWishProjection(wish, fb) {
     const { income: pi, expense: pe } = calcMonthData(pmk);
     if (pi > 0) prevMonths.push(pi - pe);
   }
-  const avgPrevFree = prevMonths.length > 0
-    ? prevMonths.reduce((s,v) => s+v, 0) / prevMonths.length
-    : projectedMonthEnd;
+  const avgMonthlyFree = prevMonths.length > 0
+    ? Math.round(prevMonths.reduce((s,v) => s+v, 0) / prevMonths.length)
+    : Math.round(fb.remaining);
 
-  // Ağırlıklı ortalama: bu ay projeksiyonu %60, geçmiş ortalama %40
-  const effectiveFree = Math.round(
-    projectedMonthEnd > 0 || avgPrevFree > 0
-      ? projectedMonthEnd * 0.6 + avgPrevFree * 0.4
-      : 0
+  // Bu ay sonu kalacak tahmini para
+  const dim = daysInMonth(mk);
+  const todayD = new Date().getDate();
+  const daysLeft = Math.max(1, dim - todayD);
+  const pastTxs = data.transactions.filter(t =>
+    monthKey(t.date) === mk && t.type === 'expense' &&
+    !t.isRecurring && !t.isDebt && !t.isGoalDeposit && t.date !== today()
   );
+  const pastDays = Math.max(1, todayD - 1);
+  const avgPastDaily = pastTxs.reduce((s,t) => s+t.amount, 0) / pastDays;
+  const effectiveDailyRate = fb.todayVarSpent > 0 ? fb.todayVarSpent : (avgPastDaily || fb.baseDaily);
+  const projectedMonthEnd = Math.round(fb.available - fb.varSpent - effectiveDailyRate * daysLeft);
 
-  // ── Trend: bugün hedefe yaklaşıyor mu uzaklaşıyor mu ──
-  let trendText = null;
-  let trendDir = 0; // +1 iyi, -1 kötü
-  if (baseDaily > 0 && todayD >= 1) {
-    if (todaySpent === 0) {
-      // harcama yok — neutral
-    } else if (todaySpent > baseDaily * 1.25) {
-      const extraPerDay = Math.round(todaySpent - baseDaily);
-      trendText = `Bu hızda her gün ${fmtTL(extraPerDay)} fazla harcıyorsun — ay sonu ${fmtTL(Math.abs(projectedMonthEnd < 0 ? projectedMonthEnd : 0))} ${projectedMonthEnd < 0 ? 'açık verir' : 'azalır'}.`;
-      trendDir = -1;
-    } else if (todaySpent < baseDaily * 0.75) {
-      const savedToday = Math.round(baseDaily - todaySpent);
-      trendText = `Bugün ${fmtTL(savedToday)} tasarruf ettin — bu hızda ay sonu ${fmtTL(Math.max(0, projectedMonthEnd))} kalır.`;
-      trendDir = 1;
-    }
-  }
+  // Aylık biriktirebilecek tahmini kapasite
+  const rawCapacity = projectedMonthEnd * 0.6 + avgMonthlyFree * 0.4;
+  const monthlyCapacity = Math.max(0, Math.round(rawCapacity));
 
-  // ── Sonuç ──
-  let result = { trendText, trendDir };
+  const result = { trendText: null, trendDir: 0, tipText: null, monthlyNeeded: null };
 
   if (fb.income <= 0) {
     result.canAfford = false;
     result.monthsAway = null;
     result.mainText = 'Gelir kaydı yok';
     result.subText = 'Önce bu aya bir gelir ekle.';
-  } else if (projectedMonthEnd >= wish.price) {
-    // Bu ay sonunda hedef parası kalacak
-    result.canAfford = true;
-    result.monthsAway = 0;
-    result.mainText = `Bu ay alabilirsin 🎉`;
-    result.subText = `Bu hızda ay sonu ${fmtTL(projectedMonthEnd)} kalır — ${fmtTL(Math.round(projectedMonthEnd - wish.price))} artı.`;
-  } else if (projectedMonthEnd <= 0) {
-    result.canAfford = false;
-    result.monthsAway = null;
-    result.mainText = projectedMonthEnd < 0
-      ? `Bu hızda ay sonu ${fmtTL(Math.abs(projectedMonthEnd))} açık verirsin`
-      : 'Bu ay bütçen yetmiyor';
-    result.subText = effectiveFree > 0
-      ? `Harcamaları kısarsan ${Math.ceil(wish.price / effectiveFree)} ay sonra alabilirsin.`
-      : 'Harcamalarını kısarak bu hedefe yaklaşabilirsin.';
-    // Günde ne kadar kısılırsa bu ay alınabilir?
-    const neededSavePerDay = fb.daysLeft > 0
-      ? Math.round((wish.price - Math.max(0, projectedMonthEnd)) / fb.daysLeft)
-      : null;
-    if (neededSavePerDay && neededSavePerDay < baseDaily * 0.4) {
-      tipText = `Günde ${fmtTL(neededSavePerDay)} az harcasan bu ay alabilirsin.`;
-    }
-  } else {
-    // Ay sonu bir miktar kalıyor ama yetmiyor
-    if (effectiveFree <= 0) {
-      result.canAfford = false;
-      result.monthsAway = null;
-      result.mainText = 'Bu hızla bütçen yetişemiyor';
-      result.subText = 'Harcamalarını azaltmadan bu hedefe ulaşmak zor.';
-    } else {
-      const monthsNeeded = Math.ceil(wish.price / effectiveFree);
-      result.canAfford = false;
-      result.monthsAway = monthsNeeded;
-      result.mainText = monthsNeeded === 1
-        ? 'Gelecek ay alabilirsin'
-        : `~${monthsNeeded} ay sonra alabilirsin`;
-      result.subText = `Bu hızda ay sonu ${fmtTL(projectedMonthEnd)} kalacak — aylık ortalama ${fmtTL(effectiveFree)}.`;
-      // Kısılma önerisi: 1 ay daha erken almak için günlük ne kadar az harcanmalı
-      if (monthsNeeded > 1 && fb.daysLeft > 1) {
-        const monthsEarlier = monthsNeeded - 1;
-        const extraNeeded = wish.price - projectedMonthEnd;
-        const savePerDay = Math.round(extraNeeded / (monthsEarlier * 30));
-        if (savePerDay > 0 && savePerDay < baseDaily * 0.45) {
-          tipText = `Günde ${fmtTL(savePerDay)} az harcasaydın 1 ay erken alırdın.`;
-        }
-      }
-    }
+    return result;
   }
 
-  result.tipText = tipText;
+  if (monthlyCapacity <= 0) {
+    result.canAfford = false;
+    result.monthsAway = null;
+    result.mainText = 'Bütçe yetersiz';
+    result.subText = 'Harcamalarını kısarak bu hedefe yaklaşabilirsin.';
+    return result;
+  }
 
-  // Progress bar: aylık serbest bütçenin hedefe oranı (maksimum %100)
-  result.pct = wish.price > 0 && effectiveFree > 0
-    ? Math.min(100, Math.round((effectiveFree / wish.price) * 100))
-    : 0;
-  // Eğer bu ay alınabiliyorsa %100 göster
-  if (result.canAfford) result.pct = 100;
+  // Bu ay tek seferde alınabilir mi?
+  if (projectedMonthEnd >= wish.price) {
+    result.canAfford = true;
+    result.monthsAway = 0;
+    result.monthlyNeeded = wish.price;
+    result.mainText = 'Bu ay alabilirsin 🎉';
+    result.subText = `Bütçen yeterli — ${fmtTL(wish.price)} ayır.`;
+    return result;
+  }
+
+  // Kaç ay gerekiyor?
+  const monthsNeeded = Math.max(1, Math.ceil(wish.price / monthlyCapacity));
+  const monthlyNeeded = Math.ceil(wish.price / monthsNeeded);
+
+  result.canAfford = false;
+  result.monthsAway = monthsNeeded;
+  result.monthlyNeeded = monthlyNeeded;
+  result.mainText = monthsNeeded === 1 ? 'Gelecek ay alabilirsin' : `${monthsNeeded} ayda alabilirsin`;
+  result.subText = `Ayda ${fmtTL(monthlyNeeded)} ayırırsan ${monthsNeeded} ayda birikir.`;
 
   return result;
 }
@@ -3586,8 +3880,8 @@ function renderWishList() {
         ? 'background:rgba(45,184,102,.08);border:1px solid rgba(45,184,102,.2)'
         : proj.monthsAway === null
           ? 'background:rgba(255,69,58,.06);border:1px solid rgba(255,69,58,.15)'
-          : 'background:var(--surface3);border:1px solid rgba(255,255,255,.05)';
-    const projMainColor = isDone ? 'var(--accent)' : proj.canAfford ? 'var(--accent)' : 'var(--text)';
+          : 'background:rgba(191,90,242,.06);border:1px solid rgba(191,90,242,.15)';
+    const projMainColor = isDone ? 'var(--accent)' : proj.canAfford ? 'var(--accent)' : 'var(--purple)';
 
     const projectionHtml = isDone ? `
       <div class="wish-projection" style="${projBg}">
@@ -3596,44 +3890,53 @@ function renderWishList() {
       </div>` : `
       <div class="wish-projection" style="${projBg}">
         <div class="wish-proj-main" style="color:${projMainColor}">${proj.mainText}</div>
-        <div class="wish-proj-sub">${proj.subText}</div>
-        ${proj.trendText ? `<div class="wish-proj-tip" style="color:${proj.trendDir>0?'var(--accent)':proj.trendDir<0?'var(--danger)':'var(--muted)'}">${proj.trendDir>0?'📉 ':'📈 '}${proj.trendText}</div>` : ''}
-        ${proj.tipText ? `<div class="wish-proj-tip">💡 ${proj.tipText}</div>` : ''}
+        <div class="wish-proj-sub" style="margin-top:3px">${proj.subText}</div>
       </div>`;
 
-    const progressHtml = !isDone ? `
-      <div class="wish-progress-row" style="margin-bottom:8px">
-        <div class="wish-progress-track">
-          <div class="wish-progress-fill" style="width:${proj.pct}%;background:${proj.canAfford?'var(--accent)':'var(--purple)'}"></div>
-        </div>
-        <span class="wish-progress-label" style="color:${proj.canAfford?'var(--accent)':'var(--purple)'}">%${proj.pct}</span>
-      </div>` : '';
+    const noteHtml = !isDone ? `
+      <div style="margin-top:8px;position:relative" onclick="event.stopPropagation()">
+        <textarea
+          id="wishnote_${w.id}"
+          placeholder="Not ekle… neden istiyorsun, ne zaman almak istiyorsun?"
+          oninput="saveWishNote('${w.id}',this.value)"
+          style="width:100%;min-height:56px;resize:none;padding:9px 12px;
+            background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);
+            border-radius:10px;color:var(--text);font-family:'Montserrat',sans-serif;
+            font-size:12px;font-weight:500;line-height:1.5;outline:none;
+            transition:border-color .2s;-webkit-appearance:none;"
+          onfocus="this.style.borderColor='rgba(191,90,242,.4)'"
+          onblur="this.style.borderColor='rgba(255,255,255,.08)'"
+        >${esc(w.note || '')}</textarea>
+      </div>` : (w.note ? `
+      <div style="margin-top:8px;padding:9px 12px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:10px;font-size:12px;color:var(--muted);font-weight:500;line-height:1.5">${esc(w.note)}</div>` : '');
+
+    const progressHtml = '';
 
     return `
     <div class="wish-card priority-${w.priority} ${reachableClass}${isDone?' done-item':''}" id="wish_${w.id}" style="${isDone?'opacity:.7':''}" onclick="toggleItemExpand('wish_${w.id}')">
-      <div class="wish-top" style="pointer-events:none;user-select:none">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;pointer-events:none;user-select:none">
         <div class="wish-icon" style="${isDone?'background:rgba(45,184,102,.12)':''}">🛍️</div>
-        <div class="wish-info">
+        <div class="wish-info" style="flex:1;min-width:0">
           <div class="wish-name" style="${isDone?'text-decoration:line-through;opacity:.6':''}"> ${esc(w.name)}</div>
           <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
             <span class="wish-price" style="${isDone?'color:var(--accent)':''}">${fmtTL(w.price)}</span>
             <span class="wish-priority-badge ${w.priority}">${priorityLabel}</span>
           </div>
         </div>
+        ${!isDone ? `
+        <button class="wish-tick-btn" onclick="event.stopPropagation();markWishDone('${w.id}')" title="Aldım" style="pointer-events:auto">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>` : `
+        <button class="wish-tick-btn done" onclick="event.stopPropagation();undoWishDone('${w.id}')" title="Geri Al" style="pointer-events:auto">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4"/></svg>
+        </button>`}
       </div>
-      <div style="pointer-events:none;user-select:none">
+      <div onclick="event.stopPropagation()">
         ${projectionHtml}
-        ${progressHtml}
+        ${noteHtml}
       </div>
       <div class="item-actions-row"><div class="item-actions-inner">
-        ${!isDone ? `
-          <button class="icon-action-btn" onclick="event.stopPropagation();openWishEdit('${w.id}')" title="Düzenle">${SVG_EDIT}</button>
-          <button class="icon-action-btn confirm" onclick="event.stopPropagation();markWishDone('${w.id}')" title="Aldım">
-            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-          </button>` : `
-          <button class="icon-action-btn undo" onclick="event.stopPropagation();undoWishDone('${w.id}')" title="Geri Al">
-            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4"/></svg>
-          </button>`}
+        <button class="icon-action-btn" onclick="event.stopPropagation();openWishEdit('${w.id}')" title="Düzenle">${SVG_EDIT}</button>
         <button class="icon-action-btn danger" onclick="event.stopPropagation();deleteWish('${w.id}')" title="Sil">${SVG_TRASH}</button>
       </div></div>
     </div>`;
