@@ -62,8 +62,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .onboard-input-wrap .currency{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:800;color:var(--muted);pointer-events:none}
 .onboard-input-wrap .form-input{padding-right:36px;font-size:22px;font-weight:800;padding-top:14px;padding-bottom:14px}
 
-.carousel-nav-btn{width:20px;height:20px;background:none;border:none;color:rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:color .15s;-webkit-tap-highlight-color:transparent;flex-shrink:0}
-.carousel-nav-btn:active{color:rgba(255,255,255,.9)}
+
 
 /* TOAST */
 #toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:var(--surface3);border:1px solid var(--border);border-radius:24px;padding:11px 20px;font-size:13px;font-weight:700;z-index:999;display:none;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.5);backdrop-filter:blur(8px)}
@@ -133,6 +132,11 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 /* ===== FEEDBACK INSIGHT / CAROUSEL ===== */
 @keyframes insightIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes insightOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
+@keyframes insightFadeRight{
+  0%{opacity:0;background-position:100% 0}
+  15%{opacity:.15}
+  100%{opacity:.55;background-position:0% 0}
+}
 .insight-carousel{border-radius:var(--radius-sm);overflow:hidden;margin-bottom:12px;height:58px}
 .insight-card{padding:0;display:flex;flex-direction:column;height:58px}
 .insight-card.good{background:var(--accent-dim)}
@@ -147,11 +151,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .insight-card.good .insight-title{color:var(--accent)}
 .insight-card.warn .insight-title{color:var(--warning)}
 .insight-card.bad .insight-title{color:var(--danger)}
-.insight-progress-track{height:3px;background:rgba(255,255,255,.08);display:block}
-.insight-progress-fill{display:block;height:3px;width:0%;transition:none}
-.insight-card.good .insight-progress-fill{background:var(--accent)}
-.insight-card.warn .insight-progress-fill{background:var(--warning)}
-.insight-card.bad .insight-progress-fill{background:var(--danger)}
 
 /* ===== TX LIST ===== */
 .tx-date-group{margin-bottom:12px;animation:cardIn .25s ease}
@@ -1482,7 +1481,8 @@ let data = {
     freezeTotal: 2,
     frozenDays: [],
     lastEvaluatedDate: '',
-    lastWeeklyFreezeGift: ''
+    lastWeeklyFreezeGift: '',
+    lastFreezeResetMonth: ''
   }
 };
 
@@ -1615,10 +1615,11 @@ function load() {
       if (!Array.isArray(data.wishlist)) data.wishlist = [];
       if (!Array.isArray(data.categories)) data.categories = [];
       // Streak migration
-      if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastEvaluatedDate:'', lastWeeklyFreezeGift:'' };
+      if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastEvaluatedDate:'', lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
       if (!data.streak.frozenDays) data.streak.frozenDays = [];
       if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
       if (data.streak.lastWeeklyFreezeGift === undefined) data.streak.lastWeeklyFreezeGift = '';
+      if (data.streak.lastFreezeResetMonth === undefined) data.streak.lastFreezeResetMonth = '';
       data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; });
       data.debts.forEach(d => {
         if (!d.paidMonths) d.paidMonths = [];
@@ -1660,6 +1661,8 @@ function fmtNum(n) {
   if (abs >= 1000000) return (n/1000000).toFixed(1).replace('.',',')+'M';
   // toLocaleString yerine regex — mobil uyumluluk için
   const rounded = Math.round(n);
+  // -0 durumunu önle
+  if (rounded === 0) return '0';
   const sign = rounded < 0 ? '-' : '';
   return sign + String(Math.abs(rounded)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
@@ -2185,7 +2188,7 @@ function calcFreeBudget(mk) {
   const isCurrentMonth = mk === monthKey();
   const todayD = new Date().getDate();
   const dim = daysInMonth(mk);
-  const daysLeft = isCurrentMonth ? Math.max(1, dim - todayD) : 1;
+  const daysLeft = isCurrentMonth ? Math.max(0, dim - todayD) : 0;
 
   // Baz limit: aylık serbest bütçe / ay gün sayısı (sabit referans)
   const baseDaily = available > 0 ? available / dim : 0;
@@ -2202,7 +2205,7 @@ function calcFreeBudget(mk) {
   const pastDeviation = expectedPast - pastVarSpent; // + = tasarruf, - = aşım
 
   // Günlük limit: baz ± sapma kalan günlere dağıtılmış
-  const daily = baseDaily + (daysLeft > 0 ? pastDeviation / daysLeft : 0);
+  const daily = baseDaily + (daysLeft > 0 ? pastDeviation / daysLeft : pastDeviation);
 
   // Bugün için kalan
   const todayRemaining = daily - todayVarSpent;
@@ -2224,13 +2227,10 @@ let _lastBalance = null;
 let _carouselTimer = null;
 let _carouselIndex = 0;
 let _carouselItems = [];
-const CAROUSEL_DURATION = 8000;
+const CAROUSEL_DURATION = 10000;
 
 function animateCount(el, fromVal, toVal, duration = 2500) {
   if (!el) return;
-  const isNeg = toVal < 0;
-  const absFrom = Math.abs(fromVal);
-  const absTo = Math.abs(toVal);
   const startTime = performance.now();
   const color = toVal >= 0 ? 'var(--accent)' : 'var(--danger)';
 
@@ -2244,12 +2244,14 @@ function animateCount(el, fromVal, toVal, duration = 2500) {
     const progress = Math.min(elapsed / duration, 1);
     // easeOutExpo: hızlı başlar, sonlara doğru belirgin yavaşlar
     const ease = progress === 1 ? 1 : 1 - Math.pow(2, -12 * progress);
-    const current = Math.round(absFrom + (absTo - absFrom) * ease);
-    el.textContent = (isNeg ? '−' : '') + fmtTL(current);
-    el.style.color = color;
+    // fromVal → toVal arasında doğrusal interpolasyon (işaret dahil)
+    const current = Math.round(fromVal + (toVal - fromVal) * ease);
+    el.textContent = fmtTL(current);
+    el.style.color = current >= 0 ? 'var(--accent)' : 'var(--danger)';
     if (progress < 1) requestAnimationFrame(step);
     else {
       el.textContent = fmtTL(toVal);
+      el.style.color = color;
       el.classList.remove('animating');
     }
   }
@@ -2532,67 +2534,23 @@ function showCarouselItem(idx) {
 
   el.className = 'insight-carousel';
   el.innerHTML = `
-    <div class="insight-card ${item.cls}" style="position:relative;overflow:hidden">
+    <div class="insight-card ${item.cls}" style="position:relative;overflow:hidden;cursor:pointer" onclick="carouselNav(1)">
       <div class="insight-card-inner" style="position:relative;z-index:1">
         <div class="insight-icon">${item.icon}</div>
         <div class="insight-text">
           <div class="insight-title">${item.title}</div>
           <div class="insight-sub">${item.sub}</div>
         </div>
-        ${total > 1 ? `
-        <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;padding-left:16px;margin-right:-4px">
-          <button onclick="carouselNav(-1)" class="carousel-nav-btn" aria-label="Önceki">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 9L7 5L11 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <button onclick="carouselNav(1)" class="carousel-nav-btn" aria-label="Sonraki">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 5L7 9L11 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </div>` : ''}
       </div>
-      <div class="insight-progress-track" style="position:relative;z-index:1">
-        <div class="insight-progress-fill" id="insightProgressFill" style="background:${barColor}"></div>
-      </div>
-      <div id="insightOverlay" style="position:absolute;inset:0;background:${overlayColor};transform:scaleX(0);transform-origin:left;z-index:0;pointer-events:none"></div>
+      <div id="insightOverlay" style="position:absolute;inset:0;z-index:0;pointer-events:none;
+        background:linear-gradient(to left, ${overlayColor} 0%, transparent 70%);
+        background-size:200% 100%;background-position:100% 0;
+        opacity:0;animation:insightFadeRight ${CAROUSEL_DURATION}ms ease-out forwards"></div>
     </div>`;
 
-  // Progress bar + overlay aynı anda
-  requestAnimationFrame(() => {
-    const fill = document.getElementById('insightProgressFill');
-    const overlay = document.getElementById('insightOverlay');
-    if (fill) {
-      fill.style.transition = 'none';
-      fill.style.width = '0%';
-    }
-    if (overlay) {
-      overlay.style.transition = 'none';
-      overlay.style.transform = 'scaleX(0)';
-    }
-    requestAnimationFrame(() => {
-      if (fill) {
-        fill.style.transition = `width ${CAROUSEL_DURATION}ms linear`;
-        fill.style.width = '100%';
-      }
-      if (overlay) {
-        overlay.style.transition = `transform ${CAROUSEL_DURATION}ms linear`;
-        overlay.style.transform = 'scaleX(1)';
-      }
-    });
-  });
 
-  // Touch swipe desteği
-  const card = el.querySelector('.insight-card');
-  if (card && total > 1) {
-    let _sx = 0;
-    card.addEventListener('touchstart', e => { _sx = e.touches[0].clientY; }, { passive: true });
-    card.addEventListener('touchend', e => {
-      const dy = e.changedTouches[0].clientY - _sx;
-      if (Math.abs(dy) > 30) carouselNav(dy < 0 ? 1 : -1);
-    }, { passive: true });
-  }
+
+
 }
 
 function carouselNav(dir) {
@@ -2844,7 +2802,7 @@ function deleteTx(id) {
   if (histOverlay && histOverlay.style.display === 'flex') {
     const listEl = document.getElementById('historyTxList');
     const subEl = document.getElementById('historySubtitle');
-    const all = data.transactions.slice().sort((a,b) => b.date < a.date ? -1 : b.date > a.date ? 1 : 0);
+    const all = data.transactions.slice().sort((a,b) => b.date.localeCompare(a.date));
     if (subEl) subEl.textContent = all.length + ' işlem';
     renderTxList(listEl, all);
   }
@@ -2853,11 +2811,14 @@ function deleteTx(id) {
 
 
 function fmtDate(dateStr) {
+  const todayStr = today();
+  if (dateStr === todayStr) return 'Bugün';
+  // Dün: bugünden bir gün önce
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().slice(0, 10);
+  if (dateStr === yesterdayStr) return 'Dün';
   const d = new Date(dateStr + 'T00:00:00');
-  const now = new Date();
-  const diff = Math.floor((now - d) / 86400000);
-  if (diff === 0) return 'Bugün';
-  if (diff === 1) return 'Dün';
   const months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
   return d.getDate() + ' ' + months[d.getMonth()];
 }
@@ -3524,7 +3485,8 @@ function toggleGoalMonthly(goalId) {
   if (!g.paidMonths) g.paidMonths = [];
   if (g.paidMonths.includes(mk)) {
     g.paidMonths = g.paidMonths.filter(m => m !== mk);
-    data.transactions = data.transactions.filter(t => !(t.goalMonthlyId === goalId && monthKey(t.date) === mk));
+    // goalMonthlyId=goalId olarak kaydedildi, bununla filtrele
+    data.transactions = data.transactions.filter(t => !(t.isGoalDeposit && t.goalId === goalId && t.goalMonthlyId === goalId && monthKey(t.date) === mk));
     const depIdx = g.deposits.findIndex(d => d.goalMonthlyId === goalId && monthKey(d.date) === mk);
     if (depIdx !== -1) g.deposits.splice(depIdx, 1);
     showToast('↩ Aylık birikim geri alındı');
@@ -3567,7 +3529,7 @@ function saveDepositModal() {
 function deleteGoal(id) {
   showConfirm('Bu hedefi silmek istediğinize emin misiniz?', () => {
     data.savingsGoals = data.savingsGoals.filter(g => g.id !== id);
-    data.transactions = data.transactions.filter(t => !(t.goalMonthlyId === id) && !(t.isGoalDeposit && t.goalId === id));
+    data.transactions = data.transactions.filter(t => !(t.isGoalDeposit && (t.goalId === id || t.goalMonthlyId === id)));
     save(); renderAll();
   });
 }
@@ -3910,7 +3872,22 @@ function renderWishList() {
       </div>` : (w.note ? `
       <div style="margin-top:8px;padding:9px 12px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:10px;font-size:12px;color:var(--muted);font-weight:500;line-height:1.5">${esc(w.note)}</div>` : '');
 
-    const progressHtml = '';
+    // Wish için aylık birikim ilerleme çubuğu
+    const monthlyCapacity = proj.monthlyNeeded || 0;
+    const progressPct = (!isDone && monthlyCapacity > 0 && fb.income > 0)
+      ? Math.min(100, Math.round((Math.max(0, fb.remaining) / monthlyCapacity) * 100))
+      : 0;
+    const progressColor = progressPct >= 100 ? 'var(--accent)' : progressPct >= 50 ? 'var(--warning)' : 'var(--danger)';
+    const progressHtml = (!isDone && monthlyCapacity > 0 && fb.income > 0) ? `
+      <div style="margin-top:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-size:10px;font-weight:700;color:var(--muted)">Bu ay birikiyor</span>
+          <span style="font-size:10px;font-weight:800;color:${progressColor}">${progressPct}%</span>
+        </div>
+        <div style="height:3px;background:var(--surface3);border-radius:99px;overflow:hidden">
+          <div style="width:${progressPct}%;height:100%;background:${progressColor};border-radius:99px;transition:width .5s ease"></div>
+        </div>
+      </div>` : '';
 
     return `
     <div class="wish-card priority-${w.priority} ${reachableClass}${isDone?' done-item':''}" id="wish_${w.id}" style="${isDone?'opacity:.7':''}" onclick="toggleItemExpand('wish_${w.id}')">
@@ -3933,6 +3910,7 @@ function renderWishList() {
       </div>
       <div onclick="event.stopPropagation()">
         ${projectionHtml}
+        ${progressHtml}
         ${noteHtml}
       </div>
       <div class="item-actions-row"><div class="item-actions-inner">
@@ -4697,7 +4675,7 @@ function openHistory() {
   const titleEl = document.getElementById('historyTitle');
   const subEl = document.getElementById('historySubtitle');
   el.style.display = 'flex';
-  const all = data.transactions.slice().sort((a,b) => b.date < a.date ? -1 : b.date > a.date ? 1 : 0);
+  const all = data.transactions.slice().sort((a,b) => b.date.localeCompare(a.date));
   if (titleEl) titleEl.textContent = 'Tüm İşlemler';
   if (subEl) subEl.textContent = all.length + ' işlem';
   renderTxList(listEl, all);
@@ -4787,6 +4765,8 @@ function saveWalletName() {
   data.walletName = val || '';
   save();
   updateAppLogo();
+  // Tab içeriklerini güncelle (örn. Özet tabında wallet adı görünebilir)
+  if (currentTab === 'ozet') renderOzetStats();
 }
 
 function closeSettings() {
@@ -4825,6 +4805,14 @@ function importData(input) {
       if (!Array.isArray(data.recurring)) data.recurring = [];
       if (!Array.isArray(data.debts)) data.debts = [];
       if (!Array.isArray(data.savingsGoals)) data.savingsGoals = [];
+      if (!Array.isArray(data.wishlist)) data.wishlist = [];
+      if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastEvaluatedDate:'', lastWeeklyFreezeGift:'' };
+      if (!Array.isArray(data.streak.frozenDays)) data.streak.frozenDays = [];
+      if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
+      if (!data.monthlyTargets || typeof data.monthlyTargets !== 'object') data.monthlyTargets = {};
+      data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; });
+      data.debts.forEach(d => { if (!d.paidMonths) d.paidMonths = []; if (!d.startMonth) d.startMonth = monthKey(); });
+      data.savingsGoals.forEach(g => { if (!g.paidMonths) g.paidMonths = []; if (!g.deposits) g.deposits = []; });
       const defaultIds = new Set(DEFAULT_CATS.map(c => c.id));
       data.categories = (data.categories || []).filter(c => !defaultIds.has(c.id));
       save(); renderAll(); closeSettings();
