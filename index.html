@@ -462,6 +462,24 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .history-header{padding:22px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .history-body{flex:1;overflow-y:auto;padding:16px 18px}
 
+/* CUSTOM DATE PICKER */
+.datepicker-wrap{position:fixed;inset:0;z-index:600;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(8px)}
+.datepicker-wrap.show{display:flex}
+.datepicker-sheet{background:var(--surface);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:20px 20px 40px;width:100%;max-width:520px;animation:tabEnter .25s cubic-bezier(.34,1.2,.64,1)}
+.datepicker-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.datepicker-title{font-size:15px;font-weight:800;color:var(--text)}
+.datepicker-nav{display:flex;align-items:center;gap:12px}
+.datepicker-nav button{background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:32px;height:32px;color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.datepicker-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px}
+.datepicker-dow{font-size:10px;font-weight:800;color:var(--muted);text-align:center;padding:4px 0;text-transform:uppercase;letter-spacing:.5px}
+.datepicker-day{height:36px;border-radius:10px;border:none;background:none;color:var(--text);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.datepicker-day:active{background:var(--surface3)}
+.datepicker-day.today{border:1.5px solid var(--border);font-weight:800}
+.datepicker-day.selected{background:var(--accent);color:#fff;font-weight:800}
+.datepicker-day.other-month{opacity:.25}
+.datepicker-day.empty{pointer-events:none}
+.datepicker-trigger{width:100%;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between}
+
 /* MODALS */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:200;display:none;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
 .modal-overlay.show{display:flex;opacity:1;pointer-events:auto}
@@ -959,6 +977,12 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         <label class="form-label">Tutar</label>
         <input type="text" id="txAmount" class="form-input" placeholder="0" oninput="fmtInput(this)" inputmode="numeric" onkeydown="if(event.key==='Enter'){event.preventDefault();addTransaction();}" autocomplete="off" enterkeyhint="done">
       </div>
+      <div class="form-group" style="flex:1">
+        <label class="form-label">Tarih</label>
+        <button type="button" class="datepicker-trigger" id="txDateTrigger" onclick="openDatePicker()">
+          <span id="txDateLabel">—</span>
+        </button>
+      </div>
     </div>
     <div class="form-group">
       <label class="form-label">Kategori</label>
@@ -1373,6 +1397,30 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       <button class="btn btn-ghost" style="flex:1" onclick="closeKeywordModal()">İptal</button>
       <button class="btn btn-primary" style="flex:1" onclick="saveKeywords()">Kaydet</button>
     </div>
+  </div>
+</div>
+
+<!-- CUSTOM DATE PICKER -->
+<div class="datepicker-wrap" id="datepickerWrap" onclick="if(event.target===this)closeDatePicker()">
+  <div class="datepicker-sheet">
+    <div class="datepicker-header">
+      <div class="datepicker-nav">
+        <button onclick="dpChangeMonth(-1)">‹</button>
+        <span class="datepicker-title" id="dpMonthLabel"></span>
+        <button onclick="dpChangeMonth(1)">›</button>
+      </div>
+      <button onclick="closeDatePicker()" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:32px;height:32px;color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center">×</button>
+    </div>
+    <div class="datepicker-grid">
+      <div class="datepicker-dow">Pt</div>
+      <div class="datepicker-dow">Sa</div>
+      <div class="datepicker-dow">Ça</div>
+      <div class="datepicker-dow">Pe</div>
+      <div class="datepicker-dow">Cu</div>
+      <div class="datepicker-dow">Ct</div>
+      <div class="datepicker-dow">Pz</div>
+    </div>
+    <div class="datepicker-grid" id="dpDaysGrid"></div>
   </div>
 </div>
 
@@ -3031,7 +3079,7 @@ function setType(type) {
 function addTransaction() {
   const desc = document.getElementById('txDesc').value.trim();
   const amount = parseNum(document.getElementById('txAmount').value);
-  const date = today();
+  const date = _dpSelected || today();
   const category = document.getElementById('txCategory').value || 'diger';
   const btn = document.getElementById('addTxBtn');
 
@@ -3046,6 +3094,8 @@ function addTransaction() {
   save();
   document.getElementById('txDesc').value = '';
   document.getElementById('txAmount').value = '';
+  _dpSelected = today();
+  document.getElementById('txDateLabel').textContent = formatTxDate(today());
 
   document.getElementById('txCategory').value = currentType === 'income' ? 'gelir' : 'market';
   setType(currentType);
@@ -5350,8 +5400,70 @@ function saveKeywords() {
 }
 
 // ===== DRAG & DROP SECTIONS =====
+function formatTxDate(dateStr) {
+  if (!dateStr) return '—';
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.getDate() + ' ' + MONTH_NAMES[d.getMonth()];
+}
+
+// ===== CUSTOM DATE PICKER =====
+let _dpYear = 0, _dpMonth = 0, _dpSelected = '';
+
+function openDatePicker() {
+  const cur = _dpSelected || today();
+  const [y, m] = cur.split('-').map(Number);
+  _dpYear = y; _dpMonth = m;
+  renderDpGrid();
+  document.getElementById('datepickerWrap').classList.add('show');
+}
+
+function closeDatePicker() {
+  document.getElementById('datepickerWrap').classList.remove('show');
+}
+
+function dpChangeMonth(dir) {
+  _dpMonth += dir;
+  if (_dpMonth > 12) { _dpMonth = 1; _dpYear++; }
+  if (_dpMonth < 1)  { _dpMonth = 12; _dpYear--; }
+  renderDpGrid();
+}
+
+function dpSelectDay(dateStr) {
+  _dpSelected = dateStr;
+  document.getElementById('txDateLabel').textContent = formatTxDate(dateStr);
+  closeDatePicker();
+}
+
+function renderDpGrid() {
+  const label = document.getElementById('dpMonthLabel');
+  if (label) label.textContent = MONTH_NAMES[_dpMonth - 1] + ' ' + _dpYear;
+
+  const grid = document.getElementById('dpDaysGrid');
+  if (!grid) return;
+
+  const todayStr = today();
+  const firstDay = new Date(_dpYear, _dpMonth - 1, 1).getDay(); // 0=Sun
+  const dim = daysInMonth(_dpYear + '-' + String(_dpMonth).padStart(2,'0'));
+  // Pazartesi bazlı: Sun=0 → 6, Mon=1 → 0
+  const offset = (firstDay + 6) % 7;
+
+  let html = '';
+  for (let i = 0; i < offset; i++) {
+    html += `<div class="datepicker-day empty"></div>`;
+  }
+  for (let d = 1; d <= dim; d++) {
+    const dateStr = _dpYear + '-' + String(_dpMonth).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const isToday = dateStr === todayStr;
+    const isSel = dateStr === _dpSelected;
+    html += `<button class="datepicker-day${isToday?' today':''}${isSel?' selected':''}" onclick="dpSelectDay('${dateStr}')">${d}</button>`;
+  }
+  grid.innerHTML = html;
+}
+
 function init() {
   load();
+  _dpSelected = today();
+  document.getElementById('txDateLabel').textContent = formatTxDate(today());
   populateCatSelects();
   updateAppLogo();
   const initCat = document.getElementById('txCategory');
