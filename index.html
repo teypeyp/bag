@@ -139,8 +139,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 .wallet-sub{font-size:12px;color:var(--muted);font-weight:600;margin-top:8px;display:flex;gap:12px}
 .wallet-sub-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:var(--surface3);border-radius:20px;font-size:11px;font-weight:700}
-.wallet-sub-chip.inc{color:var(--accent)}
-.wallet-sub-chip.exp{color:var(--danger)}
 
 /* ===== FEEDBACK INSIGHT / CAROUSEL ===== */
 @property --border-angle {
@@ -155,7 +153,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 }
 @keyframes insightIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes insightOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
-@keyframes rotateBorder{from{--border-angle:90deg}to{--border-angle:450deg}}
+to{--border-angle:450deg}
 @keyframes rotateHero{from{--hero-angle:90deg}to{--hero-angle:450deg}}
 
 /* ── Carousel: gradient animasyon, stroke yok ── */
@@ -501,8 +499,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 
 .vs-badge{font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px}
-.vs-badge.up{background:rgba(255,69,58,.12);color:var(--danger)}
-.vs-badge.down{background:rgba(45,184,102,.12);color:var(--accent)}
 .vs-badge
 /* Kategori dağılımı */
 
@@ -514,7 +510,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* Tasarruf oranı ring */
 
-.savings-rate-ring svg{transform:rotate(-90deg)}
 
 
 /* CHARTS */
@@ -596,8 +591,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .hero-balance{font-size:54px;font-weight:900;letter-spacing:-3px;line-height:1;margin-bottom:14px;text-shadow:0 2px 20px rgba(0,0,0,.4)}
 
 .hero-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:800;letter-spacing:.1px}
-.hero-chip.inc{background:rgba(45,184,102,.12);color:var(--accent);border:1px solid rgba(45,184,102,.25);box-shadow:0 0 12px rgba(45,184,102,.1)}
-.hero-chip.exp{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid rgba(255,255,255,.07)}
 
 .hero-top{display:flex;align-items:flex-start;justify-content:space-between}
 
@@ -677,7 +670,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .icon-action-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .icon-action-btn.danger{border-color:rgba(255,69,58,.25);background:rgba(255,69,58,.08);color:var(--danger)}
 .icon-action-btn.confirm{border-color:rgba(45,184,102,.3);background:rgba(45,184,102,.08);color:var(--accent)}
-.icon-action-btn.undo{border-color:rgba(255,214,10,.25);background:rgba(255,214,10,.06);color:var(--warning)}
 
 /* ===== FINANCIAL ADVICE ANIMATED ===== */
 @keyframes adviceSlideIn {
@@ -761,7 +753,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .stagger-item{opacity:0;animation:staggerIn .35s cubic-bezier(.4,0,.2,1) both}
 /* Sayı pop */
 
-@keyframes numFlash{0%{opacity:.3;transform:scale(.92)}60%{transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}
+60%{transform:scale(1.04)}100%{opacity:1;transform:scale(1)}
 
 /* ── Onboarding Splash ── */
 @keyframes ringPulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.08);opacity:.22}}
@@ -775,7 +767,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 @keyframes splashInRight{from{opacity:0;transform:translateY(-50%) translateX(-48px)}to{opacity:1;transform:translateY(-50%) translateX(0)}}
 @keyframes cardSlide{from{opacity:0;transform:translateY(28px) rotate(-2deg)}to{opacity:1;transform:translateY(0) rotate(-2deg)}}
 @keyframes cardSlide2{from{opacity:0;transform:translateY(44px) rotate(3deg)}to{opacity:1;transform:translateY(0) rotate(3deg)}}
-@keyframes streakBounce{0%{transform:scale(0) rotate(-20deg);opacity:0}60%{transform:scale(1.15) rotate(4deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+60%{transform:scale(1.15) rotate(4deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}
 @keyframes barFill{from{width:0}to{width:var(--bar-w)}}
 @keyframes logoIn{0%{opacity:0;letter-spacing:6px}100%{opacity:1;letter-spacing:3px}}
 
@@ -1050,7 +1042,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     </div><!-- /splash-slides -->
 
     <div class="ob-bottom">
-      <div class="splash-dots" id="splashDots">
+      <div class="splash-dots">
         <span class="splash-dot active" onclick="goSplash(0)"></span>
         <span class="splash-dot" onclick="goSplash(1)"></span>
         <span class="splash-dot" onclick="goSplash(2)"></span>
@@ -1130,7 +1122,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();openHistory()">Geçmiş →</button>
       </div>
     </div>
-    <div id="txBody" style="padding:0 12px 12px">
+    <div style="padding:0 12px 12px">
       <div id="txList"></div>
     </div>
   </div>
@@ -1142,7 +1134,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
   <div id="sabitSectionsContainer" style="margin-top:28px">
   <!-- Ödemeler -->
-  <div class="card collapsible-card" id="recSection" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
+  <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
     <div class="card-collapse-header" onclick="toggleSection('rec')">
       <div class="collapse-left">
         <div class="collapse-icon-wrap" style="background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.25);font-size:18px">🗓</div>
@@ -1178,7 +1170,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   </div>
 
   <!-- Borçlar -->
-  <div class="card collapsible-card" id="debtSection" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
+  <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
     <div class="card-collapse-header" onclick="toggleSection('debt')">
       <div class="collapse-left">
         <div class="collapse-icon-wrap" style="background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.2)">💳</div>
@@ -1219,7 +1211,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   </div>
 
   <!-- Birikim -->
-  <div class="card collapsible-card" id="goalSection" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
+  <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
     <div class="card-collapse-header" onclick="toggleSection('goal')">
       <div class="collapse-left">
         <div class="collapse-icon-wrap" style="background:rgba(45,184,102,.12);border:1px solid rgba(45,184,102,.2)">🪙</div>
@@ -1266,7 +1258,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   </div>
 
   <!-- Hedefler -->
-  <div class="card collapsible-card" id="wishSection" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
+  <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
     <div class="card-collapse-header" onclick="toggleSection('wish')">
       <div class="collapse-left">
         <div class="collapse-icon-wrap" style="background:rgba(191,90,242,.12);border:1px solid rgba(191,90,242,.22);font-size:18px">🎯</div>
@@ -1499,7 +1491,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 <div class="modal-overlay" id="keywordModal" onclick="if(event.target===this)closeKeywordModal()">
   <div class="modal-sheet" style="position:relative">
     <button class="modal-close" onclick="closeKeywordModal()">×</button>
-    <div id="keywordModalCatHeader" style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
       <div id="keywordModalEmoji" style="width:48px;height:48px;border-radius:14px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;border:1.5px solid var(--border)" onclick="toggleEmojiPickerModal()" title="Emoji değiştir"></div>
       <div>
         <div id="keywordModalTitle" style="font-size:17px;font-weight:800"></div>
@@ -2608,7 +2600,7 @@ function renderMonthly() {
   const balanceChanged = prevBalance !== null && prevBalance !== balance;
   _lastBalance = balance;
 
-  renderWalletHero(balance, income, expense, fb);
+  renderWalletHero(balance, income, fb);
 
   // Bakiye değişince countup animasyonu
   if (balanceChanged) {
@@ -2620,14 +2612,12 @@ function renderMonthly() {
   const monthTxs = data.transactions.filter(t => monthKey(t.date) === mk);
   renderTxList(document.getElementById('txList'), monthTxs.slice().reverse(), true);
   updateTxSectionSummary(monthTxs);
-  const label = document.getElementById('txExpandLabel');
-  if (label) label.textContent = _txListExpanded ? 'Son 5' : 'Tümü';
   populateCatSelects();
   renderFinancialAdvice();
 }
 
 
-function renderWalletHero(balance, income, expense, fb) {
+function renderWalletHero(balance, income, fb) {
   const el = document.getElementById('walletHero');
   if (!el) return;
   const balColor = balance >= 0 ? 'var(--accent)' : 'var(--danger)';
@@ -2924,8 +2914,6 @@ let _txListExpanded = false; // false = son 5, true = tümü
 
 function toggleTxSection() {
   _txListExpanded = !_txListExpanded;
-  const label = document.getElementById('txExpandLabel');
-  if (label) label.textContent = _txListExpanded ? 'Son 5' : 'Tümü';
   renderMonthly();
 }
 
@@ -4941,7 +4929,7 @@ function setupChartObservers() {
       });
       if (doughnutSub) doughnutSub.textContent = fmtNum(Math.round(totalExp)) + '₺ toplam';
       const legend = document.getElementById('doughnutLegend');
-      if (legend) { legend.innerHTML = '<div class="donut-legend">' + catEntries.map(([id, amt]) => { const cat = getCat(id); const pct = Math.round((amt / totalExp) * 100); return `<div class="donut-legend-item"><div class="donut-legend-dot" style="background:${cat.color}"></div><span class="donut-legend-name">${cat.name}</span><span class="donut-legend-amt">%${pct}</span></div>`; }).join('') + '</div>'; }
+      if (legend) { legend.innerHTML = '<div class="donut-legend">' + catEntries.map(([id, amt]) => { const cat = getCat(id); const pct = Math.round((amt / totalExp) * 100); return `<div class="donut-legend-item"><div class="donut-legend-dot" style="background:${cat.color}"></div><span class="donut-legend-name">${esc(cat.name)}</span><span class="donut-legend-amt">%${pct}</span></div>`; }).join('') + '</div>'; }
     }
   });
 
