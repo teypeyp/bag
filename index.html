@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>VAULT V5</title>
+<title>VAULT V6</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="BAGIT">
+<meta name="apple-mobile-web-app-title" content="VAULT">
 <meta name="theme-color" content="#0F0F11">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -34,10 +34,9 @@
 :root{
   --bg:#0A0A0D;--surface:#141417;--surface2:#1C1C21;--surface3:#242429;--border:#2C2C35;
   --text:#F2F1EB;--muted:#6E6D78;--accent:#2DB866;--accent-dim:#0c2e1a;--accent-glow:rgba(45,184,102,.15);
-  --danger:#FF453A;--danger-dim:#3d0f0d;--warning:#FFD60A;--warning-dim:#3d3100;
+  --danger:#FF453A;--danger-dim:#3d0f0d;--warning:#FFD60A;
   --blue:#0A84FF;--purple:#BF5AF2;
   --radius:20px;--radius-sm:12px;--radius-xs:8px;
-  --shadow:0 4px 24px rgba(0,0,0,.4);--shadow-lg:0 12px 48px rgba(0,0,0,.6);
 }
 html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased;overflow:hidden}#appWrap{max-width:520px;margin:0 auto;height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:104px}
 ::-webkit-scrollbar{width:0;height:0;display:none}
@@ -45,7 +44,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 ::-webkit-scrollbar-thumb{background:transparent}
 
 /* ANIMATIONS */
-@keyframes dlFillIn{from{opacity:0}to{opacity:1}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
 @keyframes tabEnter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -58,10 +56,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* OVERLAY */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s}
-
-/* ONBOARDING */
-
-
 
 /* CELEBRATION OVERLAY */
 #celebrationOverlay{
@@ -111,11 +105,11 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
 .form-select{width:100%;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;outline:none;appearance:none;cursor:pointer;-webkit-appearance:none}
 .form-input[type="date"]{color-scheme:dark;color:var(--text)}
+.form-input::placeholder{color:rgba(255,255,255,.35);font-weight:700}
 
 /* BUTTONS */
 .btn{padding:11px 18px;border-radius:var(--radius-sm);border:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:6px;-webkit-tap-highlight-color:transparent;letter-spacing:.1px}
-.btn:active{transform:scale(.95)}
-.btn-primary{background:var(--accent);color:#0A0A0D;box-shadow:0 4px 16px rgba(45,184,102,.25)}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(45,184,102,.25)}
 .btn-primary:active{box-shadow:none}
 .btn-danger{background:var(--danger);color:#fff;box-shadow:0 4px 16px rgba(255,69,58,.2)}
 .btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
@@ -125,7 +119,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 /* TOGGLE */
 .toggle-row{display:flex;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:4px;gap:4px;margin-bottom:12px}
 .toggle-btn{flex:1;padding:9px;border:none;border-radius:10px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:none;color:var(--muted);transition:all .2s}
-.toggle-btn.income.active{background:var(--accent);color:#0A0A0D;box-shadow:0 2px 12px rgba(45,184,102,.3)}
+.toggle-btn.income.active{background:var(--accent);color:#fff;box-shadow:0 2px 12px rgba(45,184,102,.3)}
 .toggle-btn.expense.active{background:var(--danger);color:#fff;box-shadow:0 2px 12px rgba(255,69,58,.25)}
 .add-tx-card.expense-mode .btn-primary{background:var(--danger);box-shadow:0 4px 20px rgba(255,69,58,.3);color:#fff}
 .add-tx-card.expense-mode .btn-primary:active{background:#d63b31}
@@ -133,19 +127,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 /* ADD TX CARD */
 .add-tx-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 
-/* ===== WALLET HERO — Apple-style glassmorphism ===== */
-.wallet-hero{position:relative;overflow:hidden;background:linear-gradient(145deg,#141417,#1a1a20);border:1px solid var(--border);border-radius:24px;padding:26px 20px 22px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
-.wallet-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(45,184,102,.04) 0%,transparent 70%);pointer-events:none}
-
-.wallet-sub{font-size:12px;color:var(--muted);font-weight:600;margin-top:8px;display:flex;gap:12px}
-.wallet-sub-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:var(--surface3);border-radius:20px;font-size:11px;font-weight:700}
-
 /* ===== FEEDBACK INSIGHT / CAROUSEL ===== */
-@property --border-angle {
-  syntax: '<angle>';
-  inherits: false;
-  initial-value: 0deg;
-}
 @property --hero-angle {
   syntax: '<angle>';
   inherits: false;
@@ -153,10 +135,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 }
 @keyframes insightIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes insightOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
-to{--border-angle:450deg}
 @keyframes rotateHero{from{--hero-angle:90deg}to{--hero-angle:450deg}}
 
-/* ── Carousel: gradient animasyon, stroke yok ── */
 .insight-carousel{
   border-radius:var(--radius-sm);
   margin-bottom:12px;
@@ -173,7 +153,6 @@ to{--border-angle:450deg}
 .insight-card.warn{background:color-mix(in srgb,var(--surface2) 85%,var(--warning) 15%)}
 .insight-card.bad{background:color-mix(in srgb,var(--surface2) 85%,var(--danger) 15%)}
 
-/* Sweep gradient overlay */
 .insight-card::after{
   content:'';
   position:absolute;inset:0;
@@ -203,10 +182,8 @@ to{--border-angle:450deg}
 .insight-card.warn .insight-title{color:var(--warning)}
 .insight-card.bad .insight-title{color:var(--danger)}
 
-/* ── Hero card: dönen conic border, 12s ── */
 .wallet-hero-combined{
   position:relative;
-  background:var(--surface);
   border-radius:28px;overflow:hidden;margin-bottom:16px;
   box-shadow:0 2px 8px rgba(0,0,0,.15);
   padding:1.5px;
@@ -218,25 +195,23 @@ to{--border-angle:450deg}
 }
 
 /* ===== TX LIST ===== */
-.tx-date-group{margin-bottom:12px;animation:cardIn .25s ease}
+.tx-date-group{margin-bottom:4px;animation:cardIn .25s ease}
 #txList{scrollbar-width:none;-ms-overflow-style:none}#txList::-webkit-scrollbar{display:none}
-.tx-date-label{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;padding:6px 0 6px;margin-bottom:2px}
-.tx-date-label .tx-date-total{font-size:10px;font-weight:700;letter-spacing:-.1px;opacity:.6}
-.tx-items-wrap{padding-left:4px;border-left:1.5px solid rgba(44,44,53,.4)}
-.tx-item{display:flex;align-items:center;gap:10px;padding:7px 0 7px 8px;border-bottom:1px solid rgba(44,44,53,.2);transition:background .1s}
-.tx-item:last-child{border-bottom:none}
-.tx-item:active{background:var(--surface2);border-radius:var(--radius-sm);margin:0 -4px;padding:8px 12px 8px 12px}
-.tx-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.tx-icon.income{background:var(--accent-dim)}
+.tx-date-label{display:flex;justify-content:space-between;align-items:center;padding:14px 0 8px;margin-bottom:2px}
+.tx-date-label span:first-child{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:.6px}
+.tx-date-label .tx-date-total{font-size:11px;font-weight:600;color:rgba(255,255,255,.25)}
+.tx-items-wrap{display:flex;flex-direction:column;gap:4px}
+.tx-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:rgba(191,90,242,.09);border-radius:12px;transition:opacity .1s}
+.tx-item:active{opacity:.7}
+.tx-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.tx-icon.income{background:rgba(45,184,102,.2)}
 .tx-icon.expense{background:var(--surface2)}
 .tx-info{flex:1;min-width:0}
-.tx-desc{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-desc{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.tx-amount{font-size:13px;font-weight:800;flex-shrink:0;letter-spacing:-.3px}
+.tx-amount{font-size:14px;font-weight:800;flex-shrink:0;letter-spacing:-.3px;color:rgba(255,255,255,.85)}
 .tx-amount.income{color:var(--accent)}
-.tx-amount.expense{color:var(--muted)}
-/* Sadece alarm durumlar kırmızı */
-.tx-amount.expense
+.tx-amount.expense{color:rgba(255,255,255,.85)}
 
 /* ===== GAMIFICATION STREAK CARD ===== */
 @keyframes streakFlame{0%,100%{transform:scaleY(1) translateY(0)}30%{transform:scaleY(1.08) translateY(-2px)}60%{transform:scaleY(.96) translateY(1px)}}
@@ -255,7 +230,6 @@ to{--border-angle:450deg}
   background:linear-gradient(90deg,transparent,rgba(255,165,0,.08),transparent);
 }
 
-/* header row */
 .streak-header{display:flex;align-items:center;gap:10px;padding:14px 16px 10px}
 .streak-flame{font-size:28px;line-height:1;animation:streakFlame 2.6s ease-in-out infinite;display:inline-block;filter:drop-shadow(0 0 10px rgba(255,140,0,.55));flex-shrink:0}
 .streak-flame.dead{filter:grayscale(1);animation:none;opacity:.35}
@@ -270,10 +244,6 @@ to{--border-angle:450deg}
 .streak-meta.dead{color:var(--muted)}
 .streak-best-chip{background:rgba(255,255,255,.06);border-radius:20px;padding:2px 7px;font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.3px}
 
-/* score / savings */
-
-
-/* day dots */
 .streak-dots-wrap{padding:0 16px 10px}
 .streak-days-grid{display:flex;gap:3px;flex-wrap:wrap}
 .day-dot{
@@ -290,7 +260,6 @@ to{--border-angle:450deg}
 .day-dot.future{background:transparent;border:1.5px dashed rgba(255,255,255,.07);color:transparent}
 .day-dot-pop{animation:dayDotPop .3s cubic-bezier(.34,1.56,.64,1) both}
 
-/* freeze row */
 .streak-freeze-row{
   display:flex;align-items:center;justify-content:space-between;
   padding:8px 16px 12px;
@@ -313,7 +282,6 @@ to{--border-angle:450deg}
 .freeze-btn:active{transform:scale(.9);background:rgba(10,132,255,.22)}
 .freeze-btn:disabled{opacity:.2;cursor:default;pointer-events:none}
 
-/* milestone */
 .streak-milestone{
   margin:0 16px 10px;padding:8px 12px;border-radius:12px;
   background:linear-gradient(135deg,rgba(255,214,10,.08),rgba(255,149,0,.05));
@@ -325,7 +293,6 @@ to{--border-angle:450deg}
 .milestone-title{font-size:11px;font-weight:800;color:#FFD60A}
 .milestone-sub{font-size:10px;color:rgba(255,214,10,.45);font-weight:600;margin-top:1px}
 
-/* month badge */
 .month-badge{margin:0 16px 10px;padding:8px 12px;border-radius:12px;display:flex;align-items:center;gap:8px}
 .month-badge.legendary{background:linear-gradient(135deg,rgba(191,90,242,.1),rgba(10,132,255,.07));border:1px solid rgba(191,90,242,.2)}
 .month-badge.disciplined{background:rgba(45,184,102,.07);border:1px solid rgba(45,184,102,.18)}
@@ -335,12 +302,6 @@ to{--border-angle:450deg}
 .empty-state-icon{font-size:44px;margin-bottom:12px;opacity:.4;display:block}
 .empty-state-text{font-size:14px;font-weight:700;margin-bottom:4px}
 .empty-state-sub{font-size:12px;opacity:.6;font-weight:600}
-
-/* ===== DAILY LIMIT BOX ===== */
-
-
-
-
 
 /* ===== COLLAPSIBLE ===== */
 .collapsible-card{padding:0;border-radius:var(--radius);transition:box-shadow .2s}
@@ -373,9 +334,7 @@ to{--border-angle:450deg}
 .rec-item:last-child{margin-bottom:0}
 .rec-item:active{background:var(--surface3)}
 .rec-item.paid-item{border-color:rgba(45,184,102,.25);background:rgba(45,184,102,.04)}
-.rec-item.debt-item.paid-item{border-color:rgba(45,184,102,.25);background:rgba(45,184,102,.04)}
 
-/* Left paid indicator strip */
 .rec-item::before{
   content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
   border-radius:3px 0 0 3px;background:var(--border);
@@ -388,7 +347,6 @@ to{--border-angle:450deg}
 .rec-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .2s}
 .rec-meta{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
 
-/* Paid status badge */
 .rec-status{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0}
 .rec-status-badge{font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:3px 8px;border-radius:20px;transition:all .2s}
 .rec-status-badge.unpaid{color:var(--muted);background:var(--surface3)}
@@ -409,8 +367,7 @@ to{--border-angle:450deg}
   content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
   border-radius:3px 0 0 3px;
 }
-.wish-card.wish-card.wish-card.wish-card.reachable{border-color:rgba(191,90,242,.3);background:rgba(191,90,242,.04)}
-
+.wish-card.reachable{border-color:rgba(191,90,242,.3);background:rgba(191,90,242,.04)}
 
 .wish-icon{width:36px;height:36px;border-radius:10px;background:rgba(191,90,242,.12);
   display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
@@ -419,19 +376,15 @@ to{--border-angle:450deg}
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .wish-price{font-size:13px;font-weight:700;color:var(--purple);margin-top:2px}
 
-
 .wish-projection{
   background:var(--surface3);border-radius:10px;
   padding:9px 12px;margin-bottom:8px;
 }
 .wish-proj-main{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.4}
 .wish-proj-sub{font-size:11px;font-weight:600;color:var(--muted);line-height:1.4}
-
-
-
-
-
-
+.wish-tip{font-size:11px;font-weight:500;color:var(--muted);line-height:1.5;padding:7px 0 0;margin-top:6px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.wish-challenge-btn{flex-shrink:0;font-size:10px;font-weight:800;font-family:'Montserrat',sans-serif;color:var(--purple);background:rgba(191,90,242,.1);border:1px solid rgba(191,90,242,.25);border-radius:6px;padding:4px 10px;cursor:pointer;letter-spacing:.3px;transition:background .15s;}
+.wish-challenge-btn:active{background:rgba(191,90,242,.22);}
 
 .wish-priority-badge{
   display:inline-flex;align-items:center;gap:3px;
@@ -442,7 +395,6 @@ to{--border-angle:450deg}
 .wish-priority-badge.mid{background:rgba(191,90,242,.12);color:var(--purple)}
 .wish-priority-badge.low{background:var(--surface3);color:var(--muted)}
 
-/* Wish tik butonu — sağ üst köşe */
 .wish-tick-btn{
   width:32px;height:32px;border-radius:10px;border:1.5px solid rgba(45,184,102,.3);
   background:rgba(45,184,102,.08);color:var(--accent);
@@ -492,25 +444,6 @@ to{--border-angle:450deg}
 .ozet-stat-label{font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
 .ozet-stat-val{font-size:16px;font-weight:900;letter-spacing:-.3px}
 .ozet-stat-card.highlight{background:linear-gradient(135deg,rgba(45,184,102,.08),rgba(45,184,102,.03));border-color:rgba(45,184,102,.25)}
-/* Geçen ay karşılaştırma */
-
-
-
-
-
-.vs-badge{font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px}
-.vs-badge
-/* Kategori dağılımı */
-
-
-
-
-
-
-
-/* Tasarruf oranı ring */
-
-
 
 /* CHARTS */
 .chart-wrap{position:relative;min-height:180px;height:200px;margin-bottom:8px}
@@ -524,8 +457,6 @@ to{--border-angle:450deg}
 .year-stat{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px}
 .year-stat-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
 .year-stat-val{font-size:20px;font-weight:900;letter-spacing:-.5px}
-/* .year-month-item layout handled below by accordion definition */
-
 /* HISTORY */
 .history-wrap{background:var(--surface);width:100%;max-width:520px;height:100vh;display:flex;flex-direction:column}
 .history-header{padding:22px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
@@ -533,11 +464,10 @@ to{--border-angle:450deg}
 
 /* MODALS */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:200;display:none;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
-.modal-overlay.show{display:flex;opacity:1;pointer-events:all}
+.modal-overlay.show{display:flex;opacity:1;pointer-events:auto}
 .modal-sheet{background:var(--surface);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:28px 20px 48px;width:100%;max-width:520px;display:flex;flex-direction:column;gap:14px;max-height:92vh;overflow-y:auto;transform:translateY(40px);transition:transform .3s cubic-bezier(.34,1.2,.64,1)}
 .modal-overlay.show .modal-sheet{transform:translateY(0)}
 .modal-close{position:absolute;top:18px;right:18px;background:var(--surface2);border:1px solid var(--border);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--muted);line-height:1;font-family:'Montserrat',sans-serif}
-.modal-title{font-size:18px;font-weight:900;margin-bottom:18px;letter-spacing:-.2px}
 
 /* LIMIT WARNING */
 #limitWarning{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;z-index:85;padding:10px 18px;background:var(--danger-dim);border-bottom:1px solid rgba(255,69,58,.3);font-size:13px;font-weight:700;color:var(--danger);display:none}
@@ -555,7 +485,6 @@ to{--border-angle:450deg}
 .ds-val{font-size:16px;font-weight:900}
 .ds-full{grid-column:1/-1;border-top:1px solid var(--border);padding-top:10px;margin-top:4px}
 
-/* QUOTE CARD */
 /* CAT LIST in modal */
 .cat-item{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border)}
 .cat-item:last-child{border-bottom:none}
@@ -563,13 +492,10 @@ to{--border-angle:450deg}
 
 /* MOBILE */
 @media(max-width:400px){
-    
   .ozet-hero-balance{font-size:42px}
 }
 
 /* ===== COMBINED WALLET HERO inner ===== */
-.wallet-hero-combined::before{ display:none; }
-.wallet-hero-combined::after{ display:none; }
 .wallet-hero-inner{
   background:#0A0A0D;
   border-radius:26.5px;
@@ -583,29 +509,9 @@ to{--border-angle:450deg}
     linear-gradient(180deg, rgba(45,184,102,.06) 0%, transparent 40%);
   pointer-events:none;z-index:0;
 }
-.wallet-hero-inner::after{ display:none; }
-.hero-top{padding:30px 24px 24px;position:relative;overflow:hidden;z-index:2}
-.hero-top::before{display:none}
-.hero-top::after{display:none}
+.hero-top{padding:30px 24px 24px;position:relative;overflow:hidden;z-index:2;display:flex;align-items:flex-start;justify-content:space-between}
 .hero-label{font-size:10px;font-weight:800;color:rgba(45,184,102,.55);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;text-shadow:0 0 12px rgba(45,184,102,.3)}
 .hero-balance{font-size:54px;font-weight:900;letter-spacing:-3px;line-height:1;margin-bottom:14px;text-shadow:0 2px 20px rgba(0,0,0,.4)}
-
-.hero-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:800;letter-spacing:.1px}
-
-.hero-top{display:flex;align-items:flex-start;justify-content:space-between}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* ===== TX ACTION ===== */
 .tx-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
@@ -619,14 +525,13 @@ to{--border-angle:450deg}
 .settings-row:last-child{border-bottom:none}
 .settings-row.tappable{cursor:pointer;transition:background .15s;-webkit-tap-highlight-color:transparent}
 .settings-row.tappable:active{background:rgba(255,255,255,.04)}
+.settings-row.danger-row .settings-row-title{color:var(--danger)}
 .settings-row-left{flex:1}
 .settings-row-title{font-size:15px;font-weight:600;color:var(--text)}
 .settings-row-sub{font-size:12px;color:var(--muted);margin-top:2px}
 .settings-chevron{font-size:20px;color:var(--muted);line-height:1}
 .settings-inline-input{background:transparent;border:none;color:var(--accent);font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;text-align:right;width:100px;outline:none}
 
-/* ===== HAMBURGER ===== */
-/* app-header position handled above */
 .cat-add-btn{background:none;border:1.5px solid var(--border);border-radius:20px;color:var(--muted);font-size:12px;font-weight:700;padding:6px 12px;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;-webkit-tap-highlight-color:transparent}
 .cat-add-btn:active{background:var(--surface2);color:var(--text)}
 .hamburger-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:38px;height:38px;background:none!important;border:none!important}
@@ -634,20 +539,12 @@ to{--border-angle:450deg}
 .hamburger-btn.active .ham-line:nth-child(1){transform:translateY(7px) rotate(45deg)}
 .hamburger-btn.active .ham-line:nth-child(2){opacity:0}
 .hamburger-btn.active .ham-line:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-.hamburger-menu{position:absolute;top:calc(100% + 6px);right:12px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:6px;min-width:180px;z-index:200;opacity:0;transform:scale(.92) translateY(-8px);pointer-events:none;transition:opacity .18s,transform .18s;box-shadow:0 12px 40px rgba(0,0,0,.4);transform-origin:top right}
-.hamburger-menu.open{opacity:1;transform:scale(1) translateY(0);pointer-events:auto}
-.ham-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:12px;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;transition:background .15s;-webkit-tap-highlight-color:transparent}
-.ham-item:active{background:var(--surface2)}
-.ham-item.danger{color:var(--danger)}
-
-
 
 /* ===== TX ACTION BUTTONS ===== */
 .tx-action-btn{display:none;padding:5px 10px;border-radius:8px;border:none;font-size:11px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;opacity:0;transform:scale(.8);transition:opacity .18s,transform .18s;pointer-events:none;white-space:nowrap}
 .tx-action-btn.show{display:inline-block;opacity:1;transform:scale(1);pointer-events:auto}
 .edit-btn{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
 .del-btn{background:var(--danger);color:#fff}
- /* eski class artık yok */
 
 /* ===== ITEM EXPAND ACTIONS (rec/debt/goal/wish) ===== */
 .item-actions-row{
@@ -669,7 +566,6 @@ to{--border-angle:450deg}
 .icon-action-btn:active{transform:scale(.9)}
 .icon-action-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .icon-action-btn.danger{border-color:rgba(255,69,58,.25);background:rgba(255,69,58,.08);color:var(--danger)}
-.icon-action-btn.confirm{border-color:rgba(45,184,102,.3);background:rgba(45,184,102,.08);color:var(--accent)}
 
 /* ===== FINANCIAL ADVICE ANIMATED ===== */
 @keyframes adviceSlideIn {
@@ -693,12 +589,6 @@ to{--border-angle:450deg}
 .advice-section-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .advice-section-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* ===== ITEM ACTION BUTTONS (unified edit/delete) ===== */
-.item-action-btn{background:var(--surface3);border:1px solid var(--border);color:var(--muted);font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;padding:5px 10px;border-radius:8px;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;white-space:nowrap}
-.item-action-btn:active{opacity:.7}
-.item-action-btn.danger{color:var(--danger);border-color:rgba(255,69,58,.25);background:rgba(255,69,58,.08)}
-
-/* ===== TX EDIT MODAL ===== */
 .modal-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:2px}
 
 /* ===== BALANCE ANIMATE ===== */
@@ -742,20 +632,13 @@ to{--border-angle:450deg}
 .ymb-sav-label{font-size:11px;font-weight:700;color:var(--muted)}
 .ymb-sav-val{font-size:13px;font-weight:800}
 
-/* ── Mikro-etkileşimler ── */
 .btn{transition:transform .12s cubic-bezier(.4,0,.2,1),opacity .12s,box-shadow .12s}
 .btn:active{transform:scale(.94) !important;opacity:.85}
 .tab-btn:active{transform:scale(.9)}
 .year-month-header:active{transform:scale(.98)}
-.rec-item:active,.debt-item:active,.hero-chip:active{transform:scale(.92);transition:transform .1s}
-/* Kart stagger giriş animasyonu */
+.rec-item:active,.debt-item:active{background:var(--surface3)}
 @keyframes staggerIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 .stagger-item{opacity:0;animation:staggerIn .35s cubic-bezier(.4,0,.2,1) both}
-/* Sayı pop */
-
-60%{transform:scale(1.04)}100%{opacity:1;transform:scale(1)}
-
-/* ── Onboarding Splash ── */
 @keyframes ringPulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.08);opacity:.22}}
 @keyframes ringPulse2{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.13);opacity:.1}}
 @keyframes ringPulse3{0%,100%{transform:scale(1);opacity:.14}50%{transform:scale(1.18);opacity:.05}}
@@ -767,7 +650,6 @@ to{--border-angle:450deg}
 @keyframes splashInRight{from{opacity:0;transform:translateY(-50%) translateX(-48px)}to{opacity:1;transform:translateY(-50%) translateX(0)}}
 @keyframes cardSlide{from{opacity:0;transform:translateY(28px) rotate(-2deg)}to{opacity:1;transform:translateY(0) rotate(-2deg)}}
 @keyframes cardSlide2{from{opacity:0;transform:translateY(44px) rotate(3deg)}to{opacity:1;transform:translateY(0) rotate(3deg)}}
-60%{transform:scale(1.15) rotate(4deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}
 @keyframes barFill{from{width:0}to{width:var(--bar-w)}}
 @keyframes logoIn{0%{opacity:0;letter-spacing:6px}100%{opacity:1;letter-spacing:3px}}
 
@@ -798,7 +680,6 @@ to{--border-angle:450deg}
 .splash-slide.slide-in-left{animation:splashInLeft .38s cubic-bezier(.4,0,.2,1) both}
 .splash-slide.slide-in-right{animation:splashInRight .38s cubic-bezier(.4,0,.2,1) both}
 
-/* Logo */
 .ob-logo{
   font-size:32px;font-weight:900;letter-spacing:3px;color:var(--accent);
   text-shadow:0 0 20px rgba(45,184,102,.35);text-transform:uppercase;
@@ -806,7 +687,6 @@ to{--border-angle:450deg}
   animation:logoIn .7s cubic-bezier(.4,0,.2,1) both;
 }
 
-/* Halkalar */
 .ob-rings{position:relative;width:220px;height:220px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-bottom:24px;animation:obFadeIn .6s ease .05s both;}
 .ob-ring{position:absolute;border-radius:50%;border:1px solid rgba(45,184,102,.35);}
 .ob-ring-1{width:220px;height:220px;animation:ringPulse3 4.2s ease-in-out infinite}
@@ -818,17 +698,14 @@ to{--border-angle:450deg}
   display:flex;align-items:center;justify-content:center;
   animation:glowPulse 3s ease-in-out infinite,iconFloat 4s ease-in-out infinite;
 }
-/* Onboarding ilk slide emoji rotasyonu */
 @keyframes emojiSwap{0%,40%{opacity:1;transform:scale(1)}45%,55%{opacity:0;transform:scale(.6)}60%,100%{opacity:1;transform:scale(1)}}
 .ob-ring-icon{font-size:26px;line-height:1;animation:emojiSwap 4s ease-in-out infinite}
 
-/* Metin */
 .ob-tag{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(45,184,102,.65);margin-bottom:8px;animation:obFadeUp .5s cubic-bezier(.4,0,.2,1) .1s both;}
 .ob-title{font-size:34px;font-weight:900;letter-spacing:-.5px;line-height:1.08;text-align:center;color:var(--text);padding:0 24px;animation:obFadeUp .5s cubic-bezier(.4,0,.2,1) .18s both;}
 .ob-title em{font-style:normal;color:var(--accent)}
 .ob-body{font-size:14px;font-weight:500;color:var(--muted);line-height:1.65;text-align:center;padding:0 30px;margin-top:10px;animation:obFadeUp .5s cubic-bezier(.4,0,.2,1) .26s both;}
 
-/* Limit kutusu */
 .ob-limit-visual{width:100%;padding:0 24px;margin-bottom:24px;animation:obFadeIn .5s ease .05s both;}
 .ob-limit-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:18px 18px 14px;position:relative;overflow:hidden;}
 .ob-limit-box::before{content:'';position:absolute;top:-30px;right:-30px;width:110px;height:110px;background:radial-gradient(circle,rgba(45,184,102,.04),transparent 70%);}
@@ -844,7 +721,6 @@ to{--border-angle:450deg}
 .ob-brow-val{font-weight:800;color:var(--text)}
 .ob-brow-val.green{color:var(--accent)}
 
-/* Hedef kartları */
 .ob-goals-visual{width:100%;padding:0 24px;margin-bottom:24px;position:relative;height:150px;animation:obFadeIn .5s ease .05s both;}
 .ob-goal-card{position:absolute;border-radius:18px;padding:13px 15px;border:1px solid var(--border);background:var(--surface);}
 .ob-goal-card-1{left:24px;right:54px;top:0;animation:cardSlide .55s cubic-bezier(.34,1.2,.64,1) .1s both;transform:rotate(-2deg);}
@@ -854,20 +730,12 @@ to{--border-angle:450deg}
 .ob-gc-fill{height:100%;border-radius:99px;background:var(--accent);animation:barFill .8s cubic-bezier(.4,0,.2,1) .5s both}
 .ob-gc-pct{font-size:10px;font-weight:800;color:var(--accent);margin-top:4px}
 
-/* Streak */
-
-
-
-
-
-/* Input */
 .ob-input-section{width:100%;padding:0 24px;margin-top:20px;animation:obFadeUp .5s both .15s}
 .ob-hint{font-size:11px;font-weight:600;color:var(--muted);text-align:center;margin-top:10px;opacity:.7}
 .ob-input-row{position:relative}
 .ob-currency{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:20px;font-weight:900;color:var(--muted)}
 .ob-input-row .form-input{font-size:26px!important;font-weight:900!important;padding-left:38px!important;border-radius:14px!important;letter-spacing:-1px;}
 
-/* Alt kontroller */
 .ob-bottom{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;padding:0 24px;z-index:2;position:relative;}
 .splash-dots{display:flex;gap:7px;align-items:center}
 .splash-dot{width:6px;height:6px;border-radius:99px;background:var(--border);cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);}
@@ -1024,10 +892,6 @@ to{--border-angle:450deg}
         </div>
       </div>
 
-
-
-
-
       <!-- SLIDE 5: Cüzdan ismi - geçilebilir -->
       <div class="splash-slide" data-idx="5">
         <div style="height:16px"></div>
@@ -1091,7 +955,7 @@ to{--border-angle:450deg}
     </div>
     <div class="form-group">
       <label class="form-label">Açıklama</label>
-      <input type="text" id="txDesc" class="form-input" onkeydown="if(event.key==='Enter')addTransaction()" placeholder="Ne için?" oninput="autoDetectCategory(this.value)" onkeydown="if(event.key==='Enter')addTransaction()" autocomplete="off" autocorrect="off" autocapitalize="off">
+      <input type="text" id="txDesc" class="form-input" oninput="autoDetectCategory(this.value)" onkeydown="if(event.key==='Enter')addTransaction()" placeholder="Ne için?" autocomplete="off" autocorrect="off" autocapitalize="off">
     </div>
     <div style="display:flex;gap:8px">
       <div class="form-group" style="flex:1">
@@ -1111,18 +975,18 @@ to{--border-angle:450deg}
   </div>
 
   <div class="card" id="txSection" style="margin-top:14px;background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15);padding:0;border-radius:var(--radius)">
-    <div class="card-collapse-header" onclick="toggleTxSection()" style="border-radius:var(--radius)">
+    <div class="card-collapse-header" style="border-radius:var(--radius);padding:18px 18px 10px;cursor:default">
       <div class="collapse-left">
         <div>
           <div class="collapse-title">Son İşlemler</div>
-          <div class="collapse-summary" id="txSectionSummary"></div>
+          <div class="collapse-summary" id="txSectionSummary" style="margin-top:5px"></div>
         </div>
       </div>
       <div class="collapse-right">
         <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();openHistory()">Geçmiş →</button>
       </div>
     </div>
-    <div style="padding:0 12px 12px">
+    <div style="padding:0 12px 14px">
       <div id="txList"></div>
     </div>
   </div>
@@ -1246,7 +1110,6 @@ to{--border-angle:450deg}
           <label class="form-label" style="display:flex;justify-content:space-between"><span>Aylık Birikim</span><span id="goalMonthlyHint" style="color:var(--accent);font-weight:800"></span></label>
           <input type="text" id="goalMonthly" class="form-input" placeholder="Otomatik hesaplanır" onkeydown="if(event.key==='Enter')addGoal()" oninput="fmtInput(this)" inputmode="numeric">
         </div>
-        <div style="display:none"></div>
         <div class="form-group">
           <label class="form-label">Not <span style="color:var(--muted);font-weight:500">(isteğe bağlı)</span></label>
           <input type="text" id="goalNote" class="form-input" placeholder="Bu hedef hakkında bir not..." onkeydown="if(event.key==='Enter')addGoal()">
@@ -1828,6 +1691,7 @@ const DEFAULT_CATS = [
 ];
 
 const GOAL_EMOJIS = ['🎯','✈️','🏠','🚗','💍','📱','💻','🎓','👶','🌴','🏋️','🎸','📷','🐕','🌱','💰'];
+const MONTH_NAMES=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
 
 // =================== STORAGE ===================
 function load() {
@@ -2111,7 +1975,7 @@ function finishOnboarding() {
 
 // =================== TABS ===================
 let currentTab = 'aylik';
-const sectionState = { rec: false, debt: false, goal: false, wish: false, chart: false, yillik: false };
+const sectionState = { rec: false, debt: false, goal: false, wish: false, yillik: false };
 
 function switchTab(id, btn) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -2144,7 +2008,7 @@ function toggleSection(name) {
   const chevron = document.getElementById(name + 'Chevron');
   if (body) body.classList.toggle('collapsed', !sectionState[name]);
   if (chevron) chevron.classList.toggle('open', sectionState[name]);
-  if (name === 'chart' && sectionState[name]) setTimeout(() => renderCharts(), 380);
+  if (name === 'chart' && sectionState[name]) setTimeout(() => setupChartObservers(), 380);
   if (name === 'yillik' && sectionState[name]) setTimeout(() => renderYillik(), 50);
 }
 
@@ -2196,8 +2060,6 @@ function calcStreakData() {
   const [y, m] = mk.split('-').map(Number);
   const dim = daysInMonth(mk);
   const todayD = new Date().getDate();
-  const todayStr = today();
-
   // Bu ayki her gün için status
   const days = [];
   for (let d = 1; d <= dim; d++) {
@@ -2209,15 +2071,10 @@ function calcStreakData() {
   // empty = harcama yok veya gelir yok → streak'i KIRMAZ ama sayılmaz
   // red = limit aşıldı → kırar
   let streak = 0;
-  let foundGreen = false;
   for (let i = Math.min(todayD, dim) - 1; i >= 0; i--) {
     const s = days[i].status;
-    if (s === 'red') break; // red = kırıldı
-    if (s === 'green' || s === 'frozen') {
-      streak++;
-      foundGreen = true;
-    }
-    // empty: zinciri kırmaz, sayılmaz — geçmeye devam et
+    if (s === 'red') break;
+    if (s === 'green' || s === 'frozen') streak++;
   }
 
   // En iyi streak (tarihsel — all time)
@@ -2497,9 +2354,6 @@ function calcMonthData(mk) {
 }
 
 function calcFreeBudget(mk) {
-  if (!Array.isArray(data.recurring)) data.recurring = [];
-  if (!Array.isArray(data.debts)) data.debts = [];
-  if (!Array.isArray(data.savingsGoals)) data.savingsGoals = [];
   const { income, expense, txs } = calcMonthData(mk);
   const savTarget = data.monthlyTargets[mk] || 0;
 
@@ -2543,12 +2397,7 @@ function calcFreeBudget(mk) {
   // Bugün için kalan
   const todayRemaining = daily - todayVarSpent;
 
-  // Ödenmemiş kalanlar (UI gösterimi için)
-  const recUnpaid = data.recurring.filter(r => r.active && !isPaidThisMonth(r, mk)).reduce((s,r) => s+r.amount, 0);
-  const debtUnpaid = data.debts.filter(d => d.active && !isPaidThisMonth(d, mk) && (!d.startMonth || d.startMonth <= mk)).reduce((s,d) => s+d.monthlyAmount, 0);
-  const goalUnpaid = data.savingsGoals.filter(g => g.monthly && !isPaidThisMonth(g, mk)).reduce((s,g) => s+g.monthly, 0);
-
-  return { income, expense, savTarget, recTotal, debtTotal, goalTotal, paidFixed, varSpent, available, remaining, daysLeft, daily, baseDaily, todayVarSpent, todayRemaining, recUnpaid, debtUnpaid, goalUnpaid };
+  return { income, expense, savTarget, recTotal, debtTotal, goalTotal, paidFixed, varSpent, available, remaining, daysLeft, daily, baseDaily, todayVarSpent, todayRemaining };
 }
 
 // =================== RENDER MONTHLY ===================
@@ -2560,7 +2409,6 @@ let _lastBalance = null;
 let _carouselTimer = null;
 let _carouselIndex = 0;
 let _carouselItems = [];
-let _overlayAnim = null;
 const CAROUSEL_DURATION = 6000;
 
 function animateCount(el, fromVal, toVal, duration = 2500, keepColor = false) {
@@ -2593,14 +2441,13 @@ function animateCount(el, fromVal, toVal, duration = 2500, keepColor = false) {
 function renderMonthly() {
   const mk = currentMonth;
   const balance = calcBalance();
-  const { income, expense } = calcMonthData(mk);
   const fb = calcFreeBudget(mk);
 
   const prevBalance = _lastBalance;
   const balanceChanged = prevBalance !== null && prevBalance !== balance;
   _lastBalance = balance;
 
-  renderWalletHero(balance, income, fb);
+  renderWalletHero(balance, fb);
 
   // Bakiye değişince countup animasyonu
   if (balanceChanged) {
@@ -2616,8 +2463,7 @@ function renderMonthly() {
   renderFinancialAdvice();
 }
 
-
-function renderWalletHero(balance, income, fb) {
+function renderWalletHero(balance, fb) {
   const el = document.getElementById('walletHero');
   if (!el) return;
   const balColor = balance >= 0 ? 'var(--accent)' : 'var(--danger)';
@@ -2626,8 +2472,6 @@ function renderWalletHero(balance, income, fb) {
 
   const todaySpent = fb.todayVarSpent;
   const todayRemaining = Math.round(fb.todayRemaining);
-  const todayRemColor = todayRemaining < 0 ? 'var(--danger)' : todayRemaining < fb.daily * 0.25 ? 'var(--warning)' : 'var(--accent)';
-
   const dailySection = fb.income > 0 ? `
     <div style="height:1px;background:rgba(255,255,255,.06);margin:18px 0 16px"></div>
     <div style="display:flex;justify-content:space-between;align-items:flex-start">
@@ -2659,13 +2503,10 @@ function renderWalletHero(balance, income, fb) {
     </div>`;
 }
 
-
 function buildCarouselItems(fb) {
   const items = [];
   const mk = currentMonth;
   const todayD = new Date().getDate();
-  const dim = daysInMonth(mk);
-
   // Ortalama günlük değişken harcama (bugün dahil, geçen gün sayısına göre)
   const pastDays = Math.max(1, todayD);
   const avgDailySpent = fb.varSpent / pastDays;
@@ -2860,7 +2701,6 @@ function showCarouselItem(idx) {
   const el = document.getElementById('insightCarousel');
   if (!el || !_carouselItems.length) return;
   const item = _carouselItems[idx];
-  const total = _carouselItems.length;
   el.className = `insight-carousel ${item.cls}`;
   el.innerHTML = `
     <div class="insight-card ${item.cls}" style="cursor:pointer" onclick="carouselNav(1)">
@@ -2873,7 +2713,6 @@ function showCarouselItem(idx) {
       </div>
     </div>`;
 
-  if (_overlayAnim) { cancelAnimationFrame(_overlayAnim); _overlayAnim = null; }
 }
 
 function carouselNav(dir) {
@@ -2907,7 +2746,6 @@ function startCarousel() {
 
 function stopCarousel() {
   if (_carouselTimer) { clearInterval(_carouselTimer); _carouselTimer = null; }
-  if (_overlayAnim) { cancelAnimationFrame(_overlayAnim); _overlayAnim = null; }
 }
 
 let _txListExpanded = false; // false = son 5, true = tümü
@@ -2945,14 +2783,15 @@ function renderTxList(container, txs, limitTo5) {
   for (const date of sortedDates) {
     const label = fmtDate(date);
     const dayTotal = grouped[date].reduce((s,t) => t.type==='income' ? s+t.amount : s-t.amount, 0);
-    const totalColor = dayTotal >= 0 ? 'var(--accent)' : 'var(--danger)';
-    const totalStr = (dayTotal >= 0 ? '+' : '') + fmtTL(dayTotal);
+    const totalColor = 'rgba(255,255,255,.25)';
+    const totalStr = (dayTotal >= 0 ? '+' : '−') + fmtTL(Math.abs(dayTotal));
     let itemsHtml = '';
     for (const t of grouped[date]) {
       if (limitTo5 && !_txListExpanded && shownCount >= MAX_ITEMS) break;
       const cat = getCat(t.category);
-      const iconBg = t.type === 'income' ? 'var(--accent-dim)' : (cat.color + '22');
-      itemsHtml += `<div class="tx-item tx-deletable stagger-item" id="tx_${t.id}" onclick="toggleTxDelete('${t.id}')">
+      const iconBg = t.type === 'income' ? 'rgba(45,184,102,.22)' : 'rgba(255,255,255,.06)';
+      const rowBg = t.type === 'income' ? 'rgba(45,184,102,.07)' : 'rgba(191,90,242,.07)';
+      itemsHtml += `<div class="tx-item tx-deletable stagger-item" id="tx_${t.id}" onclick="toggleTxDelete('${t.id}')" style="background:${rowBg}">
         <div class="tx-icon ${t.type}" style="background:${iconBg}">${cat.emoji}</div>
         <div class="tx-info">
           <div class="tx-desc">${esc(t.desc)}</div>
@@ -2977,7 +2816,6 @@ function renderTxList(container, txs, limitTo5) {
 
   container.innerHTML = allDatesHtml;
 }
-
 
 let expandedTx = null;
 let _touchStartY = 0;
@@ -3101,7 +2939,6 @@ function toggleItemExpand(id) {
   _expandedItem = isOpen ? null : id;
 }
 
-
 // ===== TX EDIT MODAL =====
 let _editTxId = null;
 function openEditTx(id) {
@@ -3174,7 +3011,6 @@ function deleteTx(id) {
   showToast('🗑 İşlem silindi');
 }
 
-
 function fmtDate(dateStr) {
   const todayStr = today();
   if (dateStr === todayStr) return 'Bugün';
@@ -3184,7 +3020,7 @@ function fmtDate(dateStr) {
   const yesterdayStr = yesterday.toISOString().slice(0, 10);
   if (dateStr === yesterdayStr) return 'Dün';
   const d = new Date(dateStr + 'T00:00:00');
-  const months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  const months = MONTH_NAMES;
   return d.getDate() + ' ' + months[d.getMonth()];
 }
 
@@ -3224,6 +3060,7 @@ function addTransaction() {
   document.getElementById('txDesc').value = '';
   document.getElementById('txAmount').value = '';
   document.getElementById('txDate').value = today();
+
   document.getElementById('txCategory').value = currentType === 'income' ? 'gelir' : 'market';
   setType(currentType);
   btn.style.animation = 'successPop .25s ease';
@@ -3278,16 +3115,15 @@ function renderDailyLimit() {
   const dim = daysInMonth(mk);
   const todayD = new Date().getDate();
   const [y, m] = mk.split('-').map(Number);
-  const monthNames = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  const monthNames = MONTH_NAMES;
 
   // Tüm ay: geçmiş = gerçek harcama, gelecek = null; limit her gün hesaplanır
-  const spent = [], limits = [], dates = [];
+  const spent = [], limits = [];
   // Bugünün gerçek dinamik limitini hesapla (tek seferlik)
   const todayDynLimit = fb.daily;
 
   for (let d = 1; d <= dim; d++) {
     const dateStr = y + '-' + String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0');
-    dates.push(dateStr);
     spent.push(d <= todayD
       ? data.transactions.filter(t => t.date === dateStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit).reduce((s,t) => s+t.amount, 0)
       : null);
@@ -3427,7 +3263,7 @@ function renderDailyLimit() {
           <!-- Limit spline çizgisi -->
           <path d="${limitPath}" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="1.2" stroke-dasharray="5,4"/>
           <!-- Harcama fill + çizgi -->
-          ${spentFill ? `<path d="${spentFill}" fill="url(#dlg)" opacity="0" style="animation:dlFillIn .8s cubic-bezier(.4,0,.2,1) .1s forwards"/>` : ''}
+          ${spentFill ? `<path d="${spentFill}" fill="url(#dlg)" opacity="0" style="animation:fadeIn .8s cubic-bezier(.4,0,.2,1) .1s forwards"/>` : ''}
           ${spentPath ? `<path id="dlSpentLine" d="${spentPath}" fill="none" stroke="${lc}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>` : ''}
           <!-- Bugün noktası -->
           <circle cx="${lx}" cy="${ly}" r="4.5" fill="${lc}" stroke="#0A0A0D" stroke-width="2"/>
@@ -3587,7 +3423,6 @@ function renderRecList() {
   }).join('');
 }
 
-
 function togglePaidRecurring(id) {
   const mk = currentMonth;
   const r = data.recurring.find(r => r.id === id);
@@ -3695,7 +3530,6 @@ function renderDebtList() {
     </div>`;
   }
 }
-
 
 function togglePaidDebt(id) {
   const mk = currentMonth;
@@ -3805,6 +3639,31 @@ function calcGoalMonthly() {
   } else if (hint) hint.textContent='';
 }
 
+function acceptWishChallenge(wishId, monthlyAmount, wishName) {
+  // Aynı isimde zaten var mı?
+  const existing = data.savingsGoals.find(g => g.wishId === wishId);
+  if (existing) {
+    showToast('Bu hedef zaten birikimlerine ekli.');
+    return;
+  }
+  const wish = data.wishlist ? data.wishlist.find(w => w.id === wishId) : null;
+  const target = wish ? wish.price : 0;
+  data.savingsGoals.push({
+    id: uid(),
+    wishId,
+    name: wishName,
+    emoji: '🎯',
+    target,
+    monthly: monthlyAmount,
+    note: 'Hedeften oluşturuldu',
+    deposits: [],
+    paidMonths: []
+  });
+  save();
+  renderAll();
+  showToast('Birikim hedefine eklendi — ' + fmtTL(monthlyAmount) + '/ay');
+}
+
 function addGoal() {
   const name = document.getElementById('goalName').value.trim();
   const target = parseNum(document.getElementById('goalTarget').value);
@@ -3812,7 +3671,7 @@ function addGoal() {
   const note = document.getElementById('goalNote')?.value.trim() || '';
   const emoji = document.getElementById('goalEmoji').value || '🎯';
   if (!name || !target) { showToast('⚠️ Ad ve hedef tutar gerekli'); return; }
-  data.savingsGoals.push({ id: uid(), name, emoji, target, monthly, deposits: [], paidMonths: [] });
+  data.savingsGoals.push({ id: uid(), name, emoji, target, monthly, note, deposits: [], paidMonths: [] });
   save();
   document.getElementById('goalName').value = '';
   document.getElementById('goalTarget').value = '';
@@ -3866,7 +3725,6 @@ function renderGoalsList() {
     </div>`;
   }).join('');
 }
-
 
 function toggleGoalMonthly(goalId) {
   const mk = currentMonth;
@@ -4175,20 +4033,37 @@ function renderWishSummaryCard() {
 function calcWishProjection(wish, fb) {
   const mk = currentMonth;
 
-  // Geçmiş aylarda ortalama aylık serbest para
+  // ── Geçmiş aylarda istatistiksel analiz (max 6 ay) ──
   const prevMonths = [];
-  for (let i = 1; i <= 3; i++) {
+  for (let i = 1; i <= 6; i++) {
     const d = new Date();
     d.setMonth(d.getMonth() - i);
     const pmk = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
     const { income: pi, expense: pe } = calcMonthData(pmk);
-    if (pi > 0) prevMonths.push(pi - pe);
+    if (pi > 0) prevMonths.push({ free: pi - pe, income: pi, expense: pe });
   }
-  const avgMonthlyFree = prevMonths.length > 0
-    ? Math.round(prevMonths.reduce((s,v) => s+v, 0) / prevMonths.length)
-    : Math.round(fb.remaining);
 
-  // Bu ay sonu kalacak tahmini para
+  const hasPrevData = prevMonths.length > 0;
+  const avgMonthlyFree = hasPrevData
+    ? Math.round(prevMonths.reduce((s,m) => s + m.free, 0) / prevMonths.length)
+    : Math.round(fb.remaining);
+  const avgIncome = hasPrevData
+    ? Math.round(prevMonths.reduce((s,m) => s + m.income, 0) / prevMonths.length)
+    : fb.income;
+  const avgExpense = hasPrevData
+    ? Math.round(prevMonths.reduce((s,m) => s + m.expense, 0) / prevMonths.length)
+    : 0;
+
+  // Trend: son 3 ay vs önceki 3 ay karşılaştırması
+  let trendDir = 0;
+  if (prevMonths.length >= 4) {
+    const recent = prevMonths.slice(0, 3).reduce((s,m) => s + m.free, 0) / 3;
+    const older  = prevMonths.slice(3).reduce((s,m) => s + m.free, 0) / prevMonths.slice(3).length;
+    if (recent > older * 1.1) trendDir = 1;   // iyileşiyor
+    else if (recent < older * 0.9) trendDir = -1; // kötüleşiyor
+  }
+
+  // Bu ay sonu tahmini
   const dim = daysInMonth(mk);
   const todayD = new Date().getDate();
   const daysLeft = Math.max(1, dim - todayD);
@@ -4201,11 +4076,38 @@ function calcWishProjection(wish, fb) {
   const effectiveDailyRate = fb.todayVarSpent > 0 ? fb.todayVarSpent : (avgPastDaily || fb.baseDaily);
   const projectedMonthEnd = Math.round(fb.available - fb.varSpent - effectiveDailyRate * daysLeft);
 
-  // Aylık biriktirebilecek tahmini kapasite
-  const rawCapacity = projectedMonthEnd * 0.6 + avgMonthlyFree * 0.4;
-  const monthlyCapacity = Math.max(0, Math.round(rawCapacity));
+  // ── Gerçekçi aylık kapasite ──
+  // fb.available = gelir − sabit giderler − borçlar − hedefler (zaten net serbest bütçe)
+  // Geçmiş ay ortalaması (avgMonthlyFree) varsa ona ağırlık ver — daha güvenilir
+  // fb.available ay boyunca değişmez, ay başı/sonu fark etmez
 
-  const result = { trendText: null, trendDir: 0, tipText: null, monthlyNeeded: null };
+  const activeDebts = data.debts ? data.debts.filter(d => d.active) : [];
+  const totalDebtMonthly = activeDebts.reduce((s,d) => s + d.monthlyAmount, 0);
+  const totalDebtRemaining = activeDebts.reduce((s,d) => {
+    const left = d.installments ? (d.installments - (d.paidCount || 0)) : 0;
+    return s + left * d.monthlyAmount;
+  }, 0);
+  const debtToIncomeRatio = fb.income > 0 ? totalDebtMonthly / fb.income : 0;
+
+  // Birikim kapasitesi: serbest bütçenin %30'u (makul oran)
+  const savingsRate = 0.30;
+  const capacityThisMonth = Math.round(Math.max(0, fb.available) * savingsRate);
+  const capacityAvg = hasPrevData ? Math.round(Math.max(0, avgMonthlyFree) * savingsRate) : 0;
+  const rawCapacity = hasPrevData
+    ? capacityThisMonth * 0.35 + capacityAvg * 0.65
+    : capacityThisMonth;
+  const incomeFloor = Math.round(fb.income * 0.05);
+  const monthlyCapacity = Math.max(incomeFloor, Math.round(rawCapacity));
+
+  // Borçsuz kapasite — borç taksitleri serbeste döner
+  const availableIfDebtFree = Math.max(0, fb.available + totalDebtMonthly);
+  const avgFreeIfDebtFree = hasPrevData ? Math.max(0, avgMonthlyFree + totalDebtMonthly) : availableIfDebtFree;
+  const capIfDebtFreeRaw = hasPrevData
+    ? availableIfDebtFree * 0.35 * savingsRate + avgFreeIfDebtFree * 0.65 * savingsRate
+    : availableIfDebtFree * savingsRate;
+  const capacityIfDebtFree = Math.round(capIfDebtFreeRaw);
+
+  const result = { trendText: null, trendDir, tipText: null, monthlyNeeded: null, tips: [] };
 
   if (fb.income <= 0) {
     result.canAfford = false;
@@ -4220,10 +4122,12 @@ function calcWishProjection(wish, fb) {
     result.monthsAway = null;
     result.mainText = 'Bütçe yetersiz';
     result.subText = 'Harcamalarını kısarak bu hedefe yaklaşabilirsin.';
+    if (totalDebtMonthly > 0)
+      result.tips.push(`💳 Aktif borcun aylık ${fmtTL(totalDebtMonthly)} götürüyor. Borçlar bitince bütçen açılır.`);
     return result;
   }
 
-  // Bu ay tek seferde alınabilir mi?
+  // ── Bu ay tek seferde alınabilir mi? ──
   if (projectedMonthEnd >= wish.price) {
     result.canAfford = true;
     result.monthsAway = 0;
@@ -4233,16 +4137,117 @@ function calcWishProjection(wish, fb) {
     return result;
   }
 
-  // Kaç ay gerekiyor?
-  const monthsNeeded = Math.max(1, Math.ceil(wish.price / monthlyCapacity));
-  const monthlyNeeded = Math.ceil(wish.price / monthsNeeded);
+  // ── Süreyi insan dilinde yaz ──
+  function formatSure(n) {
+    if (n === 1) return '1 ay';
+    if (n <= 12) return `${n} ay`;
+    const y = Math.floor(n / 12), m = n % 12;
+    return m > 0 ? `${y} yıl ${m} ay` : `${y} yıl`;
+  }
+
+  // ── Kaç ay gerekiyor? ──
+  // Maksimum makul süre: 5 yıl (60 ay). Üzerini göstermek anlamsız.
+  const MAX_MONTHS = 60;
+  const rawMonthsNeeded = Math.ceil(wish.price / monthlyCapacity);
+  const monthsNeeded = Math.max(1, rawMonthsNeeded);
+  const isBeyondHorizon = rawMonthsNeeded > MAX_MONTHS;
+
+  // Makul hedef için aylık ne lazım? (5 yıl baz alınır)
+  const monthlyFor5yr = Math.ceil(wish.price / MAX_MONTHS);
+  const monthlyFor3yr = Math.ceil(wish.price / 36);
+  const monthlyFor1yr = Math.ceil(wish.price / 12);
+
+  // Fiilen önerilen aylık (mevcut kapasiteye göre)
+  const monthlyNeeded = isBeyondHorizon ? monthlyFor5yr : Math.ceil(wish.price / monthsNeeded);
+
+  // Borçsuz kaç ayda biterdi?
+  const monthsIfDebtFree = capacityIfDebtFree > 0
+    ? Math.max(1, Math.ceil(wish.price / capacityIfDebtFree))
+    : null;
 
   result.canAfford = false;
-  result.monthsAway = monthsNeeded;
+  result.monthsAway = isBeyondHorizon ? null : monthsNeeded;
   result.monthlyNeeded = monthlyNeeded;
-  result.mainText = monthsNeeded === 1 ? 'Gelecek ay alabilirsin' : `${monthsNeeded} ayda alabilirsin`;
-  result.subText = `Ayda ${fmtTL(monthlyNeeded)} ayırırsan ${monthsNeeded} ayda birikir.`;
 
+  let mainText, subText;
+  if (isBeyondHorizon) {
+    // Mevcut kapasite yetersiz — hedef odaklı mesaj ver
+    mainText = 'Uzun vadeli hedef';
+    subText = `5 yılda biriktirmek için ayda ${fmtTL(monthlyFor5yr)} gerekiyor.`;
+  } else if (monthsNeeded === 1) {
+    mainText = 'Gelecek ay alabilirsin';
+    subText = `Ayda ${fmtTL(monthlyNeeded)} ayırırsan gelecek ay yeter.`;
+  } else if (monthsNeeded <= 12) {
+    mainText = `${monthsNeeded} ayda alabilirsin`;
+    subText = `Ayda ${fmtTL(monthlyNeeded)} ayırırsan ${monthsNeeded} ayda birikir.`;
+  } else if (monthsNeeded <= 36) {
+    const sure = formatSure(monthsNeeded);
+    mainText = `~${sure} sonra alabilirsin`;
+    subText = `Ayda ${fmtTL(monthlyNeeded)} ayırırsan ${sure}da birikir.`;
+  } else {
+    const sure = formatSure(monthsNeeded);
+    mainText = `~${sure} sonra alabilirsin`;
+    subText = `Ayda ${fmtTL(monthlyNeeded)} ayırırsan ${sure}da birikir.`;
+  }
+
+  result.mainText = mainText;
+  result.monthlyFor5yr = monthlyFor5yr;
+  result.monthlyFor3yr = monthlyFor3yr;
+  result.monthlyFor1yr = monthlyFor1yr;
+  result.subText = subText;
+
+  // ── Akıllı öneriler — emojisiz, sade ──
+  const tips = [];
+
+  // 1. Harcama trendi
+  if (trendDir === -1 && hasPrevData) {
+    tips.push(`Son aylarda serbest paran azalıyor. Bu gidişle bu süre uzayabilir.`);
+  } else if (trendDir === 1 && hasPrevData) {
+    tips.push(`Son aylarda bütçen iyileşiyor. Böyle devam edersen daha erken ulaşırsın.`);
+  }
+
+  // 2. Borç yükü çok yüksekse
+  if (debtToIncomeRatio > 0.3 && totalDebtMonthly > 0) {
+    tips.push(`Gelirinin %${Math.round(debtToIncomeRatio*100)}'i borç taksitlerine gidiyor. Borçları kapatmak öncelik olabilir.`);
+  }
+
+  // 3. Borçsuz kaç ayda biterdi?
+  if (monthsIfDebtFree !== null && monthsIfDebtFree < monthsNeeded * 0.7 && totalDebtRemaining > 0) {
+    const kazanim = monthsNeeded - monthsIfDebtFree;
+    tips.push(`Borçların bitmesiyle aylık kapasiten ${fmtTL(capacityIfDebtFree)}'ye çıkar — bu hedefe ${formatSure(kazanim)} erken ulaşırsın.`);
+  }
+
+  // 4. Kolay erişilebilir hedef
+  if (monthsNeeded <= 6 && monthlyNeeded < monthlyCapacity * 0.5) {
+    tips.push(`Mevcut bütçenin yarısını ayırsan bile yeterli. Kolay erişilebilir bir hedef.`);
+  }
+
+  // 5. Hedef çok uzaksa — anlamlı seçenekler sun
+  if (isBeyondHorizon) {
+    tips.push(`1 yılda biriktirmek için ayda ${fmtTL(result.monthlyFor1yr)}, 3 yılda ${fmtTL(result.monthlyFor3yr)}, 5 yılda ${fmtTL(result.monthlyFor5yr)} gerekiyor.`);
+    if (totalDebtMonthly > 0) {
+      tips.push(`Borçların bitmesiyle aylık ${fmtTL(totalDebtMonthly)} serbest kalır — bu hedefe daha hızlı ulaşırsın.`);
+    }
+  } else if (monthsNeeded > 24) {
+    const reducedTarget = Math.round(wish.price * 0.6);
+    const reducedMonths = Math.ceil(reducedTarget / monthlyCapacity);
+    if (reducedMonths <= 12) {
+      tips.push(`Hedef tutarını ${fmtTL(reducedTarget)}'ya düşürürsen ${reducedMonths} ayda ulaşırsın.`);
+    }
+  }
+
+  // 6. Veri yoksa
+  if (!hasPrevData) {
+    tips.push(`Geçmiş ay verisi yok — tahmin bu ayın bütçesine dayanıyor. Daha fazla ay kaydettikçe hesap netleşir.`);
+  }
+
+  // Her hedef için tutarlı ama farklı bir öneri — id'den basit hash
+  if (tips.length > 0) {
+    const seed = (wish.id || '').split('').reduce((s,c) => s + c.charCodeAt(0), 0);
+    result.tips = [tips[seed % tips.length]];
+  } else {
+    result.tips = [];
+  }
   return result;
 }
 
@@ -4281,15 +4286,28 @@ function renderWishList() {
           : 'background:rgba(191,90,242,.06);border:1px solid rgba(191,90,242,.15)';
     const projMainColor = isDone ? 'var(--accent)' : proj.canAfford ? 'var(--accent)' : 'var(--purple)';
 
+    const tipsHtml = (!isDone && proj.tips && proj.tips.length > 0)
+      ? `<div class="wish-tip">${proj.tips[0]}</div>`
+      : '';
+
+    const alreadyGoal = data.savingsGoals && data.savingsGoals.some(g => g.wishId === w.id);
+    const challengeBtn = (!isDone && proj.monthlyNeeded && !proj.canAfford && !alreadyGoal)
+      ? `<button class="wish-challenge-btn" onclick="event.stopPropagation();acceptWishChallenge('${w.id}',${proj.monthlyNeeded},'${esc(w.name)}')">Kabul et</button>`
+      : (alreadyGoal && !isDone ? `<span style="font-size:10px;font-weight:700;color:var(--accent);flex-shrink:0">Eklendi ✓</span>` : '');
+
     const projectionHtml = isDone ? `
       <div class="wish-projection" style="${projBg}">
         <div class="wish-proj-main" style="color:var(--accent)">✓ Alındı — ${w.boughtAt}</div>
         <div class="wish-proj-sub">${fmtTL(w.price)} harcandı.</div>
       </div>` : `
-      <div class="wish-projection" style="${projBg}">
-        <div class="wish-proj-main" style="color:${projMainColor}">${proj.mainText}</div>
-        <div class="wish-proj-sub" style="margin-top:3px">${proj.subText}</div>
-      </div>`;
+      <div class="wish-projection" style="${projBg};display:flex;align-items:center;gap:10px">
+        <div style="flex:1;min-width:0">
+          <div class="wish-proj-main" style="color:${projMainColor}">${proj.mainText}</div>
+          <div class="wish-proj-sub" style="margin-top:3px">${proj.subText}</div>
+        </div>
+        ${challengeBtn}
+      </div>
+      ${tipsHtml}`;
 
     const noteHtml = !isDone ? `
       <div style="margin-top:8px;position:relative" onclick="event.stopPropagation()">
@@ -4307,8 +4325,6 @@ function renderWishList() {
         >${esc(w.note || '')}</textarea>
       </div>` : (w.note ? `
       <div style="margin-top:8px;padding:9px 12px;background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:10px;font-size:12px;color:var(--muted);font-weight:500;line-height:1.5">${esc(w.note)}</div>` : '');
-
-    const progressHtml = '';
 
     return `
     <div class="wish-card priority-${w.priority} ${reachableClass}${isDone?' done-item':''}" id="wish_${w.id}" style="${isDone?'opacity:.7':''}" onclick="toggleItemExpand('wish_${w.id}')">
@@ -4331,7 +4347,6 @@ function renderWishList() {
       </div>
       <div onclick="event.stopPropagation()">
         ${projectionHtml}
-        ${progressHtml}
         ${noteHtml}
       </div>
       <div class="item-actions-row"><div class="item-actions-inner">
@@ -4480,10 +4495,7 @@ function renderOzetStats() {
 
   // 4-card stats (2x2)
   const goals = data.savingsGoals || [];
-  const totalTarget = goals.reduce((s,g) => s + (g.target||0), 0);
   const totalSaved = goals.reduce((s,g) => s + (g.deposits||[]).reduce((a,d) => a + (d.amount||0), 0), 0);
-  const savPct = totalTarget > 0 ? Math.min(100, Math.round((totalSaved/totalTarget)*100)) : null;
-  const savColor = savPct === null ? 'var(--muted)' : savPct >= 75 ? 'var(--accent)' : savPct >= 30 ? 'var(--warning)' : 'var(--danger)';
   const statsEl = document.getElementById('ozetStatsRow');
   if (statsEl) {
     statsEl.innerHTML = `
@@ -4492,7 +4504,6 @@ function renderOzetStats() {
       <div class="ozet-stat-card"><div class="ozet-stat-label">Kalan</div><div class="ozet-stat-val" style="color:${fb.remaining>=0?'var(--accent)':'var(--danger)'}">${fmtTL(Math.round(fb.remaining))}</div></div>
       <div class="ozet-stat-card highlight"><div class="ozet-stat-label">Birikim</div><div class="ozet-stat-val" style="color:${totalSaved > 0 ? 'var(--accent)' : 'var(--muted)'}">${totalSaved > 0 ? fmtTL(totalSaved) : '—'}</div></div>`;
   }
-
 
   // Streak card - her zaman göster
   const scWrap = document.getElementById('streakCardWrap');
@@ -4580,19 +4591,11 @@ function renderDailyStats() {
   const avgDaily = todayD > 0 ? Math.round(totalVarSpent / todayD) : 0;
   const scorePct = (todayD - emptyDays) > 0 ? Math.round((greenDays / (todayD - emptyDays)) * 100) : 0;
   const scoreColor = scorePct >= 70 ? 'var(--accent)' : scorePct >= 40 ? 'var(--warning)' : 'var(--danger)';
-  const scoreLabel = scorePct >= 80 ? 'Mükemmel' : scorePct >= 60 ? 'İyi' : scorePct >= 40 ? 'Gelişiyor' : 'Zorlanıyor';
 
-  // Geçen ay karşılaştırma
   const vsLastMonth = prevAvgDaily > 0 ? avgDaily - prevAvgDaily : null;
   const vsColor = vsLastMonth === null ? 'var(--muted)' : vsLastMonth <= 0 ? 'var(--accent)' : 'var(--danger)';
-  const vsText = vsLastMonth === null ? '—' : (vsLastMonth > 0 ? '+' : '') + fmtTL(vsLastMonth);
 
   // Mini bar chart — Chart.js ile
-  const maxBar = Math.max(...dayBars.map(b => b.daySpent), baseDaily, 1);
-
-  // Limit çizgisi oranı
-  const limitLineH = Math.round((baseDaily / maxBar) * 40);
-
   el.innerHTML = `
     <div class="card" style="padding:20px;margin-bottom:12px;overflow:hidden;position:relative">
 
@@ -4948,11 +4951,6 @@ function setupChartObservers() {
   });
 }
 
-function renderCharts() {
-  // Artık setupChartObservers() kullanılıyor — bu fonksiyon geriye dönük uyumluluk için boş bırakıldı
-}
-
-
 // =================== YILLIK ===================
 function changeYear(dir) {
   const thisYear = new Date().getFullYear();
@@ -4965,7 +4963,7 @@ function renderYillik() {
   if (el) el.textContent = viewYear;
 
   let totalIncome = 0, totalExpense = 0;
-  const monthNames = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  const monthNames = MONTH_NAMES;
   const monthItems = [];
   for (let m = 1; m <= 12; m++) {
     const mk = viewYear + '-' + String(m).padStart(2,'0');
@@ -5064,7 +5062,6 @@ function toggleYearMonth(uid) {
     });
   }
 }
-
 
 // =================== HISTORY ===================
 function openHistory() {
@@ -5204,7 +5201,7 @@ function importData(input) {
       if (!Array.isArray(data.debts)) data.debts = [];
       if (!Array.isArray(data.savingsGoals)) data.savingsGoals = [];
       if (!Array.isArray(data.wishlist)) data.wishlist = [];
-      if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastEvaluatedDate:'', lastWeeklyFreezeGift:'' };
+      if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastEvaluatedDate:'', lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
       if (!Array.isArray(data.streak.frozenDays)) data.streak.frozenDays = [];
       if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
       if (!data.monthlyTargets || typeof data.monthlyTargets !== 'object') data.monthlyTargets = {};
@@ -5270,7 +5267,7 @@ function renderAll() {
     Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
     charts = {};
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      setTimeout(() => { renderCharts(); renderYillik(); }, 60);
+      setTimeout(() => { renderYillik(); }, 60);
     }));
   }
   updateCollapseSummaries();
@@ -5360,7 +5357,6 @@ function saveKeywords() {
 
 // ===== DRAG & DROP SECTIONS =====
 function closeHamburger() {
-  document.getElementById('hamburgerMenu')?.classList.remove('open');
   document.getElementById('hamburgerBtn')?.classList.remove('active');
 }
 function init() {
