@@ -115,7 +115,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .pill-nav-inner{
   display:flex;flex:1;align-items:center;height:100%;
 }
-/* pill-indicator removed — no-op element cleaned up */
 
 /* inactive btns — eşit flex, sadece ikon */
 .tab-btn{
@@ -307,7 +306,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* ===== TX LIST ===== */
 .tx-date-group{margin-bottom:4px;animation:cardIn .25s ease}
-#txList{scrollbar-width:none;-ms-overflow-style:none}#txList::-webkit-scrollbar{display:none}
+#txList{scrollbar-width:none;-ms-overflow-style:none}
 .tx-date-label{display:flex;justify-content:space-between;align-items:center;padding:14px 0 8px;margin-bottom:2px}
 .tx-date-label span:first-child{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:.6px}
 .tx-date-label .tx-date-total{font-size:11px;font-weight:600;color:rgba(255,255,255,.25)}
@@ -605,12 +604,64 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .modal-overlay.show .modal-sheet{transform:translateY(0)}
 .modal-close{position:absolute;top:18px;right:18px;background:var(--surface2);border:1px solid var(--border);border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--muted);line-height:1;font-family:'Montserrat',sans-serif}
 
-/* CONFIRM */
-.confirm-modal{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(16px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+/* CONFIRM MODAL */
+.confirm-modal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.82);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  z-index:500;
+  display:none;align-items:flex-end;justify-content:center;
+  padding:0;
+}
 .confirm-modal.show{display:flex}
-.confirm-box{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:30px 24px;width:100%;max-width:340px;animation:popIn .25s cubic-bezier(.34,1.4,.64,1)}
-.confirm-msg{font-size:15px;font-weight:700;text-align:center;margin-bottom:24px;line-height:1.5;color:var(--text)}
-.confirm-btns{display:flex;gap:10px}
+@keyframes confirmSlideDown{
+  from{opacity:1;transform:translateY(0)}
+  to{opacity:0;transform:translateY(40px)}
+}
+.confirm-modal.hiding .confirm-box{
+  animation:confirmSlideDown .22s cubic-bezier(.4,0,.2,1) forwards;
+}
+.confirm-box{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:28px 28px 0 0;
+  padding:10px 20px 44px;
+  width:100%;max-width:520px;
+  animation:confirmSlideUp .32s cubic-bezier(.34,1.1,.64,1);
+}
+.confirm-handle{
+  width:36px;height:4px;border-radius:99px;
+  background:rgba(255,255,255,.12);
+  margin:0 auto 24px;
+}
+.confirm-icon-wrap{
+  width:56px;height:56px;border-radius:18px;
+  background:rgba(255,69,58,.1);
+  border:1.5px solid rgba(255,69,58,.2);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;
+}
+.confirm-icon-wrap svg{width:24px;height:24px;stroke:var(--danger);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.confirm-title{font-size:17px;font-weight:900;color:var(--text);text-align:center;margin-bottom:8px;letter-spacing:-.2px}
+.confirm-msg{font-size:13px;font-weight:600;color:var(--muted);text-align:center;line-height:1.6;margin-bottom:28px;padding:0 8px}
+.confirm-btns{display:flex;flex-direction:column;gap:10px}
+.confirm-btn-ok{
+  width:100%;padding:16px;border:none;border-radius:16px;
+  background:var(--danger);color:#fff;
+  font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;
+  cursor:pointer;letter-spacing:.1px;
+  box-shadow:0 4px 20px rgba(255,69,58,.3);
+  transition:transform .12s,opacity .12s,box-shadow .12s;
+}
+.confirm-btn-ok:active{transform:scale(.96);opacity:.85;box-shadow:none}
+.confirm-btn-cancel{
+  width:100%;padding:16px;border:none;border-radius:16px;
+  background:var(--surface2);color:var(--muted);
+  font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;
+  cursor:pointer;border:1.5px solid var(--border);
+  transition:transform .12s,opacity .12s;
+}
+.confirm-btn-cancel:active{transform:scale(.96);opacity:.85}
 
 /* DEBT SUMMARY */
 .debt-summary-box{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;padding:14px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border)}
@@ -1028,7 +1079,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         <div class="ob-title">Cüzdanına<br><em>istediğin ismi ver.</em></div>
         <div class="ob-body">Header'da görünür. Ayarlardan değiştirebilirsin.</div>
         <div class="ob-input-section">
-          <input type="text" id="onboardWalletName" class="form-input" placeholder="VAULT" onkeydown="if(event.key==='Enter')nextSplash()" oninput="updateSplashBtn()" maxlength="24" style="text-align:center;font-size:18px;font-weight:800;border-radius:14px">
+          <input type="text" id="onboardWalletName" class="form-input" placeholder="VAULT" onkeydown="if(event.key==='Enter')nextSplash()" maxlength="24" style="text-align:center;font-size:18px;font-weight:800;border-radius:14px">
         </div>
       </div>
 
@@ -1557,10 +1608,15 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 <!-- CONFIRM MODAL -->
 <div class="confirm-modal" id="confirmModal">
   <div class="confirm-box">
+    <div class="confirm-handle"></div>
+    <div class="confirm-icon-wrap" id="confirmIconWrap">
+      <svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3h6v3"/></svg>
+    </div>
+    <div class="confirm-title" id="confirmTitle">Emin misin?</div>
     <div class="confirm-msg" id="confirmMsg"></div>
     <div class="confirm-btns">
-      <button class="btn btn-ghost btn-full" onclick="closeConfirm()">İptal</button>
-      <button class="btn btn-danger btn-full" id="confirmOkBtn" onclick="doConfirm()">Sil</button>
+      <button class="confirm-btn-ok" id="confirmOkBtn" onclick="doConfirm()">Sil</button>
+      <button class="confirm-btn-cancel" onclick="closeConfirm()">İptal</button>
     </div>
   </div>
 </div>
@@ -2147,36 +2203,15 @@ function updateSplashDots() {
   });
 }
 
-function isSkippableSlideEmpty() {
-  if (_splashIdx === 5) {
-    // Cüzdan ismi
-    const val = document.getElementById('onboardWalletName')?.value.trim() || '';
-    return val === '';
-  }
-  return false;
-}
 
 function updateSplashBtn() {
   const btn = document.getElementById('splashBtn');
   if (!btn) return;
   const isLast = _splashIdx === _SPLASH_COUNT - 1;
-  const isWalletSlide = _splashIdx === 5 && !isLast;
-  if (isLast) {
-    btn.textContent = 'Başla';
-    btn.style.background = '';
-    btn.style.color = '';
-    btn.style.boxShadow = '';
-  } else if (isWalletSlide && isSkippableSlideEmpty()) {
-    btn.textContent = 'Geç →';
-    btn.style.background = 'var(--surface2)';
-    btn.style.color = 'var(--muted)';
-    btn.style.boxShadow = 'none';
-  } else {
-    btn.textContent = 'Devam';
-    btn.style.background = '';
-    btn.style.color = '';
-    btn.style.boxShadow = '';
-  }
+  btn.textContent = isLast ? 'Başla' : 'Devam';
+  btn.style.background = '';
+  btn.style.color = '';
+  btn.style.boxShadow = '';
 }
 
 function finishOnboarding() {
@@ -2248,7 +2283,11 @@ function switchTab(id) {
   }
 }
 
-function updatePillIndicator() {}
+function updatePillIndicator(id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.getElementById('nav-' + id);
+  if (activeBtn) activeBtn.classList.add('active');
+}
 
 function toggleSection(name) {
   sectionState[name] = !sectionState[name];
@@ -2540,17 +2579,22 @@ function closeCelebration() {
   if (!overlay) return;
   card.style.opacity = '0';
   card.style.transform = 'translateY(16px)';
+  _fadeOutConfetti(); // yumuşak fade başlat
   setTimeout(() => {
     overlay.classList.remove('show');
-    _stopConfetti();
+    _hardStopConfetti(); // kalan her şeyi temizle
   }, 350);
 }
 
 let _confettiAnim = null;
 let _confettiPieces = [];
+let _confettiFading = false;
+let _confettiFadeTimer = null;
 
 function _launchConfetti(canvas) {
-  _stopConfetti();
+  // Önceki her şeyi tamamen temizle
+  _hardStopConfetti();
+
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   _confettiPieces = Array.from({ length: 120 }, () => ({
@@ -2568,7 +2612,9 @@ function _launchConfetti(canvas) {
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
+    let alive = 0;
     _confettiPieces.forEach(p => {
+      if (p.opacity <= 0) return;
       ctx.save();
       ctx.globalAlpha = p.opacity;
       ctx.fillStyle = p.color;
@@ -2586,22 +2632,46 @@ function _launchConfetti(canvas) {
       p.y += p.d;
       p.x += p.vx;
       p.tilt += p.tiltSpeed;
-      p.opacity -= .003;
 
-      if (p.y > H || p.opacity <= 0) {
-        p.y = Math.random() * -60;
-        p.x = Math.random() * W;
-        p.opacity = Math.random() * .5 + .4;
+      if (_confettiFading) {
+        p.opacity -= .012; // yavaş ve smooth fade
+      } else {
+        p.opacity -= .003;
+        // Normal modda: ekrandan çıkınca respawn
+        if (p.y > H || p.opacity <= 0) {
+          p.y = Math.random() * -60;
+          p.x = Math.random() * W;
+          p.opacity = Math.random() * .5 + .4;
+        }
       }
+      if (p.opacity > 0) alive++;
     });
+
+    // Fading bitince loop'u durdur
+    if (_confettiFading && alive === 0) {
+      _confettiAnim = null;
+      ctx.clearRect(0, 0, W, H);
+      _confettiPieces = [];
+      return;
+    }
     _confettiAnim = requestAnimationFrame(draw);
   }
+
   draw();
-  // 4 saniye sonra dur
-  setTimeout(_stopConfetti, 4000);
+
+  // 5 saniye sonra yumuşakça solar
+  _confettiFadeTimer = setTimeout(_fadeOutConfetti, 5000);
 }
 
-function _stopConfetti() {
+// Yumuşak fade — parçacıklar yavaş solar
+function _fadeOutConfetti() {
+  _confettiFading = true;
+}
+
+// Sert durdurma — overlay kapanınca canvas'ı temizle
+function _hardStopConfetti() {
+  _confettiFading = false;
+  if (_confettiFadeTimer) { clearTimeout(_confettiFadeTimer); _confettiFadeTimer = null; }
   if (_confettiAnim) { cancelAnimationFrame(_confettiAnim); _confettiAnim = null; }
   const canvas = document.getElementById('confettiCanvas');
   if (canvas) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
@@ -2929,7 +2999,11 @@ function renderFeedbackPill(fb) {
 
   // Randomize sıra
   const raw = buildCarouselItems(fb);
-  _carouselItems = raw.sort(() => Math.random() - 0.5);
+  _carouselItems = raw.slice();
+  for (let i = _carouselItems.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [_carouselItems[i], _carouselItems[j]] = [_carouselItems[j], _carouselItems[i]];
+  }
   if (!_carouselItems.length) { el.innerHTML=''; stopCarousel(); return; }
 
   _carouselIndex = 0;
@@ -3737,11 +3811,11 @@ function togglePaidRecurring(id) {
 }
 
 function deleteRecurring(id) {
-  showConfirm('Bu sabit gideri silmek istediğinize emin misiniz?', () => {
+  showConfirm('Bu sabit gideri ve bağlı işlemleri kalıcı olarak sileceksin.', () => {
     data.recurring = data.recurring.filter(r => r.id !== id);
     data.transactions = data.transactions.filter(t => t.recurringId !== id);
     save(); renderAll();
-  });
+  }, 'Sil', 'Sabit Gideri Sil');
 }
 
 // =================== BORÇLAR ===================
@@ -3895,11 +3969,11 @@ function saveDebtEdit() {
 }
 
 function deleteDebt(id) {
-  showConfirm('Bu ödemeyi silmek istediğinize emin misiniz?', () => {
+  showConfirm('Bu ödemeyi ve bağlı taksit işlemlerini kalıcı olarak sileceksin.', () => {
     data.debts = data.debts.filter(d => d.id !== id);
     data.transactions = data.transactions.filter(t => t.debtId !== id);
     save(); renderAll();
-  });
+  }, 'Sil', 'Ödemeyi Sil');
 }
 
 // =================== GOALS ===================
@@ -4103,11 +4177,11 @@ function saveDepositModal() {
 }
 
 function deleteGoal(id) {
-  showConfirm('Bu hedefi silmek istediğinize emin misiniz?', () => {
+  showConfirm('Bu birikim hedefini ve tüm yatırılan tutarları kalıcı olarak sileceksin.', () => {
     data.savingsGoals = data.savingsGoals.filter(g => g.id !== id);
     data.transactions = data.transactions.filter(t => !(t.isGoalDeposit && (t.goalId === id || t.goalMonthlyId === id)));
     save(); renderAll();
-  });
+  }, 'Sil', 'Hedefi Sil');
 }
 
 let _editGoalId = null;
@@ -4170,12 +4244,12 @@ function addWish() {
 }
 
 function deleteWish(id) {
-  showConfirm('Bu hedefi silmek istiyor musunuz?', () => {
+  showConfirm('Bu hedefi ve bağlı birikim planını kalıcı olarak sileceksin.', () => {
     data.wishlist = data.wishlist.filter(w => w.id !== id);
     // İlişkili savingsGoals kaydını da temizle (orphan önleme)
     data.savingsGoals = data.savingsGoals.filter(g => g.wishId !== id);
     save(); renderAll();
-  });
+  }, 'Sil', 'Hedefi Sil');
 }
 
 const WISH_ICONS = [
@@ -5308,14 +5382,13 @@ function renderYillik() {
   if (el) el.textContent = viewYear;
 
   let totalIncome = 0, totalExpense = 0;
-  const monthNames = MONTH_NAMES;
   const monthItems = [];
   for (let m = 1; m <= 12; m++) {
     const mk = viewYear + '-' + String(m).padStart(2,'0');
     const { income, expense } = calcMonthData(mk);
     totalIncome += income;
     totalExpense += expense;
-    monthItems.push({ mk, income, expense, net: income - expense, name: monthNames[m-1] });
+    monthItems.push({ mk, income, expense, net: income - expense, name: MONTH_NAMES[m-1] });
   }
 
   // ── Yıllık özet kartlar ──
@@ -5586,18 +5659,48 @@ function importData(input) {
 }
 
 function resetAll() {
-  showConfirm('Tüm veriler silinecek! Bu işlem geri alınamaz. Devam etmek istiyor musunuz?', () => {
+  showConfirm('Tüm işlemler, hedefler ve ayarlar kalıcı olarak silinecek. Bu işlem geri alınamaz.', () => {
     try { localStorage.removeItem(KEY); } catch(e) {}
     location.reload();
-  }, 'Sıfırla');
+  }, 'Sıfırla', 'Tüm Verileri Sıfırla', 'reset');
 }
 
 // =================== CONFIRM MODAL ===================
 let confirmCallback = null;
 
-function showConfirm(msg, cb, btnText) {
+const _CONFIRM_ICONS = {
+  del:   '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3h6v3"/></svg>',
+  reset: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg>',
+};
+
+function showConfirm(msg, cb, btnText, title, iconType) {
   document.getElementById('confirmMsg').textContent = msg;
-  document.getElementById('confirmOkBtn').textContent = btnText || 'Sil';
+  const okBtn = document.getElementById('confirmOkBtn');
+  okBtn.textContent = btnText || 'Sil';
+  document.getElementById('confirmTitle').textContent = title || 'Emin misin?';
+  const iconEl = document.getElementById('confirmIconWrap');
+  if (iconEl) iconEl.innerHTML = _CONFIRM_ICONS[iconType] || _CONFIRM_ICONS.del;
+  if (iconType === 'reset') {
+    if (iconEl) {
+      iconEl.style.background = 'rgba(255,214,10,.1)';
+      iconEl.style.borderColor = 'rgba(255,214,10,.25)';
+      const s = iconEl.querySelector('svg');
+      if (s) s.style.stroke = 'var(--warning)';
+    }
+    okBtn.style.background = 'var(--warning)';
+    okBtn.style.color = '#000';
+    okBtn.style.boxShadow = '0 4px 20px rgba(255,214,10,.25)';
+  } else {
+    if (iconEl) {
+      iconEl.style.background = '';
+      iconEl.style.borderColor = '';
+      const s = iconEl.querySelector('svg');
+      if (s) s.style.stroke = '';
+    }
+    okBtn.style.background = '';
+    okBtn.style.color = '';
+    okBtn.style.boxShadow = '';
+  }
   confirmCallback = cb;
   document.getElementById('confirmModal').classList.add('show');
 }
@@ -5608,8 +5711,12 @@ function doConfirm() {
 }
 
 function closeConfirm() {
-  document.getElementById('confirmModal').classList.remove('show');
-  confirmCallback = null;
+  const modal = document.getElementById('confirmModal');
+  modal.classList.add('hiding');
+  setTimeout(() => {
+    modal.classList.remove('show', 'hiding');
+    confirmCallback = null;
+  }, 220);
 }
 function updateAppLogo() {
   const el = document.getElementById('appLogo');
