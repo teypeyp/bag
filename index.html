@@ -1974,10 +1974,9 @@ function esc(str) {
 function pct(n) {
   const last = n % 10;
   const tens = Math.floor(n % 100 / 10);
-  // Özel: 11-19 arası hepsi 'i'
-  if (tens === 1) return `yüzde ${n}'i`;
+  if (tens === 1) return `%${n}'i`;
   const suffixes = { 0:'ı', 1:'i', 2:'si', 3:'ü', 4:'ü', 5:'i', 6:'sı', 7:'si', 8:'i', 9:'u' };
-  return `yüzde ${n}'${suffixes[last] || 'i'}`;
+  return `%${n}'${suffixes[last] || 'i'}`;
 }
 
 function parseNum(s) {
