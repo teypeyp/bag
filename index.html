@@ -1970,6 +1970,17 @@ function esc(str) {
   return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+// Türkçe sesli uyumu: sayının son rakamına göre doğru ek
+// "yüzde 30'u", "yüzde 45'i", "yüzde 60'ı" gibi
+function pct(n) {
+  const last = n % 10;
+  const tens = Math.floor(n % 100 / 10);
+  // Özel: 11-19 arası hepsi 'i'
+  if (tens === 1) return `yüzde ${n}'i`;
+  const suffixes = { 0:'ı', 1:'i', 2:'si', 3:'ü', 4:'ü', 5:'i', 6:'sı', 7:'si', 8:'i', 9:'u' };
+  return `yüzde ${n}'${suffixes[last] || 'i'}`;
+}
+
 function parseNum(s) {
   if (!s && s !== 0) return 0;
   return parseFloat(String(s).replace(/\./g,'').replace(',','.')) || 0;
@@ -2863,7 +2874,7 @@ function buildCarouselItems(fb) {
     if (topCat) {
       const cat=getCat(topCat.id);
       items.push({cls:'warn',icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#60A5FA" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 13a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M9 13v-8h6v8"/><path d="M9 5h6"/><path d="M5 21h14"/><path d="M12 17v4"/></svg>',
-        title:`${cat.name} harcaman geçen aya göre yüzde ${topCat.pct} arttı — bu kategori limiti düşürüyor`});
+        title:`${cat.name} harcaman geçen aya göre ${pct(topCat.pct)} arttı — bu kategori limiti düşürüyor`});
     }
   }
 
@@ -2875,10 +2886,10 @@ function buildCarouselItems(fb) {
     const debtPct = Math.round(debtToIncomeRatio * 100);
     if (debtToIncomeRatio > 0.4) {
       items.push({ cls:'bad', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg>',
-        title:`Borç yükün gelirinin yüzde ${debtPct}'i — kritik seviyede, yeni borç alma` });
+        title:`Borç yükün gelirinın ${pct(debtPct)} — kritik seviyede, yeni borç alma` });
     } else if (debtToIncomeRatio > 0.2) {
       items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg>',
-        title:`Borç yükün gelirinin yüzde ${debtPct}'i — yeni borç almaktan kaçın` });
+        title:`Borç yükün gelirinın ${pct(debtPct)} — yeni borç almaktan kaçın` });
     }
     if (activeDebts.length > 1) {
       const smallest = [...activeDebts].sort((a,b) =>
