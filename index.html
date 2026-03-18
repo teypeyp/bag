@@ -2311,14 +2311,14 @@ function renderStreakCard(sd) {
   return `
   <div class="streak-card">
     <div class="streak-header">
-      <span class="streak-flame${isDead?' dead':''}">${isDead ? '<svg width="28" height="28" style="flex-shrink:0;filter:grayscale(1);opacity:.35" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#888" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>' : '<svg width="28" height="28" style="flex-shrink:0;transform-origin:bottom center" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>'}</span>
+      <span class="streak-flame${isDead?' dead':''}">${isDead ? '<svg width="44" height="44" style="flex-shrink:0;filter:grayscale(1);opacity:.35" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#888" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>' : '<svg width="44" height="44" style="flex-shrink:0;transform-origin:bottom center" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>'}</span>
       <div class="streak-main">
         <div class="streak-count${isDead?' dead':''}">${streak}</div>
         <div class="streak-meta${isDead?' dead':''}">
           ${hasIncome ? 'gün limit altında' : 'streak henüz başlamadı'}
-          <span class="streak-best-chip">En iyi ${data.streak.best || 0}</span>
         </div>
       </div>
+      <div style="font-size:11px;font-weight:800;color:rgba(255,149,0,.6);text-align:right;flex-shrink:0;align-self:flex-start">EN UZUN SERİ: ${data.streak.best || 0}</div>
     </div>
 
     ${noIncomeHint}
@@ -5290,10 +5290,7 @@ function populateCatSelects() {
   const cats = allCategories();
   // Gider seçimlerinden gelir kategorisini çıkar
   const expenseCats = cats.filter(c => c.id !== 'gelir');
-  const allOpts = cats.map(c => {
-    if (c.id === 'gelir') return `<option value="${c.id}">${c.name}</option>`;
-    return `<option value="${c.id}">${c.name}</option>`;
-  }).join('');
+  const allOpts = cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
   const expenseOpts = expenseCats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
   // txCategory: type'a göre filtrele
   const txCat = document.getElementById('txCategory');
@@ -5520,8 +5517,6 @@ function renderAll() {
 // =================== INIT ===================
 
 // ===== KEYWORD EDIT =====
-const CAT_EMOJIS = [];
-
 let editingKeywordCat = null;
 let _emojiPickerOpen = false;
 
@@ -5537,7 +5532,6 @@ function openKeywordEdit(catId) {
   const pickerEl = document.getElementById('emojiPickerModal');
 
   if (emojiEl) { emojiEl.innerHTML = catIconSvg(cat, 24); emojiEl.dataset.current = cat.id; }
-  // emoji alanı: dataset.current artık cat.id saklar
   if (titleEl) titleEl.textContent = cat.name;
   if (inputEl) inputEl.value = (cat.keywords || []).join(', ');
   if (pickerEl) pickerEl.style.display = 'none';
@@ -5551,17 +5545,6 @@ function buildEmojiPickerModal(currentEmoji) {
   // Emoji picker devre dışı — kategoriler artık SVG ikon kullanıyor
 }
 
-function selectCatEmoji(e) {
-  const emojiEl = document.getElementById('keywordModalEmoji');
-  if (emojiEl) { emojiEl.textContent = e; emojiEl.dataset.current = e; }
-  buildEmojiPickerModal(e);
-}
-
-function toggleEmojiPickerModal() {
-  _emojiPickerOpen = !_emojiPickerOpen;
-  const el = document.getElementById('emojiPickerModal');
-  if (el) el.style.display = _emojiPickerOpen ? 'block' : 'none';
-}
 
 function closeKeywordModal() {
   document.getElementById('keywordModal').classList.remove('show');
