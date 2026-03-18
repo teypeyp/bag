@@ -263,7 +263,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .streak-count.dead{background:linear-gradient(135deg,#444,#2a2a2a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .streak-meta{font-size:11px;font-weight:700;color:rgba(255,214,10,.45);margin-top:2px;display:flex;align-items:center;gap:6px}
 .streak-meta.dead{color:var(--muted)}
-.streak-best-chip{background:rgba(255,255,255,.06);border-radius:20px;padding:2px 7px;font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.3px}
+
 
 .streak-dots-wrap{padding:0 16px 10px}
 .streak-days-grid{display:flex;gap:3px;flex-wrap:wrap}
@@ -1400,12 +1400,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
         <div id="keywordModalTitle" style="font-size:17px;font-weight:800"></div>
         
       </div>
-    </div>
-
-    <!-- Emoji picker -->
-    <div id="emojiPickerModal" style="display:none;margin-bottom:16px">
-      <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px">Emoji Seç</div>
-      <div id="emojiPickerGrid" style="display:flex;flex-wrap:wrap;gap:6px"></div>
     </div>
 
     <div style="height:1px;background:var(--border);margin:16px 0"></div>
@@ -5518,23 +5512,19 @@ function renderAll() {
 
 // ===== KEYWORD EDIT =====
 let editingKeywordCat = null;
-let _emojiPickerOpen = false;
 
 function openKeywordEdit(catId) {
   const cat = allCategories().find(c => c.id === catId);
   if (!cat) return;
   editingKeywordCat = catId;
-  _emojiPickerOpen = false;
 
   const emojiEl = document.getElementById('keywordModalEmoji');
   const titleEl = document.getElementById('keywordModalTitle');
   const inputEl = document.getElementById('keywordEditInput');
-  const pickerEl = document.getElementById('emojiPickerModal');
 
   if (emojiEl) { emojiEl.innerHTML = catIconSvg(cat, 24); emojiEl.dataset.current = cat.id; }
   if (titleEl) titleEl.textContent = cat.name;
   if (inputEl) inputEl.value = (cat.keywords || []).join(', ');
-  if (pickerEl) pickerEl.style.display = 'none';
 
   buildEmojiPickerModal(cat.emoji);
   document.getElementById('keywordModal').classList.add('show');
@@ -5549,7 +5539,6 @@ function buildEmojiPickerModal(currentEmoji) {
 function closeKeywordModal() {
   document.getElementById('keywordModal').classList.remove('show');
   editingKeywordCat = null;
-  _emojiPickerOpen = false;
 }
 
 function saveKeywords() {
