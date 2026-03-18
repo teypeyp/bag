@@ -111,14 +111,11 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   pointer-events:none;
   z-index:49;
   background:linear-gradient(to bottom, transparent 0%, var(--bg) 70%);
-  opacity:1;
-  transition:opacity .3s cubic-bezier(.4,0,.2,1);
 }
-.nav-fade.visible{ opacity:1; }
 .pill-nav-inner{
   display:flex;flex:1;align-items:center;height:100%;
 }
-.pill-indicator{display:none}
+/* pill-indicator removed — no-op element cleaned up */
 
 /* inactive btns — eşit flex, sadece ikon */
 .tab-btn{
@@ -212,7 +209,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .form-input::placeholder{color:rgba(255,255,255,.35);font-weight:700}
 
 /* BUTTONS */
-.btn{padding:11px 18px;border-radius:var(--radius-sm);border:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;justify-content:center;gap:6px;-webkit-tap-highlight-color:transparent;letter-spacing:.1px}
+.btn{padding:11px 18px;border-radius:var(--radius-sm);border:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:transform .12s cubic-bezier(.4,0,.2,1),opacity .12s,box-shadow .12s;display:inline-flex;align-items:center;justify-content:center;gap:6px;-webkit-tap-highlight-color:transparent;letter-spacing:.1px}
 .btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(45,184,102,.25)}
 .btn-primary:active{box-shadow:none}
 .btn-danger{background:var(--danger);color:#fff;box-shadow:0 4px 16px rgba(255,69,58,.2)}
@@ -766,7 +763,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .ymb-sav-label{font-size:11px;font-weight:700;color:var(--muted)}
 .ymb-sav-val{font-size:13px;font-weight:800}
 
-.btn{transition:transform .12s cubic-bezier(.4,0,.2,1),opacity .12s,box-shadow .12s}
 .btn:active{transform:scale(.94) !important;opacity:.85}
 .tab-btn:active{transform:scale(.9)}
 .year-month-header:active{transform:scale(.98)}
@@ -948,7 +944,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
           </div>
         </div>
         <div class="ob-tag">Hoş geldin</div>
-        <div class="ob-title">Paranı <em>gör.</em><br>Kontrolü al.</div>
+        <div class="ob-title">Paranı<br>Kontrolü al.</div>
         <div class="ob-body">Gelir, gider, borç ve birikimlerini tek ekranda takip et. Sade, hızlı, Türkçe.</div>
       </div>
 
@@ -1066,7 +1062,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 <!-- FLOATING PILL NAV -->
 <nav class="pill-nav" id="pillNav">
   <div class="pill-nav-inner" id="pillNavInner">
-    <div class="pill-indicator" id="pillIndicator"></div>
     <!-- Cüzdan -->
     <button class="tab-btn active" id="nav-aylik" onclick="switchTab('aylik')" aria-label="Cüzdan">
       <div class="tab-btn-dot">
@@ -1725,8 +1720,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 <script>
 // =================== GLOBALS ===================
-const SVG_EDIT = `<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
-const SVG_TRASH = `<svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
+const SVG_EDIT = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+const SVG_TRASH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
 
 // =================== CATEGORY ICONS ===================
 const CAT_ICONS = {
@@ -1937,7 +1932,7 @@ function load() {
       if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
       if (!data.streak.frozenDays) data.streak.frozenDays = [];
       if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
-      if ((data.streak.freezeTotal || 2) > 2) data.streak.freezeTotal = 2; // max 2
+      if (typeof data.streak.freezeTotal !== 'number' || data.streak.freezeTotal > 2) data.streak.freezeTotal = 2; // max 2
       if (data.streak.lastWeeklyFreezeGift === undefined) data.streak.lastWeeklyFreezeGift = '';
       if (data.streak.lastFreezeResetMonth === undefined) data.streak.lastFreezeResetMonth = '';
       data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; });
@@ -1975,8 +1970,17 @@ function esc(str) {
 function pct(n) {
   const last = n % 10;
   const tens = Math.floor(n % 100 / 10);
+  if (last === 0) {
+    const hundreds = Math.floor(n / 100);
+    if (n % 100 === 0 && hundreds > 0) {
+      const hMap = { 1:'ü', 2:'si', 3:'ü', 4:'ü', 5:'i', 6:'u', 7:'si', 8:'i', 9:'u' };
+      return `%${n}'${hMap[hundreds % 10] || 'i'}`;
+    }
+    const tMap = { 0:'ı', 1:'u', 2:'si', 3:'u', 4:'ı', 5:'si', 6:'ı', 7:'i', 8:'i', 9:'ı' };
+    return `%${n}'${tMap[tens] || 'i'}`;
+  }
   if (tens === 1) return `%${n}'i`;
-  const suffixes = { 0:'ı', 1:'i', 2:'si', 3:'ü', 4:'ü', 5:'i', 6:'sı', 7:'si', 8:'i', 9:'u' };
+  const suffixes = { 1:'i', 2:'si', 3:'ü', 4:'ü', 5:'i', 6:'sı', 7:'si', 8:'i', 9:'u' };
   return `%${n}'${suffixes[last] || 'i'}`;
 }
 
@@ -2155,24 +2159,18 @@ function isSkippableSlideEmpty() {
 function updateSplashBtn() {
   const btn = document.getElementById('splashBtn');
   if (!btn) return;
-  if (_splashIdx === _SPLASH_COUNT - 1) {
+  const isLast = _splashIdx === _SPLASH_COUNT - 1;
+  const isWalletSlide = _splashIdx === 5 && !isLast;
+  if (isLast) {
     btn.textContent = 'Başla';
     btn.style.background = '';
     btn.style.color = '';
     btn.style.boxShadow = '';
-  } else if (_splashIdx >= 5) {
-    const empty = isSkippableSlideEmpty();
-    if (empty) {
-      btn.textContent = 'Geç →';
-      btn.style.background = 'var(--surface2)';
-      btn.style.color = 'var(--muted)';
-      btn.style.boxShadow = 'none';
-    } else {
-      btn.textContent = 'Devam';
-      btn.style.background = '';
-      btn.style.color = '';
-      btn.style.boxShadow = '';
-    }
+  } else if (isWalletSlide && isSkippableSlideEmpty()) {
+    btn.textContent = 'Geç →';
+    btn.style.background = 'var(--surface2)';
+    btn.style.color = 'var(--muted)';
+    btn.style.boxShadow = 'none';
   } else {
     btn.textContent = 'Devam';
     btn.style.background = '';
@@ -2250,9 +2248,7 @@ function switchTab(id) {
   }
 }
 
-function updatePillIndicator(id) {
-  // pillIndicator display:none — no-op
-}
+function updatePillIndicator() {}
 
 function toggleSection(name) {
   sectionState[name] = !sectionState[name];
@@ -2828,7 +2824,7 @@ function buildCarouselItems(fb) {
   const streak = data.streak.current || 0;
   if (streak >= 2) {
     items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>',
-      title: streak >= 7 ? `${streak} gün üst üste limit altındasın <em>— mükemmel disiplin!</em>` : `${streak} gün üst üste limit altındasın <em>— her yeşil gün limiti artırıyor</em>` });
+      title: streak >= 7 ? `${streak} gün üst üste limit altındasın <em>— mükemmel disiplin!</em>` : `${streak} gün üst üste limit altındasın` });
   } else if (streak === 0 && todayD > 3) {
     items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0 4h-2a2 2 0 0 0 -1.8 -1"/><path d="M12 7v10"/></svg>',
       title:'Zinciri başlat <em>— limiti aşmayan her gün sayılır</em>' });
@@ -2919,7 +2915,7 @@ function buildCarouselItems(fb) {
           title: `${esc(w.name)} <em>— ${proj.monthsAway === 1 ? 'gelecek ay alabilirsin' : proj.monthsAway + ' ay sonra alabilirsin'}</em>` });
       } else if (proj.monthsAway !== null) {
         items.push({ cls: 'warn', icon: '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
-          title: `${esc(w.name)} <em>— yaklaşık ${proj.monthsAway} ay sonra alabilirsin</em>` });
+          title: `${esc(w.name)} <em>— ${proj.monthsAway === 1 ? 'gelecek ay alabilirsin' : proj.monthsAway + ' ay sonra alabilirsin'}</em>` });
       }
     });
   }
@@ -3527,14 +3523,15 @@ function renderDailyLimit() {
           <!-- Bugün noktası -->
           <circle id="dlDot" r="4.5" fill="${lc}" stroke="#0A0A0D" stroke-width="2" cx="0" cy="0" opacity="0"/>
           <!-- X ekseni -->
-          ${[...new Set(xTicks)].map(i => `<text x="${toX(i)}" y="${svgH-5}" text-anchor="middle" font-size="10" font-family="Montserrat,sans-serif" font-weight="700" fill="rgba(255,255,255,.35)">${i+1}</text>`).join('')}
+          ${[...new Set(xTicks)].map(i => `<text x="${toX(i)}" y="${svgH-5}" text-anchor="middle" font-size="8" font-family="Montserrat,sans-serif" font-weight="700" fill="rgba(255,255,255,.28)">${i+1}</text>`).join('')}
           <!-- Hover araçları -->
           <line id="dlHL" x1="0" y1="${padT}" x2="0" y2="${svgH-padB}" stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-dasharray="3,3" opacity="0"/>
           <circle id="dlHD" r="5" fill="white" stroke="#0A0A0D" stroke-width="2" opacity="0"/>
         </svg>
         <div id="dlTT" style="position:absolute;pointer-events:none;opacity:0;transition:opacity .12s;background:rgba(15,15,18,.96);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:7px 12px;white-space:nowrap;font-family:'Montserrat',sans-serif;z-index:10;top:4px">
-          <div id="dlTTD" style="font-size:10px;font-weight:700;color:rgba(255,255,255,.45);margin-bottom:2px"></div>
+          <div id="dlTTD" style="font-size:10px;font-weight:700;color:rgba(255,255,255,.45);margin-bottom:4px"></div>
           <div id="dlTTV" style="font-size:14px;font-weight:900"></div>
+          <div id="dlTTL" style="font-size:11px;font-weight:700;color:rgba(255,255,255,.35);margin-top:3px;display:none"></div>
         </div>
       </div>
 
@@ -3612,20 +3609,34 @@ function renderDailyLimit() {
       const i = Math.max(0, Math.min(dim-1, Math.round((clientX - rect.left) / rect.width * (dim-1))));
       const cx = toX(i);
       const isFuture = spent[i] === null;
-      const val = isFuture ? limits[i] : spent[i];
+      const spentVal = spent[i];
+      const limitVal = limits[i];
+      const val = isFuture ? limitVal : spentVal;
       const cy = toY(val);
 
       hl.setAttribute('x1', cx); hl.setAttribute('x2', cx); hl.setAttribute('opacity', '1');
       hd.setAttribute('cx', cx); hd.setAttribute('cy', cy); hd.setAttribute('opacity', '1');
       hd.setAttribute('fill', isFuture ? 'rgba(255,255,255,.4)' : lc);
 
-      ttD.textContent = `${i+1} ${monthNames[m-1]}`;
-      ttV.textContent = isFuture ? `Limit: ${fmtTL(Math.round(val))}` : fmtTL(Math.round(val));
-      ttV.style.color = isFuture ? 'rgba(255,255,255,.5)' : lc;
+      ttD.textContent = `${i+1} ${MONTH_NAMES[m-1]}`;
+      const ttL = document.getElementById('dlTTL');
+      if (isFuture) {
+        ttV.textContent = `Limit: ${fmtTL(Math.round(limitVal))}`;
+        ttV.style.color = 'rgba(255,255,255,.5)';
+        if (ttL) ttL.style.display = 'none';
+      } else {
+        ttV.textContent = fmtTL(Math.round(spentVal));
+        ttV.style.color = spentVal > limitVal ? 'var(--danger)' : lc;
+        if (ttL) {
+          ttL.textContent = `Limit: ${fmtTL(Math.round(limitVal))}`;
+          ttL.style.display = 'block';
+          ttL.style.color = spentVal > limitVal ? 'rgba(255,69,58,.5)' : 'rgba(255,255,255,.35)';
+        }
+      }
 
       const wRect = wrap.getBoundingClientRect();
       const px = (cx / svgW) * rect.width;
-      const ttW = 130;
+      const ttW = 150;
       tt.style.left = Math.max(4, Math.min(wRect.width - ttW - 4, px - ttW/2)) + 'px';
       tt.style.opacity = '1';
     }
@@ -5559,7 +5570,7 @@ function importData(input) {
       if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
       if (!Array.isArray(data.streak.frozenDays)) data.streak.frozenDays = [];
       if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
-      if ((data.streak.freezeTotal || 2) > 2) data.streak.freezeTotal = 2; // max 2
+      if (typeof data.streak.freezeTotal !== 'number' || data.streak.freezeTotal > 2) data.streak.freezeTotal = 2; // max 2
       if (!data.monthlyTargets || typeof data.monthlyTargets !== 'object') data.monthlyTargets = {};
       data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; });
       data.debts.forEach(d => { if (!d.paidMonths) d.paidMonths = []; if (!d.startMonth) d.startMonth = monthKey(); });
@@ -5762,19 +5773,7 @@ function init() {
 init();
 window.addEventListener('resize', () => { updatePillIndicator(currentTab); });
 
-// ===== NAV FADE ON SCROLL =====
-(function() {
-  const wrap = document.getElementById('appWrap');
-  const fade = document.getElementById('navFade');
-  if (!wrap || !fade) return;
-  wrap.addEventListener('scroll', () => {
-    if (wrap.scrollTop > 10) {
-      fade.classList.add('visible');
-    } else {
-      fade.classList.remove('visible');
-    }
-  }, { passive: true });
-})();
+// ===== NAV FADE — static gradient, no scroll toggle needed =====
 </script>
 </body>
 </html>
