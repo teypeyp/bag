@@ -42,7 +42,7 @@
   --blue:#0A84FF;--purple:#BF5AF2;
   --radius:20px;--radius-sm:12px;--radius-xs:8px;
 }
-html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased;overflow:hidden}#appWrap{max-width:520px;margin:0 auto;height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:104px}
+html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased;overflow:hidden}#appWrap{max-width:520px;margin:0 auto;height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:60px;padding-bottom:96px}
 ::-webkit-scrollbar{width:0;height:0;display:none}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:transparent}
@@ -80,22 +80,47 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 #toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:var(--surface3);border:1px solid var(--border);border-radius:24px;padding:11px 20px;font-size:13px;font-weight:700;z-index:999;display:none;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.5);backdrop-filter:blur(8px)}
 
 /* HEADER */
-.app-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;z-index:50;height:56px;background:rgba(10,10,13,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(44,44,53,.6)}
-.app-logo{font-size:22px;font-weight:900;color:var(--accent);letter-spacing:2px;text-shadow:0 0 16px rgba(45,184,102,.3);text-transform:uppercase}
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;z-index:50;height:56px;background:rgba(10,10,13,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(44,44,53,.6)}.app-logo{font-size:22px;font-weight:900;color:var(--accent);letter-spacing:2px;text-shadow:0 0 16px rgba(45,184,102,.3);text-transform:uppercase}
 .header-actions{display:flex;gap:6px}
 .icon-btn{background:var(--surface2);border:1px solid var(--border);border-radius:12px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;color:var(--text);transition:all .15s;-webkit-tap-highlight-color:transparent}
 .icon-btn:active{background:var(--surface3);transform:scale(.93)}
 
-/* TABS */
-.tab-bar-wrap{position:fixed;top:56px;left:50%;transform:translateX(-50%);width:100%;max-width:520px;z-index:40;background:rgba(10,10,13,.9);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(44,44,53,.5)}
-.tab-bar{display:flex;padding:0 6px}
-.tab-btn{flex:1;padding:13px 8px;background:none;border:none;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;position:relative;transition:color .2s;letter-spacing:.1px}
-.tab-btn::after{content:'';position:absolute;bottom:-1px;left:15%;right:15%;height:2.5px;background:var(--accent);border-radius:2px;transform:scaleX(0);transition:transform .25s cubic-bezier(.34,1.4,.64,1)}
-.tab-btn.active{color:var(--text)}
-.tab-btn.active::after{transform:scaleX(1)}
+/* FLOATING PILL NAV */
+.pill-nav{
+  position:fixed;bottom:12px;left:50%;transform:translateX(-50%);
+  width:calc(100% - 48px);max-width:472px;
+  z-index:50;
+  background:#1A1A1F;
+  border-radius:99px;
+  padding:10px 8px;
+  display:flex;align-items:center;justify-content:space-around;
+  box-shadow:0 8px 32px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.3);
+  border:1px solid rgba(255,255,255,.07);
+}
+.pill-btn{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  height:46px;border:none;background:none;cursor:pointer;
+  border-radius:99px;
+  transition:background .2s;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;
+}
+.pill-btn svg{transition:stroke .2s,opacity .2s;}
+.pill-btn .pill-icon{
+  width:44px;height:44px;border-radius:99px;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,transform .18s;
+}
+.pill-btn.active .pill-icon{
+  background:var(--accent);
+  box-shadow:0 4px 16px rgba(45,184,102,.35);
+}
+.pill-btn.active svg{stroke:#fff;opacity:1;}
+.pill-btn:not(.active) svg{stroke:rgba(255,255,255,.38);opacity:1;}
+.pill-btn:active .pill-icon{transform:scale(.88);}
 
 /* TAB CONTENT */
-.tab-content{display:none;flex:1;padding:16px 16px 100px}
+.tab-content{display:none;flex:1;padding:16px 16px 16px}
 .tab-content.active{display:block;animation:tabEnter .6s cubic-bezier(.4,0,.2,1) both}
 
 /* CARDS */
@@ -575,11 +600,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .settings-inline-input{background:transparent;border:none;color:var(--accent);font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;text-align:right;width:100px;outline:none}
 .settings-inline-input::placeholder{color:var(--muted);opacity:1}
 
-.cat-add-btn{background:none;border:1.5px solid var(--border);border-radius:20px;color:var(--muted);font-size:12px;font-weight:700;padding:6px 12px;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .2s;-webkit-tap-highlight-color:transparent}
-.cat-add-btn:active{background:var(--surface2);color:var(--text)}
-.hamburger-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:38px;height:38px;background:none!important;border:none!important}
-.ham-line{width:18px;height:2px;background:var(--text);border-radius:2px}
-
 /* ===== TX ACTION BUTTONS ===== */
 .tx-action-btn{display:none;padding:5px 10px;border-radius:8px;border:none;font-size:11px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;opacity:0;transform:scale(.8);transition:opacity .18s,transform .18s;pointer-events:none;white-space:nowrap}
 .tx-action-btn.show{display:inline-block;opacity:1;transform:scale(1);pointer-events:auto}
@@ -674,7 +694,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 .btn{transition:transform .12s cubic-bezier(.4,0,.2,1),opacity .12s,box-shadow .12s}
 .btn:active{transform:scale(.94) !important;opacity:.85}
-.tab-btn:active{transform:scale(.9)}
 .year-month-header:active{transform:scale(.98)}
 .rec-item:active,.debt-item:active{background:var(--surface3)}
 @keyframes staggerIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
@@ -963,23 +982,57 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 <!-- HEADER -->
 <div class="app-header">
-  <div class="app-logo" onclick="switchTab('aylik', document.querySelector('.tab-btn'))" style="cursor:pointer" id="appLogo">Vault</div>
-  <div class="header-actions">
-    <button class="cat-add-btn" onclick="openCategories()">+ Kategori</button>
-    <button class="icon-btn hamburger-btn" onclick="openSettings()" id="hamburgerBtn">
-      <span class="ham-line"></span><span class="ham-line"></span><span class="ham-line"></span>
-    </button>
-  </div>
+  <div class="app-logo" onclick="switchTab('aylik')" style="cursor:pointer" id="appLogo">Vault</div>
 </div>
 
-<!-- TABS -->
-<div class="tab-bar-wrap">
-  <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('aylik',this)">Cüzdan</button>
-    <button class="tab-btn" onclick="switchTab('sabit',this)">Giderler</button>
-    <button class="tab-btn" onclick="switchTab('ozet',this)">Özet</button>
-  </div>
-</div>
+<!-- FLOATING PILL NAV -->
+<nav class="pill-nav" id="pillNav">
+  <!-- Cüzdan -->
+  <button class="pill-btn active" id="nav-aylik" onclick="switchTab('aylik')">
+    <div class="pill-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/>
+        <path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/>
+      </svg>
+    </div>
+  </button>
+  <!-- Giderler -->
+  <button class="pill-btn" id="nav-sabit" onclick="switchTab('sabit')">
+    <div class="pill-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"/>
+        <path d="M16 3v4"/>
+        <path d="M8 3v4"/>
+        <path d="M4 11h16"/>
+        <path d="M11 15h1"/>
+        <path d="M12 15v3"/>
+      </svg>
+    </div>
+  </button>
+  <!-- Özet -->
+  <button class="pill-btn" id="nav-ozet" onclick="switchTab('ozet')">
+    <div class="pill-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M3 12m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
+        <path d="M9 8m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
+        <path d="M15 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
+      </svg>
+    </div>
+  </button>
+  <!-- Ayarlar -->
+  <button class="pill-btn" id="nav-ayarlar" onclick="switchTab('ayarlar')">
+    <div class="pill-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/>
+        <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/>
+      </svg>
+    </div>
+  </button>
+</nav>
 
 <!-- TAB: CÜZDAN -->
 <div class="tab-content active" id="tab-aylik">
@@ -1278,6 +1331,80 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   </div>
 </div>
 
+<!-- TAB: AYARLAR -->
+<div class="tab-content" id="tab-ayarlar">
+
+  <!-- Cüzdan -->
+  <div class="settings-section-label" style="margin-top:8px">Cüzdan</div>
+  <div class="settings-group">
+    <div class="settings-row">
+      <div class="settings-row-left">
+        <div class="settings-row-title">Cüzdan İsmi</div>
+        <div class="settings-row-sub">Header'da görünen isim</div>
+      </div>
+      <input type="text" id="walletNameInput" class="settings-inline-input" placeholder="Vault" maxlength="24" onblur="saveWalletName()" style="width:140px">
+    </div>
+  </div>
+
+  <!-- Bütçe -->
+  <div class="settings-section-label">Bütçe</div>
+  <div class="settings-group">
+    <div class="settings-row">
+      <div class="settings-row-left">
+        <div class="settings-row-title">Bu Ay Hedef Bütçe</div>
+        <div class="settings-row-sub">Aylık harcama limiti</div>
+      </div>
+      <input type="text" id="monthlyTarget" class="settings-inline-input" placeholder="—" oninput="fmtInput(this)" inputmode="numeric" onblur="saveMonthlyTarget()">
+    </div>
+  </div>
+
+  <!-- Kategoriler -->
+  <div class="settings-section-label">Kategoriler</div>
+  <div class="settings-group">
+    <div class="settings-row tappable" onclick="openCategories()">
+      <div class="settings-row-left">
+        <div class="settings-row-title">Kategori Yönetimi</div>
+        <div class="settings-row-sub">Ekle, düzenle, anahtar kelimeler</div>
+      </div>
+      <span class="settings-chevron">›</span>
+    </div>
+  </div>
+
+  <!-- Veri -->
+  <div class="settings-section-label">Veri</div>
+  <div class="settings-group">
+    <div class="settings-row tappable" onclick="exportData()">
+      <div class="settings-row-left">
+        <div class="settings-row-title">Dışa Aktar</div>
+        <div class="settings-row-sub">JSON dosyası olarak indir</div>
+      </div>
+      <span class="settings-chevron">›</span>
+    </div>
+    <div class="settings-row tappable" onclick="document.getElementById('importFileTab').click()">
+      <div class="settings-row-left">
+        <div class="settings-row-title">İçe Aktar</div>
+        <div class="settings-row-sub">JSON dosyasından yükle</div>
+      </div>
+      <span class="settings-chevron">›</span>
+    </div>
+  </div>
+  <input type="file" id="importFileTab" style="display:none" accept=".json" onchange="importData(this)">
+
+  <!-- Hesap -->
+  <div class="settings-section-label">Hesap</div>
+  <div class="settings-group">
+    <div class="settings-row tappable danger-row" onclick="resetAll()">
+      <div class="settings-row-left">
+        <div class="settings-row-title" style="color:var(--danger)">Tüm Verileri Sıfırla</div>
+        <div class="settings-row-sub">Bu işlem geri alınamaz</div>
+      </div>
+      <span class="settings-chevron" style="color:var(--danger)">›</span>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:28px;font-size:11px;color:var(--muted)">Vault · Veriler bu cihazda saklanır</div>
+</div>
+
 <!-- HISTORY OVERLAY -->
 <div class="overlay" id="historyOverlay" style="display:none;align-items:flex-start;padding:0">
   <div class="history-wrap">
@@ -1291,73 +1418,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <div class="history-body">
       <div id="historyTxList"></div>
     </div>
-  </div>
-</div>
-
-<!-- SETTINGS MODAL -->
-<div class="modal-overlay" id="settingsModal" onclick="if(event.target===this)closeSettings()">
-  <div class="modal-sheet settings-sheet" style="position:relative">
-    <button class="modal-close" onclick="closeSettings()">×</button>
-    <div class="modal-title" style="margin-bottom:4px">Ayarlar</div>
-    <div style="font-size:14px;font-weight:700;color:var(--accent);margin-bottom:20px">Vault · Kişisel Bütçe Yöneticisi</div>
-
-    <!-- Cüzdan -->
-    <div class="settings-section-label">Cüzdan</div>
-    <div class="settings-group">
-      <div class="settings-row">
-        <div class="settings-row-left">
-          <div class="settings-row-title">Cüzdan İsmi</div>
-          <div class="settings-row-sub">Header'da görünen isim</div>
-        </div>
-        <input type="text" id="walletNameInput" class="settings-inline-input" placeholder="Vault" maxlength="24" onblur="saveWalletName()" style="width:140px">
-      </div>
-    </div>
-
-    <!-- Bütçe hedefi -->
-    <div class="settings-section-label">Bütçe</div>
-    <div class="settings-group">
-      <div class="settings-row">
-        <div class="settings-row-left">
-          <div class="settings-row-title">Bu Ay Hedef Bütçe</div>
-          <div class="settings-row-sub">Aylık harcama limiti</div>
-        </div>
-        <input type="text" id="monthlyTarget" class="settings-inline-input" placeholder="—" oninput="fmtInput(this)" inputmode="numeric" onblur="saveMonthlyTarget()">
-      </div>
-    </div>
-
-    <!-- Veri -->
-    <div class="settings-section-label">Veri</div>
-    <div class="settings-group">
-      <div class="settings-row tappable" onclick="exportData()">
-        <div class="settings-row-left">
-          <div class="settings-row-title">Dışa Aktar</div>
-          <div class="settings-row-sub">JSON dosyası olarak indir</div>
-        </div>
-        <span class="settings-chevron">›</span>
-      </div>
-      <div class="settings-row tappable" onclick="document.getElementById('importFile').click()">
-        <div class="settings-row-left">
-          <div class="settings-row-title">İçe Aktar</div>
-          <div class="settings-row-sub">JSON dosyasından yükle</div>
-        </div>
-        <span class="settings-chevron">›</span>
-      </div>
-    </div>
-    <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(this)">
-
-    <!-- Tehlikeli bölge -->
-    <div class="settings-section-label">Hesap</div>
-    <div class="settings-group">
-      <div class="settings-row tappable danger-row" onclick="resetAll()">
-        <div class="settings-row-left">
-          <div class="settings-row-title" style="color:var(--danger)">Tüm Verileri Sıfırla</div>
-          <div class="settings-row-sub">Bu işlem geri alınamaz</div>
-        </div>
-        <span class="settings-chevron" style="color:var(--danger)">›</span>
-      </div>
-    </div>
-
-    <div style="text-align:center;margin-top:24px;font-size:11px;color:var(--muted)">Vault · Veriler bu cihazda saklanır</div>
   </div>
 </div>
 
@@ -2073,7 +2133,15 @@ function finishOnboarding() {
   const ob = document.getElementById('onboarding');
   ob.style.transition = 'opacity .4s';
   ob.style.opacity = '0';
-  setTimeout(() => { ob.style.display = 'none'; ob.style.opacity = ''; }, 400);
+  setTimeout(() => {
+    ob.style.display = 'none';
+    ob.style.opacity = '';
+    // Pill nav ve header'ı geri göster
+    const pillNav = document.getElementById('pillNav');
+    const appHeader = document.querySelector('.app-header');
+    if (pillNav) pillNav.style.display = '';
+    if (appHeader) appHeader.style.display = '';
+  }, 400);
   renderAll();
 }
 
@@ -2081,20 +2149,26 @@ function finishOnboarding() {
 let currentTab = 'aylik';
 const sectionState = { rec: false, debt: false, goal: false, wish: false, yillik: false };
 
-function switchTab(id, btn) {
+function switchTab(id) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
   const next = document.getElementById('tab-' + id);
   if (next) next.classList.add('active');
-  if (btn) btn.classList.add('active');
+  const navBtn = document.getElementById('nav-' + id);
+  if (navBtn) navBtn.classList.add('active');
   if (id !== 'aylik') stopCarousel();
   currentTab = id;
   if (id === 'aylik') renderMonthly();
   if (id === 'sabit') { renderSabit(); updateCollapseSummaries(); }
+  if (id === 'ayarlar') {
+    const mk = currentMonth;
+    const el = document.getElementById('monthlyTarget');
+    if (el) el.value = data.monthlyTargets[mk] ? String(Math.round(data.monthlyTargets[mk])).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
+    const wn = document.getElementById('walletNameInput');
+    if (wn) wn.value = data.walletName || '';
+  }
   if (id === 'ozet') {
     renderOzetStats();
-    // dlMini renderOzetStats içinde kendi destroy/null döngüsünü yönetiyor,
-    // sadece chart.js Observer'lı chart'ları temizle
     ['bar','doughnut','line'].forEach(k => {
       if (charts[k]) { try { charts[k].destroy(); } catch(e){} charts[k] = null; }
     });
@@ -2949,7 +3023,7 @@ let _touchEndX = 0;
 let _touchOnInteractive = false;
 let _touchActive = false; // en az bir touchstart geçti mi
 
-const TAB_ORDER = ['aylik', 'sabit', 'ozet'];
+const TAB_ORDER = ['aylik', 'sabit', 'ozet', 'ayarlar'];
 
 document.addEventListener('touchstart', e => {
   _touchStartY = e.touches[0].clientY;
@@ -2992,13 +3066,9 @@ document.addEventListener('touchend', e => {
 
   const idx = TAB_ORDER.indexOf(currentTab);
   if (dx < 0 && idx < TAB_ORDER.length - 1) {
-    const nextId = TAB_ORDER[idx + 1];
-    const btn = document.querySelectorAll('.tab-btn')[idx + 1];
-    switchTab(nextId, btn);
+    switchTab(TAB_ORDER[idx + 1]);
   } else if (dx > 0 && idx > 0) {
-    const prevId = TAB_ORDER[idx - 1];
-    const btn = document.querySelectorAll('.tab-btn')[idx - 1];
-    switchTab(prevId, btn);
+    switchTab(TAB_ORDER[idx - 1]);
   }
 }, { passive: true });
 
@@ -5400,12 +5470,7 @@ function deleteCustomCat(id) {
 
 // =================== SETTINGS ===================
 function openSettings() {
-  const mk = currentMonth;
-  const el = document.getElementById('monthlyTarget');
-  if (el) { el.value = data.monthlyTargets[mk] ? String(Math.round(data.monthlyTargets[mk])).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : ''; }
-  const wn = document.getElementById('walletNameInput');
-  if (wn) wn.value = data.walletName || '';
-  document.getElementById('settingsModal').classList.add('show');
+  switchTab('ayarlar');
 }
 
 function saveWalletName() {
@@ -5418,7 +5483,7 @@ function saveWalletName() {
 }
 
 function closeSettings() {
-  document.getElementById('settingsModal').classList.remove('show');
+  // Settings artık modal değil tab — geçiş uyumluluğu için korundu
 }
 
 function saveMonthlyTarget() {
@@ -5426,7 +5491,7 @@ function saveMonthlyTarget() {
   const val = parseNum(document.getElementById('monthlyTarget').value);
   if (val > 0) data.monthlyTargets[mk] = val;
   else delete data.monthlyTargets[mk];
-  save(); closeSettings(); renderAll();
+  save(); renderAll();
   showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> Hedef bütçe kaydedildi');
 }
 
@@ -5464,7 +5529,7 @@ function importData(input) {
       data.savingsGoals.forEach(g => { if (!g.paidMonths) g.paidMonths = []; if (!g.deposits) g.deposits = []; });
       const defaultIds = new Set(DEFAULT_CATS.map(c => c.id));
       data.categories = (data.categories || []).filter(c => !defaultIds.has(c.id));
-      save(); renderAll(); closeSettings();
+      save(); renderAll();
       showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg> Veri içe aktarıldı');
     } catch(err) { showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg> Dosya okunamadı'); }
     input.value = '';
@@ -5644,7 +5709,13 @@ function init() {
   if (initCat) initCat.value = 'gelir';
 
   if (!data.onboarded) {
-    document.getElementById('onboarding').style.display = 'flex'; initSplash();
+    // Onboarding sırasında pill nav ve header'ı gizle
+    const pillNav = document.getElementById('pillNav');
+    const appHeader = document.querySelector('.app-header');
+    if (pillNav) pillNav.style.display = 'none';
+    if (appHeader) appHeader.style.display = 'none';
+    document.getElementById('onboarding').style.display = 'flex';
+    initSplash();
   } else {
     renderAll();
   }
