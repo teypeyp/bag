@@ -14,19 +14,25 @@
 // Splash swipe desteği
 (function() {
   let _tsX = 0;
-  document.addEventListener('touchstart', e => {
+  function _splashTouchStart(e) {
     if (document.getElementById('onboarding')?.style.display === 'flex') {
       _tsX = e.touches[0].clientX;
     }
-  }, { passive: true });
-  document.addEventListener('touchend', e => {
+  }
+  function _splashTouchEnd(e) {
     if (document.getElementById('onboarding')?.style.display !== 'flex') return;
     const dx = e.changedTouches[0].clientX - _tsX;
     if (Math.abs(dx) > 40) {
       if (dx < 0 && _splashIdx < _SPLASH_COUNT - 1) goSplash(_splashIdx + 1);
       else if (dx > 0 && _splashIdx > 0) goSplash(_splashIdx - 1);
     }
-  }, { passive: true });
+  }
+  document.addEventListener('touchstart', _splashTouchStart, { passive: true });
+  document.addEventListener('touchend', _splashTouchEnd, { passive: true });
+  window._removeSplashListeners = function() {
+    document.removeEventListener('touchstart', _splashTouchStart);
+    document.removeEventListener('touchend', _splashTouchEnd);
+  };
 })();
 </script>
 <style>
@@ -38,7 +44,7 @@
   --blue:#0A84FF;--purple:#BF5AF2;
   --radius:20px;--radius-sm:12px;--radius-xs:8px;
 }
-html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased;overflow:hidden}#appWrap{max-width:520px;margin:0 auto;height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:60px;padding-bottom:104px}
+html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased;overflow:hidden}#appWrap{max-width:520px;margin:0 auto;height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:52px;padding-bottom:104px}
 ::-webkit-scrollbar{width:0;height:0;display:none}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:transparent}
@@ -76,7 +82,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 #toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:var(--surface3);border:1px solid var(--border);border-radius:24px;padding:11px 20px;font-size:13px;font-weight:700;z-index:999;display:none;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.5);backdrop-filter:blur(8px)}
 
 /* HEADER */
-.app-header{display:flex;align-items:center;justify-content:flex-start;padding:12px 18px;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;z-index:50;height:56px;background:rgba(10,10,13,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(44,44,53,.6)}
+.app-header{display:flex;align-items:center;justify-content:flex-start;padding:12px 18px;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;z-index:50;height:56px;background:rgba(10,10,13,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
 .app-logo{font-size:22px;font-weight:900;color:var(--accent);letter-spacing:2px;text-shadow:0 0 16px rgba(45,184,102,.3);text-transform:uppercase}
 
 /* FLOATING PILL NAV */
@@ -101,11 +107,11 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   bottom:0;
   left:50%;transform:translateX(-50%);
   width:100%;max-width:520px;
-  height:120px;
+  height:140px;
   pointer-events:none;
   z-index:49;
-  background:linear-gradient(to bottom, transparent 0%, var(--bg) 100%);
-  opacity:0;
+  background:linear-gradient(to bottom, transparent 0%, var(--bg) 55%);
+  opacity:1;
   transition:opacity .3s cubic-bezier(.4,0,.2,1);
 }
 .nav-fade.visible{ opacity:1; }
@@ -131,10 +137,11 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     background .3s cubic-bezier(.4,0,.2,1);
   gap:0;
 }
-/* active pill — genişler, yeşil arka plan */
+/* active pill — genişler, stroke style */
 .tab-btn.active{
   flex:2.4;
-  background:var(--accent);
+  background:rgba(45,184,102,.1);
+  border:1.5px solid rgba(45,184,102,.5);
 }
 .tab-btn:active{opacity:.75}
 
@@ -155,13 +162,9 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   transition:stroke .25s cubic-bezier(.4,0,.2,1), stroke-width .25s cubic-bezier(.4,0,.2,1);
   display:block;
 }
-/* filled ikon — hidden, artık kullanılmıyor */
-.tab-btn svg.icon-filled{
-  display:none;
-}
-/* active: aynı outline ikon, kalın + tam beyaz */
+/* active: ikon yeşil */
 .tab-btn.active svg.icon-outline{
-  stroke:#fff;
+  stroke:var(--accent);
   stroke-width:2.2;
 }
 
@@ -169,7 +172,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .tab-btn-label{
   font-family:'Montserrat',sans-serif;
   font-size:13px;font-weight:800;
-  color:#fff;
+  color:var(--accent);
   letter-spacing:.1px;
   max-width:0;
   overflow:hidden;
@@ -1069,7 +1072,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <button class="tab-btn active" id="nav-aylik" onclick="switchTab('aylik')" aria-label="Cüzdan">
       <div class="tab-btn-dot">
         <svg class="icon-outline" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/></svg>
-        <svg class="icon-filled" viewBox="0 0 24 24"><path d="M13 3a1 1 0 0 1 1 1v1h1a3 3 0 0 1 3 3v1h1a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-1v2a3 3 0 0 1 -3 3h-10a3 3 0 0 1 -3 -3v-10a3 3 0 0 1 3 -3h2v-1a1 1 0 0 1 1 -1zm5 7h-2a1 1 0 0 0 -1 1v2a1 1 0 0 0 1 1h2z"/></svg>
       </div>
       <span class="tab-btn-label">Cüzdan</span>
     </button>
@@ -1077,7 +1079,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <button class="tab-btn" id="nav-sabit" onclick="switchTab('sabit')" aria-label="Giderler">
       <div class="tab-btn-dot">
         <svg class="icon-outline" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/><path d="M11 15h1"/><path d="M12 15v3"/></svg>
-        <svg class="icon-filled" viewBox="0 0 24 24"><path d="M16 2a1 1 0 0 1 1 1v1h1a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12a3 3 0 0 1 3 -3h1v-1a1 1 0 0 1 2 0v1h6v-1a1 1 0 0 1 1 -1zm3 7h-14v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1zm-5 4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0 -2z"/></svg>
       </div>
       <span class="tab-btn-label">Giderler</span>
     </button>
@@ -1085,7 +1086,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <button class="tab-btn" id="nav-ozet" onclick="switchTab('ozet')" aria-label="Özet">
       <div class="tab-btn-dot">
         <svg class="icon-outline" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 20v-8a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v8"/><path d="M10 20v-12a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12"/><path d="M17 20v-5a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v5"/><path d="M3 20h18"/></svg>
-        <svg class="icon-filled" viewBox="0 0 24 24"><path d="M3 19h18a1 1 0 0 1 0 2h-18a1 1 0 0 1 0 -2z"/><path d="M4 11h2a1 1 0 0 1 1 1v7h-4v-7a1 1 0 0 1 1 -1z"/><path d="M11 7h2a1 1 0 0 1 1 1v11h-4v-11a1 1 0 0 1 1 -1z"/><path d="M18 14h2a1 1 0 0 1 1 1v4h-4v-4a1 1 0 0 1 1 -1z"/></svg>
       </div>
       <span class="tab-btn-label">Özet</span>
     </button>
@@ -1093,7 +1093,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <button class="tab-btn" id="nav-ayarlar" onclick="switchTab('ayarlar')" aria-label="Ayarlar">
       <div class="tab-btn-dot">
         <svg class="icon-outline" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>
-        <svg class="icon-filled" viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 1 -5 5l0 -.005a5 5 0 0 1 5 -4.995z"/><path d="M14 14a5 5 0 0 1 5 5v1a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1v-1a5 5 0 0 1 5 -5z"/></svg>
       </div>
       <span class="tab-btn-label">Hesap</span>
     </button>
@@ -2203,6 +2202,7 @@ function finishOnboarding() {
   if (walletName) data.walletName = walletName;
   data.onboarded = true;
   save();
+  if (typeof window._removeSplashListeners === 'function') window._removeSplashListeners();
   const ob = document.getElementById('onboarding');
   ob.style.transition = 'opacity .4s';
   ob.style.opacity = '0';
@@ -2221,7 +2221,7 @@ function finishOnboarding() {
 
 // =================== TABS ===================
 let currentTab = 'aylik';
-const sectionState = { rec: false, debt: false, goal: false, wish: false, yillik: false };
+const sectionState = { rec: false, debt: false, goal: false, wish: false };
 
 function switchTab(id) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -2262,18 +2262,7 @@ function switchTab(id) {
 }
 
 function updatePillIndicator(id) {
-  const tabs = ['aylik','sabit','ozet','ayarlar'];
-  const idx = tabs.indexOf(id);
-  const inner = document.getElementById('pillNavInner');
-  const indicator = document.getElementById('pillIndicator');
-  if (!inner || !indicator || idx < 0) return;
-  const btns = inner.querySelectorAll('.tab-btn');
-  if (!btns[idx]) return;
-  const btn = btns[idx];
-  indicator.style.left = btn.offsetLeft + 'px';
-  indicator.style.width = btn.offsetWidth + 'px';
-  indicator.style.top = '0px';
-  indicator.style.height = btn.offsetHeight + 'px';
+  // pillIndicator display:none — no-op
 }
 
 function toggleSection(name) {
@@ -2282,7 +2271,6 @@ function toggleSection(name) {
   const chevron = document.getElementById(name + 'Chevron');
   if (body) body.classList.toggle('collapsed', !sectionState[name]);
   if (chevron) chevron.classList.toggle('open', sectionState[name]);
-  if (name === 'yillik' && sectionState[name]) setTimeout(() => renderYillik(), 50);
 }
 
 // =================== GAMIFICATION ENGINE ===================
@@ -3417,7 +3405,6 @@ function renderDailyLimit() {
   const dim = daysInMonth(mk);
   const todayD = new Date().getDate();
   const [y, m] = mk.split('-').map(Number);
-  const monthNames = MONTH_NAMES;
 
   // Tüm ay: geçmiş = gerçek harcama, gelecek = null; limit her gün hesaplanır
   const spent = [], limits = [];
@@ -5511,7 +5498,7 @@ function buildNewCatIconPicker() {
   // Kategoriler için ikon seti: CAT_ICONS + GOAL_ICONS birleşimi (unique id)
   const PICKER_ICONS = [
     ...Object.entries(CAT_ICONS).map(([id, svg]) => ({id, svg})),
-    ...(typeof GOAL_ICONS !== 'undefined' ? GOAL_ICONS.filter(ic => !CAT_ICONS[ic.id]) : []),
+    ...GOAL_ICONS.filter(ic => !CAT_ICONS[ic.id]),
   ];
   const currentId = document.getElementById('newCatEmoji')?.value || 'tag';
   container.innerHTML = PICKER_ICONS.map(({id, svg}) => {
@@ -5562,21 +5549,12 @@ function deleteCustomCat(id) {
 }
 
 // =================== SETTINGS ===================
-function openSettings() {
-  // Navigate to settings tab instead of modal
-  switchTab('ayarlar');
-}
-
 function saveWalletName() {
   const val = document.getElementById('walletNameInput')?.value.trim();
   data.walletName = val || '';
   save();
   updateAppLogo();
   if (currentTab === 'ozet') renderOzetStats();
-}
-
-function closeSettings() {
-  // No-op: settings is now a tab, kept for backward compat calls
 }
 
 function saveMonthlyTarget() {
@@ -5703,13 +5681,8 @@ function openKeywordEdit(catId) {
   if (titleEl) titleEl.textContent = cat.name;
   if (inputEl) inputEl.value = (cat.keywords || []).join(', ');
 
-  buildEmojiPickerModal(cat.emoji);
   document.getElementById('keywordModal').classList.add('show');
   setTimeout(() => inputEl?.focus(), 200);
-}
-
-function buildEmojiPickerModal(currentEmoji) {
-  // Emoji picker devre dışı — kategoriler artık SVG ikon kullanıyor
 }
 
 
