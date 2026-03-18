@@ -107,10 +107,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   bottom:0;
   left:50%;transform:translateX(-50%);
   width:100%;max-width:520px;
-  height:140px;
+  height:100px;
   pointer-events:none;
   z-index:49;
-  background:linear-gradient(to bottom, transparent 0%, var(--bg) 55%);
+  background:linear-gradient(to bottom, transparent 0%, var(--bg) 70%);
   opacity:1;
   transition:opacity .3s cubic-bezier(.4,0,.2,1);
 }
@@ -245,7 +245,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .insight-carousel{
   border-radius:var(--radius-sm);
   margin-bottom:12px;
-  height:58px;
+  height:48px;
   position:relative;
   overflow:hidden;
 }
@@ -253,7 +253,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .insight-carousel.warn{ background:color-mix(in srgb,var(--surface2) 85%,var(--warning) 15%); }
 .insight-carousel.bad{  background:color-mix(in srgb,var(--surface2) 85%,var(--danger) 15%);  }
 
-.insight-card{padding:0;display:flex;flex-direction:column;height:58px;overflow:hidden;position:relative;}
+.insight-card{padding:0;display:flex;flex-direction:column;height:48px;overflow:hidden;position:relative;}
 .insight-card.good{background:color-mix(in srgb,var(--surface2) 85%,var(--accent) 15%)}
 .insight-card.warn{background:color-mix(in srgb,var(--surface2) 85%,var(--warning) 15%)}
 .insight-card.bad{background:color-mix(in srgb,var(--surface2) 85%,var(--danger) 15%)}
@@ -276,9 +276,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .insight-carousel.warn .insight-sweep{ background:linear-gradient(90deg,transparent 0%,rgba(255,214,10,.15) 50%,transparent 100%); }
 .insight-carousel.bad  .insight-sweep{ background:linear-gradient(90deg,transparent 0%,rgba(255,69,58,.15) 50%,transparent 100%); }
 
-.insight-card-inner{padding:7px 12px 6px;flex:1;display:flex;align-items:center;gap:10px;animation:insightIn .3s ease;overflow:hidden;position:relative;z-index:2}
-.insight-title{font-size:13px;font-weight:800;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.insight-sub{font-size:11px;font-weight:600;opacity:.7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.insight-card-inner{padding:0 12px;flex:1;display:flex;align-items:center;gap:10px;animation:insightIn .3s ease;overflow:hidden;position:relative;z-index:2}
+.insight-title{font-size:12.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .insight-card-inner.leaving{animation:insightOut .25s ease forwards}
 .insight-icon{font-size:27px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .insight-card.good .insight-icon svg{stroke:var(--accent)}
@@ -1404,7 +1403,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:16px">Vault · Kişisel Bütçe</div>
 
     <!-- Cüzdan -->
-    <div class="settings-section-label">Cüzdan</div>
     <div class="settings-group">
       <div class="settings-row">
         <div class="settings-row-left">
@@ -1415,20 +1413,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       </div>
     </div>
 
-    <!-- Bütçe -->
-    <div class="settings-section-label">Bütçe</div>
-    <div class="settings-group">
-      <div class="settings-row">
-        <div class="settings-row-left">
-          <div class="settings-row-title">Bu Ay Hedef Bütçe</div>
-          <div class="settings-row-sub">Aylık harcama limiti</div>
-        </div>
-        <input type="text" id="monthlyTarget" class="settings-inline-input" placeholder="—" oninput="fmtInput(this)" inputmode="numeric" onblur="saveMonthlyTarget()">
-      </div>
-    </div>
-
     <!-- Kategoriler -->
-    <div class="settings-section-label">Kategoriler</div>
     <div class="settings-group">
       <div class="settings-row tappable" onclick="openCategories()">
         <div class="settings-row-left">
@@ -1440,7 +1425,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     </div>
 
     <!-- Veri -->
-    <div class="settings-section-label">Veri</div>
     <div class="settings-group">
       <div class="settings-row tappable" onclick="exportData()">
         <div class="settings-row-left">
@@ -1460,7 +1444,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <input type="file" id="importFileTab" style="display:none" accept=".json" onchange="importData(this)">
 
     <!-- Tehlikeli bölge -->
-    <div class="settings-section-label">Hesap</div>
     <div class="settings-group">
       <div class="settings-row tappable danger-row" onclick="resetAll()">
         <div class="settings-row-left">
@@ -2252,12 +2235,8 @@ function switchTab(id) {
     });
   }
   if (id === 'ayarlar') {
-    // Populate settings inputs
     const wni = document.getElementById('walletNameInput');
     if (wni) wni.value = data.walletName || '';
-    const mt = document.getElementById('monthlyTarget');
-    const mk = monthKey();
-    if (mt) mt.value = data.monthlyTargets?.[mk] ? fmtNum(data.monthlyTargets[mk]) : '';
   }
 }
 
@@ -2794,13 +2773,13 @@ function buildCarouselItems(fb) {
 
   // 1. Temel bütçe durumu
   if (fb.remaining < 0) {
-    items.push({ cls:'bad', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l5 5a7 7 0 1 1 -10 0z"/></svg>', title:`Bütçeyi ${fmtTL(Math.round(-fb.remaining))} aştın`, sub:'Harcamalarını kıs, günlük limit düştü.' });
+    items.push({ cls:'bad', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l5 5a7 7 0 1 1 -10 0z"/></svg>', title:`Bütçeyi ${fmtTL(Math.round(-fb.remaining))} aştın — harcamalarını kıs` });
   } else if (fb.daily < 100) {
-    items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg>', title:'Günlük limitin çok düştü', sub:`${fb.daysLeft} gün için günlük sadece ${fmtTL(Math.round(fb.daily))} var.` });
+    items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg>', title:`Günlük limitin düştü — ${fb.daysLeft} gün için sadece ${fmtTL(Math.round(fb.daily))} kaldı` });
   } else if (fb.remaining > 0) {
-    items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>', title:'Bütçen kontrol altında', sub:`${fmtTL(Math.round(fb.remaining))} kaldı · günlük ${fmtTL(Math.round(fb.daily))} limitin var.` });
+    items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>', title:`Bütçen kontrol altında — ${fmtTL(Math.round(fb.remaining))} kaldı, günlük limitin ${fmtTL(Math.round(fb.daily))}` });
   } else {
-    items.push({ cls:'bad', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg>', title:'Bu ay giderin gelirini geçti', sub:'Sabit gider ve borçlarını gözden geçir.' });
+    items.push({ cls:'bad', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg>', title:'Bu ay giderin gelirini geçti — sabit giderlerini gözden geçir' });
   }
 
   // Harca azalt / biriktir motivasyonu
@@ -2808,7 +2787,7 @@ function buildCarouselItems(fb) {
     const savePerDay = Math.round(fb.daily * 0.2);
     const potentialSaving = savePerDay * fb.daysLeft;
     if (potentialSaving > 100) {
-      items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0 4h-2a2 2 0 0 0 -1.8 -1"/><path d="M12 7v10"/></svg>', title:`Günde ${fmtTL(savePerDay)} az harcarsan`, sub:`Ay sonuna ${fmtTL(potentialSaving)} daha birikir.` });
+      items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0 4h-2a2 2 0 0 0 -1.8 -1"/><path d="M12 7v10"/></svg>', title:`Günde ${fmtTL(savePerDay)} az harcarsan ay sonuna ${fmtTL(potentialSaving)} daha birikir` });
     }
   }
 
@@ -2818,11 +2797,8 @@ function buildCarouselItems(fb) {
     const diff = Math.abs(Math.round(fb.baseDaily - avgDailySpent));
     items.push({ cls: overSpeed ? 'bad' : 'good', icon: overSpeed ? '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 13.5a4 4 0 1 0 4 0v-8.5a2 2 0 0 0 -4 0v8.5"/><path d="M10 9l4 0"/></svg>' : '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l0 18"/><path d="M3 12l18 0"/><path d="M12 3l3 3"/><path d="M12 3l-3 3"/><path d="M12 21l3 -3"/><path d="M12 21l-3 -3"/><path d="M3 12l3 -3"/><path d="M3 12l3 3"/><path d="M21 12l-3 3"/><path d="M21 12l-3 -3"/></svg>',
       title: overSpeed
-        ? `Günlük baz limiti ortalama ${fmtTL(diff)} aşıyorsun`
-        : `Günlük baz limitinin ${fmtTL(diff)} altındasın`,
-      sub: overSpeed
-        ? `Bu hızda limit düşmeye devam eder.`
-        : `Tasarruf farkı sonraki günlere yansıyor.` });
+        ? `Ortalama harcaman günlük limiti ${fmtTL(diff)} aşıyor — limit düşmeye devam eder`
+        : `Ortalama harcaman günlük limitin ${fmtTL(diff)} altında — tasarruf sonraki günlere yansıyor` });
   }
 
   // 3. Ay sonu tahmini
@@ -2831,12 +2807,10 @@ function buildCarouselItems(fb) {
     const projectedVsAvail = Math.round(fb.available - projectedVarTotal);
     if (projectedVsAvail > 0) {
       items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#818CF8" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 21l6 -5l6 5"/><path d="M12 13v3"/><path d="M3 7l5 1.5"/><path d="M8 8.5l8 2.5"/><path d="M16 11l5 -4"/><path d="M3.5 6.5l5 -4"/></svg>',
-        title:`Bu hızda ay sonu ${fmtTL(projectedVsAvail)} artı kaparsın`,
-        sub:`Ort. günlük: ${fmtTL(Math.round(avgDailySpent))}.` });
+        title:`Bu hızda devam edersen ay sonu ${fmtTL(projectedVsAvail)} artı kaparsın` });
     } else {
       items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#818CF8" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 21l6 -5l6 5"/><path d="M12 13v3"/><path d="M3 7l5 1.5"/><path d="M8 8.5l8 2.5"/><path d="M16 11l5 -4"/><path d="M3.5 6.5l5 -4"/></svg>',
-        title:`Bu hızda ay sonu ${fmtTL(Math.abs(projectedVsAvail))} açık verir`,
-        sub:`Günlük ${fmtTL(Math.round(fb.daily))} altında tut.` });
+        title:`Bu hızda ay sonu ${fmtTL(Math.abs(projectedVsAvail))} açık verir — günlük ${fmtTL(Math.round(fb.daily))} altında tut` });
     }
   }
 
@@ -2844,12 +2818,10 @@ function buildCarouselItems(fb) {
   const streak = data.streak.current || 0;
   if (streak >= 2) {
     items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>',
-      title:`${streak} gün üst üste limit altındasın`,
-      sub: streak >= 7 ? 'Mükemmel disiplin!' : 'Her yeşil gün limiti artırıyor.' });
+      title: streak >= 7 ? `${streak} gün üst üste limit altındasın — mükemmel disiplin!` : `${streak} gün üst üste limit altındasın — her yeşil gün limiti artırıyor` });
   } else if (streak === 0 && todayD > 3) {
     items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0 4h-2a2 2 0 0 0 -1.8 -1"/><path d="M12 7v10"/></svg>',
-      title:'Limitte kal, streaki başlat',
-      sub:'Günlük limitini aşmayan her gün zinciri uzatır.' });
+      title:'Limitte kal ve zinciri başlat — limitini aşmayan her gün sayılır' });
   }
 
   // 5. Birikim hedefi durumu
@@ -2858,13 +2830,11 @@ function buildCarouselItems(fb) {
     const paidGoals = goalsWithMonthly.filter(g => (g.paidMonths||[]).includes(mk)).length;
     if (paidGoals === goalsWithMonthly.length) {
       items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
-        title:`Bu ay tüm birikim hedeflerini karşıladın`,
-        sub:'Harika, devam et!' });
+        title:'Bu ay tüm birikim hedeflerini karşıladın — harika, devam et!' });
     } else {
       const unpaid = goalsWithMonthly.length - paidGoals;
       items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
-        title:`${unpaid} birikim hedefin bu ay henüz ödenmedi`,
-        sub:'Giderler sekmesinden ekle.' });
+        title:`${unpaid} birikim hedefin bu ay henüz ödenmedi — Giderler sekmesinden ekleyebilirsin` });
     }
   }
 
@@ -2873,8 +2843,7 @@ function buildCarouselItems(fb) {
     const extraDays = Math.floor(fb.remaining / avgDailySpent);
     if (extraDays > 0 && extraDays < 90) {
       items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#818CF8" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.5 7h11"/><path d="M6.5 17h11"/><path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"/><path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"/></svg>',
-        title:`Bu hızda bütçen ${extraDays} gün daha yetişir`,
-        sub:'Limitin altında kal.' });
+        title:`Bu hızda bütçen ${extraDays} gün daha yetişir — limitin altında kalmaya devam et` });
     }
   }
 
@@ -2894,8 +2863,7 @@ function buildCarouselItems(fb) {
     if (topCat) {
       const cat=getCat(topCat.id);
       items.push({cls:'warn',icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#60A5FA" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 13a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M9 13v-8h6v8"/><path d="M9 5h6"/><path d="M5 21h14"/><path d="M12 17v4"/></svg>',
-        title:`${cat.name} harcaman geçen aya göre %${topCat.pct} arttı`,
-        sub:'Bu kategori limiti düşürüyor.'});
+        title:`${cat.name} harcaman geçen aya göre yüzde ${topCat.pct} arttı — bu kategori limiti düşürüyor`});
     }
   }
 
@@ -2907,25 +2875,21 @@ function buildCarouselItems(fb) {
     const debtPct = Math.round(debtToIncomeRatio * 100);
     if (debtToIncomeRatio > 0.4) {
       items.push({ cls:'bad', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg>',
-        title:`Borç yükün gelirinin %${debtPct}'i — kritik`,
-        sub:`%30 sınırını aşıyorsun.` });
+        title:`Borç yükün gelirinin yüzde ${debtPct}'i — kritik seviyede, yeni borç alma` });
     } else if (debtToIncomeRatio > 0.2) {
       items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg>',
-        title:`Borç yükün gelirinin %${debtPct}'i`,
-        sub:`Yeni borç alma.` });
+        title:`Borç yükün gelirinin yüzde ${debtPct}'i — yeni borç almaktan kaçın` });
     }
     if (activeDebts.length > 1) {
       const smallest = [...activeDebts].sort((a,b) =>
         (a.totalAmount - a.paidCount*a.monthlyAmount) - (b.totalAmount - b.paidCount*b.monthlyAmount))[0];
       const left = Math.round(smallest.totalAmount - smallest.paidCount * smallest.monthlyAmount);
       if (left > 0) items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
-        title:`En küçük borcu önce bitir: ${esc(smallest.name)}`,
-        sub:`${fmtTL(left)} kaldı — bitince diğerine ekstra öde.` });
+        title:`En küçük borcu önce bitir: ${esc(smallest.name)} — ${fmtTL(left)} kaldı, bitince diğerine ekstra öde` });
     }
   } else if (fb.income > 0) {
     items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>',
-      title:'Aktif borcun yok',
-      sub:'Şimdi biriktirme vakti!' });
+      title:'Aktif borcun yok — şimdi biriktirme vakti!' });
   }
 
   // 9. Hedefler (wishlist) projeksiyon insight'ları
@@ -2939,16 +2903,13 @@ function buildCarouselItems(fb) {
       const proj = calcWishProjection(w, fb);
       if (proj.canAfford) {
         items.push({ cls: 'good', icon: '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
-          title: `${esc(w.name)} için bütçen yeterli!`,
-          sub: `Bu ay alabilirsin — ${fmtTL(w.price)}.` });
+          title: `${esc(w.name)} için bütçen yeterli — bu ay alabilirsin (${fmtTL(w.price)})` });
       } else if (proj.monthsAway !== null && proj.monthsAway <= 3) {
         items.push({ cls: 'good', icon: '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
-          title: `${esc(w.name)} — ${proj.monthsAway === 1 ? 'gelecek ay' : proj.monthsAway + ' ay sonra'}`,
-          sub: proj.subText });
+          title: `${esc(w.name)} — ${proj.monthsAway === 1 ? 'gelecek ay alabilirsin' : proj.monthsAway + ' ay sonra alabilirsin'}` });
       } else if (proj.monthsAway !== null) {
         items.push({ cls: 'warn', icon: '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
-          title: `${esc(w.name)} — ~${proj.monthsAway} ay kaldı`,
-          sub: proj.subText });
+          title: `${esc(w.name)} — yaklaşık ${proj.monthsAway} ay sonra alabilirsin` });
       }
     });
   }
@@ -2994,7 +2955,6 @@ function showCarouselItem(idx) {
         <div class="insight-icon">${item.icon}</div>
         <div class="insight-text">
           <div class="insight-title">${item.title}</div>
-          <div class="insight-sub">${item.sub}</div>
         </div>
       </div>`;
 }
