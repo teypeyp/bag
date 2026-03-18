@@ -1825,7 +1825,7 @@ function load() {
       if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
       if (!data.streak.frozenDays) data.streak.frozenDays = [];
       if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
-      data.streak.freezeTotal = 2; // sabit 2 hak
+      if ((data.streak.freezeTotal || 2) > 2) data.streak.freezeTotal = 2; // max 2
       if (data.streak.lastWeeklyFreezeGift === undefined) data.streak.lastWeeklyFreezeGift = '';
       if (data.streak.lastFreezeResetMonth === undefined) data.streak.lastFreezeResetMonth = '';
       data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; });
@@ -2196,7 +2196,15 @@ function calcStreakData() {
   // Freeze kalan
   const freezesLeft = (data.streak.freezeTotal || 2) - (data.streak.freezesUsed || 0);
 
-  // Bonus freeze sistemi kaldırıldı — sabit 2 hak
+  // Haftalık freeze hediyesi: her 7 günde +1, max 2
+  const weeklyGiftKey = Math.floor(streak / 7) + '_' + monthKey();
+  if (streak > 0 && streak % 7 === 0 && data.streak.lastWeeklyFreezeGift !== weeklyGiftKey) {
+    data.streak.lastWeeklyFreezeGift = weeklyGiftKey;
+    if ((data.streak.freezeTotal || 2) < 2) {
+      data.streak.freezeTotal = 2;
+      _needsSave = true;
+    }
+  }
 
   // Milestone
   let milestone = null;
@@ -5439,7 +5447,7 @@ function importData(input) {
       if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
       if (!Array.isArray(data.streak.frozenDays)) data.streak.frozenDays = [];
       if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
-      data.streak.freezeTotal = 2; // sabit 2 hak
+      if ((data.streak.freezeTotal || 2) > 2) data.streak.freezeTotal = 2; // max 2
       if (!data.monthlyTargets || typeof data.monthlyTargets !== 'object') data.monthlyTargets = {};
       data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; });
       data.debts.forEach(d => { if (!d.paidMonths) d.paidMonths = []; if (!d.startMonth) d.startMonth = monthKey(); });
