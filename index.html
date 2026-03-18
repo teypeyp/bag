@@ -11,8 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-// Splash swipe desteği — window üzerinden erişim: değişkenler body script'inde tanımlanır,
-// bu listener'lar tetiklendiğinde çoktan mevcut olur.
+// Splash swipe desteği
 (function() {
   let _tsX = 0;
   document.addEventListener('touchstart', e => {
@@ -22,13 +21,10 @@
   }, { passive: true });
   document.addEventListener('touchend', e => {
     if (document.getElementById('onboarding')?.style.display !== 'flex') return;
-    // window üzerinden güvenli erişim: değişkenler henüz tanımlı değilse no-op
-    if (typeof window._splashIdx === 'undefined' || typeof window.goSplash === 'undefined') return;
-    const splashCount = window._SPLASH_COUNT || 6;
     const dx = e.changedTouches[0].clientX - _tsX;
     if (Math.abs(dx) > 40) {
-      if (dx < 0 && window._splashIdx < splashCount - 1) window.goSplash(window._splashIdx + 1);
-      else if (dx > 0 && window._splashIdx > 0) window.goSplash(window._splashIdx - 1);
+      if (dx < 0 && _splashIdx < _SPLASH_COUNT - 1) goSplash(_splashIdx + 1);
+      else if (dx > 0 && _splashIdx > 0) goSplash(_splashIdx - 1);
     }
   }, { passive: true });
 })();
@@ -42,7 +38,7 @@
   --blue:#0A84FF;--purple:#BF5AF2;
   --radius:20px;--radius-sm:12px;--radius-xs:8px;
 }
-html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased;overflow:hidden}#appWrap{max-width:520px;margin:0 auto;height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:60px;padding-bottom:96px}
+html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased;overflow:hidden}#appWrap{max-width:520px;margin:0 auto;height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:60px;padding-bottom:104px}
 ::-webkit-scrollbar{width:0;height:0;display:none}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:transparent}
@@ -80,51 +76,123 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 #toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:var(--surface3);border:1px solid var(--border);border-radius:24px;padding:11px 20px;font-size:13px;font-weight:700;z-index:999;display:none;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.5);backdrop-filter:blur(8px)}
 
 /* HEADER */
-.app-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;z-index:50;height:56px;background:rgba(10,10,13,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(44,44,53,.6)}.app-logo{font-size:22px;font-weight:900;color:var(--accent);letter-spacing:2px;text-shadow:0 0 16px rgba(45,184,102,.3);text-transform:uppercase}
-.header-actions{display:flex;gap:6px}
-.icon-btn{background:var(--surface2);border:1px solid var(--border);border-radius:12px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;color:var(--text);transition:all .15s;-webkit-tap-highlight-color:transparent}
-.icon-btn:active{background:var(--surface3);transform:scale(.93)}
+.app-header{display:flex;align-items:center;justify-content:flex-start;padding:12px 18px;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;z-index:50;height:56px;background:rgba(10,10,13,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(44,44,53,.6)}
+.app-logo{font-size:22px;font-weight:900;color:var(--accent);letter-spacing:2px;text-shadow:0 0 16px rgba(45,184,102,.3);text-transform:uppercase}
 
 /* FLOATING PILL NAV */
 .pill-nav{
-  position:fixed;bottom:12px;left:50%;transform:translateX(-50%);
+  position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
   width:calc(100% - 48px);max-width:472px;
   z-index:50;
-  background:#1A1A1F;
+  background:#1C1C20;
   border-radius:99px;
-  padding:10px 8px;
-  display:flex;align-items:center;justify-content:space-around;
-  box-shadow:0 8px 32px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.3);
-  border:1px solid rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:0 20px 60px rgba(0,0,0,.6),0 4px 16px rgba(0,0,0,.4);
+  display:flex;align-items:center;
+  padding:7px 8px;
+  height:64px;
+  transition:opacity .3s,transform .3s;
 }
-.pill-btn{
-  flex:1;display:flex;align-items:center;justify-content:center;
-  height:46px;border:none;background:none;cursor:pointer;
-  border-radius:99px;
-  transition:background .2s;
-  -webkit-tap-highlight-color:transparent;
-  position:relative;
+.pill-nav.hidden{opacity:0;pointer-events:none;transform:translateX(-50%) translateY(24px)}
+
+/* scroll fade mask — nav bar üstü gradient */
+.nav-fade{
+  position:fixed;
+  bottom:0;
+  left:50%;transform:translateX(-50%);
+  width:100%;max-width:520px;
+  height:120px;
+  pointer-events:none;
+  z-index:49;
+  background:linear-gradient(to bottom, transparent 0%, var(--bg) 100%);
+  opacity:0;
+  transition:opacity .3s cubic-bezier(.4,0,.2,1);
 }
-.pill-btn svg{transition:stroke .2s,opacity .2s;}
-.pill-btn .pill-icon{
-  width:44px;height:44px;border-radius:99px;
+.nav-fade.visible{ opacity:1; }
+.pill-nav-inner{
+  display:flex;flex:1;align-items:center;height:100%;
+}
+.pill-indicator{display:none}
+
+/* inactive btns — eşit flex, sadece ikon */
+.tab-btn{
+  flex:1;
+  height:50px;
+  background:none;border:none;
   display:flex;align-items:center;justify-content:center;
-  transition:background .2s,transform .18s;
+  cursor:pointer;
+  border-radius:99px;
+  position:relative;z-index:1;
+  -webkit-tap-highlight-color:transparent;
+  overflow:hidden;
+  white-space:nowrap;
+  transition:
+    flex .35s cubic-bezier(.4,0,.2,1),
+    background .3s cubic-bezier(.4,0,.2,1);
+  gap:0;
 }
-.pill-btn.active .pill-icon{
+/* active pill — genişler, yeşil arka plan */
+.tab-btn.active{
+  flex:2.4;
   background:var(--accent);
-  box-shadow:0 4px 16px rgba(45,184,102,.35);
 }
-.pill-btn.active svg{stroke:#fff;opacity:1;}
-.pill-btn:not(.active) svg{stroke:rgba(255,255,255,.38);opacity:1;}
-.pill-btn:active .pill-icon{transform:scale(.88);}
+.tab-btn:active{opacity:.75}
+
+/* dot wrapper — artık arka plansız, sadece hizalama için */
+.tab-btn-dot{
+  width:24px;height:24px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+
+/* outline ikon — inactive */
+.tab-btn svg.icon-outline{
+  width:22px;height:22px;
+  stroke:rgba(255,255,255,.35);
+  fill:none;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+  flex-shrink:0;
+  transition:stroke .25s cubic-bezier(.4,0,.2,1), stroke-width .25s cubic-bezier(.4,0,.2,1);
+  display:block;
+}
+/* filled ikon — hidden, artık kullanılmıyor */
+.tab-btn svg.icon-filled{
+  display:none;
+}
+/* active: aynı outline ikon, kalın + tam beyaz */
+.tab-btn.active svg.icon-outline{
+  stroke:#fff;
+  stroke-width:2.2;
+}
+
+/* label */
+.tab-btn-label{
+  font-family:'Montserrat',sans-serif;
+  font-size:13px;font-weight:800;
+  color:#fff;
+  letter-spacing:.1px;
+  max-width:0;
+  overflow:hidden;
+  opacity:0;
+  margin-left:0;
+  transition:
+    max-width .35s cubic-bezier(.4,0,.2,1),
+    opacity .25s cubic-bezier(.4,0,.2,1),
+    margin-left .35s cubic-bezier(.4,0,.2,1);
+  pointer-events:none;
+}
+.tab-btn.active .tab-btn-label{
+  max-width:90px;
+  opacity:1;
+  margin-left:7px;
+}
 
 /* TAB CONTENT */
-.tab-content{display:none;flex:1;padding:20px 16px 16px}
+.tab-content{display:none;flex:1;padding:16px 16px 24px}
 .tab-content.active{display:block;animation:tabEnter .6s cubic-bezier(.4,0,.2,1) both}
 
 /* CARDS */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .card-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px}
 
 /* FORMS */
@@ -158,7 +226,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .add-tx-card.expense-mode .btn-primary:active{background:#d63b31}
 
 /* ADD TX CARD */
-.add-tx-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.add-tx-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 
 /* ===== FEEDBACK INSIGHT / CAROUSEL ===== */
 @property --hero-angle {
@@ -173,7 +241,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 .insight-carousel{
   border-radius:var(--radius-sm);
-  margin-bottom:16px;
+  margin-bottom:12px;
   height:58px;
   position:relative;
   overflow:hidden;
@@ -574,9 +642,9 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     linear-gradient(180deg, rgba(45,184,102,.06) 0%, transparent 40%);
   pointer-events:none;z-index:0;
 }
-.hero-top{padding:20px 24px 18px;position:relative;overflow:hidden;z-index:2;display:flex;align-items:flex-start;justify-content:space-between}
+.hero-top{padding:22px 20px 18px;position:relative;overflow:hidden;z-index:2;display:flex;align-items:flex-start;justify-content:space-between}
 .hero-label{font-size:10px;font-weight:800;color:rgba(45,184,102,.55);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;text-shadow:0 0 12px rgba(45,184,102,.3)}
-.hero-balance{font-size:46px;font-weight:900;letter-spacing:-2.5px;line-height:1;margin-bottom:12px;text-shadow:0 2px 20px rgba(0,0,0,.4)}
+.hero-balance{font-size:46px;font-weight:900;letter-spacing:-2.5px;line-height:1;margin-bottom:10px;text-shadow:0 2px 20px rgba(0,0,0,.4)}
 
 /* ===== TX ACTION ===== */
 .tx-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
@@ -584,6 +652,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* ===== SETTINGS APPLE STYLE ===== */
 .settings-sheet{padding-bottom:40px!important;gap:8px!important}
+.settings-tab{padding:16px 0 24px;display:flex;flex-direction:column;gap:8px}
 .settings-section-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin:6px 0 0 4px}
 .settings-group{background:var(--surface2);border-radius:16px;border:1px solid var(--border);overflow:hidden}
 .settings-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;gap:12px;border-bottom:1px solid rgba(44,44,53,.5)}
@@ -599,6 +668,9 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .settings-chevron{font-size:20px;color:var(--muted);line-height:1}
 .settings-inline-input{background:transparent;border:none;color:var(--accent);font-size:15px;font-weight:800;font-family:'Montserrat',sans-serif;text-align:right;width:100px;outline:none}
 .settings-inline-input::placeholder{color:var(--muted);opacity:1}
+
+.icon-btn{background:var(--surface2);border:1px solid var(--border);border-radius:12px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;color:var(--text);transition:all .15s;-webkit-tap-highlight-color:transparent}
+.icon-btn:active{background:var(--surface3);transform:scale(.93)}
 
 /* ===== TX ACTION BUTTONS ===== */
 .tx-action-btn{display:none;padding:5px 10px;border-radius:8px;border:none;font-size:11px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;opacity:0;transform:scale(.8);transition:opacity .18s,transform .18s;pointer-events:none;white-space:nowrap}
@@ -694,6 +766,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 .btn{transition:transform .12s cubic-bezier(.4,0,.2,1),opacity .12s,box-shadow .12s}
 .btn:active{transform:scale(.94) !important;opacity:.85}
+.tab-btn:active{transform:scale(.9)}
 .year-month-header:active{transform:scale(.98)}
 .rec-item:active,.debt-item:active{background:var(--surface3)}
 @keyframes staggerIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
@@ -981,57 +1054,50 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 </div>
 
 <!-- HEADER -->
-<div class="app-header">
+<div class="app-header" id="appHeader">
   <div class="app-logo" onclick="switchTab('aylik')" style="cursor:pointer" id="appLogo">Vault</div>
 </div>
 
+<!-- NAV FADE MASK -->
+<div class="nav-fade" id="navFade"></div>
+
 <!-- FLOATING PILL NAV -->
 <nav class="pill-nav" id="pillNav">
-  <!-- Cüzdan -->
-  <button class="pill-btn active" id="nav-aylik" onclick="switchTab('aylik')">
-    <div class="pill-icon">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-        <path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/>
-        <path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/>
-      </svg>
-    </div>
-  </button>
-  <!-- Giderler -->
-  <button class="pill-btn" id="nav-sabit" onclick="switchTab('sabit')">
-    <div class="pill-icon">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-        <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"/>
-        <path d="M16 3v4"/>
-        <path d="M8 3v4"/>
-        <path d="M4 11h16"/>
-        <path d="M11 15h1"/>
-        <path d="M12 15v3"/>
-      </svg>
-    </div>
-  </button>
-  <!-- Özet -->
-  <button class="pill-btn" id="nav-ozet" onclick="switchTab('ozet')">
-    <div class="pill-icon">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-        <path d="M3 12m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
-        <path d="M9 8m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
-        <path d="M15 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
-      </svg>
-    </div>
-  </button>
-  <!-- Ayarlar -->
-  <button class="pill-btn" id="nav-ayarlar" onclick="switchTab('ayarlar')">
-    <div class="pill-icon">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-        <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/>
-        <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/>
-      </svg>
-    </div>
-  </button>
+  <div class="pill-nav-inner" id="pillNavInner">
+    <div class="pill-indicator" id="pillIndicator"></div>
+    <!-- Cüzdan -->
+    <button class="tab-btn active" id="nav-aylik" onclick="switchTab('aylik')" aria-label="Cüzdan">
+      <div class="tab-btn-dot">
+        <svg class="icon-outline" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/></svg>
+        <svg class="icon-filled" viewBox="0 0 24 24"><path d="M13 3a1 1 0 0 1 1 1v1h1a3 3 0 0 1 3 3v1h1a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-1v2a3 3 0 0 1 -3 3h-10a3 3 0 0 1 -3 -3v-10a3 3 0 0 1 3 -3h2v-1a1 1 0 0 1 1 -1zm5 7h-2a1 1 0 0 0 -1 1v2a1 1 0 0 0 1 1h2z"/></svg>
+      </div>
+      <span class="tab-btn-label">Cüzdan</span>
+    </button>
+    <!-- Giderler -->
+    <button class="tab-btn" id="nav-sabit" onclick="switchTab('sabit')" aria-label="Giderler">
+      <div class="tab-btn-dot">
+        <svg class="icon-outline" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/><path d="M11 15h1"/><path d="M12 15v3"/></svg>
+        <svg class="icon-filled" viewBox="0 0 24 24"><path d="M16 2a1 1 0 0 1 1 1v1h1a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12a3 3 0 0 1 3 -3h1v-1a1 1 0 0 1 2 0v1h6v-1a1 1 0 0 1 1 -1zm3 7h-14v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1 -1zm-5 4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0 -2z"/></svg>
+      </div>
+      <span class="tab-btn-label">Giderler</span>
+    </button>
+    <!-- Özet -->
+    <button class="tab-btn" id="nav-ozet" onclick="switchTab('ozet')" aria-label="Özet">
+      <div class="tab-btn-dot">
+        <svg class="icon-outline" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 20v-8a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v8"/><path d="M10 20v-12a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12"/><path d="M17 20v-5a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v5"/><path d="M3 20h18"/></svg>
+        <svg class="icon-filled" viewBox="0 0 24 24"><path d="M3 19h18a1 1 0 0 1 0 2h-18a1 1 0 0 1 0 -2z"/><path d="M4 11h2a1 1 0 0 1 1 1v7h-4v-7a1 1 0 0 1 1 -1z"/><path d="M11 7h2a1 1 0 0 1 1 1v11h-4v-11a1 1 0 0 1 1 -1z"/><path d="M18 14h2a1 1 0 0 1 1 1v4h-4v-4a1 1 0 0 1 1 -1z"/></svg>
+      </div>
+      <span class="tab-btn-label">Özet</span>
+    </button>
+    <!-- Ayarlar -->
+    <button class="tab-btn" id="nav-ayarlar" onclick="switchTab('ayarlar')" aria-label="Ayarlar">
+      <div class="tab-btn-dot">
+        <svg class="icon-outline" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>
+        <svg class="icon-filled" viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 1 -5 5l0 -.005a5 5 0 0 1 5 -4.995z"/><path d="M14 14a5 5 0 0 1 5 5v1a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1v-1a5 5 0 0 1 5 -5z"/></svg>
+      </div>
+      <span class="tab-btn-label">Hesap</span>
+    </button>
+  </div>
 </nav>
 
 <!-- TAB: CÜZDAN -->
@@ -1333,76 +1399,81 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 <!-- TAB: AYARLAR -->
 <div class="tab-content" id="tab-ayarlar">
+  <div class="settings-tab">
 
-  <!-- Cüzdan -->
-  <div class="settings-section-label" style="margin-top:8px">Cüzdan</div>
-  <div class="settings-group">
-    <div class="settings-row">
-      <div class="settings-row-left">
-        <div class="settings-row-title">Cüzdan İsmi</div>
-        <div class="settings-row-sub">Header'da görünen isim</div>
+    <div style="font-size:20px;font-weight:900;color:var(--text);letter-spacing:-.3px;margin-bottom:4px">Ayarlar</div>
+    <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:16px">Vault · Kişisel Bütçe</div>
+
+    <!-- Cüzdan -->
+    <div class="settings-section-label">Cüzdan</div>
+    <div class="settings-group">
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <div class="settings-row-title">Cüzdan İsmi</div>
+          <div class="settings-row-sub">Header'da görünen isim</div>
+        </div>
+        <input type="text" id="walletNameInput" class="settings-inline-input" placeholder="Vault" maxlength="24" onblur="saveWalletName()" oninput="saveWalletName()" style="width:140px">
       </div>
-      <input type="text" id="walletNameInput" class="settings-inline-input" placeholder="Vault" maxlength="24" onblur="saveWalletName()" style="width:140px">
     </div>
+
+    <!-- Bütçe -->
+    <div class="settings-section-label">Bütçe</div>
+    <div class="settings-group">
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <div class="settings-row-title">Bu Ay Hedef Bütçe</div>
+          <div class="settings-row-sub">Aylık harcama limiti</div>
+        </div>
+        <input type="text" id="monthlyTarget" class="settings-inline-input" placeholder="—" oninput="fmtInput(this)" inputmode="numeric" onblur="saveMonthlyTarget()">
+      </div>
+    </div>
+
+    <!-- Kategoriler -->
+    <div class="settings-section-label">Kategoriler</div>
+    <div class="settings-group">
+      <div class="settings-row tappable" onclick="openCategories()">
+        <div class="settings-row-left">
+          <div class="settings-row-title">Kategori Yönetimi</div>
+          <div class="settings-row-sub">Ekle, düzenle, anahtar kelimeler</div>
+        </div>
+        <span class="settings-chevron">›</span>
+      </div>
+    </div>
+
+    <!-- Veri -->
+    <div class="settings-section-label">Veri</div>
+    <div class="settings-group">
+      <div class="settings-row tappable" onclick="exportData()">
+        <div class="settings-row-left">
+          <div class="settings-row-title">Dışa Aktar</div>
+          <div class="settings-row-sub">JSON dosyası olarak indir</div>
+        </div>
+        <span class="settings-chevron">›</span>
+      </div>
+      <div class="settings-row tappable" onclick="document.getElementById('importFileTab').click()">
+        <div class="settings-row-left">
+          <div class="settings-row-title">İçe Aktar</div>
+          <div class="settings-row-sub">JSON dosyasından yükle</div>
+        </div>
+        <span class="settings-chevron">›</span>
+      </div>
+    </div>
+    <input type="file" id="importFileTab" style="display:none" accept=".json" onchange="importData(this)">
+
+    <!-- Tehlikeli bölge -->
+    <div class="settings-section-label">Hesap</div>
+    <div class="settings-group">
+      <div class="settings-row tappable danger-row" onclick="resetAll()">
+        <div class="settings-row-left">
+          <div class="settings-row-title" style="color:var(--danger)">Tüm Verileri Sıfırla</div>
+          <div class="settings-row-sub">Bu işlem geri alınamaz</div>
+        </div>
+        <span class="settings-chevron" style="color:var(--danger)">›</span>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault · Veriler bu cihazda saklanır</div>
   </div>
-
-  <!-- Bütçe -->
-  <div class="settings-section-label">Bütçe</div>
-  <div class="settings-group">
-    <div class="settings-row">
-      <div class="settings-row-left">
-        <div class="settings-row-title">Bu Ay Hedef Bütçe</div>
-        <div class="settings-row-sub">Aylık harcama limiti</div>
-      </div>
-      <input type="text" id="monthlyTarget" class="settings-inline-input" placeholder="—" oninput="fmtInput(this)" inputmode="numeric" onblur="saveMonthlyTarget()">
-    </div>
-  </div>
-
-  <!-- Kategoriler -->
-  <div class="settings-section-label">Kategoriler</div>
-  <div class="settings-group">
-    <div class="settings-row tappable" onclick="openCategories()">
-      <div class="settings-row-left">
-        <div class="settings-row-title">Kategori Yönetimi</div>
-        <div class="settings-row-sub">Ekle, düzenle, anahtar kelimeler</div>
-      </div>
-      <span class="settings-chevron">›</span>
-    </div>
-  </div>
-
-  <!-- Veri -->
-  <div class="settings-section-label">Veri</div>
-  <div class="settings-group">
-    <div class="settings-row tappable" onclick="exportData()">
-      <div class="settings-row-left">
-        <div class="settings-row-title">Dışa Aktar</div>
-        <div class="settings-row-sub">JSON dosyası olarak indir</div>
-      </div>
-      <span class="settings-chevron">›</span>
-    </div>
-    <div class="settings-row tappable" onclick="document.getElementById('importFileTab').click()">
-      <div class="settings-row-left">
-        <div class="settings-row-title">İçe Aktar</div>
-        <div class="settings-row-sub">JSON dosyasından yükle</div>
-      </div>
-      <span class="settings-chevron">›</span>
-    </div>
-  </div>
-  <input type="file" id="importFileTab" style="display:none" accept=".json" onchange="importData(this)">
-
-  <!-- Hesap -->
-  <div class="settings-section-label">Hesap</div>
-  <div class="settings-group">
-    <div class="settings-row tappable danger-row" onclick="resetAll()">
-      <div class="settings-row-left">
-        <div class="settings-row-title" style="color:var(--danger)">Tüm Verileri Sıfırla</div>
-        <div class="settings-row-sub">Bu işlem geri alınamaz</div>
-      </div>
-      <span class="settings-chevron" style="color:var(--danger)">›</span>
-    </div>
-  </div>
-
-  <div style="text-align:center;margin-top:28px;font-size:11px;color:var(--muted)">Vault · Veriler bu cihazda saklanır</div>
 </div>
 
 <!-- HISTORY OVERLAY -->
@@ -1420,6 +1491,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     </div>
   </div>
 </div>
+
 
 <!-- CATEGORIES MODAL -->
 <div class="modal-overlay" id="catModal" onclick="if(event.target===this)closeCatModal()">
@@ -2013,10 +2085,6 @@ function isPaidThisMonth(item, mk) {
 // =================== ONBOARDING ===================
 let _splashIdx = 0;
 const _SPLASH_COUNT = 6;
-// head script'teki splash swipe için window'a bağla
-window._splashIdx = 0;
-window._SPLASH_COUNT = _SPLASH_COUNT;
-window.goSplash = function(idx) { goSplash(idx); }; // forward ref — init sonrası geçerli
 
 function initSplash() {
   _splashIdx = 0;
@@ -2065,7 +2133,6 @@ function goSplash(idx) {
   setTimeout(() => next.classList.remove('slide-in-left','slide-in-right'), 350);
 
   _splashIdx = idx;
-  window._splashIdx = idx; // head script erişimi için senkron tut
   updateSplashDots();
   updateSplashBtn();
 }
@@ -2096,18 +2163,24 @@ function isSkippableSlideEmpty() {
 function updateSplashBtn() {
   const btn = document.getElementById('splashBtn');
   if (!btn) return;
-  // Son slide: "Başla" — skippable slide kontrolünden önce gelmeli
   if (_splashIdx === _SPLASH_COUNT - 1) {
     btn.textContent = 'Başla';
     btn.style.background = '';
     btn.style.color = '';
     btn.style.boxShadow = '';
-  } else if (isSkippableSlideEmpty()) {
-    // Skippable slide (wallet name gibi) boşsa "Geç →"
-    btn.textContent = 'Geç →';
-    btn.style.background = 'var(--surface2)';
-    btn.style.color = 'var(--muted)';
-    btn.style.boxShadow = 'none';
+  } else if (_splashIdx >= 5) {
+    const empty = isSkippableSlideEmpty();
+    if (empty) {
+      btn.textContent = 'Geç →';
+      btn.style.background = 'var(--surface2)';
+      btn.style.color = 'var(--muted)';
+      btn.style.boxShadow = 'none';
+    } else {
+      btn.textContent = 'Devam';
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.boxShadow = '';
+    }
   } else {
     btn.textContent = 'Devam';
     btn.style.background = '';
@@ -2136,13 +2209,14 @@ function finishOnboarding() {
   setTimeout(() => {
     ob.style.display = 'none';
     ob.style.opacity = '';
-    // Pill nav ve header'ı geri göster
-    const pillNav = document.getElementById('pillNav');
-    const appHeader = document.querySelector('.app-header');
-    if (pillNav) pillNav.style.display = '';
-    if (appHeader) appHeader.style.display = '';
+    // Show header & pill nav
+    const hdr = document.getElementById('appHeader');
+    const nav = document.getElementById('pillNav');
+    if (hdr) hdr.style.display = '';
+    if (nav) nav.classList.remove('hidden');
   }, 400);
   renderAll();
+  requestAnimationFrame(() => updatePillIndicator('aylik'));
 }
 
 // =================== TABS ===================
@@ -2151,27 +2225,23 @@ const sectionState = { rec: false, debt: false, goal: false, wish: false, yillik
 
 function switchTab(id) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
   const next = document.getElementById('tab-' + id);
   if (next) next.classList.add('active');
-  const navBtn = document.getElementById('nav-' + id);
-  if (navBtn) navBtn.classList.add('active');
+
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const activeBtn = document.getElementById('nav-' + id);
+  if (activeBtn) activeBtn.classList.add('active');
+
+  updatePillIndicator(id);
+
   if (id !== 'aylik') stopCarousel();
   currentTab = id;
   if (id === 'aylik') renderMonthly();
   if (id === 'sabit') { renderSabit(); updateCollapseSummaries(); }
-  if (id === 'ayarlar') {
-    const mk = currentMonth;
-    const el = document.getElementById('monthlyTarget');
-    if (el) el.value = data.monthlyTargets[mk] ? String(Math.round(data.monthlyTargets[mk])).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
-    const wn = document.getElementById('walletNameInput');
-    if (wn) wn.value = data.walletName || '';
-  }
   if (id === 'ozet') {
     renderOzetStats();
-    ['bar','doughnut','line'].forEach(k => {
-      if (charts[k]) { try { charts[k].destroy(); } catch(e){} charts[k] = null; }
-    });
+    Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
+    charts = {};
     requestAnimationFrame(() => {
       ['barChart','doughnutChart','lineChart'].forEach(cid => {
         const el = document.getElementById(cid);
@@ -2181,6 +2251,29 @@ function switchTab(id) {
       renderYillik();
     });
   }
+  if (id === 'ayarlar') {
+    // Populate settings inputs
+    const wni = document.getElementById('walletNameInput');
+    if (wni) wni.value = data.walletName || '';
+    const mt = document.getElementById('monthlyTarget');
+    const mk = monthKey();
+    if (mt) mt.value = data.monthlyTargets?.[mk] ? fmtNum(data.monthlyTargets[mk]) : '';
+  }
+}
+
+function updatePillIndicator(id) {
+  const tabs = ['aylik','sabit','ozet','ayarlar'];
+  const idx = tabs.indexOf(id);
+  const inner = document.getElementById('pillNavInner');
+  const indicator = document.getElementById('pillIndicator');
+  if (!inner || !indicator || idx < 0) return;
+  const btns = inner.querySelectorAll('.tab-btn');
+  if (!btns[idx]) return;
+  const btn = btns[idx];
+  indicator.style.left = btn.offsetLeft + 'px';
+  indicator.style.width = btn.offsetWidth + 'px';
+  indicator.style.top = '0px';
+  indicator.style.height = btn.offsetHeight + 'px';
 }
 
 function toggleSection(name) {
@@ -2692,7 +2785,7 @@ function renderWalletHero(balance, fb) {
   el.innerHTML = `
     <div class="wallet-hero-combined">
       <div class="wallet-hero-inner">
-        <div class="hero-top" style="padding-bottom:18px">
+        <div class="hero-top" style="padding-bottom:28px">
           <div style="width:100%">
             <div class="hero-label">Toplam Varlığın</div>
             <div class="hero-balance" style="color:${balColor}">${fmtTL(balance)}</div>
@@ -2981,6 +3074,7 @@ function renderTxList(container, txs, limitTo5, prefix) {
   for (const date of sortedDates) {
     const label = fmtDate(date);
     const dayTotal = grouped[date].reduce((s,t) => t.type==='income' ? s+t.amount : s-t.amount, 0);
+    const totalColor = 'rgba(255,255,255,.25)';
     const totalStr = (dayTotal >= 0 ? '+' : '−') + fmtTL(Math.abs(dayTotal));
     let itemsHtml = '';
     for (const t of grouped[date]) {
@@ -3006,7 +3100,7 @@ function renderTxList(container, txs, limitTo5, prefix) {
     allDatesHtml += `<div class="tx-date-group">
       <div class="tx-date-label">
         <span>${label}</span>
-        <span class="tx-date-total" style="color:rgba(255,255,255,.25)">${totalStr}</span>
+        <span class="tx-date-total" style="color:${totalColor}">${totalStr}</span>
       </div>
       <div class="tx-items-wrap">${itemsHtml}</div>
     </div>`;
@@ -3021,7 +3115,6 @@ let _touchStartX = 0;
 let _touchEndY = 0;
 let _touchEndX = 0;
 let _touchOnInteractive = false;
-let _touchActive = false; // en az bir touchstart geçti mi
 
 const TAB_ORDER = ['aylik', 'sabit', 'ozet', 'ayarlar'];
 
@@ -3030,7 +3123,6 @@ document.addEventListener('touchstart', e => {
   _touchStartX = e.touches[0].clientX;
   _touchEndY = _touchStartY;
   _touchEndX = _touchStartX;
-  _touchActive = true;
   // Grafik, SVG veya scroll edilebilir alan üzerinde başladıysa swipe'ı engelle
   const target = e.target;
   _touchOnInteractive = !!(
@@ -3066,9 +3158,11 @@ document.addEventListener('touchend', e => {
 
   const idx = TAB_ORDER.indexOf(currentTab);
   if (dx < 0 && idx < TAB_ORDER.length - 1) {
-    switchTab(TAB_ORDER[idx + 1]);
+    const nextId = TAB_ORDER[idx + 1];
+    switchTab(nextId);
   } else if (dx > 0 && idx > 0) {
-    switchTab(TAB_ORDER[idx - 1]);
+    const prevId = TAB_ORDER[idx - 1];
+    switchTab(prevId);
   }
 }, { passive: true });
 
@@ -3092,7 +3186,6 @@ document.addEventListener('click', e => {
 });
 
 function _wasTap() {
-  if (!_touchActive) return false; // hiç touchstart olmadı
   const dy = Math.abs(_touchEndY - _touchStartY);
   const dx = Math.abs(_touchEndX - _touchStartX);
   return dy < 12 && dx < 12;
@@ -5470,6 +5563,7 @@ function deleteCustomCat(id) {
 
 // =================== SETTINGS ===================
 function openSettings() {
+  // Navigate to settings tab instead of modal
   switchTab('ayarlar');
 }
 
@@ -5478,12 +5572,11 @@ function saveWalletName() {
   data.walletName = val || '';
   save();
   updateAppLogo();
-  // Tab içeriklerini güncelle (örn. Özet tabında wallet adı görünebilir)
   if (currentTab === 'ozet') renderOzetStats();
 }
 
 function closeSettings() {
-  // Settings artık modal değil tab — geçiş uyumluluğu için korundu
+  // No-op: settings is now a tab, kept for backward compat calls
 }
 
 function saveMonthlyTarget() {
@@ -5610,8 +5703,13 @@ function openKeywordEdit(catId) {
   if (titleEl) titleEl.textContent = cat.name;
   if (inputEl) inputEl.value = (cat.keywords || []).join(', ');
 
+  buildEmojiPickerModal(cat.emoji);
   document.getElementById('keywordModal').classList.add('show');
   setTimeout(() => inputEl?.focus(), 200);
+}
+
+function buildEmojiPickerModal(currentEmoji) {
+  // Emoji picker devre dışı — kategoriler artık SVG ikon kullanıyor
 }
 
 
@@ -5709,19 +5807,35 @@ function init() {
   if (initCat) initCat.value = 'gelir';
 
   if (!data.onboarded) {
-    // Onboarding sırasında pill nav ve header'ı gizle
-    const pillNav = document.getElementById('pillNav');
-    const appHeader = document.querySelector('.app-header');
-    if (pillNav) pillNav.style.display = 'none';
-    if (appHeader) appHeader.style.display = 'none';
+    // Hide header & pill nav during onboarding
+    const hdr = document.getElementById('appHeader');
+    const nav = document.getElementById('pillNav');
+    if (hdr) hdr.style.display = 'none';
+    if (nav) nav.classList.add('hidden');
     document.getElementById('onboarding').style.display = 'flex';
     initSplash();
   } else {
     renderAll();
+    requestAnimationFrame(() => updatePillIndicator('aylik'));
   }
 }
 
 init();
+window.addEventListener('resize', () => { updatePillIndicator(currentTab); });
+
+// ===== NAV FADE ON SCROLL =====
+(function() {
+  const wrap = document.getElementById('appWrap');
+  const fade = document.getElementById('navFade');
+  if (!wrap || !fade) return;
+  wrap.addEventListener('scroll', () => {
+    if (wrap.scrollTop > 10) {
+      fade.classList.add('visible');
+    } else {
+      fade.classList.remove('visible');
+    }
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>
