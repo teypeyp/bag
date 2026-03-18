@@ -11,7 +11,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-// Splash swipe desteği
+// Splash swipe desteği — window üzerinden erişim: değişkenler body script'inde tanımlanır,
+// bu listener'lar tetiklendiğinde çoktan mevcut olur.
 (function() {
   let _tsX = 0;
   document.addEventListener('touchstart', e => {
@@ -21,10 +22,13 @@
   }, { passive: true });
   document.addEventListener('touchend', e => {
     if (document.getElementById('onboarding')?.style.display !== 'flex') return;
+    // window üzerinden güvenli erişim: değişkenler henüz tanımlı değilse no-op
+    if (typeof window._splashIdx === 'undefined' || typeof window.goSplash === 'undefined') return;
+    const splashCount = window._SPLASH_COUNT || 6;
     const dx = e.changedTouches[0].clientX - _tsX;
     if (Math.abs(dx) > 40) {
-      if (dx < 0 && _splashIdx < _SPLASH_COUNT - 1) goSplash(_splashIdx + 1);
-      else if (dx > 0 && _splashIdx > 0) goSplash(_splashIdx - 1);
+      if (dx < 0 && window._splashIdx < splashCount - 1) window.goSplash(window._splashIdx + 1);
+      else if (dx > 0 && window._splashIdx > 0) window.goSplash(window._splashIdx - 1);
     }
   }, { passive: true });
 })();
@@ -1949,6 +1953,10 @@ function isPaidThisMonth(item, mk) {
 // =================== ONBOARDING ===================
 let _splashIdx = 0;
 const _SPLASH_COUNT = 6;
+// head script'teki splash swipe için window'a bağla
+window._splashIdx = 0;
+window._SPLASH_COUNT = _SPLASH_COUNT;
+window.goSplash = function(idx) { goSplash(idx); }; // forward ref — init sonrası geçerli
 
 function initSplash() {
   _splashIdx = 0;
@@ -1997,6 +2005,7 @@ function goSplash(idx) {
   setTimeout(() => next.classList.remove('slide-in-left','slide-in-right'), 350);
 
   _splashIdx = idx;
+  window._splashIdx = idx; // head script erişimi için senkron tut
   updateSplashDots();
   updateSplashBtn();
 }
@@ -2027,24 +2036,18 @@ function isSkippableSlideEmpty() {
 function updateSplashBtn() {
   const btn = document.getElementById('splashBtn');
   if (!btn) return;
+  // Son slide: "Başla" — skippable slide kontrolünden önce gelmeli
   if (_splashIdx === _SPLASH_COUNT - 1) {
     btn.textContent = 'Başla';
     btn.style.background = '';
     btn.style.color = '';
     btn.style.boxShadow = '';
-  } else if (_splashIdx >= 5) {
-    const empty = isSkippableSlideEmpty();
-    if (empty) {
-      btn.textContent = 'Geç →';
-      btn.style.background = 'var(--surface2)';
-      btn.style.color = 'var(--muted)';
-      btn.style.boxShadow = 'none';
-    } else {
-      btn.textContent = 'Devam';
-      btn.style.background = '';
-      btn.style.color = '';
-      btn.style.boxShadow = '';
-    }
+  } else if (isSkippableSlideEmpty()) {
+    // Skippable slide (wallet name gibi) boşsa "Geç →"
+    btn.textContent = 'Geç →';
+    btn.style.background = 'var(--surface2)';
+    btn.style.color = 'var(--muted)';
+    btn.style.boxShadow = 'none';
   } else {
     btn.textContent = 'Devam';
     btn.style.background = '';
@@ -2090,8 +2093,11 @@ function switchTab(id, btn) {
   if (id === 'sabit') { renderSabit(); updateCollapseSummaries(); }
   if (id === 'ozet') {
     renderOzetStats();
-    Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
-    charts = {};
+    // dlMini renderOzetStats içinde kendi destroy/null döngüsünü yönetiyor,
+    // sadece chart.js Observer'lı chart'ları temizle
+    ['bar','doughnut','line'].forEach(k => {
+      if (charts[k]) { try { charts[k].destroy(); } catch(e){} charts[k] = null; }
+    });
     requestAnimationFrame(() => {
       ['barChart','doughnutChart','lineChart'].forEach(cid => {
         const el = document.getElementById(cid);
@@ -2901,7 +2907,6 @@ function renderTxList(container, txs, limitTo5, prefix) {
   for (const date of sortedDates) {
     const label = fmtDate(date);
     const dayTotal = grouped[date].reduce((s,t) => t.type==='income' ? s+t.amount : s-t.amount, 0);
-    const totalColor = 'rgba(255,255,255,.25)';
     const totalStr = (dayTotal >= 0 ? '+' : '−') + fmtTL(Math.abs(dayTotal));
     let itemsHtml = '';
     for (const t of grouped[date]) {
@@ -2927,7 +2932,7 @@ function renderTxList(container, txs, limitTo5, prefix) {
     allDatesHtml += `<div class="tx-date-group">
       <div class="tx-date-label">
         <span>${label}</span>
-        <span class="tx-date-total" style="color:${totalColor}">${totalStr}</span>
+        <span class="tx-date-total" style="color:rgba(255,255,255,.25)">${totalStr}</span>
       </div>
       <div class="tx-items-wrap">${itemsHtml}</div>
     </div>`;
@@ -2942,6 +2947,7 @@ let _touchStartX = 0;
 let _touchEndY = 0;
 let _touchEndX = 0;
 let _touchOnInteractive = false;
+let _touchActive = false; // en az bir touchstart geçti mi
 
 const TAB_ORDER = ['aylik', 'sabit', 'ozet'];
 
@@ -2950,6 +2956,7 @@ document.addEventListener('touchstart', e => {
   _touchStartX = e.touches[0].clientX;
   _touchEndY = _touchStartY;
   _touchEndX = _touchStartX;
+  _touchActive = true;
   // Grafik, SVG veya scroll edilebilir alan üzerinde başladıysa swipe'ı engelle
   const target = e.target;
   _touchOnInteractive = !!(
@@ -3015,6 +3022,7 @@ document.addEventListener('click', e => {
 });
 
 function _wasTap() {
+  if (!_touchActive) return false; // hiç touchstart olmadı
   const dy = Math.abs(_touchEndY - _touchStartY);
   const dx = Math.abs(_touchEndX - _touchStartX);
   return dy < 12 && dx < 12;
@@ -5537,13 +5545,8 @@ function openKeywordEdit(catId) {
   if (titleEl) titleEl.textContent = cat.name;
   if (inputEl) inputEl.value = (cat.keywords || []).join(', ');
 
-  buildEmojiPickerModal(cat.emoji);
   document.getElementById('keywordModal').classList.add('show');
   setTimeout(() => inputEl?.focus(), 200);
-}
-
-function buildEmojiPickerModal(currentEmoji) {
-  // Emoji picker devre dışı — kategoriler artık SVG ikon kullanıyor
 }
 
 
