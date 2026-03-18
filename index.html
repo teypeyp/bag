@@ -228,7 +228,14 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .tx-amount.expense{color:rgba(255,255,255,.85)}
 
 /* ===== GAMIFICATION STREAK CARD ===== */
-@keyframes streakFlame{0%,100%{transform:scaleY(1) translateY(0)}30%{transform:scaleY(1.08) translateY(-2px)}60%{transform:scaleY(.96) translateY(1px)}}
+@keyframes streakFlame{
+  0%,100%{transform:scaleY(1) translateY(0)}
+  50%    {transform:scaleY(1.05) translateY(-1.5px)}
+}
+@keyframes streakGlow{
+  0%,100%{filter:drop-shadow(0 0 6px rgba(255,140,0,.35))}
+  50%    {filter:drop-shadow(0 0 20px rgba(255,140,0,.75))}
+}
 @keyframes badgeIn{0%{opacity:0;transform:scale(.5) rotate(-15deg)}60%{transform:scale(1.12) rotate(3deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
 @keyframes dayDotPop{0%{transform:scale(0)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
 
@@ -245,7 +252,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 }
 
 .streak-header{display:flex;align-items:center;gap:10px;padding:14px 16px 10px}
-.streak-flame{font-size:28px;line-height:1;animation:streakFlame 2.6s ease-in-out infinite;display:inline-block;filter:drop-shadow(0 0 10px rgba(255,140,0,.55));flex-shrink:0}
+.streak-flame{font-size:28px;line-height:1;animation:streakFlame 4s ease-in-out infinite, streakGlow 3s ease-in-out infinite;display:inline-block;flex-shrink:0;transform-origin:bottom center}
 .streak-flame.dead{filter:grayscale(1);animation:none;opacity:.35}
 .streak-main{flex:1}
 .streak-count{
@@ -279,21 +286,20 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   padding:8px 16px 12px;
   border-top:1px solid rgba(255,255,255,.05);
 }
-.freeze-shields{display:flex;gap:4px}
+.freeze-shields{display:flex;gap:6px}
 .freeze-shield{
-  width:24px;height:24px;border-radius:7px;
-  display:flex;align-items:center;justify-content:center;font-size:13px;
-}
-.freeze-shield.active{background:rgba(10,132,255,.14);border:1.5px solid rgba(10,132,255,.28)}
-.freeze-shield.used{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);filter:grayscale(1);opacity:.25}
-.freeze-btn{
-  width:30px;height:30px;border-radius:9px;border:1.5px solid rgba(10,132,255,.28);
-  background:rgba(10,132,255,.1);
-  font-size:15px;line-height:1;
-  cursor:pointer;transition:all .15s;
+  width:36px;height:36px;border-radius:10px;
   display:flex;align-items:center;justify-content:center;
 }
-.freeze-btn:active{transform:scale(.9);background:rgba(10,132,255,.22)}
+.freeze-shield.active{background:rgba(10,132,255,.14);border:1.5px solid rgba(10,132,255,.35)}
+.freeze-shield.used{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);filter:grayscale(1);opacity:.25}
+.freeze-btn{
+  height:32px;padding:0 10px;border-radius:10px;border:1.5px solid rgba(10,132,255,.35);
+  background:rgba(10,132,255,.12);
+  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;gap:2px;
+}
+.freeze-btn:active{transform:scale(.9);background:rgba(10,132,255,.25)}
 .freeze-btn:disabled{opacity:.2;cursor:default;pointer-events:none}
 
 .streak-milestone{
@@ -438,7 +444,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .monthly-tick-row:active{transform:scale(.98)}
 .monthly-tick-row.paid{border-color:var(--accent);background:var(--accent-dim)}
 .monthly-tick-check{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;transition:all .2s;color:var(--muted)}
-.monthly-tick-row.paid .monthly-tick-check{border-color:var(--accent);background:var(--accent);color:#0A0A0D;animation:tikPop .3s ease}
+.monthly-tick-row.paid .monthly-tick-check{border-color:var(--accent);background:var(--accent);color:#fff;animation:tikPop .3s ease}
 .monthly-tick-info{flex:1}
 .monthly-tick-label{font-size:13px;font-weight:700}
 .monthly-tick-amount{font-size:11px;color:var(--muted);font-weight:600;margin-top:1px}
@@ -728,8 +734,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   display:flex;align-items:center;justify-content:center;
   animation:glowPulse 3s ease-in-out infinite,iconFloat 4s ease-in-out infinite;
 }
-@keyframes emojiSwap{0%,40%{opacity:1;transform:scale(1)}45%,55%{opacity:0;transform:scale(.6)}60%,100%{opacity:1;transform:scale(1)}}
-.ob-ring-icon{font-size:26px;line-height:1;animation:emojiSwap 4s ease-in-out infinite}
+.ob-ring-icon{font-size:26px;line-height:1;display:flex;align-items:center;justify-content:center}
 
 .ob-tag{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(45,184,102,.65);margin-bottom:8px;animation:obFadeUp .5s cubic-bezier(.4,0,.2,1) .1s both;}
 .ob-title{font-size:34px;font-weight:900;letter-spacing:-.5px;line-height:1.08;text-align:center;color:var(--text);padding:0 24px;animation:obFadeUp .5s cubic-bezier(.4,0,.2,1) .18s both;}
@@ -803,7 +808,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       <div style="position:absolute;width:148px;height:148px;border-radius:50%;border:1px solid rgba(45,184,102,.35);animation:ringPulse2 3.7s ease-in-out infinite .5s"></div>
       <div style="position:absolute;width:96px;height:96px;border-radius:50%;border:1px solid rgba(45,184,102,.55);animation:ringPulse 3s ease-in-out infinite .9s"></div>
       <div style="width:58px;height:58px;border-radius:50%;background:var(--accent-dim);border:1.5px solid rgba(45,184,102,.5);display:flex;align-items:center;justify-content:center;animation:glowPulse 3s ease-in-out infinite,iconFloat 4s ease-in-out infinite">
-        <span id="celebEmoji" style="font-size:24px;line-height:1"></span>
+        <span id="celebEmoji" style="display:flex;align-items:center;justify-content:center"></span>
       </div>
     </div>
 
@@ -820,11 +825,12 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <div style="width:100%;opacity:0;transform:translateY(16px)" id="celebBtn">
       <button onclick="closeCelebration()" style="
         width:100%;padding:16px;border-radius:14px;border:none;
-        background:var(--accent);color:#0A0A0D;
+        background:var(--accent);color:#fff;
         font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;
         cursor:pointer;letter-spacing:.2px;
         box-shadow:0 4px 20px rgba(45,184,102,.3);
-      " style="display:inline-flex;align-items:center;gap:6px">Harika! <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg></button>
+        display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      ">Harika! <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg></button>
     </div>
   </div>
 </div>
@@ -1672,25 +1678,25 @@ let data = {
 // =================== DEFAULTS ===================
 const DEFAULT_CATS = [
   // MARKET & ALIŞ VERİŞ
-  {id:'market',name:'Market',emoji:'🛒',color:'#4ADE80',default:true,keywords:[
+  {id:'market',name:'Market',emoji:'',color:'#4ADE80',default:true,keywords:[
     'market','bim','a101','migros','carrefour','şok','hakmar','onur','file','tarım kredi',
     'gratis','watsons','bauhaus','ikea','mediamarkt','teknosa','vatan','hepsiburada',
     'trendyol','getir','yemeksepeti market','molle','metro','macro','alışveriş','süpermarket',
     'manav','kasap','fırın','ekmek','bakkal'
   ]},
   // FATURA & ABONELİK
-  {id:'fatura',name:'Fatura & Abonelik',emoji:'🔌',color:'#60A5FA',default:true,keywords:[
+  {id:'fatura',name:'Fatura & Abonelik',emoji:'',color:'#60A5FA',default:true,keywords:[
     'elektrik','su','doğalgaz','internet','fatura','abonelik','vodafone','turkcell','türk telekom',
     'superonline','ttnet','enerjisa','başkent gaz','igdaş','iski','bedaş','abone',
     'netflix','spotify','youtube','apple','disney','exxen','blutv','tabii','gain',
     'amazon prime','google','icloud','dropbox','adobe','canva','chatgpt','openai','microsoft'
   ]},
   // KİRA & KONUT
-  {id:'kira',name:'Kira & Aidat',emoji:'🏠',color:'#A78BFA',default:true,keywords:[
+  {id:'kira',name:'Kira & Aidat',emoji:'',color:'#A78BFA',default:true,keywords:[
     'kira','aidat','site aidatı','apartman','yönetim','konut','ev kirası','işyeri kirası'
   ]},
   // ULAŞIM
-  {id:'ulasim',name:'Ulaşım',emoji:'🚇',color:'#FBBF24',default:true,keywords:[
+  {id:'ulasim',name:'Ulaşım',emoji:'',color:'#FBBF24',default:true,keywords:[
     'metro','otobüs','taksi','uber','bitaksi','bolt','indrive','benzin','akaryakıt',
     'akbil','istanbulkart','dolmuş','tramvay','vapur','feribot','tren','marmaray',
     'türk hava yolları','thy','pegasus','sunexpress','anadolujet','havalimanı','otogar',
@@ -1698,7 +1704,7 @@ const DEFAULT_CATS = [
     'shell','bp','opet','petrol ofisi','total','lpg','servis'
   ]},
   // YEME İÇME
-  {id:'yemek',name:'Yeme-İçme',emoji:'🍽️',color:'#F97316',default:true,keywords:[
+  {id:'yemek',name:'Yeme-İçme',emoji:'',color:'#F97316',default:true,keywords:[
     'restoran','cafe','kafeterya','lokanta','yemek','pizza','burger','döner','lahmacun',
     'pide','kebap','köfte','balık','sushi','noodle','sandviç','tost','börek','simit',
     'kahve','starbucks','kahve dünyası','caribou','negro','mcdonald','burger king',
@@ -1707,7 +1713,7 @@ const DEFAULT_CATS = [
     'içecek','çay','su','meyve suyu','smoothie','protein shake','fast food'
   ]},
   // SAĞLIK
-  {id:'saglik',name:'Sağlık',emoji:'🩺',color:'#34D399',default:true,keywords:[
+  {id:'saglik',name:'Sağlık',emoji:'',color:'#34D399',default:true,keywords:[
     'eczane','doktor','hastane','klinik','poliklinik','ilaç','muayene','tahlil',
     'röntgen','mri','ultrason','diş','diş hekimi','ortodonti','göz doktoru','gözlük',
     'lens','psikolog','psikiyatrist','terapi','sağlık sigortası','özel sigorta',
@@ -1715,7 +1721,7 @@ const DEFAULT_CATS = [
     'fizyoterapi','ameliyat','medikal'
   ]},
   // GİYİM & KİŞİSEL BAKIM
-  {id:'giyim',name:'Giyim & Bakım',emoji:'👗',color:'#EC4899',default:true,keywords:[
+  {id:'giyim',name:'Giyim & Bakım',emoji:'',color:'#EC4899',default:true,keywords:[
     'giyim','kıyafet','ayakkabı','pantolon','mont','ceket','elbise','etek','gömlek',
     'kazak','tişört','jean','spor giyim','nike','adidas','zara','h&m','lcw','koton',
     'mavi','defacto','bershka','stradivarius','pull&bear','polo','lacoste','tommy',
@@ -1724,7 +1730,7 @@ const DEFAULT_CATS = [
     'kişisel bakım','kozmetik','kuru temizleme','çamaşır','ütü'
   ]},
   // EĞLENCE & HOBİ
-  {id:'eglence',name:'Eğlence & Hobi',emoji:'🎮',color:'#8B5CF6',default:true,keywords:[
+  {id:'eglence',name:'Eğlence & Hobi',emoji:'',color:'#8B5CF6',default:true,keywords:[
     'sinema','tiyatro','konser','festival','müze','sergi','lunapark','bowling','go-kart',
     'oyun','steam','playstation','xbox','nintendo','uygulama','app store','google play',
     'kitap','dergi','gazete','puzzle','satranç','oyuncak','koleksiyon','hobi',
@@ -1733,14 +1739,14 @@ const DEFAULT_CATS = [
     'passo','seyahat','tur','rehber','aktivite'
   ]},
   // EĞİTİM
-  {id:'egitim',name:'Eğitim',emoji:'📚',color:'#06B6D4',default:true,keywords:[
+  {id:'egitim',name:'Eğitim',emoji:'',color:'#06B6D4',default:true,keywords:[
     'okul','üniversite','dershane','kurs','sertifika','udemy','coursera','linkedin learning',
     'kitap','ders kitabı','kalem','defter','kırtasiye','fotokopi','baskı','tez',
     'özel ders','öğretmen','tutor','sınav ücreti','yds','toefl','ielts','lys','yks',
     'sürücü kursu','ehliyet','eğitim','okul servis','okul forması','okul yemeği'
   ]},
   // EV & YAŞAM
-  {id:'ev',name:'Ev & Yaşam',emoji:'🛋️',color:'#FB923C',default:true,keywords:[
+  {id:'ev',name:'Ev & Yaşam',emoji:'',color:'#FB923C',default:true,keywords:[
     'mobilya','dekorasyon','ev eşyası','mutfak','banyo','halı','perde','aydınlatma',
     'lamba','ampul','pil','temizlik','deterjan','sabun','bez','süpürge','tamir',
     'tadilat','boyama','ustası','tesisatçı','elektrikçi','boya','çimento','kiremit',
@@ -1748,13 +1754,13 @@ const DEFAULT_CATS = [
     'yatak','yastık','nevresim','havlu','ikea','kocaş','bauhaus','praktiker'
   ]},
   // ARAÇ & OTOMOTİV
-  {id:'arac',name:'Araç & Bakım',emoji:'🚗',color:'#F59E0B',default:true,keywords:[
+  {id:'arac',name:'Araç & Bakım',emoji:'',color:'#F59E0B',default:true,keywords:[
     'oto','araba','araç','servis','bakım','yağ değişimi','filtre','lastik','rot','balans',
     'egzoz','fren','akü','oto yıkama','kasko','trafik sigortası','muayene','tescil',
     'ekspertiz','oto galeri','oto aksesuar','navigasyon','oto cam','döşeme'
   ]},
   // TEKNOLOJİ & ELEKTRONİK
-  {id:'teknoloji',name:'Teknoloji',emoji:'💻',color:'#818CF8',default:true,keywords:[
+  {id:'teknoloji',name:'Teknoloji',emoji:'',color:'#818CF8',default:true,keywords:[
     'telefon','laptop','bilgisayar','tablet','ipad','iphone','samsung','apple',
     'xiaomi','huawei','kulaklık','airpods','mouse','klavye','monitör','printer',
     'yazıcı','hard disk','ssd','ram','kamera','fotoğraf makinesi','drone','akıllı saat',
@@ -1762,20 +1768,20 @@ const DEFAULT_CATS = [
     'apple store','teknosa','mediamarkt','vatan','gold bilgisayar'
   ]},
   // PET / EVCIL HAYVAN
-  {id:'evcil',name:'Evcil Hayvan',emoji:'🐾',color:'#A3E635',default:true,keywords:[
+  {id:'evcil',name:'Evcil Hayvan',emoji:'',color:'#A3E635',default:true,keywords:[
     'veteriner','pet','evcil','mama','kedi','köpek','kuş','balık','hamster',
     'kedi kumu','kafes','tasma','oyuncak','aşı','ilaç','veteriner kliniği','petshop'
   ]},
   // BAĞIŞ & HEDİYE
-  {id:'hediye',name:'Hediye & Bağış',emoji:'🎁',color:'#F472B6',default:true,keywords:[
+  {id:'hediye',name:'Hediye & Bağış',emoji:'',color:'#F472B6',default:true,keywords:[
     'hediye','bağış','yardım','sadaka','vakıf','dernek','çiçek','buket',
     'pasta','doğum günü','düğün','nişan','nikah','bebek şekeri','çeyiz',
     'kına','sünnet','mezuniyet','sevgililer günü','anneler günü','babalar günü'
   ]},
   // DİĞER
-  {id:'diger',name:'Diğer',emoji:'🫙',color:'#6B7280',default:true,keywords:[]},
+  {id:'diger',name:'Diğer',emoji:'',color:'#6B7280',default:true,keywords:[]},
   // GELİR
-  {id:'gelir',name:'Maaş / Gelir',emoji:'💸',color:'#2DB866',default:true,keywords:[
+  {id:'gelir',name:'Maaş / Gelir',emoji:'',color:'#2DB866',default:true,keywords:[
     'maaş','gelir','ücret','ikramiye','prim','kira geliri','freelance','serbest',
     'fatura','tahsilat','transfer','yatırım','temettü','faiz','kâr','satış',
     'komisyon','bonus','ödül','burs','haciz','nafaka','kira tahsilatı'
@@ -1819,6 +1825,7 @@ function load() {
       if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
       if (!data.streak.frozenDays) data.streak.frozenDays = [];
       if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
+      data.streak.freezeTotal = 2; // sabit 2 hak
       if (data.streak.lastWeeklyFreezeGift === undefined) data.streak.lastWeeklyFreezeGift = '';
       if (data.streak.lastFreezeResetMonth === undefined) data.streak.lastFreezeResetMonth = '';
       data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; });
@@ -1934,7 +1941,7 @@ function autoDetectCategory(desc) {
 
 function showToast(msg, duration) {
   const el = document.getElementById('toast');
-  el.textContent = msg;
+  el.innerHTML = msg;
   el.style.display = 'block';
   el.style.animation = 'popIn .25s ease';
   clearTimeout(el._t);
@@ -1957,20 +1964,25 @@ function initSplash() {
   updateSplashDots();
   updateSplashBtn();
   // Hero emoji rotasyonu
-  const heroEmojis = ['<svg width="28" height="28" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/></svg>', '<svg width="28" height="28" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>', '<svg width="28" height="28" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>', '<svg width="28" height="28" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>'];
+  const heroEmojis = ['<svg width="28" height="28" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/></svg>', '<svg width="28" height="28" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>', '<svg width="28" height="28" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>', '<svg width="28" height="28" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>'];
   let heroIdx = 0;
   setInterval(() => {
     const el = document.getElementById('obHeroEmoji');
     if (!el) return;
+    // CSS animation yok, sadece JS transition — temiz geçiş
+    el.style.transition = 'opacity .2s ease, transform .2s ease';
     el.style.opacity = '0';
-    el.style.transform = 'scale(0.5)';
+    el.style.transform = 'scale(0.4)';
     setTimeout(() => {
       heroIdx = (heroIdx + 1) % heroEmojis.length;
       el.innerHTML = heroEmojis[heroIdx];
+      // reflow zorla — yeni içerik DOM'a girdikten sonra transition başlasın
+      void el.offsetWidth;
+      el.style.transition = 'opacity .35s cubic-bezier(.34,1.4,.64,1), transform .35s cubic-bezier(.34,1.4,.64,1)';
       el.style.opacity = '1';
       el.style.transform = 'scale(1)';
-    }, 250);
-  }, 2000);
+    }, 220);
+  }, 2200);
 }
 
 function goSplash(idx) {
@@ -2184,25 +2196,35 @@ function calcStreakData() {
   // Freeze kalan
   const freezesLeft = (data.streak.freezeTotal || 2) - (data.streak.freezesUsed || 0);
 
-  // Haftalık freeze hediyesi: her 7 ardışık yeşil günde +1 bonus freeze
-  const weeklyGiftKey = Math.floor(streak / 7) + '_' + monthKey();
-  if (streak > 0 && streak % 7 === 0 && data.streak.lastWeeklyFreezeGift !== weeklyGiftKey) {
-    data.streak.lastWeeklyFreezeGift = weeklyGiftKey;
-    data.streak.freezeTotal = (data.streak.freezeTotal || 2) + 1;
-    _needsSave = true;
-    showToast('🎁 7 gün streak! +1 freeze hakkı kazandın!');
-  }
+  // Bonus freeze sistemi kaldırıldı — sabit 2 hak
 
   // Milestone
   let milestone = null;
   const milestones = [
-    {days:3,  emoji:'<svg width="16" height="16" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#4ADE80" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 10a6 6 0 0 0 -6 -6h-3v2a6 6 0 0 0 6 6h3"/><path d="M12 14a6 6 0 0 1 6 -6h3v1a6 6 0 0 1 -6 6h-3"/><path d="M12 20l0 -10"/></svg>', title:'3 gün limit altında!',    sub:'Günlük limitin yükseliyor.'},
-    {days:7,  emoji:'<svg width="16" height="16" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>', title:'7 gün limit altında!',    sub:'Bir haftadır bütçen büyüyor.'},
-    {days:14, emoji:'<svg width="16" height="16" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 3l-9 11h8l-1 7l9 -11h-8l1 -7z"/></svg>', title:'14 gün limit altında!',   sub:'İki haftadır limit disiplini.'},
-    {days:21, emoji:'<svg width="16" height="16" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 5h12l3 5l-8.5 9.5a.7 .7 0 0 1 -1 0l-8.5 -9.5l3 -5"/><path d="M10 12l-2 -2.2l.6 -1"/></svg>', title:'21 gün limit altında!',   sub:'Bu artık bir alışkanlık.'},
-    {days:30, emoji:'<svg width="16" height="16" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4z"/></svg>', title:'Tam ay limit altında!',   sub:'Efsanevi bütçe kontrolü.'},
+    {days:3,  title:'İlk adım atıldı!',      sub:'3 gün boyunca limitin altında kaldın.'},
+    {days:7,  title:'Bir hafta disiplin!',    sub:'Bütçen artık senin için çalışıyor.'},
+    {days:14, title:'İki haftadır kararlısın!', sub:'Bu alışkanlık haline geliyor.'},
+    {days:21, title:'21 gün — yeni bir alışkanlık!', sub:'Araştırmalar 21 günün kritik eşik olduğunu söylüyor.'},
+    {days:30, title:'Tam ay — efsanevi kontrol!', sub:'Aylık bütçe disiplininde zirveye ulaştın.'},
   ];
   milestones.forEach(ms => { if (streak === ms.days) milestone = ms; });
+
+  // 30+ streak: her 30 günde büyük milestone
+  if (!milestone && streak > 30 && streak % 30 === 0) {
+    const months = streak / 30;
+    milestone = {
+      title: `${months} aylık seri!`,
+      sub: `${streak} gün boyunca bütçe disiplinini korudun. Bu artık bir yaşam biçimi.`
+    };
+  }
+  // 30+ streak: her 7 günde küçük milestone (30'un katı değilse)
+  if (!milestone && streak > 30 && streak % 7 === 0) {
+    const weeks = Math.floor(streak / 7);
+    milestone = {
+      title: `${weeks}. haftayı tamamladın!`,
+      sub: `${streak} günlük zincir devam ediyor. Kırmak için hiçbir neden yok.`
+    };
+  }
 
   // Ay sonu rozeti
   let monthBadge = null;
@@ -2219,15 +2241,15 @@ function calcStreakData() {
 }
 
 function useFreeze() {
-  if ((data.streak.freezesUsed || 0) >= (data.streak.freezeTotal || 2)) { showToast('🛡️ Bu ay freeze hakkın kalmadı'); return; }
+  if ((data.streak.freezesUsed || 0) >= (data.streak.freezeTotal || 2)) { showToast('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg> Bu ay freeze hakkın kalmadı'); return; }
   const todayStr = today();
-  if (data.streak.frozenDays.includes(todayStr)) { showToast('🛡️ Bugün zaten donduruldu'); return; }
+  if (data.streak.frozenDays.includes(todayStr)) { showToast('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg> Bugün zaten donduruldu'); return; }
   const todayStatus = getDayStatus(todayStr);
-  if (todayStatus !== 'red') { showToast('⚡ Bugün limit aşımı yok, freeze gerekmez!'); return; }
+  if (todayStatus !== 'red') { showToast('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 3l-9 11h8l-1 7l9 -11h-8l1 -7z"/></svg> Bugün limit aşımı yok, freeze gerekmez!'); return; }
   data.streak.frozenDays.push(todayStr);
   data.streak.freezesUsed = (data.streak.freezesUsed || 0) + 1;
   save();
-  showToast('🛡️ Bugün donduruldu — streak korundu!');
+  showToast('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg> Bugün donduruldu — streak korundu!');
   renderOzetStats();
 }
 
@@ -2239,7 +2261,10 @@ function renderStreakCard(sd) {
 
   const shieldsHtml = Array.from({length: data.streak.freezeTotal || 2}, (_,i) => {
     const used = i >= freezesLeft;
-    return `<div class="freeze-shield ${used?'used':'active'}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="${used?'rgba(255,255,255,.15)':'#0A84FF'}" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg></div>`;
+    const svg = used
+      ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="rgba(255,255,255,.2)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg>'
+      : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg>';
+    return `<div class="freeze-shield ${used?'used':'active'}">${svg}</div>`;
   }).join('');
 
   const dotsHtml = days.map((day, i) => {
@@ -2255,7 +2280,6 @@ function renderStreakCard(sd) {
 
   const milestoneHtml = milestone ? `
     <div class="streak-milestone">
-      <span class="milestone-emoji">${milestone.emoji}</span>
       <div>
         <div class="milestone-title">${milestone.title}</div>
         <div class="milestone-sub">${milestone.sub}</div>
@@ -2279,7 +2303,7 @@ function renderStreakCard(sd) {
   return `
   <div class="streak-card">
     <div class="streak-header">
-      <span class="streak-flame${isDead?' dead':''}">${isDead ? '<svg width="28" height="28" style="flex-shrink:0;filter:grayscale(1);opacity:.35" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#888" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>' : '<svg width="28" height="28" style="flex-shrink:0;animation:streakFlame 2.6s ease-in-out infinite;filter:drop-shadow(0 0 10px rgba(255,140,0,.55))" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>'}</span>
+      <span class="streak-flame${isDead?' dead':''}">${isDead ? '<svg width="28" height="28" style="flex-shrink:0;filter:grayscale(1);opacity:.35" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#888" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>' : '<svg width="28" height="28" style="flex-shrink:0;transform-origin:bottom center" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>'}</span>
       <div class="streak-main">
         <div class="streak-count${isDead?' dead':''}">${streak}</div>
         <div class="streak-meta${isDead?' dead':''}">
@@ -2299,7 +2323,10 @@ function renderStreakCard(sd) {
 
     <div class="streak-freeze-row">
       <div class="freeze-shields">${shieldsHtml}</div>
-      <button class="freeze-btn" onclick="useFreeze()" ${freezesLeft<=0?'disabled':''}><svg width="15" height="15" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l0 18"/><path d="M3 12l18 0"/><path d="M12 3l3 3"/><path d="M12 3l-3 3"/><path d="M12 21l3 -3"/><path d="M12 21l-3 -3"/><path d="M3 12l3 -3"/><path d="M3 12l3 3"/><path d="M21 12l-3 3"/><path d="M21 12l-3 -3"/></svg></button>
+      <button class="freeze-btn" onclick="useFreeze()" ${freezesLeft<=0?'disabled':''} title="Bugünü dondur — limit aşsan bile streak devam eder">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg>
+        <span style="font-size:10px;font-weight:800;color:#0A84FF;margin-left:4px">Koru</span>
+      </button>
     </div>
   </div>`;
 }
@@ -2313,9 +2340,9 @@ function showCelebration({ emoji, title, sub, tag, color }) {
   const canvas = document.getElementById('confettiCanvas');
   if (!overlay || !card || !canvas) return;
 
-  document.getElementById('celebEmoji').textContent = emoji;
+  document.getElementById('celebEmoji').innerHTML = emoji;
   document.getElementById('celebTitle').textContent = title;
-  document.getElementById('celebSub').textContent = sub;
+  document.getElementById('celebSub').innerHTML = sub;
 
   const tagEl = document.getElementById('celebTag');
   if (tagEl) {
@@ -3044,7 +3071,7 @@ function openEditTx(id) {
   document.getElementById('editTxAmount').value = fmtTL(tx.amount).replace('₺','');
   document.getElementById('editTxDate').value = tx.date;
   document.getElementById('editTxCategory').innerHTML = cats.map(c =>
-    `<option value="${c.id}"${c.id===tx.category?' selected':''}>${c.emoji} ${c.name}</option>`
+    `<option value="${c.id}"${c.id===tx.category?' selected':''}>${c.name}</option>`
   ).join('');
   document.getElementById('txEditModal').classList.add('show');
 }
@@ -3059,7 +3086,7 @@ function saveTxEdit() {
   const amount = parseNum(document.getElementById('editTxAmount').value);
   const date = document.getElementById('editTxDate').value;
   const category = document.getElementById('editTxCategory').value;
-  if (!desc || !amount) { showToast('⚠️ Açıklama ve tutar gerekli'); return; }
+  if (!desc || !amount) { showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg> Açıklama ve tutar gerekli'); return; }
   tx.desc = desc; tx.amount = amount;
   if (date) tx.date = date;
   tx.category = category;
@@ -3072,7 +3099,7 @@ function saveTxEdit() {
     if (subEl) subEl.textContent = all.length + ' işlem';
     renderTxList(listEl, all, false, 'h_');
   }
-  showToast('✅ İşlem güncellendi');
+  showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> İşlem güncellendi');
 }
 function deleteTx(id) {
   const tx = data.transactions.find(t => t.id === id);
@@ -3108,7 +3135,7 @@ function deleteTx(id) {
     if (subEl) subEl.textContent = all.length + ' işlem';
     renderTxList(listEl, all, false, 'h_');
   }
-  showToast('🗑 İşlem silindi');
+  showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3h6v3"/></svg> İşlem silindi');
 }
 
 function fmtDate(dateStr) {
@@ -3151,7 +3178,7 @@ function addTransaction() {
   if (!desc || !amount) {
     btn.style.animation = 'shake .3s ease';
     setTimeout(() => btn.style.animation = '', 300);
-    showToast('⚠️ Açıklama ve tutar giriniz');
+    showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg> Açıklama ve tutar giriniz');
     return;
   }
 
@@ -3169,21 +3196,21 @@ function addTransaction() {
 
   // Friendly contextual feedback
   if (currentType === 'income') {
-    const incomeMessages = ['💚 Gelir eklendi, limitin güncellendi.', '💚 Para geldi! Günlük limitin arttı.', '💚 Harika, gelir kaydedildi.'];
+    const incomeMessages = ['<svg width="10" height="10" viewBox="0 0 24 24" fill="#2DB866" stroke="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg> Gelir eklendi, limitin güncellendi.', '<svg width="10" height="10" viewBox="0 0 24 24" fill="#2DB866" stroke="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg> Para geldi! Günlük limitin arttı.', '<svg width="10" height="10" viewBox="0 0 24 24" fill="#2DB866" stroke="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg> Harika, gelir kaydedildi.'];
     showToast(incomeMessages[Math.floor(Math.random()*incomeMessages.length)]);
   } else {
     const fb = calcFreeBudget(monthKey());
     if (fb.daily < 0) {
-      showToast('🔴 Bütçeyi aştın! Bu ay dikkatli harca.');
+      showToast('<svg width="10" height="10" viewBox="0 0 24 24" fill="#FF453A" stroke="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg> Bütçeyi aştın! Bu ay dikkatli harca.');
     } else if (fb.daily < 200) {
-      showToast('🟡 Harcama eklendi — günlük limitin düşüyor, ' + fmtTL(Math.round(fb.daily)) + ' kaldı.');
+      showToast('<svg width="10" height="10" viewBox="0 0 24 24" fill="#FFD60A" stroke="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg> Harcama eklendi — günlük limitin düşüyor, ' + fmtTL(Math.round(fb.daily)) + ' kaldı.');
     } else if (amount > fb.daily * 3) {
-      showToast('🟡 Büyük harcama kaydedildi. Günlük ' + fmtTL(Math.round(fb.daily)) + ' limitin var.');
+      showToast('<svg width="10" height="10" viewBox="0 0 24 24" fill="#FFD60A" stroke="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg> Büyük harcama kaydedildi. Günlük ' + fmtTL(Math.round(fb.daily)) + ' limitin var.');
     } else {
       const msgs = [
-        '✓ Harcama eklendi. Günlük ' + fmtTL(Math.round(fb.daily)) + ' limitin var.',
-        '✓ Kaydedildi. Kalan: ' + fmtTL(Math.round(fb.remaining)) + '.',
-        '✓ Tamam! ' + fmtTL(Math.round(fb.daily)) + ' günlük limitinle devam.',
+        '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> Harcama eklendi. Günlük ' + fmtTL(Math.round(fb.daily)) + ' limitin var.',
+        '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> Kaydedildi. Kalan: ' + fmtTL(Math.round(fb.remaining)) + '.',
+        '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> Tamam! ' + fmtTL(Math.round(fb.daily)) + ' günlük limitinle devam.',
       ];
       showToast(msgs[Math.floor(Math.random()*msgs.length)]);
     }
@@ -3368,7 +3395,7 @@ function renderDailyLimit() {
           ${spentFill ? `<path d="${spentFill}" fill="url(#dlg)" opacity="0" style="animation:fadeIn .8s cubic-bezier(.4,0,.2,1) .1s forwards"/>` : ''}
           ${spentPath ? `<path id="dlSpentLine" d="${spentPath}" fill="none" stroke="${lc}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>` : ''}
           <!-- Bugün noktası -->
-          <circle cx="${lx}" cy="${ly}" r="4.5" fill="${lc}" stroke="#0A0A0D" stroke-width="2"/>
+          <circle id="dlDot" r="4.5" fill="${lc}" stroke="#0A0A0D" stroke-width="2" cx="0" cy="0" opacity="0"/>
           <!-- X ekseni -->
           ${[...new Set(xTicks)].map(i => `<text x="${toX(i)}" y="${svgH-5}" text-anchor="middle" font-size="10" font-family="Montserrat,sans-serif" font-weight="700" fill="rgba(255,255,255,.35)">${i+1}</text>`).join('')}
           <!-- Hover araçları -->
@@ -3396,24 +3423,49 @@ function renderDailyLimit() {
     </div>`;
 
   requestAnimationFrame(() => {
-    // Çizgi animasyonu — sıfırdan çiz
+    // Çizgi + dot animasyonu — tamamen JS, tek easing kaynağı, sıfır kopukluk
     setTimeout(() => {
       const line = document.getElementById('dlSpentLine');
-      if (line) {
-        const len = line.getTotalLength();
-        if (len > 0) {
-          line.style.strokeDasharray = len;
-          line.style.strokeDashoffset = len;
-          line.style.transition = 'none';
-          line.setAttribute('opacity', '1');
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              line.style.transition = 'stroke-dashoffset 2s cubic-bezier(.4,0,.2,1)';
-              line.style.strokeDashoffset = '0';
-            });
-          });
-        }
+      const dot  = document.getElementById('dlDot');
+      if (!line) return;
+      const len = line.getTotalLength();
+      if (len <= 0) return;
+
+      // Tek rAF döngüsü — dashoffset VE dot aynı getPointAtLength değerinden
+      line.style.transition = 'none';
+      line.style.strokeDasharray = len;
+      line.style.strokeDashoffset = len;
+      line.setAttribute('opacity', '1');
+      if (dot) dot.setAttribute('opacity', '1');
+
+      const dur = 1800;
+      let startTime = null;
+
+      // easeInOutCubic — yumuşak, sade
+      function ease(t) {
+        return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2;
       }
+
+      function step(now) {
+        if (!startTime) startTime = now;
+        const raw = Math.min((now - startTime) / dur, 1);
+        const te  = ease(raw);
+        const drawn = te * len;                    // path'in ne kadarı çizildi
+
+        // Çizgi: drawn kadar göster
+        line.style.strokeDashoffset = len - drawn;
+
+        // Dot: çizilen kısmın tam ucu
+        if (dot) {
+          const pt = line.getPointAtLength(drawn);
+          dot.setAttribute('cx', pt.x);
+          dot.setAttribute('cy', pt.y);
+        }
+
+        if (raw < 1) requestAnimationFrame(step);
+      }
+
+      requestAnimationFrame(step);
     }, 80);
 
     const svg = document.getElementById('dlSvg');
@@ -3483,13 +3535,13 @@ function addRecurring() {
   const desc = document.getElementById('recDesc').value.trim();
   const amount = parseNum(document.getElementById('recAmount').value);
   const category = document.getElementById('recCategory').value || 'fatura';
-  if (!desc || !amount) { showToast('⚠️ Tüm alanları doldur'); return; }
+  if (!desc || !amount) { showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg> Tüm alanları doldur'); return; }
   data.recurring.push({ id: uid(), desc, amount, category, active: true, paidMonths: [] });
   save();
   document.getElementById('recDesc').value = '';
   document.getElementById('recAmount').value = '';
   document.getElementById('recForm').style.display = 'none';
-  showToast('✅ Sabit gider eklendi');
+  showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> Sabit gider eklendi');
   renderAll();
 }
 
@@ -3538,7 +3590,7 @@ function togglePaidRecurring(id) {
     r.paidMonths.push(mk);
     data.transactions = data.transactions.filter(t => !(t.recurringId === id && monthKey(t.date) === mk));
     data.transactions.push({ id: uid(), type: 'expense', desc: r.desc, amount: r.amount, date: today(), category: r.category, recurringId: id, isRecurring: true });
-    showToast('✅ ' + r.desc + ' ödendi');
+    showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> ' + r.desc + ' ödendi');
   }
   save(); renderAll();
 }
@@ -3565,7 +3617,7 @@ function addDebt() {
   const totalAmount = parseNum(document.getElementById('debtTotal').value);
   const installments = parseInt(document.getElementById('debtInstall').value) || 1;
   const startMonth = document.getElementById('debtStartMonth').value || monthKey();
-  if (!name || !totalAmount) { showToast('⚠️ Ödeme adı ve tutar gerekli'); return; }
+  if (!name || !totalAmount) { showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg> Ödeme adı ve tutar gerekli'); return; }
   const monthlyAmount = Math.round(totalAmount / installments);
   data.debts.push({ id: uid(), name, totalAmount, installments, monthlyAmount, paidCount: 0, active: true, paidMonths: [], startMonth });
   save();
@@ -3573,7 +3625,7 @@ function addDebt() {
   document.getElementById('debtTotal').value = '';
   document.getElementById('debtInstall').value = '';
   document.getElementById('debtForm').style.display = 'none';
-  showToast('✅ Ödeme eklendi');
+  showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> Ödeme eklendi');
   renderAll();
 }
 
@@ -3604,7 +3656,7 @@ function renderDebtList() {
           <div style="height:3px;background:var(--surface3);border-radius:2px;margin-top:6px;overflow:hidden">
             <div style="width:${pct}%;height:100%;background:${done?'var(--accent)':paid?'var(--accent)':'rgba(255,69,58,.5)'};border-radius:2px;transition:width .5s ease"></div>
           </div>
-          ${future?`<div style="font-size:10px;color:var(--warning);margin-top:3px;font-weight:800">⏳ ${d.startMonth} ayında başlıyor</div>`:''}
+          ${future?`<div style="font-size:10px;color:var(--warning);margin-top:3px;font-weight:800;display:flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--warning)" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.5 7h11"/><path d="M6.5 17h11"/><path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"/><path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"/></svg> ${d.startMonth} ayında başlıyor</div>`:''}
           ${done?`<div style="font-size:10px;color:var(--accent);margin-top:3px;font-weight:800"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> Tamamlandı</div>`:''}
         </div>
         <div class="rec-status" style="cursor:${future||done?'default':'pointer'}" onclick="event.stopPropagation();${!future&&!done?`togglePaidDebt('${d.id}')`:''}"
@@ -3637,7 +3689,7 @@ function togglePaidDebt(id) {
   const mk = currentMonth;
   const d = data.debts.find(d => d.id === id);
   if (!d) return;
-  if (d.startMonth && d.startMonth > mk) { showToast('⏳ Bu borç henüz başlamadı'); return; }
+  if (d.startMonth && d.startMonth > mk) { showToast('<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--warning)" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.5 7h11"/><path d="M6.5 17h11"/><path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"/><path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"/></svg> Bu borç henüz başlamadı'); return; }
   if (!d.paidMonths) d.paidMonths = [];
   if (d.paidMonths.includes(mk)) {
     d.paidMonths = d.paidMonths.filter(m => m !== mk);
@@ -3654,15 +3706,15 @@ function togglePaidDebt(id) {
       d.active = false;
       save(); renderAll();
       setTimeout(() => showCelebration({
-        emoji: '💳',
+        emoji: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg>',
         title: 'Borcu Tamamladın!',
-        sub: `${esc(d.name)} tamamen kapandı.\n${d.installments} taksiti başarıyla bitirdin! 🎉`,
+        sub: `${esc(d.name)} tamamen kapandı.\n${d.installments} taksiti başarıyla bitirdin! <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h2"/><path d="M5 4v2"/><path d="M11.5 4l-.5 2"/><path d="M18 5h2"/><path d="M19 4v2"/><path d="M15 9l-1 1"/><path d="M18 13l2 -.5"/><path d="M18 19h2"/><path d="M19 18v2"/><path d="M14 16.518l-6.518 -6.518l-4.39 9.58a1 1 0 0 0 1.329 1.329l9.579 -4.39z"/></svg>`,
         tag: 'Tebrikler',
         color: 'var(--accent)'
       }), 150);
       return;
     } else {
-      showToast('✅ ' + d.name + ' — ' + d.paidCount + '/' + d.installments + '. taksit ödendi');
+      showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> ' + d.name + ' — ' + d.paidCount + '/' + d.installments + '. taksit ödendi');
     }
   }
   save(); renderAll();
@@ -3694,11 +3746,11 @@ function saveDebtEdit() {
   const totalAmount = parseNum(document.getElementById('editDebtTotal').value);
   const installments = parseInt(document.getElementById('editDebtInstall').value) || d.installments;
   const startMonth = document.getElementById('editDebtStartMonth').value || d.startMonth;
-  if (!name || !totalAmount) { showToast('⚠️ Ad ve tutar gerekli'); return; }
+  if (!name || !totalAmount) { showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg> Ad ve tutar gerekli'); return; }
   d.name = name; d.totalAmount = totalAmount; d.installments = installments;
   d.monthlyAmount = Math.round(totalAmount / installments); d.startMonth = startMonth;
   save(); closeDebtEdit(); renderAll();
-  showToast('✅ Ödeme güncellendi');
+  showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> Ödeme güncellendi');
 }
 
 function deleteDebt(id) {
@@ -3767,7 +3819,7 @@ function acceptWishChallenge(wishId, monthlyAmount, wishName) {
     id: uid(),
     wishId,
     name: wishName,
-    emoji: '🎯',
+    emoji: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
     target,
     monthly: monthlyAmount,
     note: 'Hedeften oluşturuldu',
@@ -3785,7 +3837,7 @@ function addGoal() {
   const monthly = parseNum(document.getElementById('goalMonthly').value);
   const note = document.getElementById('goalNote')?.value.trim() || '';
   const emoji = document.getElementById('goalEmoji').value || 'target';
-  if (!name || !target) { showToast('⚠️ Ad ve hedef tutar gerekli'); return; }
+  if (!name || !target) { showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg> Ad ve hedef tutar gerekli'); return; }
   data.savingsGoals.push({ id: uid(), name, emoji, target, monthly, note, deposits: [], paidMonths: [] });
   save();
   document.getElementById('goalName').value = '';
@@ -3793,7 +3845,7 @@ function addGoal() {
   const gn = document.getElementById('goalNote'); if(gn) gn.value = '';
   document.getElementById('goalMonthly').value = '';
   document.getElementById('goalForm').style.display='none'; const gm=document.getElementById('goalMonths'); if(gm)gm.value=''; const gh=document.getElementById('goalMonthlyHint'); if(gh)gh.textContent='';
-  showToast('✅ Hedef eklendi');
+  showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> Hedef eklendi');
   renderAll();
 }
 
@@ -3858,7 +3910,7 @@ function toggleGoalMonthly(goalId) {
     const depId = uid();
     g.deposits.push({ id: depId, amount: g.monthly, date: today(), note: 'Aylık otomatik', goalMonthlyId: goalId });
     data.transactions.push({ id: uid(), type: 'expense', desc: g.name + ' (aylık)', amount: g.monthly, date: today(), category: 'diger', goalMonthlyId: goalId, isGoalDeposit: true, goalId: goalId });
-    showToast('✅ ' + g.name + ' — ' + fmtTL(g.monthly) + ' eklendi');
+    showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> ' + g.name + ' — ' + fmtTL(g.monthly) + ' eklendi');
   }
   save(); renderAll();
 }
@@ -3883,7 +3935,7 @@ function saveDepositModal() {
   const g = data.savingsGoals.find(g => g.id === _depositGoalId);
   if (!g) return;
   const amount = parseNum(document.getElementById('depositAmount').value);
-  if (!amount) { showToast('⚠️ Tutar giriniz'); return; }
+  if (!amount) { showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg> Tutar giriniz'); return; }
 
   g.deposits.push({ id: uid(), amount, date: today(), note: 'Manuel' });
   data.transactions.push({ id: uid(), type: 'expense', desc: g.name, amount, date: today(), category: 'diger', isGoalDeposit: true, goalId: _depositGoalId });
@@ -3891,12 +3943,12 @@ function saveDepositModal() {
   const total = g.deposits.reduce((s,d) => s + d.amount, 0);
   const pct = Math.min(100, g.target > 0 ? Math.round((total / g.target) * 100) : 0);
   const celebData = total >= g.target ? {
-    emoji: '🏆',
+    emoji: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4z"/></svg>',
     title: 'Hedefe Ulaştın!',
-    sub: `${g.name} için ${fmtTL(g.target)} biriktirdin.\nTebrikler, harika iş çıkardın! 🎉`,
+    sub: `${g.name} için ${fmtTL(g.target)} biriktirdin.\nTebrikler, harika iş çıkardın! <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h2"/><path d="M5 4v2"/><path d="M11.5 4l-.5 2"/><path d="M18 5h2"/><path d="M19 4v2"/><path d="M15 9l-1 1"/><path d="M18 13l2 -.5"/><path d="M18 19h2"/><path d="M19 18v2"/><path d="M14 16.518l-6.518 -6.518l-4.39 9.58a1 1 0 0 0 1.329 1.329l9.579 -4.39z"/></svg>`,
     tag: 'Tamamlandı'
   } : {
-    emoji: '💰',
+    emoji: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0 4h-2a2 2 0 0 0 -1.8 -1"/><path d="M12 7v10"/></svg>',
     title: `${fmtTL(amount)} Eklendi!`,
     sub: `${g.name} — %${pct} tamamlandı.\n${fmtTL(g.target - total)} kaldı.`,
     tag: 'Birikim'
@@ -3934,10 +3986,10 @@ function saveGoalEdit() {
   const name = document.getElementById('editGoalName').value.trim();
   const target = parseNum(document.getElementById('editGoalTarget').value);
   const monthly = parseNum(document.getElementById('editGoalMonthly').value) || 0;
-  if (!name || !target) { showToast('⚠️ Ad ve hedef tutar gerekli'); return; }
+  if (!name || !target) { showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg> Ad ve hedef tutar gerekli'); return; }
   g.name = name; g.target = target; g.monthly = monthly;
   save(); closeGoalEdit(); renderAll();
-  showToast('✅ Birikim güncellendi');
+  showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> Birikim güncellendi');
 }
 
 // =================== HEDEFLer (WISHLIST) ===================
@@ -3966,13 +4018,13 @@ function addWish() {
   const price = parseNum(document.getElementById('wishPrice').value);
   const priority = document.getElementById('wishPriority').value || 'mid';
   const emoji = document.getElementById('wishEmojiHidden')?.value || 'target';
-  if (!name || !price) { showToast('⚠️ Ad ve fiyat gerekli'); return; }
+  if (!name || !price) { showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg> Ad ve fiyat gerekli'); return; }
   data.wishlist.push({ id: uid(), name, price, priority, emoji, createdAt: today() });
   save();
   document.getElementById('wishName').value = '';
   document.getElementById('wishPrice').value = '';
   document.getElementById('wishForm').style.display = 'none';
-  showToast('✅ Hedef eklendi');
+  showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> Hedef eklendi');
   renderAll();
 }
 
@@ -4064,7 +4116,7 @@ function saveWishEdit() {
   const emoji = document.getElementById('editWishEmoji').value || w.emoji || 'target';
   w.name = name; w.price = price; w.priority = priority; w.note = note; w.emoji = emoji;
   save(); closeWishEdit(); renderAll();
-  showToast('✅ Hedef güncellendi');
+  showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> Hedef güncellendi');
 }
 
 function saveWishNote(id, note) {
@@ -4080,7 +4132,7 @@ function markWishDone(id) {
   w.boughtAt = today();
   save(); renderAll();
   showCelebration({
-    emoji: '🎯',
+    emoji: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
     title: 'Hedefe ulaştın!',
     sub: `${esc(w.name)} için ${fmtTL(w.price)} biriktirdin. Tebrikler!`
   });
@@ -4169,7 +4221,7 @@ function renderWishSummaryCard() {
             <div style="flex:1;font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(w.name)}</div>
             <div style="font-size:12px;font-weight:800;color:var(--purple);flex-shrink:0">${fmtTL(w.price)}</div>
             <div style="font-size:10px;font-weight:700;color:${proj.canAfford?'var(--accent)':'var(--muted)'};flex-shrink:0;min-width:48px;text-align:right">
-              ${proj.canAfford ? 'Bu ay ✓' : proj.monthsAway ? '~'+proj.monthsAway+'ay' : '—'}
+              ${proj.canAfford ? 'Bu ay <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg>' : proj.monthsAway ? '~'+proj.monthsAway+'ay' : '—'}
             </div>
           </div>`;
         }).join('')}
@@ -4266,7 +4318,7 @@ function calcWishProjection(wish, fb) {
     result.mainText = 'Bütçe yetersiz';
     result.subText = 'Harcamalarını kısarak bu hedefe yaklaşabilirsin.';
     if (totalDebtMonthly > 0)
-      result.tips.push(`💳 Aktif borcun aylık ${fmtTL(totalDebtMonthly)} götürüyor. Borçlar bitince bütçen açılır.`);
+      result.tips.push(`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg> Aktif borcun aylık ${fmtTL(totalDebtMonthly)} götürüyor. Borçlar bitince bütçen açılır.`);
     return result;
   }
 
@@ -4275,7 +4327,7 @@ function calcWishProjection(wish, fb) {
     result.canAfford = true;
     result.monthsAway = 0;
     result.monthlyNeeded = wish.price;
-    result.mainText = 'Bu ay alabilirsin 🎉';
+    result.mainText = 'Bu ay alabilirsin <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h2"/><path d="M5 4v2"/><path d="M11.5 4l-.5 2"/><path d="M18 5h2"/><path d="M19 4v2"/><path d="M15 9l-1 1"/><path d="M18 13l2 -.5"/><path d="M18 19h2"/><path d="M19 18v2"/><path d="M14 16.518l-6.518 -6.518l-4.39 9.58a1 1 0 0 0 1.329 1.329l9.579 -4.39z"/></svg>';
     result.subText = `Bütçen yeterli — ${fmtTL(wish.price)} ayır.`;
     return result;
   }
@@ -4440,7 +4492,7 @@ function renderWishList() {
 
     const projectionHtml = isDone ? `
       <div class="wish-projection" style="${projBg}">
-        <div class="wish-proj-main" style="color:var(--accent)">✓ Alındı — ${w.boughtAt}</div>
+        <div class="wish-proj-main" style="color:var(--accent)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> Alındı — ${w.boughtAt}</div>
         <div class="wish-proj-sub">${fmtTL(w.price)} harcandı.</div>
       </div>` : `
       <div class="wish-projection" style="${projBg};display:flex;align-items:center;gap:10px">
@@ -4508,7 +4560,7 @@ function openRecEditModal(id) {
   document.getElementById('editRecDescModal').value = r.desc;
   document.getElementById('editRecAmountModal').value = fmtTL(r.amount).replace('₺','');
   document.getElementById('editRecCatModal').innerHTML = allCategories().map(c =>
-    `<option value="${c.id}"${c.id===r.category?' selected':''}>${c.emoji} ${c.name}</option>`
+    `<option value="${c.id}"${c.id===r.category?' selected':''}>${c.name}</option>`
   ).join('');
   document.getElementById('recEditModal').classList.add('show');
 }
@@ -4519,10 +4571,10 @@ function saveRecEditModal() {
   const desc = document.getElementById('editRecDescModal').value.trim();
   const amount = parseNum(document.getElementById('editRecAmountModal').value);
   const category = document.getElementById('editRecCatModal').value;
-  if (!desc || !amount) { showToast('⚠️ Açıklama ve tutar gerekli'); return; }
+  if (!desc || !amount) { showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg> Açıklama ve tutar gerekli'); return; }
   r.desc = desc; r.amount = amount; r.category = category;
   save(); closeRecEdit(); renderAll();
-  showToast('✅ Güncellendi');
+  showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> Güncellendi');
 }
 
 // =================== FİNANSAL TAVSİYELER ===================
@@ -4600,7 +4652,7 @@ function updateCollapseSummaries() {
     const active = data.debts.filter(d => d.active);
     const paid = active.filter(d => isPaidThisMonth(d, mk)).length;
     const total = active.reduce((s,d) => s+d.monthlyAmount, 0);
-    debtEl.textContent = active.length ? `${paid}/${active.length} ödendi · ${fmtTL(total)}/ay` : 'Ödeme yok 🎉';
+    debtEl.innerHTML = active.length ? `${paid}/${active.length} ödendi · ${fmtTL(total)}/ay` : 'Ödeme yok';
   }
   const goalEl = document.getElementById('goalSummaryLabel');
   if (goalEl) {
@@ -4954,7 +5006,7 @@ function renderDebtSummaryCard() {
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:4px">
           <span style="font-size:10px;color:var(--muted);font-weight:600">%${pct} tamamlandı</span>
-          <span style="font-size:10px;font-weight:700;color:${barColor}">${d.monthsLeft > 0 ? d.monthsLeft + ' ay kaldı' : '🎉 Bitti'}</span>
+          <span style="font-size:10px;font-weight:700;color:${barColor}">${d.monthsLeft > 0 ? d.monthsLeft + ' ay kaldı' : '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h2"/><path d="M5 4v2"/><path d="M11.5 4l-.5 2"/><path d="M18 5h2"/><path d="M19 4v2"/><path d="M15 9l-1 1"/><path d="M18 13l2 -.5"/><path d="M18 19h2"/><path d="M19 18v2"/><path d="M14 16.518l-6.518 -6.518l-4.39 9.58a1 1 0 0 0 1.329 1.329l9.579 -4.39z"/></svg> Bitti'}</span>
         </div>
       </div>`;
   }).join('');
@@ -4989,7 +5041,7 @@ function renderDebtSummaryCard() {
         <div style="background:var(--surface2);border-radius:12px;padding:12px 14px">
           <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">En Yakın Biten</div>
           <div style="font-size:14px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${soonest.name}</div>
-          <div style="font-size:10px;font-weight:700;color:${soonest.monthsLeft<=2?'var(--accent)':'var(--muted)'};margin-top:3px">${soonest.monthsLeft > 0 ? soonest.monthsLeft + ' ay sonra bitiyor' : '🎉 Bu ay bitiyor!'}</div>
+          <div style="font-size:10px;font-weight:700;color:${soonest.monthsLeft<=2?'var(--accent)':'var(--muted)'};margin-top:3px">${soonest.monthsLeft > 0 ? soonest.monthsLeft + ' ay sonra bitiyor' : '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h2"/><path d="M5 4v2"/><path d="M11.5 4l-.5 2"/><path d="M18 5h2"/><path d="M19 4v2"/><path d="M15 9l-1 1"/><path d="M18 13l2 -.5"/><path d="M18 19h2"/><path d="M19 18v2"/><path d="M14 16.518l-6.518 -6.518l-4.39 9.58a1 1 0 0 0 1.329 1.329l9.579 -4.39z"/></svg> Bu ay bitiyor!'}</div>
         </div>
       </div>
 
@@ -5232,7 +5284,7 @@ function populateCatSelects() {
   const expenseCats = cats.filter(c => c.id !== 'gelir');
   const allOpts = cats.map(c => {
     if (c.id === 'gelir') return `<option value="${c.id}">${c.name}</option>`;
-    return `<option value="${c.id}">${c.emoji} ${c.name}</option>`;
+    return `<option value="${c.id}">${c.name}</option>`;
   }).join('');
   const expenseOpts = expenseCats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
   // txCategory: type'a göre filtrele
@@ -5309,7 +5361,7 @@ function addCategory() {
   const color = document.getElementById('newCatColor').value;
   const emoji = document.getElementById('newCatEmoji').value || 'tag';
   const keywords = document.getElementById('newCatKeywords').value.split(',').map(k => k.trim().toLowerCase()).filter(Boolean);
-  if (!name) { showToast('⚠️ Kategori adı gerekli'); return; }
+  if (!name) { showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg> Kategori adı gerekli'); return; }
   data.categories.push({ id: 'cat_' + uid(), name, color, emoji, keywords });
   save();
   document.getElementById('newCatName').value = '';
@@ -5318,7 +5370,7 @@ function addCategory() {
   document.getElementById('newCatKeywords').value = '';
   renderCatList();
   populateCatSelects();
-  showToast('✅ Kategori eklendi');
+  showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> Kategori eklendi');
 }
 
 function deleteCustomCat(id) {
@@ -5357,7 +5409,7 @@ function saveMonthlyTarget() {
   if (val > 0) data.monthlyTargets[mk] = val;
   else delete data.monthlyTargets[mk];
   save(); closeSettings(); renderAll();
-  showToast('✅ Hedef bütçe kaydedildi');
+  showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> Hedef bütçe kaydedildi');
 }
 
 function exportData() {
@@ -5368,7 +5420,7 @@ function exportData() {
   a.download = 'butcem-' + today() + '.json';
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
-  showToast('📤 Yedeklendi!');
+  showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 9l5 -5l5 5"/><path d="M12 4l0 12"/></svg> Yedeklendi!');
 }
 
 function importData(input) {
@@ -5387,6 +5439,7 @@ function importData(input) {
       if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
       if (!Array.isArray(data.streak.frozenDays)) data.streak.frozenDays = [];
       if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
+      data.streak.freezeTotal = 2; // sabit 2 hak
       if (!data.monthlyTargets || typeof data.monthlyTargets !== 'object') data.monthlyTargets = {};
       data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; });
       data.debts.forEach(d => { if (!d.paidMonths) d.paidMonths = []; if (!d.startMonth) d.startMonth = monthKey(); });
@@ -5394,8 +5447,8 @@ function importData(input) {
       const defaultIds = new Set(DEFAULT_CATS.map(c => c.id));
       data.categories = (data.categories || []).filter(c => !defaultIds.has(c.id));
       save(); renderAll(); closeSettings();
-      showToast('📥 Veri içe aktarıldı');
-    } catch(err) { showToast('⚠️ Dosya okunamadı'); }
+      showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg> Veri içe aktarıldı');
+    } catch(err) { showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg> Dosya okunamadı'); }
     input.value = '';
   };
   r.readAsText(file);
@@ -5459,7 +5512,7 @@ function renderAll() {
 // =================== INIT ===================
 
 // ===== KEYWORD EDIT =====
-const CAT_EMOJIS = ['🛒','🔌','🏠','🚇','🍽️','🩺','👗','🎮','📚','🛋️','🚗','💻','🐾','🎁','💰','✈️','🏋️','🎸','📷','🌱','☕','🎯','💍','👶','🌴','🎭','🎪','🏖️','🎨','🎬','📦','💼'];
+const CAT_EMOJIS = [];
 
 let editingKeywordCat = null;
 let _emojiPickerOpen = false;
@@ -5522,7 +5575,7 @@ function saveKeywords() {
   data.categoryKeywordOverrides[editingKeywordCat] = words;
   closeKeywordModal();
   save();
-  showToast('✅ Kategori güncellendi');
+  showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg> Kategori güncellendi');
   openCategories();
 }
 
