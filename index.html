@@ -2800,15 +2800,29 @@ function renderWalletHero(balance, fb) {
 
   const todaySpent = fb.todayVarSpent;
   const todayRemaining = Math.round(fb.todayRemaining);
+
+  // Bugünkü harcama rengi: limite göre
+  const spentRatio = fb.daily > 0 ? todaySpent / fb.daily : 0;
+  const spentColor = todaySpent <= 0
+    ? 'var(--muted)'
+    : todaySpent > fb.daily
+      ? 'var(--danger)'
+      : spentRatio > 0.5
+        ? 'var(--warning)'
+        : 'var(--accent)';
+  const spentLabel = todaySpent <= 0
+    ? 'henüz harcama yok'
+    : todaySpent > fb.daily
+      ? `${fmtTL(Math.round(todaySpent))} harcandı — limiti aştın`
+      : `${fmtTL(Math.round(todaySpent))} harcandı`;
+
   const dailySection = fb.income > 0 ? `
     <div style="height:1px;background:rgba(255,255,255,.06);margin:18px 0 16px"></div>
     <div style="display:flex;justify-content:space-between;align-items:flex-start">
       <div>
         <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Günlük Limit</div>
         <div style="font-size:36px;font-weight:900;letter-spacing:-1.5px;line-height:1;color:${dailyColor}">${fb.daily < 0 ? '−' : ''}${fmtTL(Math.abs(Math.round(fb.daily)))}</div>
-        ${todaySpent > 0 ? `
-        <div style="margin-top:6px;font-size:11px;font-weight:600;color:var(--muted)">${fmtTL(Math.round(todaySpent))} harcandı</div>` : `
-        <div style="margin-top:6px;font-size:11px;font-weight:600;color:var(--muted)">henüz harcama yok</div>`}
+        <div style="margin-top:6px;font-size:11px;font-weight:600;color:${spentColor}">${spentLabel}</div>
       </div>
       <div style="text-align:right;flex-shrink:0">
         <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Kalan Para</div>
@@ -2835,9 +2849,10 @@ function buildCarouselItems(fb) {
   const items = [];
   const mk = currentMonth;
   const todayD = new Date().getDate();
-  // Ortalama günlük değişken harcama (bugün dahil, geçen gün sayısına göre)
-  const pastDays = Math.max(1, todayD);
-  const avgDailySpent = fb.varSpent / pastDays;
+  // Ortalama günlük harcama: bugün HARİÇ — bugün henüz bitmedi
+  const pastDays = Math.max(1, todayD - 1);
+  const pastVarSpent = fb.varSpent - fb.todayVarSpent;
+  const avgDailySpent = pastVarSpent / pastDays;
 
   // 1. Temel bütçe durumu
   if (fb.remaining < 0) {
