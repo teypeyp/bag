@@ -2720,8 +2720,10 @@ function calcFreeBudget(mk) {
 
   // Günlük limit: bugünkü harcama HARİÇ kalan serbest para / kalan gün
   // Bugün harcanan yarın hesaba katılır — gün içinde limit değişmez
+  // Son gün (daysLeft=0): kalan tüm bütçe bugünün limiti
   const pastVarSpent = varSpent - todayVarSpent;
-  const daily = daysLeft > 0 ? (available - pastVarSpent) / daysLeft : 0;
+  const remainingBudget = available - pastVarSpent;
+  const daily = daysLeft > 0 ? remainingBudget / daysLeft : remainingBudget;
 
   // Bugün için kalan (limitten bugün ne kadar harcandı)
   const todayRemaining = daily - todayVarSpent;
@@ -5013,7 +5015,7 @@ function renderDailyStats() {
     if (daySpent > 0 && daySpent < minSpent) { minSpent = daySpent; minSpentDate = dateStr; }
   }
 
-  const avgDaily = todayD > 0 ? Math.round(totalVarSpent / todayD) : 0;
+  const avgDaily = todayD > 1 ? Math.round(totalVarSpent / (todayD - 1)) : Math.round(totalVarSpent);
   const scorePct = (todayD - emptyDays) > 0 ? Math.round((greenDays / (todayD - emptyDays)) * 100) : 0;
   const scoreColor = scorePct >= 70 ? 'var(--accent)' : scorePct >= 40 ? 'var(--warning)' : 'var(--danger)';
 
