@@ -227,7 +227,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* QUICK ACTION BAR */
 .qa-bar{display:flex;gap:10px;margin-bottom:16px}
-.qa-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 10px;border:none;border-radius:var(--radius-sm);font-family:'Montserrat',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:transform .12s cubic-bezier(.4,0,.2,1),box-shadow .12s;-webkit-tap-highlight-color:transparent;letter-spacing:.2px}
+.qa-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 10px;border:none;border-radius:var(--radius-sm);font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:transform .12s cubic-bezier(.4,0,.2,1),box-shadow .12s;-webkit-tap-highlight-color:transparent;letter-spacing:.2px}
 .qa-btn:active{transform:scale(.96)}
 .qa-btn-expense{background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;box-shadow:0 4px 20px rgba(231,76,60,.28);flex:1.6}
 .qa-btn-income{background:var(--surface2);color:var(--accent);border:1.5px solid rgba(45,184,102,.25);flex:1}
@@ -259,8 +259,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .tx-amount-big{width:100%;background:none;border:none;outline:none;font-family:'Montserrat',sans-serif;font-size:52px;font-weight:900;letter-spacing:-2px;color:var(--text);text-align:center;padding:8px 0 4px;caret-color:var(--sheet-accent)}
 .tx-amount-big::placeholder{color:rgba(255,255,255,.15)}
 .tx-amount-currency{position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:20px;font-weight:800;color:var(--muted);pointer-events:none}
-.tx-amount-divider{height:1.5px;background:var(--border);border-radius:1px;margin-bottom:16px;transition:background .2s}
-.tx-amount-divider.focused{background:var(--sheet-accent)}
+.tx-amount-divider{height:1px;background:var(--border);border-radius:1px;margin-bottom:16px;transition:background .2s}
+.tx-amount-divider.focused{background:var(--border)}
 
 /* OPTIONAL FIELDS */
 .tx-optionals{padding:0 20px}
@@ -366,13 +366,13 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .tx-items-wrap{display:flex;flex-direction:column;gap:6px}
 .tx-item{display:flex;align-items:center;gap:13px;padding:12px 12px;background:transparent;border-radius:14px;border:1.5px solid transparent;transition:opacity .1s}
 .tx-item:active{opacity:.7}
-.tx-item.tx-expense-card{background:rgba(231,76,60,.06);border-color:rgba(231,76,60,.18)}
-.tx-item.tx-income-card{background:rgba(45,184,102,.06);border-color:rgba(45,184,102,.18)}
+.tx-item.tx-expense-card{background:var(--surface);border-color:rgba(255,255,255,.07)}
+.tx-item.tx-income-card{background:var(--surface);border-color:rgba(255,255,255,.07)}
 .tx-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .tx-icon.income{background:rgba(45,184,102,.18)}
 .tx-icon.expense{background:rgba(231,76,60,.15)}
 .tx-info{flex:1;min-width:0}
-.tx-desc{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tx-desc{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 .tx-amount{font-size:14px;font-weight:800;flex-shrink:0;letter-spacing:-.3px;color:rgba(255,255,255,.85)}
 .tx-amount.income{color:var(--accent)}
@@ -1918,7 +1918,13 @@ const CAT_ICONS = {
   evcil:     '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14.7 13.5c-1.1 -2 -1.441 -2.5 -2.7 -2.5c-1.259 0 -1.736 .61 -2.7 2.5c-.827 1.612 -1.831 2.812 -2.8 3.5c-1.086 .752 -1.931 1 -3.5 1l0 1.5c2 0 3.5 -.5 5.5 -2c.5 .5 1 1 3.5 1s3 -.5 3.5 -1c2 1.5 3.5 2 5.5 2l0 -1.5c-1.787 0 -2.67 -.259 -3.737 -1.003c-.936 -.655 -1.917 -1.847 -2.563 -3.497z"/><path d="M9.5 8.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"/><path d="M4 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M20 10m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M14.5 8.5m-2.5 0a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0 -5 0"/></svg>',
   hediye:    '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 8m0 1a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z"/><path d="M12 8l0 13"/><path d="M19 12v7a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0 -5a4.8 8 0 0 1 4.5 5a4.8 8 0 0 1 4.5 -5a2.5 2.5 0 0 1 0 5"/></svg>',
   diger:     '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12m0 .5a.5 .5 0 1 0 0 -1a.5 .5 0 0 0 0 1"/><path d="M12 12m0 .5a.5 .5 0 1 0 0 -1a.5 .5 0 0 0 0 1"/><path d="M15 12m0 .5a.5 .5 0 1 0 0 -1a.5 .5 0 0 0 0 1"/></svg>',
-  gelir:     '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l4 -4l4 4l4 -6l4 4"/><path d="M14 7l3 0l0 3"/></svg>',
+  gelir:            '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l4 -4l4 4l4 -6l4 4"/><path d="M14 7l3 0l0 3"/></svg>',
+  gelir_freelance:  '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12h1m8 -9v1m8 8h1m-15.4 -6.4l.7 .7m12.1 -.7l-.7 .7"/><path d="M9 16a5 5 0 1 1 6 0a3.5 3.5 0 0 0 -1 3a2 2 0 0 1 -4 0a3.5 3.5 0 0 0 -1 -3"/><path d="M9.7 17h4.6"/></svg>',
+  gelir_kira:       '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0"/><path d="M9 8l1 0"/><path d="M9 12l1 0"/><path d="M9 16l1 0"/><path d="M14 8l1 0"/><path d="M14 12l1 0"/><path d="M14 16l1 0"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/></svg>',
+  gelir_yatirim:    '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l4 -4l4 4l4 -6l4 4"/><path d="M14 7l3 0l0 3"/></svg>',
+  gelir_ikramiye:   '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 8m0 1a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z"/><path d="M12 8l0 13"/><path d="M19 12v7a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0 -5a4.8 8 0 0 1 4.5 5a4.8 8 0 0 1 4.5 -5a2.5 2.5 0 0 1 0 5"/></svg>',
+  gelir_satis:      '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 17h-11v-14h-2"/><path d="M6 5l14 1l-1 7h-13"/></svg>',
+  gelir_diger:      '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0 4h-2a2 2 0 0 0 -1.8 -1"/><path d="M12 7v10"/></svg>',
 };
 const CAT_ICON_BORC = '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg>';
 
@@ -1963,25 +1969,25 @@ let data = {
 // =================== DEFAULTS ===================
 const DEFAULT_CATS = [
   // MARKET & ALIŞ VERİŞ
-  {id:'market',name:'Market',emoji:'',color:'#4ADE80',default:true,keywords:[
+  {id:'market',name:'Market',emoji:'',color:'#4ADE80',default:true,type:'expense',keywords:[
     'market','bim','a101','migros','carrefour','şok','hakmar','onur','file','tarım kredi',
     'gratis','watsons','bauhaus','ikea','mediamarkt','teknosa','vatan','hepsiburada',
     'trendyol','getir','yemeksepeti market','molle','metro','macro','alışveriş','süpermarket',
     'manav','kasap','fırın','ekmek','bakkal'
   ]},
   // FATURA & ABONELİK
-  {id:'fatura',name:'Fatura & Abonelik',emoji:'',color:'#60A5FA',default:true,keywords:[
+  {id:'fatura',type:'expense',name:'Fatura & Abonelik',emoji:'',color:'#60A5FA',default:true,keywords:[
     'elektrik','su','doğalgaz','internet','fatura','abonelik','vodafone','turkcell','türk telekom',
     'superonline','ttnet','enerjisa','başkent gaz','igdaş','iski','bedaş','abone',
     'netflix','spotify','youtube','apple','disney','exxen','blutv','tabii','gain',
     'amazon prime','google','icloud','dropbox','adobe','canva','chatgpt','openai','microsoft'
   ]},
   // KİRA & KONUT
-  {id:'kira',name:'Kira & Aidat',emoji:'',color:'#A78BFA',default:true,keywords:[
+  {id:'kira',type:'expense',name:'Kira & Aidat',emoji:'',color:'#A78BFA',default:true,keywords:[
     'kira','aidat','site aidatı','apartman','yönetim','konut','ev kirası','işyeri kirası'
   ]},
   // ULAŞIM
-  {id:'ulasim',name:'Ulaşım',emoji:'',color:'#FBBF24',default:true,keywords:[
+  {id:'ulasim',type:'expense',name:'Ulaşım',emoji:'',color:'#FBBF24',default:true,keywords:[
     'metro','otobüs','taksi','uber','bitaksi','bolt','indrive','benzin','akaryakıt',
     'akbil','istanbulkart','dolmuş','tramvay','vapur','feribot','tren','marmaray',
     'türk hava yolları','thy','pegasus','sunexpress','anadolujet','havalimanı','otogar',
@@ -1989,7 +1995,7 @@ const DEFAULT_CATS = [
     'shell','bp','opet','petrol ofisi','total','lpg','servis'
   ]},
   // YEME İÇME
-  {id:'yemek',name:'Yeme-İçme',emoji:'',color:'#F97316',default:true,keywords:[
+  {id:'yemek',type:'expense',name:'Yeme-İçme',emoji:'',color:'#F97316',default:true,keywords:[
     'restoran','cafe','kafeterya','lokanta','yemek','pizza','burger','döner','lahmacun',
     'pide','kebap','köfte','balık','sushi','noodle','sandviç','tost','börek','simit',
     'kahve','starbucks','kahve dünyası','caribou','negro','mcdonald','burger king',
@@ -1998,7 +2004,7 @@ const DEFAULT_CATS = [
     'içecek','çay','su','meyve suyu','smoothie','protein shake','fast food'
   ]},
   // SAĞLIK
-  {id:'saglik',name:'Sağlık',emoji:'',color:'#34D399',default:true,keywords:[
+  {id:'saglik',type:'expense',name:'Sağlık',emoji:'',color:'#34D399',default:true,keywords:[
     'eczane','doktor','hastane','klinik','poliklinik','ilaç','muayene','tahlil',
     'röntgen','mri','ultrason','diş','diş hekimi','ortodonti','göz doktoru','gözlük',
     'lens','psikolog','psikiyatrist','terapi','sağlık sigortası','özel sigorta',
@@ -2006,7 +2012,7 @@ const DEFAULT_CATS = [
     'fizyoterapi','ameliyat','medikal'
   ]},
   // GİYİM & KİŞİSEL BAKIM
-  {id:'giyim',name:'Giyim & Bakım',emoji:'',color:'#EC4899',default:true,keywords:[
+  {id:'giyim',type:'expense',name:'Giyim & Bakım',emoji:'',color:'#EC4899',default:true,keywords:[
     'giyim','kıyafet','ayakkabı','pantolon','mont','ceket','elbise','etek','gömlek',
     'kazak','tişört','jean','spor giyim','nike','adidas','zara','h&m','lcw','koton',
     'mavi','defacto','bershka','stradivarius','pull&bear','polo','lacoste','tommy',
@@ -2015,7 +2021,7 @@ const DEFAULT_CATS = [
     'kişisel bakım','kozmetik','kuru temizleme','çamaşır','ütü'
   ]},
   // EĞLENCE & HOBİ
-  {id:'eglence',name:'Eğlence & Hobi',emoji:'',color:'#8B5CF6',default:true,keywords:[
+  {id:'eglence',type:'expense',name:'Eğlence & Hobi',emoji:'',color:'#8B5CF6',default:true,keywords:[
     'sinema','tiyatro','konser','festival','müze','sergi','lunapark','bowling','go-kart',
     'oyun','steam','playstation','xbox','nintendo','uygulama','app store','google play',
     'kitap','dergi','gazete','puzzle','satranç','oyuncak','koleksiyon','hobi',
@@ -2024,14 +2030,14 @@ const DEFAULT_CATS = [
     'passo','seyahat','tur','rehber','aktivite'
   ]},
   // EĞİTİM
-  {id:'egitim',name:'Eğitim',emoji:'',color:'#06B6D4',default:true,keywords:[
+  {id:'egitim',type:'expense',name:'Eğitim',emoji:'',color:'#06B6D4',default:true,keywords:[
     'okul','üniversite','dershane','kurs','sertifika','udemy','coursera','linkedin learning',
     'kitap','ders kitabı','kalem','defter','kırtasiye','fotokopi','baskı','tez',
     'özel ders','öğretmen','tutor','sınav ücreti','yds','toefl','ielts','lys','yks',
     'sürücü kursu','ehliyet','eğitim','okul servis','okul forması','okul yemeği'
   ]},
   // EV & YAŞAM
-  {id:'ev',name:'Ev & Yaşam',emoji:'',color:'#FB923C',default:true,keywords:[
+  {id:'ev',type:'expense',name:'Ev & Yaşam',emoji:'',color:'#FB923C',default:true,keywords:[
     'mobilya','dekorasyon','ev eşyası','mutfak','banyo','halı','perde','aydınlatma',
     'lamba','ampul','pil','temizlik','deterjan','sabun','bez','süpürge','tamir',
     'tadilat','boyama','ustası','tesisatçı','elektrikçi','boya','çimento','kiremit',
@@ -2039,13 +2045,13 @@ const DEFAULT_CATS = [
     'yatak','yastık','nevresim','havlu','ikea','kocaş','bauhaus','praktiker'
   ]},
   // ARAÇ & OTOMOTİV
-  {id:'arac',name:'Araç & Bakım',emoji:'',color:'#F59E0B',default:true,keywords:[
+  {id:'arac',type:'expense',name:'Araç & Bakım',emoji:'',color:'#F59E0B',default:true,keywords:[
     'oto','araba','araç','servis','bakım','yağ değişimi','filtre','lastik','rot','balans',
     'egzoz','fren','akü','oto yıkama','kasko','trafik sigortası','muayene','tescil',
     'ekspertiz','oto galeri','oto aksesuar','navigasyon','oto cam','döşeme'
   ]},
   // TEKNOLOJİ & ELEKTRONİK
-  {id:'teknoloji',name:'Teknoloji',emoji:'',color:'#818CF8',default:true,keywords:[
+  {id:'teknoloji',type:'expense',name:'Teknoloji',emoji:'',color:'#818CF8',default:true,keywords:[
     'telefon','laptop','bilgisayar','tablet','ipad','iphone','samsung','apple',
     'xiaomi','huawei','kulaklık','airpods','mouse','klavye','monitör','printer',
     'yazıcı','hard disk','ssd','ram','kamera','fotoğraf makinesi','drone','akıllı saat',
@@ -2053,23 +2059,40 @@ const DEFAULT_CATS = [
     'apple store','teknosa','mediamarkt','vatan','gold bilgisayar'
   ]},
   // PET / EVCIL HAYVAN
-  {id:'evcil',name:'Evcil Hayvan',emoji:'',color:'#A3E635',default:true,keywords:[
+  {id:'evcil',type:'expense',name:'Evcil Hayvan',emoji:'',color:'#A3E635',default:true,keywords:[
     'veteriner','pet','evcil','mama','kedi','köpek','kuş','balık','hamster',
     'kedi kumu','kafes','tasma','oyuncak','aşı','ilaç','veteriner kliniği','petshop'
   ]},
   // BAĞIŞ & HEDİYE
-  {id:'hediye',name:'Hediye & Bağış',emoji:'',color:'#F472B6',default:true,keywords:[
+  {id:'hediye',type:'expense',name:'Hediye & Bağış',emoji:'',color:'#F472B6',default:true,keywords:[
     'hediye','bağış','yardım','sadaka','vakıf','dernek','çiçek','buket',
     'pasta','doğum günü','düğün','nişan','nikah','bebek şekeri','çeyiz',
     'kına','sünnet','mezuniyet','sevgililer günü','anneler günü','babalar günü'
   ]},
   // DİĞER
-  {id:'diger',name:'Diğer',emoji:'',color:'#6B7280',default:true,keywords:[]},
-  // GELİR
-  {id:'gelir',name:'Maaş / Gelir',emoji:'',color:'#2DB866',default:true,keywords:[
-    'maaş','gelir','ücret','ikramiye','prim','kira geliri','freelance','serbest',
-    'fatura','tahsilat','transfer','yatırım','temettü','faiz','kâr','satış',
-    'komisyon','bonus','ödül','burs','haciz','nafaka','kira tahsilatı'
+  {id:'diger',type:'expense',name:'Diğer',emoji:'',color:'#6B7280',default:true,keywords:[]},
+  // GELİR KATEGORİLERİ
+  {id:'gelir',name:'Maaş',emoji:'',color:'#2DB866',default:true,type:'income',keywords:[
+    'maaş','ücret','maaş yatma','maaş günü','aylık','net maaş','brüt maaş'
+  ]},
+  {id:'gelir_freelance',name:'Freelance',emoji:'',color:'#34D399',default:true,type:'income',keywords:[
+    'freelance','serbest çalışma','proje','danışmanlık','consulting','iş','ödeme','tahsilat'
+  ]},
+  {id:'gelir_kira',name:'Kira Geliri',emoji:'',color:'#6EE7B7',default:true,type:'income',keywords:[
+    'kira geliri','kira tahsilatı','kiracı','ev kirası','dükkan kirası'
+  ]},
+  {id:'gelir_yatirim',name:'Yatırım Getirisi',emoji:'',color:'#A7F3D0',default:true,type:'income',keywords:[
+    'yatırım','temettü','faiz','hisse','borsa','bist','kripto','bitcoin','ethereum',
+    'döviz','altın','fon','repo','mevduat','getiri','kâr payı'
+  ]},
+  {id:'gelir_ikramiye',name:'İkramiye & Prim',emoji:'',color:'#FCD34D',default:true,type:'income',keywords:[
+    'ikramiye','prim','bonus','ödül','performans','bayram','yılsonu'
+  ]},
+  {id:'gelir_satis',name:'Satış Geliri',emoji:'',color:'#FDE68A',default:true,type:'income',keywords:[
+    'satış','sattım','ikinci el','letgo','sahibinden','trendyol','hepsiburada','satılan'
+  ]},
+  {id:'gelir_diger',name:'Diğer Gelir',emoji:'',color:'#D1FAE5',default:true,type:'income',keywords:[
+    'burs','nafaka','yardım','destek','transfer','havale','eft','para geldi','gelir'
   ]},
 ];
 
@@ -3561,18 +3584,10 @@ function _sheetSetTheme(type) {
 function _buildSheetCatGrid() {
   const grid = document.getElementById('txCatGrid');
   if (!grid) return;
-  const cats = allCategories().filter(c => _sheetType === 'income' ? true : c.id !== 'gelir');
-  // Ana 8 kategori önce, sonra geri kalanlar
-  const priority = ['market','yemek','ulasim','fatura','giyim','saglik','eglence','diger'];
-  const sorted = [
-    ...priority.map(id => cats.find(c => c.id === id)).filter(Boolean),
-    ...cats.filter(c => !priority.includes(c.id))
-  ];
-  if (_sheetType === 'income') {
-    const gelir = cats.find(c => c.id === 'gelir');
-    if (gelir) sorted.unshift(gelir);
-  }
-  grid.innerHTML = sorted.map(cat => {
+  const cats = allCategories().filter(c =>
+    _sheetType === 'income' ? c.type === 'income' : c.type !== 'income'
+  );
+  grid.innerHTML = cats.map(cat => {
     const icon = catIconSvg(cat, 20);
     const sel  = _sheetCatId === cat.id ? ' selected' : '';
     return `<div class="cat-cell${sel}" id="catcell_${cat.id}" onclick="txSheetSelectCat('${cat.id}')">
@@ -3597,13 +3612,13 @@ function _updateCatChip() {
 
 function openTxSheet(type) {
   _sheetType   = type || 'expense';
-  _sheetCatId  = _sheetType === 'income' ? 'gelir' : null;
+  _sheetCatId  = null;
   _sheetDateStr = today();
 
   _sheetSetTheme(_sheetType);
 
   const title = document.getElementById('txSheetTitle');
-  if (title) title.textContent = _sheetType === 'expense' ? 'Ne harcadın?' : 'Gelir ekle';
+  if (title) title.textContent = _sheetType === 'expense' ? 'Ne harcadın?' : 'Gelir türü?';
 
   // Reset fields
   const amtEl = document.getElementById('txSheetAmount');
@@ -3620,15 +3635,9 @@ function openTxSheet(type) {
   // Sync legacy hidden fields
   setType(_sheetType);
 
-  if (_sheetType === 'income') {
-    // Gelir: direkt step2'ye geç
-    _sheetCatId = 'gelir';
-    _txSheetGoStep2();
-  } else {
-    // Gider: kategori seçimi
-    _buildSheetCatGrid();
-    _txSheetGoStep1();
-  }
+  // Her iki tip için de kategori seçimiyle başla
+  _buildSheetCatGrid();
+  _txSheetGoStep1();
 
   document.getElementById('txSheetOverlay').classList.add('show');
   document.getElementById('txSheet').classList.add('show');
@@ -5873,18 +5882,17 @@ function closeHistory() {
 // =================== CATEGORIES ===================
 function populateCatSelects() {
   const cats = allCategories();
-  // Gider seçimlerinden gelir kategorisini çıkar
-  const expenseCats = cats.filter(c => c.id !== 'gelir');
-  const allOpts = cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  const expenseCats = cats.filter(c => c.type !== 'income');
+  const incomeCats  = cats.filter(c => c.type === 'income');
+  const allOpts     = cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
   const expenseOpts = expenseCats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-  // txCategory: type'a göre filtrele
+  const incomeOpts  = incomeCats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
   const txCat = document.getElementById('txCategory');
   if (txCat) {
     const prev = txCat.value;
-    txCat.innerHTML = currentType === 'income' ? allOpts : expenseOpts;
+    txCat.innerHTML = currentType === 'income' ? incomeOpts : expenseOpts;
     if (prev && txCat.querySelector(`option[value="${prev}"]`)) txCat.value = prev;
   }
-  // recCategory: her zaman gider kategorileri
   const recCat = document.getElementById('recCategory');
   if (recCat) {
     const prev = recCat.value;
