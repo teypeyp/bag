@@ -243,7 +243,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .tx-sheet-close{width:30px;height:30px;border-radius:50%;background:var(--surface3);border:none;color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
 
 /* CATEGORY GRID */
-.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px 8px}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px 8px}
 .cat-cell{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .15s cubic-bezier(.4,0,.2,1);-webkit-tap-highlight-color:transparent}
 .cat-cell:active{transform:scale(.93)}
 .cat-cell.selected{border-color:var(--sheet-accent);background:var(--sheet-accent-dim);box-shadow:0 0 0 1px var(--sheet-accent)}
@@ -1675,10 +1675,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       <div id="txCatChipWrap" style="margin-bottom:16px"></div>
       <div class="tx-amount-input-wrap">
         <input type="text" id="txSheetAmount" class="tx-amount-big"
-          placeholder="0" inputmode="numeric"
+          placeholder="0" inputmode="numeric" pattern="[0-9]*"
           oninput="fmtInput(this);txSheetAmountChanged()"
           onkeydown="if(event.key==='Enter'){txSheetSave()}"
-          autocomplete="off" enterkeyhint="done">
+          autocomplete="off" enterkeyhint="done" readonly>
         <span class="tx-amount-currency">₺</span>
       </div>
       <div class="tx-amount-divider" id="txAmountDivider"></div>
@@ -3676,20 +3676,22 @@ function _txSheetGoStep2() {
   document.getElementById('txStep2').classList.add('active');
   document.getElementById('txSheetTitle').textContent = _sheetType === 'expense' ? 'Ne kadar?' : 'Ne kadar geldi?';
   _updateCatChip();
-  setTimeout(() => {
-    const amtEl = document.getElementById('txSheetAmount');
-    if (amtEl) amtEl.focus();
-  }, 80);
 }
 
 function txSheetSelectCat(catId) {
   _sheetCatId = catId;
-  // Seçim animasyonu
   document.querySelectorAll('.cat-cell').forEach(el => el.classList.remove('selected'));
   const cell = document.getElementById('catcell_' + catId);
   if (cell) cell.classList.add('selected');
-  // Kısa gecikmeyle step2'ye geç
-  setTimeout(() => _txSheetGoStep2(), 160);
+  setTimeout(() => {
+    _txSheetGoStep2();
+    // Step2 görünür olduktan hemen sonra focus — hâlâ aynı user gesture zincirinde
+    const amtEl = document.getElementById('txSheetAmount');
+    if (amtEl) {
+      amtEl.removeAttribute('readonly');
+      amtEl.focus();
+    }
+  }, 160);
 }
 
 function txSheetSkipCat() {
