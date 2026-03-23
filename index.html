@@ -253,7 +253,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* AMOUNT SCREEN */
 .tx-amount-screen{padding:0 20px 12px}
-.tx-cat-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:30px;background:var(--surface2);border:1.5px solid var(--sheet-accent);margin-bottom:18px;cursor:pointer}
+.tx-cat-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:30px;background:var(--surface2);border:1.5px solid var(--border);margin-bottom:18px;cursor:pointer}
 .tx-cat-chip-name{font-size:13px;font-weight:700;color:var(--text)}
 .tx-amount-input-wrap{position:relative;margin-bottom:4px}
 .tx-amount-big{width:100%;background:none;border:none;outline:none;font-family:'Montserrat',sans-serif;font-size:52px;font-weight:900;letter-spacing:-2px;color:var(--text);text-align:center;padding:8px 0 4px;caret-color:var(--sheet-accent)}
@@ -778,10 +778,11 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .icon-btn:active{background:var(--surface3);transform:scale(.93)}
 
 /* ===== TX ACTION BUTTONS ===== */
-.tx-action-btn{display:none;padding:5px 10px;border-radius:8px;border:none;font-size:11px;font-weight:800;font-family:'Montserrat',sans-serif;cursor:pointer;opacity:0;transform:scale(.8);transition:opacity .18s,transform .18s;pointer-events:none;white-space:nowrap}
-.tx-action-btn.show{display:inline-block;opacity:1;transform:scale(1);pointer-events:auto}
-.edit-btn{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
-.del-btn{background:var(--danger);color:#fff}
+.tx-action-btn{display:none;width:32px;height:32px;border-radius:9px;border:1px solid var(--border);background:var(--surface3);color:var(--muted);align-items:center;justify-content:center;cursor:pointer;opacity:0;transform:scale(.8);transition:opacity .18s,transform .18s;pointer-events:none;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+.tx-action-btn.show{display:flex;opacity:1;transform:scale(1);pointer-events:auto}
+.tx-action-btn:active{transform:scale(.9)}
+.edit-btn{background:var(--surface3);color:var(--muted);border-color:var(--border)}
+.del-btn{border-color:rgba(255,69,58,.25);background:rgba(255,69,58,.08);color:var(--danger)}
 
 /* ===== ITEM EXPAND ACTIONS (rec/debt/goal/wish) ===== */
 .item-actions-row{
@@ -1582,30 +1583,44 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   <div class="modal-sheet" style="position:relative">
     <button class="modal-close" onclick="closeCatModal()">×</button>
     <div class="modal-title">Kategoriler</div>
-    <div id="catList"></div>
 
-    <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--border)">
-      <div class="modal-title" style="font-size:15px;margin-bottom:14px">Yeni Kategori Ekle</div>
-      <div class="form-group">
-        <label class="form-label">İsim</label>
-        <input type="text" id="newCatName" class="form-input" placeholder="Kategori adı">
-      </div>
-      <div style="display:flex;gap:8px">
-        <div class="form-group" style="flex:1">
-          <label class="form-label">Renk</label>
-          <input type="color" id="newCatColor" class="form-input" value="#4ADE80" style="height:44px;padding:4px" oninput="updateNewCatIconColor(this.value)">
+    <!-- Tab toggle -->
+    <div class="toggle-row" style="margin-bottom:14px">
+      <button class="toggle-btn expense active" id="catTabExpense" onclick="switchCatTab('expense')">Giderler</button>
+      <button class="toggle-btn income" id="catTabIncome" onclick="switchCatTab('income')">Gelirler</button>
+    </div>
+
+    <div id="catListExpense"></div>
+    <div id="catListIncome"></div>
+
+    <!-- Kategori Ekle butonu -->
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+      <button class="btn btn-ghost btn-full" onclick="toggleNewCatForm()" id="newCatToggleBtn">+ Kategori Ekle</button>
+      <div id="newCatForm" style="display:none;margin-top:16px">
+        <div class="form-group">
+          <label class="form-label">Tür</label>
+          <div class="toggle-row" style="margin-bottom:0">
+            <button class="toggle-btn income active" id="newCatTypeIncome" onclick="setNewCatType('income')">Gelir</button>
+            <button class="toggle-btn expense" id="newCatTypeExpense" onclick="setNewCatType('expense')">Gider</button>
+          </div>
         </div>
+        <div class="form-group">
+          <label class="form-label">İsim</label>
+          <input type="text" id="newCatName" class="form-input" placeholder="Kategori adı">
+        </div>
+        <div style="display:flex;gap:8px">
+          <div class="form-group" style="flex:1">
+            <label class="form-label">Renk</label>
+            <input type="color" id="newCatColor" class="form-input" value="#4ADE80" style="height:44px;padding:4px" oninput="updateNewCatIconColor(this.value)">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">İkon</label>
+          <input type="hidden" id="newCatEmoji" value="tag">
+          <div id="newCatIconPicker" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--surface2);border-radius:var(--radius-sm);border:1.5px solid var(--border)"></div>
+        </div>
+        <button class="btn btn-primary btn-full" style="margin-top:8px" onclick="addCategory()">Ekle</button>
       </div>
-      <div class="form-group">
-        <label class="form-label">İkon</label>
-        <input type="hidden" id="newCatEmoji" value="tag">
-        <div id="newCatIconPicker" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--surface2);border-radius:var(--radius-sm);border:1.5px solid var(--border)"></div>
-      </div>
-      <div class="form-group" style="margin-top:6px">
-        <label class="form-label" style="color:var(--muted);opacity:.7">Anahtar Kelimeler <span style="font-weight:500;text-transform:none;letter-spacing:0">(virgülle ayır — isteğe bağlı)</span></label>
-        <input type="text" id="newCatKeywords" class="form-input" placeholder="market, alışveriş" style="color:var(--muted)">
-      </div>
-      <button class="btn btn-primary btn-full" style="margin-top:8px" onclick="addCategory()">Kategori Ekle</button>
     </div>
   </div>
 </div>
@@ -3300,8 +3315,8 @@ function renderTxList(container, txs, limitTo5, prefix) {
         </div>
         <div class="tx-right">
           <div class="tx-amount ${t.type}">${t.type==='income' ? '+' : '−'}${fmtTL(t.amount)}</div>
-          <button class="tx-action-btn edit-btn" id="txedit_${domId}" onclick="event.stopPropagation();openEditTx('${t.id}')">Düzenle</button>
-          <button class="tx-action-btn del-btn" id="txdel_${domId}" onclick="event.stopPropagation();deleteTx('${t.id}','${pfx}')">Sil</button>
+          <button class="tx-action-btn edit-btn" id="txedit_${domId}" onclick="event.stopPropagation();openEditTx('${t.id}')" title="Düzenle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="tx-action-btn del-btn" id="txdel_${domId}" onclick="event.stopPropagation();deleteTx('${t.id}','${pfx}')" title="Sil"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
         </div>
       </div>`;
       shownCount++;
@@ -5902,6 +5917,9 @@ function populateCatSelects() {
 }
 
 function openCategories() {
+  _catTab = 'expense';
+  document.getElementById('catTabExpense')?.classList.add('active');
+  document.getElementById('catTabIncome')?.classList.remove('active');
   renderCatList();
   document.getElementById('catModal').classList.add('show');
   buildNewCatIconPicker();
@@ -5911,15 +5929,62 @@ function closeCatModal() {
   document.getElementById('catModal').classList.remove('show');
 }
 
+let _catTab = 'expense';
+function switchCatTab(tab) {
+  _catTab = tab;
+  document.getElementById('catTabExpense').classList.toggle('active', tab === 'expense');
+  document.getElementById('catTabIncome').classList.toggle('active', tab === 'income');
+  renderCatList();
+}
+
 function renderCatList() {
-  const el = document.getElementById('catList');
-  if (!el) return;
-  el.innerHTML = allCategories().map(c => `<div class="cat-item">
-    <span style="display:flex;align-items:center">${catIconSvg(c,20)}</span>
+  const cats = allCategories().filter(c => _catTab === 'income' ? c.type === 'income' : c.type !== 'income');
+  const expEl = document.getElementById('catListExpense');
+  const incEl = document.getElementById('catListIncome');
+  const target = _catTab === 'income' ? incEl : expEl;
+  const other  = _catTab === 'income' ? expEl : incEl;
+  if (other)  other.innerHTML = '';
+  if (!target) return;
+  target.innerHTML = cats.map(c => `<div class="cat-item">
+    <span style="display:flex;align-items:center;cursor:pointer" onclick="openKeywordEdit('${c.id}')">${catIconSvg(c,22)}</span>
     <span style="flex:1;font-size:13px;font-weight:700;color:${c.color}">${c.name}</span>
-    <button class="btn btn-ghost btn-sm" style="padding:4px 8px;font-size:11px" onclick="openKeywordEdit('${c.id}')">Kelimeler</button>
-    ${c.default ? '' : `<button class="btn btn-ghost btn-sm" style="padding:4px 10px;color:var(--danger)" onclick="deleteCustomCat('${c.id}')">Sil</button>`}
+    <div style="display:flex;gap:6px">
+      <button class="icon-action-btn" onclick="event.stopPropagation();openKeywordEdit('${c.id}')" title="Düzenle">${SVG_EDIT}</button>
+      ${c.default ? '' : `<button class="icon-action-btn danger" onclick="event.stopPropagation();deleteCustomCat('${c.id}')" title="Sil">${SVG_TRASH}</button>`}
+    </div>
   </div>`).join('');
+}
+
+let _newCatType = 'income';
+function toggleNewCatForm() {
+  const form = document.getElementById('newCatForm');
+  const btn  = document.getElementById('newCatToggleBtn');
+  if (!form) return;
+  const isOpen = form.style.display !== 'none';
+  form.style.display = isOpen ? 'none' : 'block';
+  btn.textContent = isOpen ? '+ Kategori Ekle' : '− Kapat';
+  if (!isOpen) buildNewCatIconPicker();
+}
+
+function setNewCatType(type) {
+  _newCatType = type;
+  document.getElementById('newCatTypeIncome').classList.toggle('active', type === 'income');
+  document.getElementById('newCatTypeExpense').classList.toggle('active', type === 'expense');
+}
+
+function addCategory() {
+  const name = document.getElementById('newCatName').value.trim();
+  const color = document.getElementById('newCatColor').value;
+  const emoji = document.getElementById('newCatEmoji').value || 'tag';
+  if (!name) { showToast(TOAST_WARN + ' Kategori adı gerekli'); return; }
+  data.categories.push({ id: 'cat_' + uid(), name, color, emoji, keywords: [], type: _newCatType });
+  save();
+  document.getElementById('newCatName').value = '';
+  document.getElementById('newCatEmoji').value = 'tag';
+  buildNewCatIconPicker();
+  renderCatList();
+  populateCatSelects();
+  showToast(TOAST_OK + ' Kategori eklendi');
 }
 
 function buildNewCatIconPicker() {
@@ -5952,23 +6017,6 @@ function selectNewCatIcon(id) {
     const svg = d.querySelector('svg');
     if (svg) svg.setAttribute('stroke', sel ? color : 'var(--muted)');
   });
-}
-
-function addCategory() {
-  const name = document.getElementById('newCatName').value.trim();
-  const color = document.getElementById('newCatColor').value;
-  const emoji = document.getElementById('newCatEmoji').value || 'tag';
-  const keywords = document.getElementById('newCatKeywords').value.split(',').map(k => k.trim().toLowerCase()).filter(Boolean);
-  if (!name) { showToast(TOAST_WARN + ' Kategori adı gerekli'); return; }
-  data.categories.push({ id: 'cat_' + uid(), name, color, emoji, keywords });
-  save();
-  document.getElementById('newCatName').value = '';
-  document.getElementById('newCatEmoji').value = 'tag';
-  buildNewCatIconPicker();
-  document.getElementById('newCatKeywords').value = '';
-  renderCatList();
-  populateCatSelects();
-  showToast(TOAST_OK + ' Kategori eklendi');
 }
 
 function deleteCustomCat(id) {
