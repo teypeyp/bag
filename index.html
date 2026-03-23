@@ -1504,6 +1504,21 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       </div>
     </div>
 
+    <!-- Bütçe -->
+    <div class="settings-section-label">Bütçe</div>
+    <div class="settings-group">
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <div class="settings-row-title">Aylık Tasarruf Hedefi</div>
+          <div class="settings-row-sub">Bu ay ayırmak istediğin miktar</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:13px;font-weight:800;color:var(--muted)">₺</span>
+          <input type="text" id="monthlyTarget" class="settings-inline-input" placeholder="0" inputmode="numeric" style="width:100px;text-align:right" oninput="fmtInput(this)" onblur="saveMonthlyTarget()" onkeydown="if(event.key==='Enter'){this.blur()}">
+        </div>
+      </div>
+    </div>
+
     <!-- Veri -->
     <div class="settings-group">
       <div class="settings-row tappable" onclick="exportData()">
@@ -2410,6 +2425,11 @@ function switchTab(id) {
   if (id === 'ayarlar') {
     const wni = document.getElementById('walletNameInput');
     if (wni) wni.value = data.walletName || '';
+    const mti = document.getElementById('monthlyTarget');
+    if (mti) {
+      const val = data.monthlyTargets[currentMonth] || 0;
+      mti.value = val > 0 ? fmtNum(val) : '';
+    }
   }
 }
 
@@ -6001,6 +6021,21 @@ function selectNewCatIcon(id) {
     d.style.borderColor = sel ? color : 'var(--border)';
     const svg = d.querySelector('svg');
     if (svg) svg.setAttribute('stroke', sel ? color : 'var(--muted)');
+  });
+}
+
+function updateNewCatIconColor(color) {
+  // Renk değişince seçili ikonun rengini güncelle
+  const hidden = document.getElementById('newCatEmoji');
+  const currentId = hidden?.value || 'tag';
+  document.querySelectorAll('#newCatIconPicker [data-icon]').forEach(d => {
+    const sel = d.dataset.icon === currentId;
+    if (sel) {
+      d.style.borderColor = color;
+      d.style.background = 'var(--accent-dim)';
+      const svg = d.querySelector('svg');
+      if (svg) svg.setAttribute('stroke', color);
+    }
   });
 }
 
