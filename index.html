@@ -2985,8 +2985,8 @@ function buildCarouselItems(fb) {
     }
     if (activeDebts.length > 1) {
       const smallest = [...activeDebts].sort((a,b) =>
-        (a.totalAmount - a.paidCount*a.monthlyAmount) - (b.totalAmount - b.paidCount*b.monthlyAmount))[0];
-      const left = Math.round(smallest.totalAmount - smallest.paidCount * smallest.monthlyAmount);
+        ((a.installments - a.paidCount) * a.monthlyAmount) - ((b.installments - b.paidCount) * b.monthlyAmount))[0];
+      const left = Math.round((smallest.installments - smallest.paidCount) * smallest.monthlyAmount);
       if (left > 0) items.push({ cls:'warn', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>',
         title:`Önce bitir: ${esc(smallest.name)} <em>— ${fmtTL(left)} kaldı</em>` });
     }
@@ -3932,7 +3932,7 @@ function renderDebtList() {
   if (sumEl) {
     const unpaidTotal = activeDebts.filter(d => !isPaidThisMonth(d,mk) && (!d.startMonth||d.startMonth<=mk)).reduce((s,d)=>s+d.monthlyAmount,0);
     const paidTotal = activeDebts.filter(d => isPaidThisMonth(d,mk)).reduce((s,d)=>s+d.monthlyAmount,0);
-    const totalLeft = activeDebts.reduce((s,d)=>s+(d.totalAmount-d.paidCount*d.monthlyAmount),0);
+    const totalLeft = activeDebts.reduce((s,d)=>s+((d.installments - d.paidCount) * d.monthlyAmount),0);
     sumEl.innerHTML = `<div class="debt-summary-box">
       <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;grid-column:1/-1;margin-bottom:4px">Ödeme Özeti</div>
       <div><div class="ds-label">Bu ay ödenecek</div><div class="ds-val" style="color:${unpaidTotal>0?'var(--danger)':'var(--muted)'}">${fmtTL(unpaidTotal)}</div></div>
@@ -4841,7 +4841,7 @@ function renderFinancialAdvice() {
   const mk = monthKey();
   const fb = calcFreeBudget(mk);
   const activeDebts = data.debts.filter(d => d.active);
-  const totalDebt = activeDebts.reduce((s,d) => s + (d.totalAmount - d.paidCount * d.monthlyAmount), 0);
+  const totalDebt = activeDebts.reduce((s,d) => s + ((d.installments - d.paidCount) * d.monthlyAmount), 0);
   const monthlyDebtLoad = activeDebts.reduce((s,d) => s + d.monthlyAmount, 0);
   const debtToIncomeRatio = fb.income > 0 ? monthlyDebtLoad / fb.income : 0;
   const tips = [];
@@ -4870,8 +4870,8 @@ function renderFinancialAdvice() {
       tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#34D399" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>', cls:'good', title:`Gelirinin sadece %${debtPct}'${pctSuffix} borca gidiyor`, sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit — sağlıklı oran. Taksiplere sadık kal.` });
     }
     if (activeDebts.length > 1) {
-      const smallest = [...activeDebts].sort((a,b)=>(a.totalAmount-a.paidCount*a.monthlyAmount)-(b.totalAmount-b.paidCount*b.monthlyAmount))[0];
-      const left = smallest.totalAmount - smallest.paidCount * smallest.monthlyAmount;
+      const smallest = [...activeDebts].sort((a,b)=>((a.installments - a.paidCount) * a.monthlyAmount)-((b.installments - b.paidCount) * b.monthlyAmount))[0];
+      const left = (smallest.installments - smallest.paidCount) * smallest.monthlyAmount;
       tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>', cls:'warn', title:`En küçük borcu önce bitir: ${esc(smallest.name)}`, sub:`${fmtTL(Math.round(left))} kaldı. Bitince o taksiti diğerine ekle — zincirleme öde.` });
     }
     const hasEmergencyFund = data.savingsGoals.some(g => g.name.toLowerCase().includes('acil') || g.name.toLowerCase().includes('fon'));
@@ -5243,7 +5243,7 @@ function renderDebtSummaryCard() {
   // Her borç için bar
   const debtBarsHtml = sorted.map(d => {
     const pct = d.installments > 0 ? Math.round((d.paidCount / d.installments) * 100) : 100;
-    const rem = Math.max(0, d.totalAmount - d.paidCount * d.monthlyAmount);
+    const rem = Math.max(0, (d.installments - d.paidCount) * d.monthlyAmount);
     const isPaid = isPaidThisMonth(d, mk);
     const barColor = pct >= 75 ? 'var(--accent)' : pct >= 40 ? 'var(--warning)' : 'var(--danger)';
     return `
