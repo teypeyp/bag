@@ -2320,7 +2320,7 @@ function getDayStatus(dateStr) {
 
   const expUntil = txsUntilDay.filter(t => t.type === 'expense').reduce((s,t) => s + t.amount, 0);
   const recTotal = data.recurring.filter(r => r.active).reduce((s,r) => s + r.amount, 0);
-  const debtTotal = data.debts.filter(dd => dd.active && (!dd.startMonth || dd.startMonth <= mk)).reduce((s,dd) => s + dd.monthlyAmount, 0);
+  const debtTotal = data.debts.filter(dd => (dd.active || (dd.paidMonths||[]).includes(mk)) && (!dd.startMonth || dd.startMonth <= mk)).reduce((s,dd) => s + dd.monthlyAmount, 0);
   const goalTotal = data.savingsGoals.filter(g => g.monthly).reduce((s,g) => s + g.monthly, 0);
   const savTarget = data.monthlyTargets[mk] || 0;
   const available = incomeUntil - recTotal - debtTotal - goalTotal - savTarget;
@@ -2351,11 +2351,28 @@ function calcStreakData() {
   // Streak: bugüne kadar ardışık green/frozen günler (geriye doğru)
   // empty = harcama yok veya gelir yok → streak'i KIRMAZ ama sayılmaz
   // red = limit aşıldı → kırar
+  // Ay sınırını aşmak için: bu ayki günler bittikten sonra önceki aya da bak
   let streak = 0;
+  // Önce bu ayı tara
+  let hitRed = false;
   for (let i = Math.min(todayD, dim) - 1; i >= 0; i--) {
     const s = days[i].status;
-    if (s === 'red') break;
+    if (s === 'red') { hitRed = true; break; }
     if (s === 'green' || s === 'frozen') streak++;
+  }
+  // Eğer bu ayın ilk gününe ulaştık ve red yoksa → önceki aya geç
+  if (!hitRed) {
+    const prevDate = new Date(y, m - 2, 1); // önceki ay
+    const prevY = prevDate.getFullYear();
+    const prevM = prevDate.getMonth() + 1;
+    const prevMk = prevY + '-' + String(prevM).padStart(2,'0');
+    const prevDim = daysInMonth(prevMk);
+    for (let pd = prevDim; pd >= 1; pd--) {
+      const dateStr = prevY + '-' + String(prevM).padStart(2,'0') + '-' + String(pd).padStart(2,'0');
+      const s = getDayStatus(dateStr);
+      if (s === 'red') break;
+      if (s === 'green' || s === 'frozen') streak++;
+    }
   }
 
   // En iyi streak (tarihsel — all time)
@@ -2693,7 +2710,8 @@ function calcFreeBudget(mk) {
 
   const recTotal = data.recurring.filter(r => r.active)
     .reduce((s, r) => s + r.amount, 0);
-  const debtTotal = data.debts.filter(d => d.active &&
+  const debtTotal = data.debts.filter(d =>
+    (d.active || (d.paidMonths || []).includes(mk)) &&
     (!d.startMonth || d.startMonth <= mk))
     .reduce((s, d) => s + d.monthlyAmount, 0);
   const goalTotal = data.savingsGoals.filter(g => g.monthly)
@@ -3274,6 +3292,7 @@ function openEditTx(id) {
   const tx = data.transactions.find(t => t.id === id);
   if (!tx) return;
   _editTxId = id;
+  const isFixed = tx.isRecurring || tx.isDebt || tx.isGoalDeposit;
   const cats = tx.type === 'expense'
     ? allCategories().filter(c => c.id !== 'gelir')
     : allCategories();
@@ -3283,18 +3302,29 @@ function openEditTx(id) {
   document.getElementById('editTxCategory').innerHTML = cats.map(c =>
     `<option value="${c.id}"${c.id===tx.category?' selected':''}>${c.name}</option>`
   ).join('');
+  // Sabit/borç/birikim transaction'larında tutar ve tarih kilitli
+  const amountEl = document.getElementById('editTxAmount');
+  const dateEl = document.getElementById('editTxDate');
+  if (amountEl) { amountEl.readOnly = isFixed; amountEl.style.opacity = isFixed ? '0.4' : '1'; }
+  if (dateEl) { dateEl.readOnly = isFixed; dateEl.style.opacity = isFixed ? '0.4' : '1'; }
   document.getElementById('txEditModal').classList.add('show');
 }
 function closeTxEdit() {
   document.getElementById('txEditModal').classList.remove('show');
+  // Kilitleri sıfırla
+  const amountEl = document.getElementById('editTxAmount');
+  const dateEl = document.getElementById('editTxDate');
+  if (amountEl) { amountEl.readOnly = false; amountEl.style.opacity = '1'; }
+  if (dateEl) { dateEl.readOnly = false; dateEl.style.opacity = '1'; }
   _editTxId = null;
 }
 function saveTxEdit() {
   const tx = data.transactions.find(t => t.id === _editTxId);
   if (!tx) return;
+  const isFixed = tx.isRecurring || tx.isDebt || tx.isGoalDeposit;
   const desc = document.getElementById('editTxDesc').value.trim();
-  const amount = parseNum(document.getElementById('editTxAmount').value);
-  const date = document.getElementById('editTxDate').value;
+  const amount = isFixed ? tx.amount : parseNum(document.getElementById('editTxAmount').value);
+  const date = isFixed ? tx.date : document.getElementById('editTxDate').value;
   const category = document.getElementById('editTxCategory').value;
   if (!desc || !amount) { showToast(TOAST_WARN + ' Açıklama ve tutar gerekli'); return; }
   tx.desc = desc; tx.amount = amount;
@@ -3417,7 +3447,7 @@ function addTransaction() {
     if (fb.daily < 0) {
       showToast('<svg width="10" height="10" viewBox="0 0 24 24" fill="#FF453A" stroke="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg> Bütçeyi aştın! Bu ay dikkatli harca.');
     } else if (fb.daily < 200) {
-      showToast(TOAST_SVG_2 + ' Harcama eklendi — günlük limitin düşüyor, ' + fmtTL(Math.round(fb.daily)) + ' kaldı.');
+      showToast(TOAST_SVG_2 + ' Harcama eklendi — günlük limit ' + fmtTL(Math.round(fb.daily)) + ', dikkatli harca.');
     } else if (amount > fb.daily * 3) {
       showToast(TOAST_SVG_2 + ' Büyük harcama kaydedildi. Günlük ' + fmtTL(Math.round(fb.daily)) + ' limitin var.');
     } else {
@@ -3482,7 +3512,7 @@ function renderDailyLimit() {
     if (!incomeUntil) { limits.push(fb.baseDaily); continue; }
     const expUntil = txsUntil.filter(t => t.type === 'expense').reduce((s,t) => s+t.amount, 0);
     const recTotal = data.recurring.filter(r=>r.active).reduce((s,r)=>s+r.amount,0);
-    const debtTotal = data.debts.filter(dd=>dd.active&&(!dd.startMonth||dd.startMonth<=mk)).reduce((s,dd)=>s+dd.monthlyAmount,0);
+    const debtTotal = data.debts.filter(dd=>(dd.active||(dd.paidMonths||[]).includes(mk))&&(!dd.startMonth||dd.startMonth<=mk)).reduce((s,dd)=>s+dd.monthlyAmount,0);
     const goalTotal = data.savingsGoals.filter(g=>g.monthly).reduce((s,g)=>s+g.monthly,0);
     const savTarget = data.monthlyTargets[mk]||0;
     const available = incomeUntil - recTotal - debtTotal - goalTotal - savTarget;
@@ -3921,6 +3951,7 @@ function togglePaidDebt(id) {
   if (d.paidMonths.includes(mk)) {
     d.paidMonths = d.paidMonths.filter(m => m !== mk);
     d.paidCount = Math.max(0, d.paidCount - 1);
+    d.active = true; // geri alındı, borç yeniden aktif
     data.transactions = data.transactions.filter(t => !(t.debtId === id && monthKey(t.date) === mk));
     showToast('↩ Taksit geri alındı');
   } else {
@@ -3976,6 +4007,11 @@ function saveDebtEdit() {
   if (!name || !totalAmount) { showToast(TOAST_WARN + ' Ad ve tutar gerekli'); return; }
   d.name = name; d.totalAmount = totalAmount; d.installments = installments;
   d.monthlyAmount = Math.round(totalAmount / installments); d.startMonth = startMonth;
+  // Taksit sayısı azaltılınca paidCount'un aşmaması için kırp
+  if (d.paidCount > d.installments) {
+    d.paidCount = d.installments;
+    d.active = false;
+  }
   save(); closeDebtEdit(); renderAll();
   showToast(TOAST_OK + ' Ödeme güncellendi');
 }
@@ -4941,14 +4977,6 @@ function renderOzetStats() {
     scWrap.innerHTML = renderStreakCard(sd);
   }
 
-  // Freeze reset ay başında
-  const thisMonthKey = monthKey();
-  if (!data.streak.lastFreezeResetMonth || data.streak.lastFreezeResetMonth !== thisMonthKey) {
-    data.streak.freezesUsed = 0;
-    data.streak.lastFreezeResetMonth = thisMonthKey;
-    save();
-  }
-
   renderFinancialAdvice();
   renderDailyStats();
   renderDebtSummaryCard();
@@ -4993,7 +5021,7 @@ function renderDailyStats() {
 
     const expUntil = txsUntil.filter(t => t.type==='expense').reduce((s,t) => s+t.amount, 0);
     const recTotal = data.recurring.filter(r=>r.active).reduce((s,r)=>s+r.amount,0);
-    const debtTotal = data.debts.filter(dd=>dd.active&&(!dd.startMonth||dd.startMonth<=mk)).reduce((s,dd)=>s+dd.monthlyAmount,0);
+    const debtTotal = data.debts.filter(dd=>(dd.active||(dd.paidMonths||[]).includes(mk))&&(!dd.startMonth||dd.startMonth<=mk)).reduce((s,dd)=>s+dd.monthlyAmount,0);
     const goalTotal = data.savingsGoals.filter(g=>g.monthly).reduce((s,g)=>s+g.monthly,0);
     const savTarget = data.monthlyTargets[mk]||0;
     const available = incomeUntil - recTotal - debtTotal - goalTotal - savTarget;
@@ -5742,6 +5770,13 @@ function renderAll() {
   if (!Array.isArray(data.savingsGoals)) data.savingsGoals = [];
   if (!Array.isArray(data.wishlist)) data.wishlist = [];
   if (!Array.isArray(data.categories)) data.categories = [];
+  // Freeze reset: ay başında her zaman kontrol et (sadece ozet tabında değil)
+  const _thisMk = monthKey();
+  if (!data.streak.lastFreezeResetMonth || data.streak.lastFreezeResetMonth !== _thisMk) {
+    data.streak.freezesUsed = 0;
+    data.streak.lastFreezeResetMonth = _thisMk;
+    save();
+  }
   updateAppLogo();
   populateCatSelects();
   renderMonthly();
