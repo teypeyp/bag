@@ -219,11 +219,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .toggle-btn{flex:1;padding:9px;border:none;border-radius:10px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:none;color:var(--muted);transition:all .2s}
 .toggle-btn.income.active{background:var(--accent);color:#fff;box-shadow:0 2px 12px rgba(45,184,102,.3)}
 .toggle-btn.expense.active{background:var(--danger);color:#fff;box-shadow:0 2px 12px rgba(255,69,58,.25)}
-.add-tx-card.expense-mode .btn-primary{background:var(--danger);box-shadow:0 4px 20px rgba(255,69,58,.3);color:#fff}
-.add-tx-card.expense-mode .btn-primary:active{background:#d63b31}
 
-/* ADD TX CARD — hidden, replaced by sheet */
-.add-tx-card{display:none}
 
 /* QUICK ACTION BAR */
 .qa-bar{display:flex;gap:10px;margin-bottom:16px}
@@ -256,7 +252,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .tx-cat-chip{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:30px;background:var(--surface2);border:1.5px solid var(--border);margin-bottom:18px;cursor:pointer}
 .tx-cat-chip-name{font-size:13px;font-weight:700;color:var(--text)}
 .tx-amount-input-wrap{position:relative;margin-bottom:4px}
-.tx-amount-big{width:100%;background:none;border:none;outline:none;font-family:'Montserrat',sans-serif;font-size:52px;font-weight:900;letter-spacing:-2px;color:var(--text);text-align:center;padding:8px 0 4px;caret-color:var(--sheet-accent)}
+.tx-amount-big{width:100%;background:none;border:none;outline:none;font-family:'Montserrat',sans-serif;font-size:52px;font-weight:900;letter-spacing:-2px;color:var(--text);text-align:center;padding:8px 0 4px;caret-color:transparent}
 .tx-amount-big::placeholder{color:rgba(255,255,255,.15)}
 .tx-amount-currency{position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:20px;font-weight:800;color:var(--muted);pointer-events:none}
 .tx-amount-divider{height:1px;background:var(--border);border-radius:1px;margin-bottom:16px;transition:background .2s}
@@ -673,6 +669,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   from{opacity:1;transform:translateY(0)}
   to{opacity:0;transform:translateY(40px)}
 }
+@keyframes confirmSlideUp{
+  from{opacity:0;transform:translateY(40px)}
+  to{opacity:1;transform:translateY(0)}
+}
 .confirm-modal.hiding .confirm-box{
   animation:confirmSlideDown .22s cubic-bezier(.4,0,.2,1) forwards;
 }
@@ -753,7 +753,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* ===== TX ACTION ===== */
 .tx-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.tx-item.tx-expanded .tx-amount{color:var(--muted)!important}
+.tx-item.tx-expanded .tx-amount{display:none!important}
 
 /* ===== SETTINGS APPLE STYLE ===== */
 .settings-sheet{padding-bottom:40px!important;gap:8px!important}
@@ -1217,31 +1217,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     </button>
   </div>
 
-  <!-- HIDDEN LEGACY FORM (logic compatibility) -->
-  <div class="add-tx-card" id="legacyTxCard">
-    <div class="toggle-row">
-      <button class="toggle-btn income active" id="typeIncome" onclick="setType('income')">+ Gelir</button>
-      <button class="toggle-btn expense" id="typeExpense" onclick="setType('expense')">− Gider</button>
-    </div>
-    <div class="form-group">
-      <input type="text" id="txDesc" class="form-input" oninput="autoDetectCategory(this.value)" placeholder="Ne için?" autocomplete="off" autocorrect="off" autocapitalize="off">
-    </div>
-    <div style="display:flex;gap:8px">
-      <div class="form-group" style="flex:1">
-        <input type="text" id="txAmount" class="form-input" placeholder="0" oninput="fmtInput(this)" inputmode="numeric" autocomplete="off">
-      </div>
-      <div class="form-group" style="flex:1">
-        <button type="button" class="datepicker-trigger" id="txDateTrigger" onclick="openDatePicker()">
-          <span id="txDateLabel">—</span>
-        </button>
-      </div>
-    </div>
-    <div class="form-group">
-      <select id="txCategory" class="form-select"></select>
-    </div>
-    <button class="btn btn-primary btn-full" id="addTxBtn" onclick="addTransaction()">Ekle</button>
-  </div>
-
   <div id="txSection" style="margin-top:14px;padding:0;border-radius:var(--radius)">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:22px 0 10px">
       <span style="font-size:11px;font-weight:800;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.8px">Son İşlemler</span>
@@ -1661,16 +1636,16 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     <button class="tx-sheet-close" onclick="closeTxSheet()">×</button>
   </div>
 
-  <!-- STEP 1: KATEGORİ -->
-  <div class="tx-step active" id="txStep1">
+  <!-- KATEGORİ -->
+  <div id="txStep1">
     <div class="cat-grid" id="txCatGrid"></div>
-    <div style="padding:8px 16px 20px">
-      <button onclick="txSheetSkipCat()" style="width:100%;padding:12px;background:none;border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer">Kategori seçme, devam et</button>
+    <div style="padding:4px 16px 12px">
+      <button onclick="closeTxSheet();openCategories()" style="width:100%;padding:10px;background:none;border:none;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Kategorileri Düzenle</button>
     </div>
   </div>
 
-  <!-- STEP 2: TUTAR + DETAYLAR -->
-  <div class="tx-step" id="txStep2">
+  <!-- TUTAR + DETAYLAR — her zaman DOM'da, kategori seçince görünür -->
+  <div id="txStep2" style="display:none">
     <div class="tx-amount-screen">
       <div id="txCatChipWrap" style="margin-bottom:16px"></div>
       <div class="tx-amount-input-wrap">
@@ -1678,13 +1653,12 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
           placeholder="0" inputmode="numeric" pattern="[0-9]*"
           oninput="fmtInput(this);txSheetAmountChanged()"
           onkeydown="if(event.key==='Enter'){txSheetSave()}"
-          autocomplete="off" enterkeyhint="done" readonly>
+          autocomplete="off" enterkeyhint="done">
         <span class="tx-amount-currency">₺</span>
       </div>
       <div class="tx-amount-divider" id="txAmountDivider"></div>
     </div>
     <div class="tx-optionals">
-      <!-- Açıklama -->
       <div class="tx-opt-row">
         <div class="tx-opt-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 6l16 0"/><path d="M4 12l16 0"/><path d="M4 18l12 0"/></svg>
@@ -1694,7 +1668,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
           oninput="autoDetectCategoryFromSheet(this.value)"
           autocomplete="off" autocorrect="off" autocapitalize="on">
       </div>
-      <!-- Tarih -->
       <div class="tx-opt-row" onclick="openDatePickerForSheet()">
         <div class="tx-opt-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg>
@@ -2262,23 +2235,20 @@ function getCat(id) {
 }
 
 function autoDetectCategory(desc) {
+  if (!desc) return null;
   const lower = desc.toLowerCase().trim();
-  if (!lower) return;
+  if (!lower) return null;
   let bestCat = null, bestScore = 0;
   for (const cat of allCategories()) {
     if (!cat.keywords || !cat.keywords.length) continue;
     for (const kw of cat.keywords) {
       if (lower.includes(kw)) {
-        // Uzun keyword = daha spesifik = daha yüksek skor
         const score = kw.length;
         if (score > bestScore) { bestScore = score; bestCat = cat.id; }
       }
     }
   }
-  if (bestCat) {
-    const sel = document.getElementById('txCategory');
-    if (sel) sel.value = bestCat;
-  }
+  return bestCat;
 }
 
 function showToast(msg, duration) {
@@ -2966,7 +2936,6 @@ function renderMonthly() {
   renderFeedbackPill(fb);
   const monthTxs = data.transactions.filter(t => monthKey(t.date) === mk);
   renderTxList(document.getElementById('txList'), monthTxs.slice().reverse(), true);
-  updateTxSectionSummary(monthTxs);
 }
 
 function renderWalletHero(balance, fb) {
@@ -3258,16 +3227,8 @@ function stopCarousel() {
 }
 
 
-let _txSectionOpen = true;
-function toggleTxSection() {
-  _txSectionOpen = !_txSectionOpen;
-  const wrap = document.getElementById('txListWrap');
-  if (wrap) wrap.style.display = _txSectionOpen ? '' : 'none';
-}
 
-function updateTxSectionSummary() {
-  // summary kaldırıldı — no-op
-}
+
 
 function renderTxList(container, txs, limitTo5, prefix) {
   if (!container) return;
@@ -3311,9 +3272,9 @@ function renderTxList(container, txs, limitTo5, prefix) {
         <div class="tx-icon ${t.type}" style="background:${iconBg}">${iconHtml}</div>
         <div class="tx-info">
           <div class="tx-desc">${esc(catName)}</div>
-          ${hasDesc ? `<div class="tx-sub-desc" id="txsub_${domId}" style="display:none;font-size:11px;font-weight:600;color:var(--muted);margin-top:2px">${esc(t.desc)}</div>` : ''}
         </div>
         <div class="tx-right">
+          ${hasDesc ? `<div class="tx-sub-desc" id="txsub_${domId}" style="display:none;font-size:11px;font-weight:600;color:var(--muted);max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.desc.length > 18 ? t.desc.slice(0,18) + '…' : t.desc)}</div>` : ''}
           <div class="tx-amount ${t.type}">${t.type==='income' ? '+' : '−'}${fmtTL(t.amount)}</div>
           <button class="tx-action-btn edit-btn" id="txedit_${domId}" onclick="event.stopPropagation();openEditTx('${t.id}')" title="Düzenle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
           <button class="tx-action-btn del-btn" id="txdel_${domId}" onclick="event.stopPropagation();deleteTx('${t.id}','${pfx}')" title="Sil"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
@@ -3605,7 +3566,9 @@ function _buildSheetCatGrid() {
   grid.innerHTML = cats.map(cat => {
     const icon = catIconSvg(cat, 20);
     const sel  = _sheetCatId === cat.id ? ' selected' : '';
-    return `<div class="cat-cell${sel}" id="catcell_${cat.id}" onclick="txSheetSelectCat('${cat.id}')">
+    return `<div class="cat-cell${sel}" id="catcell_${cat.id}"
+      ontouchend="event.preventDefault();txSheetSelectCat('${cat.id}')"
+      onclick="txSheetSelectCat('${cat.id}')">
       <div class="cat-cell-icon">${icon}</div>
       <div class="cat-cell-name">${cat.name}</div>
     </div>`;
@@ -3647,9 +3610,6 @@ function openTxSheet(type) {
   const dateLabel = document.getElementById('txSheetDateLabel');
   if (dateLabel) dateLabel.textContent = 'Bugün';
 
-  // Sync legacy hidden fields
-  setType(_sheetType);
-
   // Her iki tip için de kategori seçimiyle başla
   _buildSheetCatGrid();
   _txSheetGoStep1();
@@ -3666,38 +3626,40 @@ function closeTxSheet() {
 }
 
 function _txSheetGoStep1() {
-  document.getElementById('txStep1').classList.add('active');
-  document.getElementById('txStep2').classList.remove('active');
-  document.getElementById('txSheetTitle').textContent = _sheetType === 'expense' ? 'Ne harcadın?' : 'Gelir ekle';
+  document.getElementById('txStep1').style.display = '';
+  document.getElementById('txStep2').style.display = 'none';
+  document.getElementById('txSheetTitle').textContent = _sheetType === 'expense' ? 'Ne harcadın?' : 'Gelir türü?';
 }
 
 function _txSheetGoStep2() {
-  document.getElementById('txStep1').classList.remove('active');
-  document.getElementById('txStep2').classList.add('active');
+  document.getElementById('txStep1').style.display = 'none';
+  document.getElementById('txStep2').style.display = '';
   document.getElementById('txSheetTitle').textContent = _sheetType === 'expense' ? 'Ne kadar?' : 'Ne kadar geldi?';
   _updateCatChip();
 }
 
+let _catSelectLock = false;
 function txSheetSelectCat(catId) {
+  if (_catSelectLock) return;
+  _catSelectLock = true;
+  setTimeout(() => { _catSelectLock = false; }, 400);
+
   _sheetCatId = catId;
   document.querySelectorAll('.cat-cell').forEach(el => el.classList.remove('selected'));
   const cell = document.getElementById('catcell_' + catId);
   if (cell) cell.classList.add('selected');
-  setTimeout(() => {
-    _txSheetGoStep2();
-    // Step2 görünür olduktan hemen sonra focus — hâlâ aynı user gesture zincirinde
-    const amtEl = document.getElementById('txSheetAmount');
-    if (amtEl) {
-      amtEl.removeAttribute('readonly');
-      amtEl.focus();
-    }
-  }, 160);
+  _txSheetGoStep2();
+  // Safari + mobil: touch event chain içinde focus çalışmaz,
+  // DOM geçişi + paint tamamlandıktan sonra tetikle
+  const amtEl = document.getElementById('txSheetAmount');
+  if (amtEl) {
+    amtEl.removeAttribute('readonly');
+    requestAnimationFrame(() => {
+      setTimeout(() => { amtEl.focus(); }, 50);
+    });
+  }
 }
 
-function txSheetSkipCat() {
-  _sheetCatId = 'diger';
-  _txSheetGoStep2();
-}
 
 function txSheetBackToStep1() {
   _buildSheetCatGrid();
@@ -3714,11 +3676,10 @@ function txSheetAmountChanged() {
 }
 
 function autoDetectCategoryFromSheet(desc) {
-  if (!desc) return;
-  autoDetectCategory(desc); // mevcut fonksiyon
-  const sel = document.getElementById('txCategory');
-  if (sel && sel.value && sel.value !== _sheetCatId) {
-    _sheetCatId = sel.value;
+  if (!desc || _sheetCatId) return; // kullanıcı zaten kategori seçtiyse dokunma
+  const detected = autoDetectCategory(desc);
+  if (detected) {
+    _sheetCatId = detected;
     _updateCatChip();
   }
 }
@@ -3736,71 +3697,23 @@ function txSheetSave() {
   const amount = parseNum(amtEl.value);
   if (!amount) return;
 
-  const desc     = descEl?.value.trim() || (getCat(_sheetCatId || 'diger').name);
-  const date     = _dpSelected || _sheetDateStr || today();
   const category = _sheetCatId || 'diger';
+  const desc     = descEl?.value.trim() || getCat(category).name;
+  const date     = _dpSelected || _sheetDateStr || today();
+  const type     = _sheetType;
 
-  // Legacy hidden form'u doldur — addTransaction() mevcut mantığı çalıştırsın
-  setType(_sheetType);
-  const txDescEl = document.getElementById('txDesc');
-  const txAmtEl  = document.getElementById('txAmount');
-  const txCatEl  = document.getElementById('txCategory');
-  if (txDescEl)  txDescEl.value = desc;
-  if (txAmtEl)   txAmtEl.value  = amtEl.value;
-  if (txCatEl)   txCatEl.value  = category;
-  _dpSelected = date;
-
-  // Önce sheet'i kapat, sonra işlemi kaydet
   closeTxSheet();
-  addTransaction(); // tüm mevcut mantık (toast, renderAll, vb.) çalışır
-}
 
-// Date picker kapanınca sheet date label'ı dpSelectDay içinde güncellenir
-
-// =================== ADD TRANSACTION ===================
-let currentType = 'income';
-
-function setType(type) {
-  currentType = type;
-  document.getElementById('typeIncome').classList.toggle('active', type === 'income');
-  document.getElementById('typeExpense').classList.toggle('active', type === 'expense');
-  populateCatSelects();
-  const desc = document.getElementById('txDesc').value.trim();
-  const catSel = document.getElementById('txCategory');
-  if (!desc && catSel) catSel.value = type === 'income' ? 'gelir' : 'market';
-}
-
-function addTransaction() {
-  const rawDesc = document.getElementById('txDesc').value.trim();
-  const amount = parseNum(document.getElementById('txAmount').value);
-  const date = _dpSelected || today();
-  const category = document.getElementById('txCategory').value || 'diger';
-  const btn = document.getElementById('addTxBtn');
-  // Açıklama opsiyonel — yoksa kategori adı fallback
-  const desc = rawDesc || getCat(category).name;
-
-  if (!amount) {
-    btn.style.animation = 'shake .3s ease';
-    setTimeout(() => btn.style.animation = '', 300);
-    showToast(TOAST_WARN + ' Tutar giriniz');
-    return;
-  }
-
-  data.transactions.push({ id: uid(), type: currentType, desc, amount, date, category });
+  data.transactions.push({ id: uid(), type, desc, amount, date, category });
   save();
-  document.getElementById('txDesc').value = '';
-  document.getElementById('txAmount').value = '';
-  _dpSelected = today();
-  document.getElementById('txDateLabel').textContent = formatTxDate(today());
-
-  document.getElementById('txCategory').value = currentType === 'income' ? 'gelir' : 'market';
-  setType(currentType);
-  btn.style.animation = 'successPop .25s ease';
-  setTimeout(() => btn.style.animation = '', 300);
 
   // Friendly contextual feedback
-  if (currentType === 'income') {
-    const incomeMessages = ['<svg width="10" height="10" viewBox="0 0 24 24" fill="#2DB866" stroke="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg> Gelir eklendi, limitin güncellendi.', '<svg width="10" height="10" viewBox="0 0 24 24" fill="#2DB866" stroke="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg> Para geldi! Günlük limitin arttı.', '<svg width="10" height="10" viewBox="0 0 24 24" fill="#2DB866" stroke="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg> Harika, gelir kaydedildi.'];
+  if (type === 'income') {
+    const incomeMessages = [
+      '<svg width="10" height="10" viewBox="0 0 24 24" fill="#2DB866" stroke="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg> Gelir eklendi, limitin güncellendi.',
+      '<svg width="10" height="10" viewBox="0 0 24 24" fill="#2DB866" stroke="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg> Para geldi! Günlük limitin arttı.',
+      '<svg width="10" height="10" viewBox="0 0 24 24" fill="#2DB866" stroke="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg> Harika, gelir kaydedildi.',
+    ];
     showToast(incomeMessages[Math.floor(Math.random()*incomeMessages.length)]);
   } else {
     const fb = calcFreeBudget(monthKey());
@@ -3820,8 +3733,8 @@ function addTransaction() {
     }
   }
   renderAll();
-  setTimeout(() => document.getElementById('txDesc')?.focus(), 50);
 }
+
 
 // =================== SABIT ===================
 function renderSabit() {
@@ -5900,16 +5813,7 @@ function closeHistory() {
 function populateCatSelects() {
   const cats = allCategories();
   const expenseCats = cats.filter(c => c.type !== 'income');
-  const incomeCats  = cats.filter(c => c.type === 'income');
-  const allOpts     = cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
   const expenseOpts = expenseCats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-  const incomeOpts  = incomeCats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-  const txCat = document.getElementById('txCategory');
-  if (txCat) {
-    const prev = txCat.value;
-    txCat.innerHTML = currentType === 'income' ? incomeOpts : expenseOpts;
-    if (prev && txCat.querySelector(`option[value="${prev}"]`)) txCat.value = prev;
-  }
   const recCat = document.getElementById('recCategory');
   if (recCat) {
     const prev = recCat.value;
@@ -6230,12 +6134,6 @@ function saveKeywords() {
   openCategories();
 }
 
-// ===== DRAG & DROP SECTIONS =====
-function formatTxDate(dateStr) {
-  if (!dateStr) return '—';
-  const d = new Date(dateStr + 'T00:00:00');
-  return d.getDate() + ' ' + MONTH_NAMES[d.getMonth()];
-}
 
 // ===== CUSTOM DATE PICKER =====
 let _dpYear = 0, _dpMonth = 0, _dpSelected = '';
@@ -6261,11 +6159,9 @@ function dpChangeMonth(dir) {
 
 function dpSelectDay(dateStr) {
   _dpSelected = dateStr;
-  document.getElementById('txDateLabel').textContent = formatTxDate(dateStr);
-  // Sheet açıksa sheet label'ını da güncelle
   const sheetDateLabel = document.getElementById('txSheetDateLabel');
   if (sheetDateLabel) {
-    sheetDateLabel.textContent = formatTxDate(dateStr);
+    sheetDateLabel.textContent = fmtDate(dateStr);
   }
   closeDatePicker();
 }
@@ -6299,11 +6195,8 @@ function renderDpGrid() {
 function init() {
   load();
   _dpSelected = today();
-  document.getElementById('txDateLabel').textContent = formatTxDate(today());
   populateCatSelects();
   updateAppLogo();
-  const initCat = document.getElementById('txCategory');
-  if (initCat) initCat.value = 'gelir';
 
   if (!data.onboarded) {
     // Hide header & pill nav during onboarding
