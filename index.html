@@ -44,7 +44,7 @@
   --blue:#0A84FF;--purple:#BF5AF2;
   --radius:20px;--radius-sm:12px;--radius-xs:8px;
 }
-html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased;overflow:hidden}#appWrap{max-width:520px;margin:0 auto;height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:52px;padding-bottom:104px}
+html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased;overflow:hidden}#appWrap{max-width:520px;margin:0 auto;height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:52px;padding-bottom:116px}
 ::-webkit-scrollbar{width:0;height:0;display:none}
 
 /* ANIMATIONS */
@@ -85,16 +85,16 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* FLOATING PILL NAV */
 .pill-nav{
-  position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
-  width:calc(100% - 48px);max-width:472px;
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  width:calc(100% - 40px);max-width:480px;
   z-index:50;
   background:#1C1C20;
   border-radius:99px;
   border:1px solid rgba(255,255,255,.06);
   box-shadow:0 20px 60px rgba(0,0,0,.6),0 4px 16px rgba(0,0,0,.4);
   display:flex;align-items:center;
-  padding:7px 8px;
-  height:64px;
+  padding:8px 10px;
+  height:68px;
   transition:opacity .3s,transform .3s;
 }
 .pill-nav.hidden{opacity:0;pointer-events:none;transform:translateX(-50%) translateY(24px)}
@@ -105,10 +105,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   bottom:0;
   left:50%;transform:translateX(-50%);
   width:100%;max-width:520px;
-  height:100px;
+  height:130px;
   pointer-events:none;
   z-index:49;
-  background:linear-gradient(to bottom, transparent 0%, var(--bg) 70%);
+  background:linear-gradient(to bottom, transparent 0%, var(--bg) 60%);
 }
 .pill-nav-inner{
   display:flex;flex:1;align-items:center;height:100%;
@@ -275,8 +275,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .tx-save-btn:disabled{opacity:.45;pointer-events:none}
 
 /* SHEET STEP TRANSITIONS */
-.tx-step{display:none}
-.tx-step.active{display:block;animation:stepIn .22s cubic-bezier(.4,0,.2,1)}
 @keyframes stepIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 /* ===== FEEDBACK INSIGHT / CAROUSEL ===== */
@@ -339,16 +337,17 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   border-radius:28px;overflow:hidden;margin-bottom:20px;
   box-shadow:0 2px 8px rgba(0,0,0,.15);
   padding:1.5px;
-  /* Fallback for browsers without @property support */
-  background:linear-gradient(135deg,rgba(45,184,102,.35),rgba(45,184,102,.8) 50%,rgba(45,184,102,.35));
+  /* fallback */
+  background:linear-gradient(135deg,var(--hero-c1,.35),var(--hero-c2,.8) 50%,var(--hero-c1,.35));
   animation:rotateHeroFallback 6s ease-in-out infinite;
+  transition:background .8s ease;
 }
 @supports (background: conic-gradient(from 1deg, red, blue)) {
   .wallet-hero-combined {
     animation:rotateHero 34s linear infinite;
     background:conic-gradient(from var(--hero-angle),
       transparent 0%, transparent 80%,
-      rgba(45,184,102,.4) 83%, rgba(45,184,102,.85) 88%, rgba(45,184,102,.85) 97%, rgba(45,184,102,.4) 99%,
+      var(--hero-c1) 83%, var(--hero-c2) 88%, var(--hero-c2) 97%, var(--hero-c1) 99%,
       transparent 100%);
   }
 }
@@ -743,9 +742,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .wallet-hero-inner::before{
   content:'';position:absolute;inset:0;
   background:
-    radial-gradient(ellipse 120% 80% at 80% -20%, rgba(45,184,102,.22) 0%, transparent 55%),
-    linear-gradient(180deg, rgba(45,184,102,.06) 0%, transparent 40%);
+    radial-gradient(ellipse 120% 80% at 80% -20%, var(--hero-glow,rgba(45,184,102,.08)) 0%, transparent 55%),
+    linear-gradient(180deg, var(--hero-glow,rgba(45,184,102,.04)) 0%, transparent 40%);
   pointer-events:none;z-index:0;
+  transition:background .8s ease;
 }
 .hero-top{padding:22px 20px 18px;position:relative;overflow:hidden;z-index:2;display:flex;align-items:flex-start;justify-content:space-between}
 .hero-label{font-size:10px;font-weight:800;color:rgba(45,184,102,.55);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;text-shadow:0 0 12px rgba(45,184,102,.3)}
@@ -753,7 +753,9 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* ===== TX ACTION ===== */
 .tx-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.tx-sub-desc{font-size:11px;font-weight:600;color:var(--muted);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:none}
 .tx-item.tx-expanded .tx-amount{display:none!important}
+.tx-item.tx-expanded .tx-sub-desc{display:block}
 
 /* ===== SETTINGS APPLE STYLE ===== */
 .settings-sheet{padding-bottom:40px!important;gap:8px!important}
@@ -857,9 +859,9 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .year-month-net{font-size:14px;font-weight:800;flex-shrink:0}
 .year-month-sav{font-size:11px;font-weight:700;flex-shrink:0;min-width:36px;text-align:right}
 .year-month-chevron{font-size:13px;color:var(--muted);transition:transform .25s;flex-shrink:0;margin-left:4px}
-.year-month-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}
-.year-month-body.open{max-height:400px}
-.year-month-detail{padding:0 4px 14px;display:flex;flex-direction:column;gap:10px}
+.year-month-body{display:grid;grid-template-rows:0fr;overflow:hidden;transition:grid-template-rows .4s cubic-bezier(.4,0,.2,1)}
+.year-month-body.open{grid-template-rows:1fr}
+.year-month-detail{padding:0 4px 14px;display:flex;flex-direction:column;gap:10px;min-height:0}
 .ymb-bars{display:flex;flex-direction:column;gap:6px}
 .ymb-bar-row{display:flex;align-items:center;gap:8px}
 .ymb-bar-label{font-size:11px;font-weight:700;width:36px;flex-shrink:0}
@@ -1651,6 +1653,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       <div class="tx-amount-input-wrap">
         <input type="text" id="txSheetAmount" class="tx-amount-big"
           placeholder="0" inputmode="numeric" pattern="[0-9]*"
+          readonly
           oninput="fmtInput(this);txSheetAmountChanged()"
           onkeydown="if(event.key==='Enter'){txSheetSave()}"
           autocomplete="off" enterkeyhint="done">
@@ -2942,21 +2945,37 @@ function renderWalletHero(balance, fb) {
   const el = document.getElementById('walletHero');
   if (!el) return;
   const balColor = balance >= 0 ? 'var(--accent)' : 'var(--danger)';
+
+  // ── Günlük durum tespiti — hero rengi için ──
+  let dayState = 0;
+  let heroC1, heroC2, heroBg;
+
+  if (fb.income > 0) {
+    const ratio = fb.daily > 0 ? fb.todayVarSpent / fb.daily : (fb.todayVarSpent > 0 ? 99 : 0);
+    if (fb.daily < 0 || fb.remaining < 0) dayState = 3;
+    else if (ratio > 0.75 || fb.daily < 150) dayState = 2;
+    else dayState = 1;
+  }
+
+  if (dayState === 3) {
+    heroC1 = 'rgba(255,69,58,.32)';  heroC2 = 'rgba(255,69,58,.72)';
+    heroBg = 'rgba(255,69,58,.06)';
+  } else if (dayState === 2) {
+    heroC1 = 'rgba(255,179,0,.30)';  heroC2 = 'rgba(255,149,0,.70)';
+    heroBg = 'rgba(255,160,0,.05)';
+  } else {
+    heroC1 = 'rgba(45,184,102,.35)';  heroC2 = 'rgba(45,184,102,.82)';
+    heroBg = 'rgba(45,184,102,.04)';
+  }
+
   const dailyColor = fb.daily < 0 ? 'var(--danger)' : fb.daily < 150 ? 'var(--warning)' : 'var(--accent)';
-  const remColor = fb.remaining >= 0 ? 'var(--accent)' : 'var(--danger)';
-
+  const remColor   = fb.remaining >= 0 ? 'var(--accent)' : 'var(--danger)';
   const todaySpent = fb.todayVarSpent;
-  const todayRemaining = Math.round(fb.todayRemaining);
-
-  // Bugünkü harcama rengi: limite göre
   const spentRatio = fb.daily > 0 ? todaySpent / fb.daily : 0;
   const spentColor = todaySpent <= 0
     ? 'var(--muted)'
-    : todaySpent > fb.daily
-      ? 'var(--danger)'
-      : spentRatio > 0.5
-        ? 'var(--warning)'
-        : 'var(--accent)';
+    : todaySpent > fb.daily ? 'var(--danger)'
+    : spentRatio > 0.75 ? 'var(--warning)' : 'var(--accent)';
   const spentLabel = todaySpent <= 0
     ? 'henüz harcama yok'
     : todaySpent > fb.daily
@@ -2964,7 +2983,7 @@ function renderWalletHero(balance, fb) {
       : `${fmtTL(Math.round(todaySpent))} harcandı`;
 
   const dailySection = fb.income > 0 ? `
-    <div style="height:1px;background:rgba(255,255,255,.06);margin:18px 0 16px"></div>
+    <div style="height:1px;background:rgba(255,255,255,.06);margin:16px 0 14px"></div>
     <div style="display:flex;justify-content:space-between;align-items:flex-start">
       <div>
         <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Günlük Limit</div>
@@ -2979,7 +2998,7 @@ function renderWalletHero(balance, fb) {
     </div>` : '';
 
   el.innerHTML = `
-    <div class="wallet-hero-combined">
+    <div class="wallet-hero-combined" id="heroRing">
       <div class="wallet-hero-inner">
         <div class="hero-top" style="padding-bottom:28px">
           <div style="width:100%">
@@ -2990,16 +3009,66 @@ function renderWalletHero(balance, fb) {
         </div>
       </div>
     </div>`;
+
+  // Render sonrası CSS variable'ları set et
+  const ring = document.getElementById('heroRing');
+  if (ring) {
+    ring.style.setProperty('--hero-c1', heroC1);
+    ring.style.setProperty('--hero-c2', heroC2);
+    ring.style.setProperty('--hero-glow', heroBg);
+  }
 }
 
 function buildCarouselItems(fb) {
   const items = [];
   const mk = currentMonth;
   const todayD = new Date().getDate();
-  // Ortalama günlük harcama: bugün HARİÇ — bugün henüz bitmedi
   const pastDays = Math.max(1, todayD - 1);
   const pastVarSpent = fb.varSpent - fb.todayVarSpent;
   const avgDailySpent = pastVarSpent / pastDays;
+
+  // ── Bütçe yorum insight'ları — sarı/kırmızıda, bağımsız koşullar ──
+  if (fb.income > 0) {
+    const spentRatio  = fb.daily > 0 ? fb.todayVarSpent / fb.daily : 0;
+    const remainRatio = fb.available > 0 ? fb.remaining / fb.available : 0;
+    const isRed  = fb.daily < 0 || fb.remaining < 0;
+    const isWarn = !isRed && (spentRatio > 0.75 || fb.daily < 150);
+
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+    const ydStr = yesterday.toISOString().slice(0,10);
+    const ydSpent = data.transactions
+      .filter(t => t.date === ydStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+      .reduce((s,t) => s + t.amount, 0);
+    const betterThanYesterday = ydSpent > 0 && fb.todayVarSpent < ydSpent * 0.8;
+
+    const ICON_WARN = '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg>';
+    const ICON_BAD  = '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg>';
+    const ICON_GOOD = '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg>';
+
+    if (isRed) {
+      if (fb.remaining < 0 && fb.daysLeft > 5)
+        items.push({ cls:'bad', icon:ICON_BAD, title:`Ay bitmeden <em>${fmtTL(Math.abs(Math.round(fb.remaining)))} açık oluştu</em>` });
+      if (fb.daily < 0)
+        items.push({ cls:'bad', icon:ICON_BAD, title:'Günlük limit negatife düştü <em>— harcama duraksatılmalı</em>' });
+      if (spentRatio > 1.5)
+        items.push({ cls:'bad', icon:ICON_BAD, title:'Bugün limit iki katından fazla harcandı' });
+      if (fb.remaining < 0 && fb.daysLeft <= 5)
+        items.push({ cls:'bad', icon:ICON_BAD, title:'Bütçe sınırına ulaşıldı <em>— kalan günler kısıtlı</em>' });
+    }
+
+    if (isWarn || isRed) {
+      if (betterThanYesterday)
+        items.push({ cls:'warn', icon:ICON_GOOD, title:'Düne göre daha iyi gidiyorsun <em>— bu tempoyu koru</em>' });
+      if (remainRatio < 0.15 && fb.daysLeft > 3)
+        items.push({ cls:'warn', icon:ICON_WARN, title:`${fb.daysLeft} gün için kalan alan daralıyor` });
+      if (avgDailySpent > 0 && fb.todayVarSpent > avgDailySpent * 1.3)
+        items.push({ cls:'warn', icon:ICON_WARN, title:'Bugünkü tempo aylık ortalamanın üstünde' });
+      if (fb.daysLeft <= 3 && fb.remaining > 0)
+        items.push({ cls:'warn', icon:ICON_WARN, title:'Aya az kaldı <em>— kontrollü tamamlayabilirsin</em>' });
+      if (spentRatio > 0.6 && spentRatio <= 0.75 && !betterThanYesterday)
+        items.push({ cls:'warn', icon:ICON_WARN, title:'Biraz dikkat: kalan alan daralıyor' });
+    }
+  }
 
   // 1. Temel bütçe durumu
   if (fb.remaining < 0) {
@@ -3274,8 +3343,8 @@ function renderTxList(container, txs, limitTo5, prefix) {
           <div class="tx-desc">${esc(catName)}</div>
         </div>
         <div class="tx-right">
-          ${hasDesc ? `<div class="tx-sub-desc" id="txsub_${domId}" style="display:none;font-size:11px;font-weight:600;color:var(--muted);max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.desc.length > 18 ? t.desc.slice(0,18) + '…' : t.desc)}</div>` : ''}
           <div class="tx-amount ${t.type}">${t.type==='income' ? '+' : '−'}${fmtTL(t.amount)}</div>
+          ${hasDesc ? `<div class="tx-sub-desc" id="txsub_${domId}">${esc(t.desc.length > 14 ? t.desc.slice(0,14) + '…' : t.desc)}</div>` : ''}
           <button class="tx-action-btn edit-btn" id="txedit_${domId}" onclick="event.stopPropagation();openEditTx('${t.id}')" title="Düzenle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
           <button class="tx-action-btn del-btn" id="txdel_${domId}" onclick="event.stopPropagation();deleteTx('${t.id}','${pfx}')" title="Sil"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
         </div>
@@ -3385,22 +3454,18 @@ function toggleTxDelete(id, pfx) {
   if (!inHistory && !_wasTap()) return;
   const delBtn  = document.getElementById('txdel_'  + domId);
   const editBtn = document.getElementById('txedit_' + domId);
-  const subDesc = document.getElementById('txsub_'  + domId);
   // Önceki expanded'ı kapat
   if (expandedTx && expandedTx !== domId) {
     const prevDel  = document.getElementById('txdel_'  + expandedTx);
     const prevEdit = document.getElementById('txedit_' + expandedTx);
-    const prevSub  = document.getElementById('txsub_'  + expandedTx);
     const prevItem = document.getElementById('tx_'     + expandedTx);
     if (prevDel)  prevDel.classList.remove('show');
     if (prevEdit) prevEdit.classList.remove('show');
-    if (prevSub)  prevSub.style.display = 'none';
     if (prevItem) prevItem.classList.remove('tx-expanded');
   }
   const isOpen = delBtn?.classList.contains('show');
   if (delBtn)  delBtn.classList.toggle('show', !isOpen);
   if (editBtn) editBtn.classList.toggle('show', !isOpen);
-  if (subDesc) subDesc.style.display = isOpen ? 'none' : 'block';
   item.classList.toggle('tx-expanded', !isOpen);
   expandedTx = isOpen ? null : domId;
 }
@@ -3592,6 +3657,7 @@ function openTxSheet(type) {
   _sheetType   = type || 'expense';
   _sheetCatId  = null;
   _sheetDateStr = today();
+  _dpSelected  = today(); // datepicker state'ini sıfırla — kirli seçim kalmasın
 
   _sheetSetTheme(_sheetType);
 
@@ -3601,7 +3667,7 @@ function openTxSheet(type) {
   // Reset fields
   const amtEl = document.getElementById('txSheetAmount');
   const descEl = document.getElementById('txSheetDesc');
-  if (amtEl)  amtEl.value = '';
+  if (amtEl)  { amtEl.value = ''; amtEl.setAttribute('readonly', ''); }
   if (descEl) descEl.value = '';
   const saveBtn = document.getElementById('txSaveBtn');
   if (saveBtn) saveBtn.disabled = true;
@@ -4079,7 +4145,12 @@ function renderRecList() {
   const mk = currentMonth;
   const el = document.getElementById('recList');
   if (!el) return;
-  const items = data.recurring.filter(r => r.active);
+  const items = data.recurring.filter(r => r.active).slice().sort((a, b) => {
+    const aPaid = isPaidThisMonth(a, mk) ? 1 : 0;
+    const bPaid = isPaidThisMonth(b, mk) ? 1 : 0;
+    if (aPaid !== bPaid) return aPaid - bPaid;   // ödenmemiş önce
+    return b.amount - a.amount;                   // aynı grupta büyükten küçüğe
+  });
   if (!items.length) {
     el.innerHTML = `<div class="empty-state" style="padding:24px 0"><span class="empty-state-icon" style="font-size:0"><svg width="44" height="44" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"/><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"/><path d="M9 12h6"/><path d="M9 16h6"/></svg></span><div class="empty-state-text">Sabit gider yok</div><div class="empty-state-sub">Kira, abonelik gibi düzenli giderleri ekle.</div></div>`;
     return;
@@ -4164,7 +4235,12 @@ function renderDebtList() {
   const el = document.getElementById('debtList');
   const sumEl = document.getElementById('debtSummary');
   if (!el) return;
-  const allDebts = data.debts;
+  const allDebts = data.debts.slice().sort((a, b) => {
+    const aScore = !a.active ? 2 : isPaidThisMonth(a, mk) ? 1 : 0;
+    const bScore = !b.active ? 2 : isPaidThisMonth(b, mk) ? 1 : 0;
+    if (aScore !== bScore) return aScore - bScore;  // tamamlanmış en alta
+    return b.monthlyAmount - a.monthlyAmount;        // aynı grupta büyükten küçüğe
+  });
   const activeDebts = allDebts.filter(d => d.active);
   if (!allDebts.length) {
     el.innerHTML = `<div class="empty-state" style="padding:24px 0"><span class="empty-state-icon" style="font-size:0"><svg width="44" height="44" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h2"/><path d="M5 4v2"/><path d="M11.5 4l-.5 2"/><path d="M18 5h2"/><path d="M19 4v2"/><path d="M15 9l-1 1"/><path d="M18 13l2 -.5"/><path d="M18 19h2"/><path d="M19 18v2"/><path d="M14 16.518l-6.518 -6.518l-4.39 9.58a1 1 0 0 0 1.329 1.329l9.579 -4.39z"/></svg></span><div class="empty-state-text">Ödeme yok!</div><div class="empty-state-sub">Harika — tüm ödemeler temiz.</div></div>`;
@@ -4393,7 +4469,21 @@ function renderGoalsList() {
     el.innerHTML = `<div class="empty-state" style="padding:24px 0"><span class="empty-state-icon" style="font-size:0"><svg width="44" height="44" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 8v-1a4 4 0 0 0 -4 -4h-2a4 4 0 0 0 -4 4v1"/><path d="M7 8h12a1 1 0 0 1 1 1v3a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -6 -6v-3a1 1 0 0 1 1 -1z"/><path d="M20 12h1a1 1 0 0 0 1 -1v-1a1 1 0 0 0 -1 -1h-1"/><path d="M9 17v2"/><path d="M15 17v2"/><path d="M11 12h2"/></svg></span><div class="empty-state-text">Henüz birikim yok</div><div class="empty-state-sub">Tatil, araba, acil fon — hayalini ekle.</div></div>`;
     return;
   }
-  el.innerHTML = data.savingsGoals.map(g => {
+  const sortedGoals = data.savingsGoals.slice().sort((a, b) => {
+    const aPaid = a.monthly && (a.paidMonths||[]).includes(mk) ? 1 : 0;
+    const bPaid = b.monthly && (b.paidMonths||[]).includes(mk) ? 1 : 0;
+    const aHasMonthly = a.monthly ? 0 : 1;
+    const bHasMonthly = b.monthly ? 0 : 1;
+    // Aylık birikimleri ön, aylık olmayanları arka
+    if (aHasMonthly !== bHasMonthly) return aHasMonthly - bHasMonthly;
+    // Aynı grupta ödenmiş aşağı
+    if (aPaid !== bPaid) return aPaid - bPaid;
+    // Büyükten küçüğe (aylık varsa monthly, yoksa target)
+    const aAmt = a.monthly || a.target;
+    const bAmt = b.monthly || b.target;
+    return bAmt - aAmt;
+  });
+  el.innerHTML = sortedGoals.map(g => {
     const total = g.deposits.reduce((s,d)=>s+d.amount,0);
     const pct = Math.min(100, g.target > 0 ? Math.round((total/g.target)*100) : 0);
     const isMonthlyPaid = (g.paidMonths||[]).includes(mk);
@@ -5124,23 +5214,12 @@ function renderFinancialAdvice() {
     tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>', cls:'good', title:'Borçsuz yaşıyorsun', sub:'Finansal özgürlüğün en sağlam temeli bu. Şimdi biriktir.' });
   } else {
     const debtPct = Math.round(debtToIncomeRatio * 100);
-    // Türkçe büyük sesli uyumu: sayının son rakamına göre ek
-    const lastDigit = debtPct % 10;
-    const lastTwo = debtPct % 100;
-    const pctSuffix = [20,50,80,90].includes(lastTwo) ? 'si' :
-                      [30,40].includes(lastTwo) ? 'u' :
-                      [60,70].includes(lastTwo) ? 'i' :
-                      [10,100].includes(lastTwo) ? 'u' :
-                      lastDigit === 0 ? 'u' :
-                      [2,5,8,9].includes(lastDigit) ? 'i' :
-                      [3,4].includes(lastDigit) ? 'ü' :
-                      [6,7].includes(lastDigit) ? 'si' : 'ı';
     if (debtToIncomeRatio > 0.4) {
-      tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>', cls:'bad', title:`Gelirinin %${debtPct}'${pctSuffix} borca gidiyor — kritik`, sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit gidiyor. Gelirine oranı yüksek — ekstra ödemeyi önceliklendir.` });
+      tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>', cls:'bad', title:`Gelirinin ${pct(debtPct)} borca gidiyor — kritik`, sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit gidiyor. Gelirine oranı yüksek — ekstra ödemeyi önceliklendir.` });
     } else if (debtToIncomeRatio > 0.2) {
-      tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#60A5FA" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg>', cls:'warn', title:`Gelirinin %${debtPct}'${pctSuffix} borca gidiyor`, sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit gidiyor. Şimdilik kontrol altında — yeni borç ekleme.` });
+      tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#60A5FA" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg>', cls:'warn', title:`Gelirinin ${pct(debtPct)} borca gidiyor`, sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit gidiyor. Şimdilik kontrol altında — yeni borç ekleme.` });
     } else {
-      tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#34D399" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>', cls:'good', title:`Gelirinin sadece %${debtPct}'${pctSuffix} borca gidiyor`, sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit — sağlıklı oran. Taksiplere sadık kal.` });
+      tips.push({ icon:'<svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#34D399" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>', cls:'good', title:`Gelirinin sadece ${pct(debtPct)} borca gidiyor`, sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit — sağlıklı oran. Taksiplere sadık kal.` });
     }
     if (activeDebts.length > 1) {
       const smallest = [...activeDebts].sort((a,b)=>((a.installments - a.paidCount) * a.monthlyAmount)-((b.installments - b.paidCount) * b.monthlyAmount))[0];
@@ -6214,8 +6293,6 @@ function init() {
 
 init();
 window.addEventListener('resize', () => { updatePillIndicator(currentTab); });
-
-// ===== NAV FADE — static gradient, no scroll toggle needed =====
 </script>
 </body>
 </html>
