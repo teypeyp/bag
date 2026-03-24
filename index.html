@@ -823,6 +823,301 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .advice-section-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .advice-section-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
+/* ===== PLAN VERTICAL — PREMIUM ===== */
+@keyframes planIn {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── Durum hero ── */
+.plan-hero {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 20px 20px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.plan-hero::before {
+  content:'';
+  position:absolute;top:-80px;right:-60px;
+  width:220px;height:220px;
+  background:radial-gradient(circle, var(--plan-glow, rgba(45,184,102,.06)) 0%, transparent 65%);
+  pointer-events:none;
+}
+.plan-hero-eyebrow {
+  font-size:10px; font-weight:800; letter-spacing:1.4px;
+  text-transform:uppercase; color:var(--muted);
+  margin-bottom:10px;
+}
+.plan-hero-status {
+  font-size:28px; font-weight:900; letter-spacing:-.8px;
+  line-height:1.1; color:var(--text); margin-bottom:8px;
+}
+.plan-hero-status span { color: var(--plan-accent, var(--accent)); }
+.plan-hero-body {
+  font-size:13px; font-weight:600; color:var(--muted);
+  line-height:1.7; margin-bottom:16px;
+}
+.plan-hero-pills {
+  display:flex; gap:6px; flex-wrap:wrap;
+}
+.plan-hero-pill {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:5px 11px; border-radius:99px;
+  font-size:11px; font-weight:800; letter-spacing:.1px;
+}
+
+/* ── Karakter kartı ── */
+.plan-char-card {
+  margin-bottom:16px;
+  border-radius: var(--radius);
+  overflow:hidden;
+  border: 1px solid var(--border);
+  animation: planIn .5s cubic-bezier(.34,1.2,.64,1) both;
+}
+.plan-char-head {
+  padding: 20px 20px 16px;
+  position: relative;
+}
+.plan-char-eyebrow {
+  font-size:10px; font-weight:800; letter-spacing:1.4px;
+  text-transform:uppercase; margin-bottom:8px;
+  opacity:.7;
+}
+.plan-char-name {
+  font-size:26px; font-weight:900; letter-spacing:-1px;
+  line-height:1; margin-bottom:10px;
+}
+.plan-char-tagline {
+  font-size:13px; font-weight:600; line-height:1.65;
+  opacity:.85;
+}
+.plan-char-body {
+  padding:0 20px 16px;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.plan-char-body-label {
+  font-size:10px; font-weight:800; letter-spacing:1.2px;
+  text-transform:uppercase; color:var(--muted);
+  margin:14px 0 7px;
+}
+.plan-char-body-text {
+  font-size:12.5px; font-weight:600; color:var(--muted);
+  line-height:1.75;
+}
+.plan-char-next {
+  display:flex; align-items:center; gap:10px;
+  padding:12px 20px;
+  background:rgba(255,255,255,.03);
+  border-top:1px solid rgba(255,255,255,.05);
+}
+.plan-char-next-arrow {
+  font-size:18px; color:var(--muted); flex-shrink:0;
+}
+.plan-char-next-text {
+  font-size:11.5px; font-weight:700; color:var(--muted);
+  line-height:1.5; flex:1;
+}
+.plan-char-next-text strong {
+  color:var(--text); font-weight:800;
+}
+
+/* ── Durum barı ── */
+.plan-bar-row {
+  display:flex; align-items:center; gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.plan-bar-row:last-child { border-bottom:none; }
+.plan-bar-label {
+  font-size:12px; font-weight:700; color:var(--text);
+  width:110px; flex-shrink:0;
+}
+.plan-bar-track {
+  flex:1; height:5px; background:var(--border);
+  border-radius:99px; overflow:hidden;
+}
+.plan-bar-fill {
+  height:100%; border-radius:99px;
+  transition:width .6s cubic-bezier(.4,0,.2,1);
+}
+.plan-bar-val {
+  font-size:12px; font-weight:800;
+  width:48px; text-align:right; flex-shrink:0;
+}
+
+/* ── Collapsible içi editorial bloklar ── */
+.plan-block {
+  padding:14px 16px; border-radius:14px;
+  margin-bottom:8px;
+  background:var(--surface2);
+}
+.plan-block:last-child { margin-bottom:0; }
+.plan-block-title {
+  font-size:13px; font-weight:800; color:var(--text);
+  margin-bottom:5px; line-height:1.3; letter-spacing:-.1px;
+}
+.plan-block-body {
+  font-size:12px; font-weight:600; color:var(--muted);
+  line-height:1.7;
+}
+.plan-block-badge {
+  display:inline-block;
+  font-size:10px; font-weight:800; letter-spacing:.5px;
+  text-transform:uppercase; padding:2px 8px; border-radius:6px;
+  margin-bottom:7px;
+}
+
+/* ── Senaryo — premium impact simulator ── */
+@keyframes scImpactIn {
+  from { opacity:0; transform:translateY(6px) scale(.98); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+@keyframes scNumPop {
+  0%   { transform:scale(1); }
+  35%  { transform:scale(1.08); }
+  65%  { transform:scale(.96); }
+  100% { transform:scale(1); }
+}
+@keyframes scSlideIn {
+  from { opacity:0; transform:translateX(-8px); }
+  to   { opacity:1; transform:translateX(0); }
+}
+
+/* Slider input — range */
+.sc-slider-wrap {
+  padding:14px 0 10px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.sc-slider-wrap:last-of-type { border-bottom:none; }
+.sc-slider-header {
+  display:flex; justify-content:space-between; align-items:baseline;
+  margin-bottom:10px;
+}
+.sc-slider-question {
+  font-size:13.5px; font-weight:700; color:var(--text);
+  letter-spacing:-.1px; line-height:1.3;
+}
+.sc-slider-val {
+  font-size:14px; font-weight:900; letter-spacing:-.4px;
+  transition:color .25s ease;
+  min-width:80px; text-align:right;
+}
+.sc-slider-val.animating { animation:scNumPop .35s cubic-bezier(.34,1.4,.64,1); }
+
+input[type=range].sc-range {
+  -webkit-appearance:none; appearance:none;
+  width:100%; height:4px;
+  background: linear-gradient(to right, var(--sc-fill,var(--accent)) 0%, var(--sc-fill,var(--accent)) var(--sc-pct,50%), var(--border) var(--sc-pct,50%), var(--border) 100%);
+  border-radius:99px; outline:none; cursor:pointer;
+  transition:background .15s;
+}
+input[type=range].sc-range::-webkit-slider-thumb {
+  -webkit-appearance:none; appearance:none;
+  width:20px; height:20px; border-radius:50%;
+  background:var(--sc-fill,var(--accent));
+  border:3px solid #0A0A0D;
+  box-shadow:0 2px 8px rgba(0,0,0,.4);
+  cursor:pointer;
+  transition:transform .15s, box-shadow .15s;
+}
+input[type=range].sc-range:active::-webkit-slider-thumb {
+  transform:scale(1.25);
+  box-shadow:0 4px 14px rgba(0,0,0,.5), 0 0 0 4px var(--sc-glow,rgba(45,184,102,.2));
+}
+.sc-range-labels {
+  display:flex; justify-content:space-between;
+  margin-top:5px;
+}
+.sc-range-label {
+  font-size:10px; font-weight:600; color:var(--muted);
+  letter-spacing:.02em;
+}
+
+/* Impact card */
+.sc-impact-card {
+  margin-top:18px;
+  border-radius:18px;
+  overflow:hidden;
+  animation:scImpactIn .3s cubic-bezier(.4,0,.2,1) both;
+}
+.sc-impact-header {
+  padding:14px 18px 10px;
+  background:var(--surface2);
+  border-bottom:1px solid rgba(255,255,255,.05);
+  display:flex; align-items:center; gap:10px;
+}
+.sc-impact-eyebrow {
+  font-size:10px; font-weight:800; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted); flex:1;
+}
+.sc-impact-status-pill {
+  font-size:11px; font-weight:800; letter-spacing:.04em;
+  padding:3px 10px; border-radius:99px;
+  transition:background .35s ease, color .35s ease;
+}
+.sc-impact-body {
+  background:var(--surface2);
+  padding:4px 0 2px;
+}
+.sc-impact-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:11px 18px;
+  border-bottom:1px solid rgba(255,255,255,.04);
+  animation:scSlideIn .25s ease both;
+}
+.sc-impact-row:last-child { border-bottom:none; }
+.sc-impact-label {
+  font-size:12.5px; font-weight:600; color:var(--muted);
+}
+.sc-impact-val {
+  font-size:16px; font-weight:900; letter-spacing:-.5px;
+  transition:color .3s ease;
+}
+.sc-impact-val.pop { animation:scNumPop .35s cubic-bezier(.34,1.4,.64,1); }
+
+/* Delta badge (artı/eksi ne kadar değişti) */
+.sc-delta {
+  font-size:11px; font-weight:700; padding:2px 7px;
+  border-radius:6px; margin-left:8px;
+  transition:opacity .3s;
+}
+.sc-delta.pos { background:rgba(45,184,102,.15); color:var(--accent); }
+.sc-delta.neg { background:rgba(255,69,58,.12);  color:var(--danger); }
+
+/* Reset link */
+.sc-reset-btn {
+  width:100%; padding:12px;
+  background:none; border:none;
+  font-size:12px; font-weight:700;
+  color:var(--muted); cursor:pointer;
+  letter-spacing:.02em;
+  transition:color .15s;
+  -webkit-tap-highlight-color:transparent;
+  margin-top:4px;
+}
+.sc-reset-btn:active { color:var(--text); }
+
+/* ── Margin projeksiyonu ── */
+.plan-margin-proj {
+  display:flex; flex-direction:column; gap:6px;
+  padding:14px 16px; border-radius:14px;
+  background:var(--surface2); margin-bottom:8px;
+}
+.plan-margin-proj-row {
+  display:flex; justify-content:space-between; align-items:baseline;
+}
+.plan-margin-proj-label {
+  font-size:11px; font-weight:700; color:var(--muted);
+}
+.plan-margin-proj-val {
+  font-size:13px; font-weight:800; color:var(--accent);
+}
+
+
+
 .modal-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:2px}
 
 /* ===== BALANCE ANIMATE ===== */
@@ -1186,6 +1481,13 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
       </div>
       <span class="tab-btn-label">Özet</span>
     </button>
+    <!-- Plan -->
+    <button class="tab-btn" id="nav-plan" onclick="switchTab('plan')" aria-label="Plan">
+      <div class="tab-btn-dot">
+        <svg class="icon-outline" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/></svg>
+      </div>
+      <span class="tab-btn-label">Plan</span>
+    </button>
     <!-- Ayarlar -->
     <button class="tab-btn" id="nav-ayarlar" onclick="switchTab('ayarlar')" aria-label="Ayarlar">
       <div class="tab-btn-dot">
@@ -1466,6 +1768,78 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
     </div>
     <div class="year-grid" id="yearSummaryCards"></div>
     <div id="yearMonthList"></div>
+  </div>
+</div>
+
+
+<!-- TAB: PLAN -->
+<div class="tab-content" id="tab-plan">
+
+  <!-- 1. DURUM HERO -->
+  <div id="planHero"></div>
+
+  <!-- 2. KARAKTER KARTI -->
+  <div id="planCharCard"></div>
+
+  <!-- 3. YAPIŞAL BASKI — bar chart stili -->
+  <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
+    <div class="card-collapse-header" onclick="toggleSection('planRisk')">
+      <div class="collapse-left">
+        <div class="collapse-icon-wrap" id="planRiskIconWrap" style="background:rgba(255,69,58,.1);border:1px solid rgba(255,69,58,.2)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF453A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 3l18 18"/><path d="M10.584 10.587a2 2 0 0 0 2.828 2.83"/><path d="M9.363 5.365a9.466 9.466 0 0 1 2.637 -.365c4 0 7.333 2.333 10 7c-.778 1.361 -1.612 2.524 -2.503 3.488m-2.14 1.861c-1.631 1.1 -3.415 1.651 -5.357 1.651c-4 0 -7.333 -2.333 -10 -7c1.369 -2.395 2.913 -4.175 4.632 -5.341"/></svg>
+        </div>
+        <div>
+          <div class="collapse-title">Yapısal Baskı</div>
+          <div class="collapse-summary" id="planRiskSummary">Baskıyı yaratan değişkenler</div>
+        </div>
+      </div>
+      <div class="collapse-right"><span class="collapse-chevron" id="planRiskChevron">›</span></div>
+    </div>
+    <div class="collapsible-body collapsed" id="planRiskBody"><div class="collapsible-inner">
+      <div id="planRiskDetail"></div>
+    </div></div>
+  </div>
+
+  <!-- 4. HEDEF & SÜRE -->
+  <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
+    <div class="card-collapse-header" onclick="toggleSection('planGoal')">
+      <div class="collapse-left">
+        <div class="collapse-icon-wrap" style="background:rgba(45,184,102,.1);border:1px solid rgba(45,184,102,.2)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2DB866" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg>
+        </div>
+        <div>
+          <div class="collapse-title">Hedef & Süre</div>
+          <div class="collapse-summary" id="planGoalSummary">Ne zaman ulaşırsın</div>
+        </div>
+      </div>
+      <div class="collapse-right"><span class="collapse-chevron" id="planGoalChevron">›</span></div>
+    </div>
+    <div class="collapsible-body collapsed" id="planGoalBody"><div class="collapsible-inner">
+      <div id="planGoalDetail"></div>
+    </div></div>
+  </div>
+
+  <!-- 5. SENARYO -->
+  <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
+    <div class="card-collapse-header" onclick="toggleSection('planScen')">
+      <div class="collapse-left">
+        <div class="collapse-icon-wrap" style="background:rgba(10,132,255,.1);border:1px solid rgba(10,132,255,.2)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A84FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/></svg>
+        </div>
+        <div>
+          <div class="collapse-title">Senaryo</div>
+          <div class="collapse-summary" id="planScenSummary">Değiştirince ne olur?</div>
+        </div>
+      </div>
+      <div class="collapse-right"><span class="collapse-chevron" id="planScenChevron">›</span></div>
+    </div>
+    <div class="collapsible-body collapsed" id="planScenBody"><div class="collapsible-inner">
+      <div id="planScenSliders" style="padding:2px 0 4px">
+        <!-- Dinamik slider'lar buraya render edilir -->
+      </div>
+      <div id="planScenResult"></div>
+      <button class="sc-reset-btn" onclick="planScenReset()">Sıfırla</button>
+    </div></div>
   </div>
 </div>
 
@@ -2397,7 +2771,7 @@ function finishOnboarding() {
 
 // =================== TABS ===================
 let currentTab = 'aylik';
-const sectionState = { rec: false, debt: false, goal: false, wish: false };
+const sectionState = { rec: false, debt: false, goal: false, wish: false, planScen: false, planRisk: false, planGoal: false };
 
 function switchTab(id) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -2422,6 +2796,9 @@ function switchTab(id) {
       setupChartObservers();
       renderYillik();
     });
+  }
+  if (id === 'plan') {
+    renderPlan();
   }
   if (id === 'ayarlar') {
     const wni = document.getElementById('walletNameInput');
@@ -3392,7 +3769,7 @@ let _touchEndY = 0;
 let _touchEndX = 0;
 let _touchOnInteractive = false;
 
-const TAB_ORDER = ['aylik', 'sabit', 'ozet', 'ayarlar'];
+const TAB_ORDER = ['aylik', 'sabit', 'ozet', 'plan', 'ayarlar'];
 
 document.addEventListener('touchstart', e => {
   _touchStartY = e.touches[0].clientY;
@@ -5221,6 +5598,753 @@ function saveRecEditModal() {
 }
 
 // =================== FİNANSAL TAVSİYELER ===================
+
+
+
+
+// =================== PLAN TAB ===================
+// Bağımlılıklar: calcFreeBudget, fmtTL, parseNum, esc, pct, data.*
+// CSS: plan-hero, plan-char-card, plan-bar-*, plan-block-*, advice-card, collapsible
+
+// ── Karakter sistemi ───────────────────────────────────────────────────────
+// Her karakter: veri bazlı sınıflandırma, editöryal ton, sonraki adım
+const PLAN_CHARACTERS = {
+  BORCLU: {
+    key: 'BORCLU',
+    name: 'Borçlu',
+    tagline: 'Aylık nakit akışının büyük bölümü taahhütlere gidiyor.',
+    headBg: 'linear-gradient(135deg, rgba(255,69,58,.12), rgba(255,69,58,.04))',
+    headBorder: 'rgba(255,69,58,.2)',
+    nameColor: '#FF453A',
+    eyebrowColor: 'rgba(255,69,58,.6)',
+    glowColor: 'rgba(255,69,58,.08)',
+    why: 'Taksit ve borç yükleri gelirinizin kritik bir kısmını bağlıyor. Bu yapıda esneklik yok denecek kadar az — bir sürpriz gider dengeyi hemen bozar.',
+    nextLabel: 'BORÇLU\'dan BİRİKTİREN\'e geçmek için',
+    next: 'Önce en küçük borcu kapat. Her kapanan taksit aylık nefes alanı açar. Hedef: borç oranını %20\'nin altına indirmek.',
+  },
+  BIRIKTIREN: {
+    key: 'BIRIKTIREN',
+    name: 'Biriktiren',
+    tagline: 'Sistematik birikim var. Sıradaki adım: bu disiplini büyütmek.',
+    headBg: 'linear-gradient(135deg, rgba(45,184,102,.12), rgba(45,184,102,.04))',
+    headBorder: 'rgba(45,184,102,.25)',
+    nameColor: '#2DB866',
+    eyebrowColor: 'rgba(45,184,102,.6)',
+    glowColor: 'rgba(45,184,102,.09)',
+    why: 'Aylık bir birikim alışkanlığı var ve sabit yükler dengeli. Mevcut yapı, büyümeye açık bir zemin sunuyor.',
+    nextLabel: 'BİRİKTİREN\'den YATIRIMCI\'ya geçmek için',
+    next: 'Acil fon 3 aylık gidere ulaştıktan sonra, fazla marjı sadece bekletmek yerine büyüme odaklı bir hedefe yönlendir.',
+  },
+  YATIRIMCI: {
+    key: 'YATIRIMCI',
+    name: 'Yatırımcı',
+    tagline: 'Temel denge kurulmuş. Büyümeye alan var.',
+    headBg: 'linear-gradient(135deg, rgba(10,132,255,.12), rgba(10,132,255,.04))',
+    headBorder: 'rgba(10,132,255,.25)',
+    nameColor: '#0A84FF',
+    eyebrowColor: 'rgba(10,132,255,.6)',
+    glowColor: 'rgba(10,132,255,.09)',
+    why: 'Sabit yükler kontrol altında, birikim disiplini yerleşmiş ve aylık marj kalıcı. Bu pozisyon, artık savunmadan büyümeye odaklanmaya izin veriyor.',
+    nextLabel: 'Şu an için önerilen yön',
+    next: 'Mevcut birikim hedeflerini koru. Fazla marjın en az yarısını uzun vadeli bir büyüme aracına yönlendir.',
+  },
+  HARCAYAN: {
+    key: 'HARCAYAN',
+    name: 'Harcayan',
+    tagline: 'Gelir yeterli — ama tanımsız harcamalar marjı eritiyor.',
+    headBg: 'linear-gradient(135deg, rgba(255,149,0,.1), rgba(255,149,0,.03))',
+    headBorder: 'rgba(255,149,0,.2)',
+    nameColor: '#FF9500',
+    eyebrowColor: 'rgba(255,149,0,.6)',
+    glowColor: 'rgba(255,149,0,.08)',
+    why: 'Sabit yapı sorunlu değil, değişken harcamalar bütçeyi düzensiz tüketiyor. Tanımsız kalan para çoğu zaman en hızlı kaybolan paradır.',
+    nextLabel: 'Bir sonraki adım',
+    next: 'Değişken harcamaları kategorize et. Aylık marjın en az yarısına bir isim ver — hedefsiz birikim korunmaz.',
+  },
+  KIRILGAN: {
+    key: 'KIRILGAN',
+    name: 'Kırılgan',
+    tagline: 'Denge var, ama tampon yok. Küçük bir sarsıntı yeterli.',
+    headBg: 'linear-gradient(135deg, rgba(255,214,10,.09), rgba(255,214,10,.03))',
+    headBorder: 'rgba(255,214,10,.2)',
+    nameColor: '#FFD60A',
+    eyebrowColor: 'rgba(255,214,10,.6)',
+    glowColor: 'rgba(255,214,10,.07)',
+    why: 'Aylık rakamlar iyi görünüyor, ama acil durum tamponu olmadan bu denge kırılgan. Beklenmedik bir gider tüm yapıyı zorlayabilir.',
+    nextLabel: 'Öncelikli adım',
+    next: 'Önce 3 aylık gider kadar bir acil fon oluştur. Sonra birikim hedefleri geliyor.',
+  },
+};
+
+function _planClassifyChar(fb) {
+  if (!fb.income) return PLAN_CHARACTERS.KIRILGAN;
+
+  const debtRatio   = fb.debtTotal / fb.income;
+  const fixedRatio  = (fb.recTotal + fb.debtTotal) / fb.income;
+  const savRatio    = Math.max(0, fb.remaining) / fb.income;
+  const hasGoals    = data.savingsGoals.filter(g => g.monthly > 0).length > 0;
+  const hasEmergency= data.savingsGoals.some(g =>
+    ['acil','fon','yedek'].some(k => g.name.toLowerCase().includes(k)));
+
+  // Borçlu: borç baskısı dominant
+  if (debtRatio > 0.28 || (debtRatio > 0.18 && fixedRatio > 0.6)) {
+    return PLAN_CHARACTERS.BORCLU;
+  }
+  // Ay sonu açığı
+  if (fb.remaining < 0) return PLAN_CHARACTERS.KIRILGAN;
+  // Yatırımcı: dengeli + birikim + tampon
+  if (savRatio > 0.22 && hasGoals && hasEmergency) {
+    return PLAN_CHARACTERS.YATIRIMCI;
+  }
+  // Biriktiren: aktif birikim + makul marj
+  if (savRatio > 0.12 && hasGoals) {
+    return PLAN_CHARACTERS.BIRIKTIREN;
+  }
+  // Biriktiren (tampon yok ama disiplin var)
+  if (savRatio > 0.18 && !hasGoals) {
+    return PLAN_CHARACTERS.HARCAYAN;
+  }
+  // Sabit gider baskısı
+  if (fixedRatio > 0.60) return PLAN_CHARACTERS.BORCLU;
+  // Kırılgan: dar marj veya tamponsuz
+  if (savRatio < 0.06 || !hasEmergency) return PLAN_CHARACTERS.KIRILGAN;
+  // Default: Biriktiren
+  return PLAN_CHARACTERS.BIRIKTIREN;
+}
+
+// ── Hesap motoru ─────────────────────────────────────────────────────────────
+function _planCalcCore(fb, sc) {
+  sc = sc || { extraIncome:0, recDelta:0, lifeDelta:0, plannedExp:0 };
+  const adjIncome = fb.income + (sc.extraIncome||0);
+  const adjRec    = Math.max(0, fb.recTotal + (sc.recDelta||0));
+  const adjAvail  = adjIncome - adjRec - fb.debtTotal - fb.goalTotal - fb.savTarget;
+  const adjVar    = fb.varSpent + (sc.lifeDelta||0) + (sc.plannedExp||0);
+  const adjRemain = adjAvail - adjVar;
+  const savPot    = Math.max(0, adjRemain);
+  const fixedRatio= adjIncome > 0 ? (adjRec + fb.debtTotal) / adjIncome : 1;
+  const debtRatio = adjIncome > 0 ? fb.debtTotal / adjIncome : 0;
+  const savRatio  = adjIncome > 0 ? savPot / adjIncome : 0;
+
+  // Risk skoru 0–9
+  let rs = 0;
+  if (fixedRatio > 0.65) rs += 3; else if (fixedRatio > 0.45) rs += 2; else if (fixedRatio > 0.30) rs += 1;
+  if (debtRatio  > 0.35) rs += 3; else if (debtRatio  > 0.20) rs += 2; else if (debtRatio  > 0.08) rs += 1;
+  if (adjRemain  < 0)    rs += 3; else if (savRatio < 0.05) rs += 2; else if (savRatio < 0.12) rs += 1;
+
+  const riskLevel = rs >= 6 ? 'high' : rs >= 3 ? 'mid' : 'low';
+
+  // Karakter (senaryo ile değişebilir)
+  const scFb = { ...fb, recTotal: adjRec, income: adjIncome, remaining: adjRemain, varSpent: adjVar };
+  const character = _planClassifyChar(scFb);
+
+  // Hedef süreleri
+  const goals = data.savingsGoals.map(g => {
+    const dep  = (g.deposits||[]).reduce((s,d) => s+d.amount, 0);
+    const left = Math.max(0, g.target - dep);
+    const pct  = Math.min(100, dep > 0 ? Math.round(dep/g.target*100) : 0);
+    const cur  = (g.monthly > 0 && left > 0) ? Math.ceil(left / g.monthly)    : null;
+    const opt  = (savPot > 0   && left > 0) ? Math.ceil(left / savPot)        : null;
+    return { ...g, dep, left, pct, curMonths: cur, optMonths: opt };
+  });
+
+  // Baskı sürücüleri (somut + sıralı)
+  const drivers = [];
+  if (fixedRatio > 0.35) drivers.push({
+    label: 'Sabit gider yükü',
+    pct: Math.round(fixedRatio*100),
+    detail: 'Gelirinizin ' + Math.round(fixedRatio*100) + '\'i sabit taahhütlere gidiyor. Bu yapı değişken harcamalardan bağımsız baskı üretiyor.',
+    level: fixedRatio > 0.60 ? 'high' : 'mid',
+    barPct: Math.min(100, Math.round(fixedRatio*100)),
+    barColor: fixedRatio > 0.60 ? 'var(--danger)' : 'var(--warning)',
+  });
+  if (debtRatio > 0.08) drivers.push({
+    label: 'Borç & taksit yükü',
+    pct: Math.round(debtRatio*100),
+    detail: 'Aktif taksitler aylık ' + fmtTL(Math.round(fb.debtTotal)) + ' bağlıyor. Her kapanan taksit bu oranı kalıcı olarak düşürüyor.',
+    level: debtRatio > 0.30 ? 'high' : 'mid',
+    barPct: Math.min(100, Math.round(debtRatio*100*2)),
+    barColor: debtRatio > 0.30 ? 'var(--danger)' : 'var(--warning)',
+  });
+  if (adjRemain < 0) drivers.push({
+    label: 'Ay sonu açığı',
+    pct: 0,
+    detail: 'Bu ay giderler geliri ' + fmtTL(Math.abs(Math.round(adjRemain))) + ' geçiyor. Öncelik: değişken harcamaları kısmak.',
+    level: 'high', barPct: 100, barColor: 'var(--danger)',
+  });
+  if (savRatio < 0.05 && adjRemain >= 0) drivers.push({
+    label: 'Dar birikim marjı',
+    pct: Math.round(savRatio*100),
+    detail: 'Gelirin sadece \'%' + Math.round(savRatio*100) + '\' birikilebilir. Beklenmedik bir gider bu dengeyi kolayca bozar.',
+    level: 'mid', barPct: Math.max(5, Math.round(savRatio*100*4)), barColor: 'var(--warning)',
+  });
+  const noEmergency = !data.savingsGoals.some(g =>
+    ['acil','fon','yedek'].some(k => g.name.toLowerCase().includes(k)));
+  if (noEmergency) drivers.push({
+    label: 'Acil fon eksikliği',
+    pct: 0,
+    detail: '3 aylık gider kadar bir tampon, yapıyı beklenmedik giderlere karşı kalıcı olarak korur.',
+    level: 'mid', barPct: 0, barColor: 'var(--muted)',
+  });
+
+  // Aksiyon önerileri (sıralı, somut)
+  const actions = [];
+  const activeDebts = data.debts.filter(d => d.active);
+  if (activeDebts.length > 0) {
+    const sm = [...activeDebts].sort((a,b) =>
+      ((a.installments-a.paidCount)*a.monthlyAmount)-((b.installments-b.paidCount)*b.monthlyAmount))[0];
+    const leftAmt = (sm.installments - sm.paidCount) * sm.monthlyAmount;
+    actions.push('En küçük borç: "' + esc(sm.name) + '" — ' + fmtTL(Math.round(leftAmt)) + ' kaldı. Kapanınca aylık ' + fmtTL(sm.monthlyAmount) + ' kalıcı olarak serbest kalır.');
+  }
+  const sortedRec = [...data.recurring].filter(r=>r.active).sort((a,b)=>b.amount-a.amount);
+  if (sortedRec.length > 0 && fixedRatio > 0.40) {
+    actions.push('"' + esc(sortedRec[0].desc) + '" en büyük sabit gider (' + fmtTL(sortedRec[0].amount) + '/ay). Küçük bir müzakere bile aylık ' + fmtTL(Math.round(sortedRec[0].amount*0.1)) + ' yer açar.');
+  }
+  if (savPot > 400 && data.savingsGoals.filter(g=>g.monthly>0).length === 0) {
+    actions.push('Aylık ' + fmtTL(Math.round(savPot)) + ' tanımsız kalıyor. Bir hedefe bağlanmayan para çoğu zaman kaybolur — küçük bir hedef bile bu marjı korur.');
+  }
+  if (noEmergency && savPot > 200) {
+    actions.push('Acil fon yok. İlk hedef: 3 aylık sabit gider (' + fmtTL(Math.round((fb.recTotal + fb.debtTotal) * 3)) + '). Bu tampon kurulmadan uzun vadeli planlama anlamsız.');
+  }
+  // Geçen ay karşılaştırma
+  const prevMk = (() => { const d = new Date(); d.setMonth(d.getMonth()-1); return d.toISOString().slice(0,7); })();
+  const prevFb = calcFreeBudget(prevMk);
+  if (prevFb.income > 0 && fb.varSpent > prevFb.varSpent * 1.18) {
+    const diff = fb.varSpent - prevFb.varSpent;
+    actions.push('Değişken harcamalar bu ay ' + fmtTL(Math.round(diff)) + ' arttı. Baskı yapısal değil, davranışsal — ritim değişirse etki hızlı hissedilir.');
+  }
+
+  return {
+    adjIncome, adjRec, adjAvail, adjVar, adjRemain, savPot,
+    fixedRatio, debtRatio, savRatio, rs, riskLevel,
+    character, drivers, actions, goals, sc,
+  };
+}
+
+function _planGetScenario() {
+  return {
+    extraIncome: parseNum((document.getElementById('scExtraIncome')||{}).value||''),
+    recDelta:    parseNum((document.getElementById('scRecDelta')   ||{}).value||''),
+    lifeDelta:   parseNum((document.getElementById('scLifeDelta')  ||{}).value||''),
+    plannedExp:  parseNum((document.getElementById('scPlannedExp') ||{}).value||''),
+  };
+}
+
+// ── Ana render ────────────────────────────────────────────────────────────────
+function renderPlan() {
+  const mk = currentMonth;
+  const fb = calcFreeBudget(mk);
+  // Slider'ları render et (senaryo seksi açılmamış olsa bile hazır olsun)
+  _planRenderSliders(fb);
+  const sc = _planGetScenario();
+  const core = _planCalcCore(fb, sc);
+  _renderPlanHero(fb, core);
+  _renderPlanChar(core);
+  _renderPlanRiskDetail(core);
+  _renderPlanGoalDetail(fb, core);
+  _renderPlanImpact(fb, core);
+  _syncPlanCollapseSummaries(core);
+}
+
+// ── 1. Durum hero — önyorum + 3 oran ─────────────────────────────────────────
+function _renderPlanHero(fb, core) {
+  const el = document.getElementById('planHero');
+  if (!el) return;
+
+  if (!fb.income) {
+    el.innerHTML = `<div class="plan-hero" style="--plan-accent:var(--muted);--plan-glow:rgba(110,109,120,.06)">
+      <div class="plan-hero-eyebrow">Finansal Durum</div>
+      <div class="plan-hero-status">Veri bekleniyor</div>
+      <div class="plan-hero-body">Gelir eklenince finansal yapının analizi başlar.</div>
+    </div>`;
+    return;
+  }
+
+  const riskMeta = {
+    low:  { label:'Dengeli',  color:'var(--accent)',  glow:'rgba(45,184,102,.07)' },
+    mid:  { label:'Dikkat',   color:'var(--warning)', glow:'rgba(255,214,10,.07)' },
+    high: { label:'Baskılı',  color:'var(--danger)',  glow:'rgba(255,69,58,.07)' },
+  }[core.riskLevel];
+
+  // Durum cümlesi — editorial, data-driven
+  let statusLine = '';
+  if (core.adjRemain < 0)
+    statusLine = 'Bu ay giderler geliri <span>aşıyor.</span>';
+  else if (core.fixedRatio > 0.60)
+    statusLine = 'Sabit yük <span>baskısı yüksek.</span>';
+  else if (core.debtRatio > 0.28)
+    statusLine = 'Borç yapısı <span>ağırlık yaratıyor.</span>';
+  else if (core.savRatio > 0.20)
+    statusLine = 'Birikim marjı <span>güçlü durumda.</span>';
+  else if (core.savRatio > 0.08)
+    statusLine = 'Yapı <span>dengeli,</span> marj makul.';
+  else
+    statusLine = 'Esneklik <span>sınırlı</span> kalmaya devam ediyor.';
+
+  // Kısa yorum
+  let body = '';
+  if (core.adjRemain < 0)
+    body = 'Değişken harcamaları kısmak dengeyi hızlı toparlar. Sorun yapısal olmak zorunda değil.';
+  else if (core.fixedRatio > 0.60)
+    body = 'Günlük harcamalardan çok, sabit yükler hareket alanını daraltıyor. Bir veya iki kalemin azaltılması fark yaratır.';
+  else if (core.debtRatio > 0.28)
+    body = 'Gelir zayıf değil; baskıyı yaratan şey yapısal taahhütler. Her kapanan taksit bu denklemi değiştiriyor.';
+  else if (core.savRatio > 0.15 && data.savingsGoals.filter(g=>g.monthly>0).length === 0)
+    body = 'Tanımsız kalan para çoğu zaman en hızlı kaybolan paradır. Bu marjı bir hedefe bağlamak değeri korur.';
+  else if (core.savRatio > 0.15)
+    body = 'Birikim disiplini var ve yapı bunu destekliyor. Şimdi hız artırma zamanı.';
+  else
+    body = 'Denge makul. Küçük yapısal değişiklikler birikim hızını belirgin şekilde artırabilir.';
+
+  // Oran pilleri
+  const pills = [
+    { label:'Sabit yük', val:'%'+Math.round(core.fixedRatio*100),
+      bg: core.fixedRatio > 0.55 ? 'rgba(255,69,58,.12)' : core.fixedRatio > 0.40 ? 'rgba(255,214,10,.1)' : 'rgba(45,184,102,.1)',
+      color: core.fixedRatio > 0.55 ? 'var(--danger)' : core.fixedRatio > 0.40 ? 'var(--warning)' : 'var(--accent)' },
+    { label:'Marj', val:'%'+Math.round(core.savRatio*100),
+      bg: core.savRatio < 0.05 ? 'rgba(255,69,58,.12)' : core.savRatio < 0.12 ? 'rgba(255,214,10,.1)' : 'rgba(45,184,102,.1)',
+      color: core.savRatio < 0.05 ? 'var(--danger)' : core.savRatio < 0.12 ? 'var(--warning)' : 'var(--accent)' },
+    { label:'Kalan', val:fmtTL(Math.round(core.adjRemain)),
+      bg: core.adjRemain < 0 ? 'rgba(255,69,58,.12)' : 'rgba(45,184,102,.1)',
+      color: core.adjRemain < 0 ? 'var(--danger)' : 'var(--accent)' },
+  ];
+
+  el.innerHTML = `<div class="plan-hero" style="--plan-accent:${riskMeta.color};--plan-glow:${riskMeta.glow}">
+    <div class="plan-hero-eyebrow">Finansal Durum · ${riskMeta.label}</div>
+    <div class="plan-hero-status">${statusLine}</div>
+    <div class="plan-hero-body">${body}</div>
+    <div class="plan-hero-pills">
+      ${pills.map(p => `<div class="plan-hero-pill" style="background:${p.bg};color:${p.color}">
+        <span style="opacity:.7;font-weight:700">${p.label}</span> ${p.val}
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ── 2. Karakter kartı ─────────────────────────────────────────────────────────
+function _renderPlanChar(core) {
+  const el = document.getElementById('planCharCard');
+  if (!el) return;
+  const ch = core.character;
+
+  el.innerHTML = `
+    <div class="plan-char-card" style="background:var(--surface)">
+      <div class="plan-char-head" style="background:${ch.headBg};border-bottom:1px solid ${ch.headBorder}">
+        <div class="plan-char-eyebrow" style="color:${ch.eyebrowColor}">Finansal Karakter</div>
+        <div class="plan-char-name" style="color:${ch.nameColor}">${ch.name}</div>
+        <div class="plan-char-tagline" style="color:var(--text)">${ch.tagline}</div>
+      </div>
+      <div class="plan-char-body">
+        <div class="plan-char-body-label">Neden bu karakter?</div>
+        <div class="plan-char-body-text">${ch.why}</div>
+        ${core.actions.length > 0 ? `
+        <div class="plan-char-body-label" style="margin-top:16px">İlk önce ne yapmalı?</div>
+        <div class="plan-char-body-text">${core.actions[0]}</div>` : ''}
+      </div>
+      <div class="plan-char-next">
+        <div class="plan-char-next-arrow">›</div>
+        <div class="plan-char-next-text"><strong>${ch.nextLabel}:</strong> ${ch.next}</div>
+      </div>
+    </div>`;
+}
+
+// ── 3. Yapısal baskı detayı (collapsible içi) ─────────────────────────────────
+function _renderPlanRiskDetail(core) {
+  const el = document.getElementById('planRiskDetail');
+  if (!el) return;
+
+  const iconWrap = document.getElementById('planRiskIconWrap');
+  const rMeta = {
+    low:  { ic:'rgba(45,184,102,.1)',  bc:'rgba(45,184,102,.2)',  sc:'#2DB866' },
+    mid:  { ic:'rgba(255,214,10,.1)',  bc:'rgba(255,214,10,.2)',  sc:'#FFD60A' },
+    high: { ic:'rgba(255,69,58,.1)',   bc:'rgba(255,69,58,.2)',   sc:'#FF453A' },
+  }[core.riskLevel];
+  if (iconWrap) {
+    iconWrap.style.background = rMeta.ic;
+    iconWrap.style.border = '1px solid ' + rMeta.bc;
+    const svg = iconWrap.querySelector('svg');
+    if (svg) svg.setAttribute('stroke', rMeta.sc);
+  }
+
+  if (!core.drivers.length) {
+    el.innerHTML = `<div class="plan-block">
+      <div class="plan-block-title" style="color:var(--accent)">Kritik baskı noktası yok</div>
+      <div class="plan-block-body">Sabit gider, borç ve birikim oranlarının tümü sağlıklı aralıkta.</div>
+    </div>`;
+    return;
+  }
+
+  const lvlLabel = { high:'Yüksek', mid:'Orta', low:'' };
+  const lvlBg    = { high:'rgba(255,69,58,.15)', mid:'rgba(255,214,10,.12)', low:'rgba(110,109,120,.1)' };
+  const lvlColor = { high:'var(--danger)', mid:'var(--warning)', low:'var(--muted)' };
+
+  // Bar chart bloku — baskı haritası
+  const barsHtml = core.drivers.filter(d => d.barPct > 0).map(d => `
+    <div class="plan-bar-row">
+      <div class="plan-bar-label">${d.label.split(' ')[0]}</div>
+      <div class="plan-bar-track"><div class="plan-bar-fill" style="width:${d.barPct}%;background:${d.barColor}"></div></div>
+      <div class="plan-bar-val" style="color:${d.barColor}">${d.pct > 0 ? '%'+d.pct : '—'}</div>
+    </div>`).join('');
+
+  const detailHtml = core.drivers.map((d, i) => `
+    <div class="plan-block" style="animation:planIn .35s ease ${i*50}ms both">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div class="plan-block-title">${d.label}</div>
+        ${d.level !== 'low' ? `<span style="font-size:10px;font-weight:800;letter-spacing:.4px;padding:2px 8px;border-radius:6px;background:${lvlBg[d.level]};color:${lvlColor[d.level]}">${lvlLabel[d.level]}</span>` : ''}
+      </div>
+      <div class="plan-block-body">${d.detail}</div>
+    </div>`).join('');
+
+  // Kalan aksiyon önerileri (ilki karakter kartında gösterildi)
+  const actHtml = core.actions.slice(1).map((a, i) => `
+    <div class="plan-block" style="animation:planIn .35s ease ${(core.drivers.length+i)*50}ms both">
+      <div class="plan-block-title">Öneri ${i+2}</div>
+      <div class="plan-block-body">${a}</div>
+    </div>`).join('');
+
+  el.innerHTML = (barsHtml ? `<div style="margin-bottom:12px">${barsHtml}</div>` : '') + detailHtml + actHtml;
+}
+
+// ── 4. Hedef & süre (collapsible içi) ─────────────────────────────────────────
+function _renderPlanGoalDetail(fb, core) {
+  const el = document.getElementById('planGoalDetail');
+  const sumEl = document.getElementById('planGoalSummary');
+  if (!el) return;
+
+  const goals = core.goals;
+
+  if (!goals.length) {
+    if (sumEl) sumEl.textContent = 'Henüz hedef tanımlanmamış';
+    // Marj projeksiyonu — ne olabilirdi?
+    const m3 = Math.round(core.savPot * 3);
+    const m6 = Math.round(core.savPot * 6);
+    const m12= Math.round(core.savPot * 12);
+    el.innerHTML = `
+      <div class="plan-block">
+        <div class="plan-block-title">Tanımsız marj</div>
+        <div class="plan-block-body">Aylık ${fmtTL(Math.round(core.savPot))} birikilebilir, ama şu an bir hedefe bağlı değil. Bir hedef tanımlanmadığında, birikim potansiyeli görünmez hale gelir.</div>
+      </div>
+      <div class="plan-margin-proj">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Bu marjla ne olurdu?</div>
+        <div class="plan-margin-proj-row"><div class="plan-margin-proj-label">3 ay sonra</div><div class="plan-margin-proj-val">${fmtTL(m3)}</div></div>
+        <div class="plan-margin-proj-row"><div class="plan-margin-proj-label">6 ay sonra</div><div class="plan-margin-proj-val">${fmtTL(m6)}</div></div>
+        <div class="plan-margin-proj-row"><div class="plan-margin-proj-label">1 yıl sonra</div><div class="plan-margin-proj-val">${fmtTL(m12)}</div></div>
+      </div>`;
+    return;
+  }
+
+  const mn = goals.filter(g => g.curMonths).map(g => g.curMonths);
+  if (sumEl) sumEl.textContent = mn.length > 0
+    ? goals.length + ' hedef · en yakını ' + Math.min(...mn) + ' ay'
+    : goals.length + ' hedef · aylık birikim atanmamış';
+
+  const items = goals.map((g, i) => {
+    const imp = (g.optMonths !== null && g.curMonths !== null && g.optMonths < g.curMonths)
+      ? g.curMonths - g.optMonths : 0;
+
+    return `<div class="plan-block" style="animation:planIn .35s ease ${i*60}ms both">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
+        <div class="plan-block-title">${esc(g.name)}</div>
+        <div style="font-size:12px;font-weight:700;color:var(--muted)">${fmtTL(Math.round(g.dep))} / ${fmtTL(g.target)}</div>
+      </div>
+      <div style="height:4px;background:var(--border);border-radius:99px;margin-bottom:10px;overflow:hidden">
+        <div style="height:100%;width:${g.pct}%;background:var(--accent);border-radius:99px"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:${imp > 0 ? '8px' : '0'}">
+        <div style="background:var(--surface3);border-radius:10px;padding:10px 12px">
+          <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Mevcut hız</div>
+          <div style="font-size:16px;font-weight:900;letter-spacing:-.5px;color:var(--text)">${g.curMonths !== null ? g.curMonths + ' ay' : '—'}</div>
+        </div>
+        <div style="background:var(--surface3);border-radius:10px;padding:10px 12px;${imp > 0 ? 'border:1px solid rgba(45,184,102,.2)' : ''}">
+          <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Tam kapasiteyle</div>
+          <div style="font-size:16px;font-weight:900;letter-spacing:-.5px;color:var(--accent)">${g.optMonths !== null ? g.optMonths + ' ay' : '—'}</div>
+        </div>
+      </div>
+      ${imp > 0 ? `<div style="font-size:12px;font-weight:700;color:var(--accent);padding-top:2px">${imp} ay erken ulaşırsın — mevcut birikim marjıyla.</div>` : ''}
+      ${g.curMonths && g.curMonths > 48 ? `<div class="plan-block-body" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)">${g.curMonths} ay uzun bir süre. Aylık tutarı artırmak ya da hedef miktarını gözden geçirmek süreci anlamlı kısaltır.</div>` : ''}
+    </div>`;
+  });
+
+  el.innerHTML = `<div style="padding-bottom:4px">${items.join('')}</div>`;
+}
+
+// ── 5. Senaryo — premium impact simulator ─────────────────────────────────────
+// State: her slider'ın değeri
+let _sc = { extraIncome: 0, recDelta: 0, lifeDelta: 0, plannedExp: 0 };
+
+// Slider konfigürasyonları — insan dilinde sorular, mantıklı aralıklar
+function _planGetSliderDefs(fb) {
+  const inc   = fb.income   || 15000;
+  const fixed = fb.recTotal || 3000;
+  const vari  = fb.varSpent || 2000;
+  return [
+    {
+      id: 'extraIncome',
+      question: 'Ek gelir gelse ne olur?',
+      unit: '₺', sign: '+',
+      min: 0, max: Math.round(inc * 0.6 / 500) * 500, step: 500,
+      default: 0,
+      fillColor: 'var(--accent)',
+      glowColor: 'rgba(45,184,102,.2)',
+      formatVal: v => v === 0 ? 'Ek gelir yok' : '+' + fmtTL(v),
+    },
+    {
+      id: 'recDelta',
+      question: 'Sabit giderleri azaltabilsem?',
+      unit: '₺', sign: '−',
+      min: -Math.round(fixed * 0.5 / 200) * 200,
+      max: Math.round(fixed * 0.3 / 200) * 200,
+      step: 200,
+      default: 0,
+      fillColor: 'var(--warning)',
+      glowColor: 'rgba(255,214,10,.18)',
+      formatVal: v => v === 0 ? 'Değişiklik yok' : (v > 0 ? '+' : '') + fmtTL(v),
+    },
+    {
+      id: 'lifeDelta',
+      question: 'Günlük harcamalarım değişse?',
+      unit: '₺', sign: '±',
+      min: -Math.round(vari * 0.5 / 200) * 200,
+      max: Math.round(vari * 0.4 / 200) * 200,
+      step: 200,
+      default: 0,
+      fillColor: '#BF5AF2',
+      glowColor: 'rgba(191,90,242,.18)',
+      formatVal: v => v === 0 ? 'Değişiklik yok' : (v > 0 ? '+' : '') + fmtTL(v),
+    },
+    {
+      id: 'plannedExp',
+      question: 'Planladığım bir harcama var',
+      unit: '₺', sign: '−',
+      min: 0,
+      max: Math.round(inc * 0.5 / 500) * 500,
+      step: 500,
+      default: 0,
+      fillColor: 'var(--blue)',
+      glowColor: 'rgba(10,132,255,.18)',
+      formatVal: v => v === 0 ? 'Planlanan gider yok' : '−' + fmtTL(v),
+    },
+  ];
+}
+
+function _planRenderSliders(fb) {
+  const el = document.getElementById('planScenSliders');
+  if (!el) return;
+  const defs = _planGetSliderDefs(fb);
+
+  el.innerHTML = defs.map(d => {
+    const v   = _sc[d.id] || 0;
+    const pct = _sliderPct(d, v);
+    return `
+    <div class="sc-slider-wrap">
+      <div class="sc-slider-header">
+        <div class="sc-slider-question">${d.question}</div>
+        <div class="sc-slider-val" id="scVal_${d.id}" style="color:${v !== 0 ? d.fillColor : 'var(--muted)'}">${d.formatVal(v)}</div>
+      </div>
+      <input type="range" class="sc-range" id="scRange_${d.id}"
+        min="${d.min}" max="${d.max}" step="${d.step}" value="${v}"
+        style="--sc-fill:${d.fillColor};--sc-glow:${d.glowColor};--sc-pct:${pct}%"
+        oninput="_scSliderMove('${d.id}',this)">
+      <div class="sc-range-labels">
+        <span class="sc-range-label">${d.min === 0 ? 'Hiç' : fmtTL(Math.abs(d.min)) + ' az'}</span>
+        <span class="sc-range-label" style="color:var(--muted);opacity:.5">—</span>
+        <span class="sc-range-label">${d.max === 0 ? 'Hiç' : '+' + fmtTL(d.max)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function _sliderPct(d, v) {
+  return Math.round(((v - d.min) / (d.max - d.min)) * 100);
+}
+
+function _scSliderMove(id, input) {
+  const mk   = currentMonth;
+  const fb   = calcFreeBudget(mk);
+  const defs = _planGetSliderDefs(fb);
+  const def  = defs.find(d => d.id === id);
+  if (!def) return;
+
+  const v    = parseFloat(input.value);
+  _sc[id]    = v;
+
+  // Slider track rengi güncelle
+  const pct = _sliderPct(def, v);
+  input.style.setProperty('--sc-pct', pct + '%');
+
+  // Val label güncelle + animasyon
+  const valEl = document.getElementById('scVal_' + id);
+  if (valEl) {
+    valEl.textContent = def.formatVal(v);
+    valEl.style.color = v !== 0 ? def.fillColor : 'var(--muted)';
+    valEl.classList.remove('animating');
+    void valEl.offsetWidth;
+    valEl.classList.add('animating');
+    setTimeout(() => valEl.classList.remove('animating'), 400);
+  }
+
+  // Impact card güncelle
+  const sc   = { extraIncome: _sc.extraIncome, recDelta: _sc.recDelta, lifeDelta: _sc.lifeDelta, plannedExp: _sc.plannedExp };
+  const core = _planCalcCore(fb, sc);
+  _renderPlanImpact(fb, core);
+  _syncPlanCollapseSummaries(core);
+}
+
+function _planGetScenario() {
+  return {
+    extraIncome: _sc.extraIncome || 0,
+    recDelta:    _sc.recDelta    || 0,
+    lifeDelta:   _sc.lifeDelta   || 0,
+    plannedExp:  _sc.plannedExp  || 0,
+  };
+}
+
+function planScenCalc() {
+  const mk   = currentMonth;
+  const fb   = calcFreeBudget(mk);
+  const sc   = _planGetScenario();
+  const core = _planCalcCore(fb, sc);
+  _renderPlanHero(fb, core);
+  _renderPlanChar(core);
+  _renderPlanRiskDetail(core);
+  _renderPlanGoalDetail(fb, core);
+  _renderPlanImpact(fb, core);
+  _syncPlanCollapseSummaries(core);
+}
+
+function _renderPlanImpact(fb, core) {
+  const el = document.getElementById('planScenResult');
+  if (!el) return;
+
+  const sc       = core.sc || {};
+  const hasDelta = Object.values(sc).some(v => v !== 0);
+
+  if (!hasDelta) {
+    // Slider sıfırda: hafif bir "simüle et" daveti
+    el.innerHTML = `
+      <div style="text-align:center;padding:18px 0 6px;color:var(--muted)">
+        <div style="font-size:12px;font-weight:600;letter-spacing:.02em;line-height:1.6">
+          Herhangi bir slider'ı kaydır<br>etkisini anlık gör.
+        </div>
+      </div>`;
+    return;
+  }
+
+  // Baseline (senaryo olmadan)
+  const baseline = _planCalcCore(fb, { extraIncome:0, recDelta:0, lifeDelta:0, plannedExp:0 });
+
+  const remDelta  = core.adjRemain - baseline.adjRemain;
+  const savDelta  = core.savPot    - baseline.savPot;
+  const riskChanged = core.riskLevel !== baseline.riskLevel;
+  const charChanged = core.character.key !== baseline.character.key;
+
+  const rlColors = { low:'var(--accent)', mid:'var(--warning)', high:'var(--danger)' };
+  const rlBg     = { low:'rgba(45,184,102,.12)', mid:'rgba(255,214,10,.1)', high:'rgba(255,69,58,.1)' };
+  const rlLabels = { low:'Dengeli', mid:'Dikkat', high:'Baskılı' };
+
+  // Delta badge HTML
+  function delta(v, prefix) {
+    if (Math.abs(v) < 10) return '';
+    const cls = v > 0 ? 'pos' : 'neg';
+    const sign = v > 0 ? '+' : '';
+    return `<span class="sc-delta ${cls}">${sign}${fmtTL(Math.round(v))}</span>`;
+  }
+
+  // Hedef tahmini
+  const bestGoal = core.goals.filter(g => g.optMonths != null)
+    .sort((a,b) => (a.optMonths||999)-(b.optMonths||999))[0];
+  const baseGoal = baseline.goals.find(g => bestGoal && g.id === bestGoal.id);
+
+  let goalRow = '';
+  if (bestGoal) {
+    const gDelta = baseGoal && baseGoal.optMonths && bestGoal.optMonths
+      ? baseGoal.optMonths - bestGoal.optMonths : 0;
+    goalRow = `
+      <div class="sc-impact-row" style="animation-delay:60ms">
+        <div class="sc-impact-label">${esc(bestGoal.name)}</div>
+        <div style="display:flex;align-items:center">
+          <div class="sc-impact-val" style="color:var(--blue)">${bestGoal.optMonths} ay</div>
+          ${gDelta > 0 ? `<span class="sc-delta pos">${gDelta} ay erken</span>` : ''}
+        </div>
+      </div>`;
+  }
+
+  // Risk / karakter değişim notu
+  let changeNote = '';
+  if (riskChanged) {
+    const dir = core.riskLevel === 'low' ? 'iyileşti' : core.riskLevel === 'high' ? 'kötüleşti' : 'değişti';
+    const noteColor = core.riskLevel === 'low' ? 'var(--accent)' : core.riskLevel === 'high' ? 'var(--danger)' : 'var(--warning)';
+    changeNote = `<div style="padding:10px 18px;font-size:12px;font-weight:700;color:${noteColor};border-top:1px solid rgba(255,255,255,.04)">
+      Risk seviyesi ${dir} — ${rlLabels[core.riskLevel].toLowerCase()}.
+    </div>`;
+  }
+  if (charChanged) {
+    changeNote += `<div style="padding:${riskChanged?'2px':'10px'} 18px 10px;font-size:12px;font-weight:700;color:${core.character.nameColor};${riskChanged ? '' : 'border-top:1px solid rgba(255,255,255,.04)'}">
+      Finansal karakter: ${core.character.name}
+    </div>`;
+  }
+
+  el.innerHTML = `
+    <div class="sc-impact-card">
+      <div class="sc-impact-header">
+        <div class="sc-impact-eyebrow">Bu senaryoda</div>
+        <div class="sc-impact-status-pill" style="background:${rlBg[core.riskLevel]};color:${rlColors[core.riskLevel]}">
+          ${rlLabels[core.riskLevel]}
+        </div>
+      </div>
+      <div class="sc-impact-body">
+        <div class="sc-impact-row" style="animation-delay:0ms">
+          <div class="sc-impact-label">Aylık kalan</div>
+          <div style="display:flex;align-items:center">
+            <div class="sc-impact-val" id="scImpactRemain" style="color:${core.adjRemain >= 0 ? 'var(--accent)' : 'var(--danger)'}">
+              ${fmtTL(Math.round(core.adjRemain))}
+            </div>
+            ${delta(remDelta)}
+          </div>
+        </div>
+        <div class="sc-impact-row" style="animation-delay:30ms">
+          <div class="sc-impact-label">Birikim potansiyeli</div>
+          <div style="display:flex;align-items:center">
+            <div class="sc-impact-val" id="scImpactSav" style="color:var(--accent)">
+              ${fmtTL(Math.round(core.savPot))}
+            </div>
+            ${delta(savDelta)}
+          </div>
+        </div>
+        ${goalRow}
+      </div>
+      ${changeNote}
+    </div>`;
+
+  // Sayıları animasyonla güncelle (zaten DOM'da varsa)
+  ['scImpactRemain', 'scImpactSav'].forEach(id => {
+    const el2 = document.getElementById(id);
+    if (el2) {
+      el2.classList.remove('pop');
+      void el2.offsetWidth;
+      el2.classList.add('pop');
+      setTimeout(() => el2.classList.remove('pop'), 400);
+    }
+  });
+}
+
+function planScenReset() {
+  _sc = { extraIncome: 0, recDelta: 0, lifeDelta: 0, plannedExp: 0 };
+  const mk = currentMonth;
+  const fb = calcFreeBudget(mk);
+  _planRenderSliders(fb);  // slider'ları sıfır pozisyona döndür
+  planScenCalc();
+}
+
+function _syncPlanCollapseSummaries(core) {
+  const rl = { low:'Risk yok — denge sağlıklı', mid:'Orta risk — dikkat gerekiyor', high:'Yüksek risk — yapısal baskı' };
+  const rEl = document.getElementById('planRiskSummary');
+  if (rEl) rEl.textContent = rl[core.riskLevel];
+
+  const scEl = document.getElementById('planScenSummary');
+  const hasDelta = core.sc && Object.values(core.sc).some(v => v !== 0);
+  if (scEl) scEl.textContent = hasDelta ? 'Senaryo aktif' : 'Değiştirince ne olur?';
+}
+
 function renderFinancialAdvice() {
   const mk = monthKey();
   const fb = calcFreeBudget(mk);
@@ -6194,6 +7318,7 @@ function renderAll() {
     }));
   }
   if (currentTab !== 'sabit') updateCollapseSummaries();
+  if (currentTab === 'plan') renderPlan();
 }
 
 // =================== INIT ===================
