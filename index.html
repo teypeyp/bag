@@ -850,7 +850,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   opacity:0;pointer-events:none;
 }
 .item-actions-row > .item-actions-inner{
-  min-height:0;display:flex;gap:6px;padding:0 0 0 50px;
+  min-height:0;display:flex;gap:6px;padding:0;
 }
 .item-expanded .item-actions-row{
   grid-template-rows:1fr;opacity:1;pointer-events:auto;
@@ -875,7 +875,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   text-transform:uppercase;letter-spacing:1.2px;
 }
 
-/* Swipe viewport — peek: son kart biraz görünsün */
+/* Swipe viewport — 2 kart tam, 3. peek */
 .advice-scroll{
   display:flex;gap:10px;
   overflow-x:auto;
@@ -883,16 +883,15 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   scroll-snap-type:x mandatory;
   scrollbar-width:none;
   padding-bottom:4px;
-  /* sağdan peek alanı */
-  padding-right:28px;
+  padding-right:22px;
 }
 .advice-scroll::-webkit-scrollbar{display:none}
 
-/* Büyük swipeable kart */
+/* Swipeable kart — 2 kart tam sığsın, 3. hafif peek */
 .advice-big-card{
   flex-shrink:0;
-  /* peek: tam genişlik değil, sağdan sonraki kart hafif görünsün */
-  width:calc(100% - 28px);
+  /* (100% - 1×gap 10px - peek 22px) / 2 */
+  width:calc(50% - 21px);
   min-height:196px;
   border-radius:var(--radius);
   overflow:hidden;
@@ -901,30 +900,45 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   animation:adviceCardIn .4s cubic-bezier(.34,1.1,.64,1) both;
+  /* glass ortak */
+  backdrop-filter:blur(28px) saturate(160%);
+  -webkit-backdrop-filter:blur(28px) saturate(160%);
+  box-shadow:0 12px 40px rgba(0,0,0,.45), 0 1px 0 0 rgba(255,255,255,.06) inset;
 }
 .advice-big-card:active{opacity:.88}
 
-/* Koyu base + sol üstten gelen parlak radial glow */
+/* good — yeşil tintli glass */
 .advice-big-card.good{
   background:
-    radial-gradient(ellipse 85% 75% at 15% 20%, rgba(45,184,102,.32) 0%, transparent 65%),
-    linear-gradient(160deg,#091a0f 0%,#050d08 100%);
+    radial-gradient(ellipse 90% 70% at 10% 10%, rgba(45,184,102,.22) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 90% 90%, rgba(45,184,102,.08) 0%, transparent 55%),
+    linear-gradient(160deg,rgba(8,26,14,.88) 0%,rgba(6,14,10,.93) 100%);
+  border:1px solid rgba(45,184,102,.22);
+  box-shadow:0 12px 40px rgba(0,0,0,.45), 0 1px 0 0 rgba(45,184,102,.2) inset;
 }
+/* warn — sarı tintli glass */
 .advice-big-card.warn{
   background:
-    radial-gradient(ellipse 85% 75% at 15% 20%, rgba(255,214,10,.28) 0%, transparent 65%),
-    linear-gradient(160deg,#1a1400 0%,#0d0a00 100%);
+    radial-gradient(ellipse 90% 70% at 10% 10%, rgba(255,214,10,.2) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 90% 90%, rgba(255,149,0,.08) 0%, transparent 55%),
+    linear-gradient(160deg,rgba(26,20,0,.88) 0%,rgba(16,12,0,.93) 100%);
+  border:1px solid rgba(255,214,10,.2);
+  box-shadow:0 12px 40px rgba(0,0,0,.45), 0 1px 0 0 rgba(255,214,10,.18) inset;
 }
+/* bad — kırmızı tintli glass */
 .advice-big-card.bad{
   background:
-    radial-gradient(ellipse 85% 75% at 15% 20%, rgba(255,69,58,.30) 0%, transparent 65%),
-    linear-gradient(160deg,#1a0604 0%,#0d0302 100%);
+    radial-gradient(ellipse 90% 70% at 10% 10%, rgba(255,69,58,.22) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 90% 90%, rgba(255,69,58,.07) 0%, transparent 55%),
+    linear-gradient(160deg,rgba(26,6,4,.88) 0%,rgba(14,4,3,.93) 100%);
+  border:1px solid rgba(255,69,58,.2);
+  box-shadow:0 12px 40px rgba(0,0,0,.45), 0 1px 0 0 rgba(255,69,58,.18) inset;
 }
 
 /* İç içerik */
 .advice-big-inner{
   position:relative;z-index:1;
-  padding:22px 20px 20px;
+  padding:16px 14px 14px;
   display:flex;flex-direction:column;
   height:100%;min-height:196px;
 }
@@ -933,10 +947,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .advice-big-value{
   flex:1;
   display:flex;align-items:center;
-  margin-bottom:16px;
+  margin-bottom:10px;
 }
 .advice-big-num{
-  font-size:72px;font-weight:900;letter-spacing:-4px;line-height:1;
+  font-size:48px;font-weight:900;letter-spacing:-3px;line-height:1;
 }
 .advice-big-card.good .advice-big-num{color:#2DB866}
 .advice-big-card.warn .advice-big-num{color:#FFD60A}
@@ -944,30 +958,30 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* Küçük rakam (₺ gibi uzun değerler için) */
 .advice-big-num.sm{
-  font-size:44px;letter-spacing:-2px;
+  font-size:32px;letter-spacing:-1.5px;
 }
 
 /* ikon modunda — büyük circle */
 .advice-big-icon-wrap{
-  width:72px;height:72px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
+  display:flex;align-items:center;justify-content:flex-start;
 }
-.advice-big-card.good .advice-big-icon-wrap{background:rgba(45,184,102,.18)}
-.advice-big-card.warn .advice-big-icon-wrap{background:rgba(255,214,10,.15)}
-.advice-big-card.bad  .advice-big-icon-wrap{background:rgba(255,69,58,.15)}
+.advice-big-icon-wrap svg{width:38px;height:38px}
+.advice-big-card.good .advice-big-icon-wrap svg{stroke:#2DB866}
+.advice-big-card.warn .advice-big-icon-wrap svg{stroke:#FFD60A}
+.advice-big-card.bad  .advice-big-icon-wrap svg{stroke:#FF453A}
 
 /* Alt metin */
 .advice-big-label{
-  font-size:13px;font-weight:800;letter-spacing:-.1px;
-  margin-bottom:5px;line-height:1.3;
+  font-size:11.5px;font-weight:800;letter-spacing:-.1px;
+  margin-bottom:4px;line-height:1.3;
 }
 .advice-big-card.good .advice-big-label{color:rgba(45,184,102,.9)}
 .advice-big-card.warn .advice-big-label{color:rgba(255,214,10,.9)}
 .advice-big-card.bad  .advice-big-label{color:rgba(255,100,80,.95)}
 
 .advice-big-sub{
-  font-size:12px;font-weight:500;color:rgba(255,255,255,.5);
-  line-height:1.6;
+  font-size:11px;font-weight:500;color:rgba(255,255,255,.5);
+  line-height:1.55;
 }
 
 /* Nokta indikatörler */
@@ -1735,6 +1749,62 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .splash-dot.active{width:22px;background:var(--accent);box-shadow:0 0 8px rgba(45,184,102,.4)}
 .splash-cta{width:100%}
 #splashBtn{border-radius:14px!important;font-size:15px!important;font-weight:800!important;padding:16px!important;letter-spacing:.2px!important;}
+
+/* ===== ADD SHEET ===== */
+.add-sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:200;pointer-events:none;transition:background .3s ease}
+.add-sheet-overlay.show{background:rgba(0,0,0,.65);pointer-events:all;backdrop-filter:blur(2px)}
+.add-sheet{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:520px;background:var(--surface);border-radius:24px 24px 0 0;z-index:201;transition:transform .38s cubic-bezier(.32,0,.15,1);padding-bottom:env(safe-area-inset-bottom,0px);max-height:92vh;overflow-y:auto}
+.add-sheet.show{transform:translateX(-50%) translateY(0)}
+.add-sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+.add-sheet-header{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between}
+.add-sheet-title{font-size:16px;font-weight:800;letter-spacing:-.3px}
+.add-sheet-close{width:30px;height:30px;border-radius:50%;background:var(--surface3);border:none;color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.add-sheet-body{padding:0 20px 20px}
+.rec-type-row{display:flex;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:4px;gap:4px;margin-bottom:14px}
+.rec-type-btn{flex:1;padding:9px;border:none;border-radius:10px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:none;color:var(--muted);transition:all .2s}
+.rec-type-btn.active{background:var(--surface3);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+/* action buton genişletme */
+.item-actions-row>.item-actions-inner{min-height:0;display:flex;gap:6px;padding:0}
+.item-expanded .item-actions-row>.item-actions-inner{padding-top:10px;padding-bottom:2px}
+.icon-action-btn.stats{flex:1.6;width:auto;height:34px;padding:0 10px;border-color:rgba(45,184,102,.25);background:rgba(45,184,102,.06);color:var(--accent);gap:5px;font-size:11px;font-weight:800;font-family:'Montserrat',sans-serif}
+.icon-action-btn.stats svg{stroke:var(--accent)}
+.icon-action-btn.edit-sm{flex:1;width:auto;height:34px;padding:0 8px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;gap:4px}
+.icon-action-btn.danger-sm{flex:1;width:auto;height:34px;padding:0 8px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;gap:4px;border-color:rgba(255,69,58,.25);background:rgba(255,69,58,.08);color:var(--danger)}
+.icon-action-btn.danger-sm svg{stroke:var(--danger)}
+/* istatistik sayfası */
+#statsPageOverlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:290;display:none;pointer-events:none;transition:background .3s,backdrop-filter .3s;-webkit-backdrop-filter:blur(0px);backdrop-filter:blur(0px)}
+#statsPageOverlay.show{display:block;pointer-events:auto;background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+#statsPage{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:520px;height:88vh;background:linear-gradient(180deg,#0d1a0f 0%,#070d08 45%,#0A0A0D 100%);border-radius:28px 28px 0 0;z-index:300;display:flex;flex-direction:column;overflow:hidden;transition:transform .4s cubic-bezier(.32,0,.15,1)}
+#statsPage.show{transform:translateX(-50%) translateY(0)}
+.stats-drag-handle{width:36px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:12px auto 0;flex-shrink:0}
+.stats-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;flex-shrink:0}
+.stats-back{width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.07);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.stats-hero{padding:20px 20px 0;flex-shrink:0}
+.stats-item-label{font-size:13px;font-weight:600;color:rgba(255,255,255,.4);margin-bottom:6px}
+.stats-big-row{display:flex;align-items:flex-end;gap:10px;margin-bottom:5px}
+.stats-big-amt{font-size:44px;font-weight:900;letter-spacing:-2px;color:#fff;line-height:1}
+.stats-change-pill{margin-bottom:7px;font-size:12px;font-weight:800;padding:3px 10px;border-radius:20px}
+.stats-change-pill.up{background:rgba(255,69,58,.15);color:#FF453A}
+.stats-change-pill.down{background:rgba(45,184,102,.15);color:#2DB866}
+.stats-change-pill.flat{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)}
+.stats-month-label{font-size:11px;color:rgba(255,255,255,.25);font-weight:600}
+.stats-chart-wrap{flex-shrink:0;position:relative;margin-top:12px}
+.stats-list-wrap{flex:1;overflow-y:auto;padding:10px 20px 40px}
+.stats-list-header{display:flex;justify-content:space-between;margin-bottom:8px}
+.stats-list-avg{font-size:10px;font-weight:700;color:rgba(45,184,102,.6)}
+.stats-list-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.8px}
+.stats-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer}
+.stats-row:last-child{border-bottom:none}
+.stats-row-month{font-size:11px;font-weight:700;width:44px;flex-shrink:0}
+.stats-row-bar-wrap{flex:1;height:3px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden}
+.stats-row-bar{height:100%;border-radius:99px}
+.stats-row-right{display:flex;align-items:center;gap:5px;min-width:80px;justify-content:flex-end}
+.stats-row-amt{font-size:12px;font-weight:700}
+.stats-row-pct{font-size:10px;font-weight:700}
+/* değişken tutar sheet */
+#varAmtSheetOverlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:400;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px)}
+#varAmtSheetOverlay.show{display:flex}
+#varAmtSheet{background:var(--surface);border-radius:24px 24px 0 0;width:100%;max-width:520px;padding:10px 20px 48px;animation:tabEnter .3s cubic-bezier(.34,1.1,.64,1)}
 </style>
 </head>
 <body>
@@ -2002,7 +2072,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         </div>
       </div>
       <div class="collapse-right">
-        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();toggleRecForm()">+ Ekle</button><span class="collapse-chevron" id="recChevron">›</span>
+        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();openRecAddSheet()">+ Ekle</button><span class="collapse-chevron" id="recChevron">›</span>
       </div>
     </div>
     <div class="collapsible-body collapsed" id="recBody"><div class="collapsible-inner">
@@ -2038,7 +2108,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         </div>
       </div>
       <div class="collapse-right">
-        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();toggleDebtForm()">+ Ekle</button><span class="collapse-chevron" id="debtChevron">›</span>
+        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();openDebtAddSheet()">+ Ekle</button><span class="collapse-chevron" id="debtChevron">›</span>
       </div>
     </div>
     <div class="collapsible-body collapsed" id="debtBody"><div class="collapsible-inner">
@@ -2083,7 +2153,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         </div>
       </div>
       <div class="collapse-right">
-        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();toggleGoalForm()">+ Ekle</button><span class="collapse-chevron" id="goalChevron">›</span>
+        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();openGoalAddSheet()">+ Ekle</button><span class="collapse-chevron" id="goalChevron">›</span>
       </div>
     </div>
     <div class="collapsible-body collapsed" id="goalBody"><div class="collapsible-inner">
@@ -2953,7 +3023,7 @@ function load() {
       if (typeof data.streak.freezeTotal !== 'number' || data.streak.freezeTotal > 2) data.streak.freezeTotal = 2; // max 2
       if (data.streak.lastWeeklyFreezeGift === undefined) data.streak.lastWeeklyFreezeGift = '';
       if (data.streak.lastFreezeResetMonth === undefined) data.streak.lastFreezeResetMonth = '';
-      data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; });
+      data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; if (!r.payHistory) r.payHistory = {}; if (r.variable === undefined) r.variable = false; });
       data.debts.forEach(d => {
         if (!d.paidMonths) d.paidMonths = [];
         if (!d.startMonth) d.startMonth = monthKey();
@@ -3224,6 +3294,8 @@ function switchTab(id) {
   updatePillIndicator(id);
 
   if (id !== 'aylik') stopCarousel();
+  // Plan tab'ından çıkınca simülasyonu sıfırla
+  if (currentTab === 'plan' && id !== 'plan') planScenReset();
   currentTab = id;
   if (id === 'aylik') renderMonthly();
   if (id === 'sabit') { renderSabit(); }
@@ -5065,8 +5137,9 @@ function renderRecList() {
         </div>
       </div>
       <div class="item-actions-row"><div class="item-actions-inner">
-        <button class="icon-action-btn" onclick="event.stopPropagation();openRecEditModal('${r.id}')" title="Düzenle">${SVG_EDIT}</button>
-        <button class="icon-action-btn danger" onclick="event.stopPropagation();deleteRecurring('${r.id}')" title="Sil">${SVG_TRASH}</button>
+        <button class="icon-action-btn stats" onclick="event.stopPropagation();openStatsPage('rec','${r.id}')"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20v-8a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v8"/><path d="M10 20v-12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12"/><path d="M17 20v-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M3 20h18"/></svg>İstatistik</button>
+        <button class="icon-action-btn edit-sm" onclick="event.stopPropagation();openRecEditModal('${r.id}')"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Düzenle</button>
+        <button class="icon-action-btn danger-sm" onclick="event.stopPropagation();deleteRecurring('${r.id}')"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Sil</button>
       </div></div>
     </div>`;
   }).join('');
@@ -5082,7 +5155,10 @@ function togglePaidRecurring(id) {
     data.transactions = data.transactions.filter(t => !(t.recurringId === id && monthKey(t.date) === mk));
     showToast('↩ ' + r.desc + ' ödemesi geri alındı');
   } else {
+    if (r.variable) { openVarAmtSheet(id); return; }
+    if (!r.payHistory) r.payHistory = {};
     r.paidMonths.push(mk);
+    r.payHistory[mk] = r.amount;
     data.transactions = data.transactions.filter(t => !(t.recurringId === id && monthKey(t.date) === mk));
     data.transactions.push({ id: uid(), type: 'expense', desc: r.desc, amount: r.amount, date: today(), category: r.category, recurringId: id, isRecurring: true });
     showToast(TOAST_OK + ' ' + r.desc + ' ödendi');
@@ -5180,8 +5256,9 @@ function renderDebtList() {
         </div>
       </div>
       <div class="item-actions-row"><div class="item-actions-inner">
-        ${!done ? `<button class="icon-action-btn" onclick="event.stopPropagation();startEditDebt('${d.id}')" title="Düzenle">${SVG_EDIT}</button>` : ''}
-        <button class="icon-action-btn danger" onclick="event.stopPropagation();deleteDebt('${d.id}')" title="Sil">${SVG_TRASH}</button>
+        <button class="icon-action-btn stats" onclick="event.stopPropagation();openStatsPage('debt','${d.id}')"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20v-8a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v8"/><path d="M10 20v-12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12"/><path d="M17 20v-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M3 20h18"/></svg>İstatistik</button>
+        ${!done ? `<button class="icon-action-btn edit-sm" onclick="event.stopPropagation();startEditDebt('${d.id}')"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Düzenle</button>` : ''}
+        <button class="icon-action-btn danger-sm" onclick="event.stopPropagation();deleteDebt('${d.id}')"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Sil</button>
       </div></div>
     </div>`;
   }).join('');
@@ -5427,8 +5504,9 @@ function renderGoalsList() {
       </div>`:''}
       <button class="btn btn-ghost btn-sm" style="width:100%;font-size:11px;margin-bottom:6px" onclick="event.stopPropagation();openDepositModal('${g.id}')">+ Manuel Ekle</button>
       <div class="item-actions-row"><div class="item-actions-inner">
-        <button class="icon-action-btn" onclick="event.stopPropagation();startEditGoal('${g.id}')" title="Düzenle">${SVG_EDIT}</button>
-        <button class="icon-action-btn danger" onclick="event.stopPropagation();deleteGoal('${g.id}')" title="Sil">${SVG_TRASH}</button>
+        <button class="icon-action-btn stats" onclick="event.stopPropagation();openStatsPage('goal','${g.id}')"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20v-8a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v8"/><path d="M10 20v-12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12"/><path d="M17 20v-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M3 20h18"/></svg>İstatistik</button>
+        <button class="icon-action-btn edit-sm" onclick="event.stopPropagation();startEditGoal('${g.id}')"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Düzenle</button>
+        <button class="icon-action-btn danger-sm" onclick="event.stopPropagation();deleteGoal('${g.id}')"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Sil</button>
       </div></div>
     </div>`;
   }).join('');
@@ -6876,10 +6954,10 @@ function renderFinancialAdvice() {
   // Her tip için: cls, bigValue (rakam string ya da null), bigIcon (svg ya da null), title, sub
   const tips = [];
 
-  const iconHeart = `<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>`;
-  const iconTarget = `<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>`;
-  const iconRocket = `<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 13a8 8 0 0 1 7 7a6 6 0 0 0 3 -5a9 9 0 0 0 6 -8a3 3 0 0 0 -3 -3a9 9 0 0 0 -8 6a6 6 0 0 0 -5 3"/><path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3"/><path d="M15 9m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>`;
-  const iconStop  = `<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M5.7 5.7l12.6 12.6"/></svg>`;
+  const iconHeart = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>`;
+  const iconTarget = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>`;
+  const iconRocket = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 13a8 8 0 0 1 7 7a6 6 0 0 0 3 -5a9 9 0 0 0 6 -8a3 3 0 0 0 -3 -3a9 9 0 0 0 -8 6a6 6 0 0 0 -5 3"/><path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3"/><path d="M15 9m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>`;
+  const iconStop  = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M5.7 5.7l12.6 12.6"/></svg>`;
 
   if (totalDebt === 0 && !activeDebts.length) {
     tips.push({ cls:'good', bigValue:null, bigIcon:iconHeart, title:'Borçsuz yaşıyorsun', sub:'Finansal özgürlüğün en sağlam temeli bu. Şimdi biriktir.' });
@@ -8076,7 +8154,7 @@ function importData(input) {
       if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
       if (typeof data.streak.freezeTotal !== 'number' || data.streak.freezeTotal > 2) data.streak.freezeTotal = 2; // max 2
       if (!data.monthlyTargets || typeof data.monthlyTargets !== 'object') data.monthlyTargets = {};
-      data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; });
+      data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; if (!r.payHistory) r.payHistory = {}; if (r.variable === undefined) r.variable = false; });
       data.debts.forEach(d => { if (!d.paidMonths) d.paidMonths = []; if (!d.startMonth) d.startMonth = monthKey(); });
       data.savingsGoals.forEach(g => { if (!g.paidMonths) g.paidMonths = []; if (!g.deposits) g.deposits = []; });
       const defaultIds = new Set(DEFAULT_CATS.map(c => c.id));
@@ -8174,6 +8252,20 @@ function renderAll() {
   if (currentTab === 'sabit') renderSabit();
   if (currentTab === 'ozet') {
     renderOzetStats();
+    // Donut toggle butonlarını mevcut _donutMode ile senkronize et
+    const expBtn = document.getElementById('donutBtnExp');
+    const incBtn = document.getElementById('donutBtnInc');
+    if (expBtn && incBtn) {
+      if (_donutMode === 'expense') {
+        expBtn.style.background = 'var(--danger)'; expBtn.style.color = '#fff';
+        incBtn.style.background = 'none';          incBtn.style.color = 'var(--muted)';
+      } else {
+        incBtn.style.background = 'var(--accent)'; incBtn.style.color = '#fff';
+        expBtn.style.background = 'none';          expBtn.style.color = 'var(--muted)';
+      }
+    }
+    const donutLabel = document.getElementById('donutTypeLabel');
+    if (donutLabel) donutLabel.textContent = _donutMode === 'expense' ? 'Harcama dağılımı' : 'Gelir dağılımı';
     Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
     charts = {};
     requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -8424,8 +8516,485 @@ function init() {
   }
 }
 
+
+// =================== ADD SHEETS ===================
+let _recType = 'fixed';
+
+function setRecType(t) {
+  _recType = t;
+  document.getElementById('recTypeFixed').classList.toggle('active', t === 'fixed');
+  document.getElementById('recTypeVar').classList.toggle('active', t === 'variable');
+  const lbl = document.getElementById('recAmountLabel');
+  if (lbl) lbl.textContent = t === 'variable' ? 'Tahmini Tutar' : 'Tutar';
+}
+
+function openRecAddSheet() {
+  _recType = 'fixed';
+  setRecType('fixed');
+  document.getElementById('recDescNew').value = '';
+  document.getElementById('recAmountNew').value = '';
+  const cats = allCategories().filter(c => c.type !== 'income');
+  const sel = document.getElementById('recCategoryNew');
+  if (sel) sel.innerHTML = cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  document.getElementById('recAddSheetOverlay').classList.add('show');
+  document.getElementById('recAddSheet').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('recDescNew')?.focus(), 350);
+}
+function closeRecAddSheet() {
+  document.getElementById('recAddSheetOverlay').classList.remove('show');
+  document.getElementById('recAddSheet').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function suggestRecCategoryNew() {
+  const desc = (document.getElementById('recDescNew')?.value||'').trim().toLowerCase();
+  const sel = document.getElementById('recCategoryNew');
+  if (!sel || !desc) return;
+  let bestCat = null, bestScore = 0;
+  for (const cat of allCategories()) {
+    if (!cat.keywords || !cat.keywords.length) continue;
+    for (const kw of cat.keywords) {
+      if (desc.includes(kw) && kw.length > bestScore) { bestScore = kw.length; bestCat = cat.id; }
+    }
+  }
+  if (bestCat) sel.value = bestCat;
+}
+
+function addRecurringNew() {
+  const desc = document.getElementById('recDescNew').value.trim();
+  const amount = parseNum(document.getElementById('recAmountNew').value);
+  const category = document.getElementById('recCategoryNew').value || 'fatura';
+  if (!desc || !amount) { showToast(TOAST_WARN + ' Tüm alanları doldur'); return; }
+  data.recurring.push({ id: uid(), desc, amount, category, active: true, paidMonths: [], variable: _recType === 'variable', payHistory: {} });
+  save(); closeRecAddSheet();
+  showToast(TOAST_OK + ' Ödeme eklendi');
+  renderAll();
+}
+
+function openDebtAddSheet() {
+  document.getElementById('debtNameNew').value = '';
+  document.getElementById('debtTotalNew').value = '';
+  document.getElementById('debtInstallNew').value = '';
+  document.getElementById('debtStartMonthNew').value = '';
+  document.getElementById('debtStartMonthLabelNew').textContent = 'Ay seç';
+  document.getElementById('debtAddSheetOverlay').classList.add('show');
+  document.getElementById('debtAddSheet').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('debtNameNew')?.focus(), 350);
+}
+function closeDebtAddSheet() {
+  document.getElementById('debtAddSheetOverlay').classList.remove('show');
+  document.getElementById('debtAddSheet').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function addDebtNew() {
+  const name = document.getElementById('debtNameNew').value.trim();
+  const totalAmount = parseNum(document.getElementById('debtTotalNew').value);
+  const installments = parseInt(document.getElementById('debtInstallNew').value) || 1;
+  const startMonth = document.getElementById('debtStartMonthNew').value || monthKey();
+  if (!name || !totalAmount) { showToast(TOAST_WARN + ' Ödeme adı ve tutar gerekli'); return; }
+  const monthlyAmount = Math.round(totalAmount / installments);
+  data.debts.push({ id: uid(), name, totalAmount, installments, monthlyAmount, paidCount: 0, active: true, paidMonths: [], startMonth });
+  save(); closeDebtAddSheet();
+  showToast(TOAST_OK + ' Ödeme eklendi'); renderAll();
+}
+
+function openGoalAddSheet() {
+  document.getElementById('goalNameNew').value = '';
+  document.getElementById('goalTargetNew').value = '';
+  document.getElementById('goalMonthsNew').value = '';
+  document.getElementById('goalMonthlyNew').value = '';
+  const gn = document.getElementById('goalNoteNew'); if(gn) gn.value = '';
+  const gh = document.getElementById('goalMonthlyHintNew'); if(gh) gh.textContent = '';
+  document.getElementById('goalEmojiNew').value = 'target';
+  const eg = document.getElementById('emojiGridSheet');
+  if (eg) {
+    eg.innerHTML = GOAL_ICONS.map(ic => {
+      const sel = ic.id === 'target';
+      const stroke = sel ? 'var(--accent)' : 'var(--muted)';
+      const svg = ic.svg.replace('<svg ','<svg width="22" height="22" style="flex-shrink:0" ').replace('stroke-width="1.5"',`stroke-width="1.5" stroke="${stroke}"`);
+      return `<div class="emoji-opt${sel?' selected':''}" onclick="selectEmojiNew('${ic.id}')" data-icon="${ic.id}">${svg}</div>`;
+    }).join('');
+  }
+  document.getElementById('goalAddSheetOverlay').classList.add('show');
+  document.getElementById('goalAddSheet').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('goalNameNew')?.focus(), 350);
+}
+function closeGoalAddSheet() {
+  document.getElementById('goalAddSheetOverlay').classList.remove('show');
+  document.getElementById('goalAddSheet').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function selectEmojiNew(id) {
+  document.getElementById('goalEmojiNew').value = id;
+  document.querySelectorAll('#emojiGridSheet .emoji-opt').forEach(el => {
+    const sel = el.dataset.icon === id;
+    el.classList.toggle('selected', sel);
+    const svg = el.querySelector('svg');
+    if (svg) svg.setAttribute('stroke', sel ? 'var(--accent)' : 'var(--muted)');
+  });
+}
+function calcGoalMonthlyNew() {
+  const target = parseNum(document.getElementById('goalTargetNew')?.value||'0');
+  const months = parseInt(document.getElementById('goalMonthsNew')?.value)||0;
+  const hint = document.getElementById('goalMonthlyHintNew');
+  const inp = document.getElementById('goalMonthlyNew');
+  if (target && months) {
+    const m = Math.ceil(target/months);
+    if (hint) hint.textContent = fmtTL(m)+'/ay';
+    if (inp) inp.value = String(m).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  } else if (hint) hint.textContent = '';
+}
+function addGoalNew() {
+  const name = document.getElementById('goalNameNew').value.trim();
+  const target = parseNum(document.getElementById('goalTargetNew').value);
+  const monthly = parseNum(document.getElementById('goalMonthlyNew').value);
+  const note = document.getElementById('goalNoteNew')?.value.trim() || '';
+  const emoji = document.getElementById('goalEmojiNew').value || 'target';
+  if (!name || !target) { showToast(TOAST_WARN + ' Ad ve hedef tutar gerekli'); return; }
+  data.savingsGoals.push({ id: uid(), name, emoji, target, monthly, note, deposits: [], paidMonths: [] });
+  save(); closeGoalAddSheet();
+  showToast(TOAST_OK + ' Hedef eklendi'); renderAll();
+}
+
+// =================== VARIABLE AMOUNT ===================
+let _varAmtRecId = null;
+function openVarAmtSheet(recId) {
+  const r = data.recurring.find(r => r.id === recId);
+  if (!r) return;
+  _varAmtRecId = recId;
+  document.getElementById('varAmtTitle').textContent = r.desc;
+  document.getElementById('varAmtSub').textContent = 'Tahmini tutar: ' + fmtTL(r.amount);
+  document.getElementById('varAmtHint').textContent = 'Boş bırakırsan ' + fmtTL(r.amount) + ' kullanılır.';
+  document.getElementById('varAmtInput').value = '';
+  document.getElementById('varAmtSheetOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('varAmtInput')?.focus(), 300);
+}
+function closeVarAmtSheet() {
+  document.getElementById('varAmtSheetOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+  _varAmtRecId = null;
+}
+function confirmVarAmt() {
+  const r = data.recurring.find(r => r.id === _varAmtRecId);
+  if (!r) return;
+  const mk = currentMonth;
+  const inputVal = parseNum(document.getElementById('varAmtInput').value);
+  const actualAmount = inputVal > 0 ? inputVal : r.amount;
+  if (!r.paidMonths) r.paidMonths = [];
+  if (!r.payHistory) r.payHistory = {};
+  r.paidMonths.push(mk);
+  r.payHistory[mk] = actualAmount;
+  data.transactions = data.transactions.filter(t => !(t.recurringId === r.id && monthKey(t.date) === mk));
+  data.transactions.push({ id: uid(), type: 'expense', desc: r.desc, amount: actualAmount, date: today(), category: r.category, recurringId: r.id, isRecurring: true });
+  save(); closeVarAmtSheet();
+  showToast(TOAST_OK + ' ' + r.desc + ' — ' + fmtTL(actualAmount) + ' ödendi');
+  renderAll();
+}
+
+// =================== İSTATİSTİK ===================
+let _statsData = [], _statsActive = 0, _statsChart = null;
+
+function openStatsPage(type, id) {
+  const items = buildStatsData(type, id);
+  if (!items.length) { showToast(TOAST_WARN + ' Henüz kayıt yok'); return; }
+  _statsData = items;
+  _statsActive = items.length - 1;
+  const labelEl = document.getElementById('statsItemLabel');
+  if (type === 'rec') { const r = data.recurring.find(r=>r.id===id); if(labelEl&&r) labelEl.textContent=r.desc; }
+  else if (type === 'debt') { const d = data.debts.find(d=>d.id===id); if(labelEl&&d) labelEl.textContent=d.name; }
+  else { const g = data.savingsGoals.find(g=>g.id===id); if(labelEl&&g) labelEl.textContent=g.name; }
+  document.getElementById('statsPageOverlay').classList.add('show');
+  document.getElementById('statsPage').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  updateStatsView(_statsActive);
+  // Sheet animasyonu bittikten sonra canvas gerçek boyutunu alır
+  setTimeout(renderStatsChart, 420);
+}
+function closeStatsPage() {
+  document.getElementById('statsPageOverlay').classList.remove('show');
+  document.getElementById('statsPage').classList.remove('show');
+  document.body.style.overflow = '';
+  if (_statsChart) { try { _statsChart.destroy(); } catch(e){} _statsChart = null; }
+}
+function buildStatsData(type, id) {
+  const items = [];
+  if (type === 'rec') {
+    const r = data.recurring.find(r=>r.id===id);
+    if (!r || !r.paidMonths || !r.paidMonths.length) return [];
+    [...r.paidMonths].sort().forEach(mk => {
+      const amt = (r.payHistory && r.payHistory[mk]) ? r.payHistory[mk] : r.amount;
+      const [y,m] = mk.split('-').map(Number);
+      items.push({ mk, label: MONTH_NAMES[m-1].slice(0,3)+' '+String(y).slice(2), amount: amt });
+    });
+  } else if (type === 'debt') {
+    const d = data.debts.find(d=>d.id===id);
+    if (!d || !d.paidMonths || !d.paidMonths.length) return [];
+    [...d.paidMonths].sort().forEach(mk => {
+      const [y,m] = mk.split('-').map(Number);
+      items.push({ mk, label: MONTH_NAMES[m-1].slice(0,3)+' '+String(y).slice(2), amount: d.monthlyAmount });
+    });
+  } else {
+    const g = data.savingsGoals.find(g=>g.id===id);
+    if (!g || !g.deposits || !g.deposits.length) return [];
+    const byMk = {};
+    g.deposits.forEach(dep => { const mk=monthKey(dep.date); byMk[mk]=(byMk[mk]||0)+dep.amount; });
+    Object.entries(byMk).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([mk,amt]) => {
+      const [y,m] = mk.split('-').map(Number);
+      items.push({ mk, label: MONTH_NAMES[m-1].slice(0,3)+' '+String(y).slice(2), amount: amt });
+    });
+  }
+  return items;
+}
+function updateStatsView(i) {
+  _statsActive = i;
+  const d = _statsData[i];
+  document.getElementById('statsBigAmt').textContent = fmtTL(d.amount);
+  document.getElementById('statsMonthLabel').textContent = d.label;
+  const pill = document.getElementById('statsChangePill');
+  if (i === 0 || _statsData.length === 1) {
+    pill.textContent = ''; pill.className = 'stats-change-pill flat'; pill.style.display = 'none';
+  } else {
+    pill.style.display = '';
+    const pct = Math.round(((d.amount - _statsData[i-1].amount) / _statsData[i-1].amount) * 100);
+    if (pct > 0) { pill.textContent = '▲ %'+pct; pill.className = 'stats-change-pill up'; }
+    else if (pct < 0) { pill.textContent = '▼ %'+Math.abs(pct); pill.className = 'stats-change-pill down'; }
+    else { pill.textContent = 'Değişmedi'; pill.className = 'stats-change-pill flat'; }
+  }
+  updateStatsChartPoint(i);
+  renderStatsList();
+}
+function renderStatsList() {
+  const el = document.getElementById('statsListEl');
+  const avgEl = document.getElementById('statsAvgLabel');
+  const amounts = _statsData.map(d=>d.amount);
+  const avgVal = Math.round(amounts.reduce((a,b)=>a+b,0)/amounts.length);
+  const maxVal = Math.max(...amounts);
+  if (avgEl) avgEl.textContent = 'Ort. '+fmtTL(avgVal);
+  el.innerHTML = [..._statsData].reverse().map((d,i,arr) => {
+    const origIdx = arr.length-1-i;
+    const isActive = origIdx === _statsActive;
+    let pctHtml = '';
+    if (origIdx > 0) {
+      const pct = Math.round(((d.amount-_statsData[origIdx-1].amount)/_statsData[origIdx-1].amount)*100);
+      if (pct>0) pctHtml=`<span class="stats-row-pct" style="color:#FF453A">▲${pct}%</span>`;
+      else if (pct<0) pctHtml=`<span class="stats-row-pct" style="color:#2DB866">▼${Math.abs(pct)}%</span>`;
+    }
+    return `<div class="stats-row" onclick="updateStatsView(${origIdx})">
+      <div class="stats-row-month" style="color:${isActive?'#fff':'rgba(255,255,255,.3)'}">${d.label}</div>
+      <div class="stats-row-bar-wrap"><div class="stats-row-bar" style="width:${Math.round(d.amount/maxVal*100)}%;background:${isActive?'#2DB866':'rgba(45,184,102,.25)'}"></div></div>
+      <div class="stats-row-right">
+        <span class="stats-row-amt" style="color:${isActive?'#2DB866':'rgba(255,255,255,.35)'};font-weight:${isActive?900:600}">${fmtTL(d.amount)}</span>
+        ${pctHtml}
+      </div>
+    </div>`;
+  }).join('');
+}
+function renderStatsChart() {
+  const canvas = document.getElementById('statsChart');
+  if (!canvas) return;
+  canvas.width = canvas.parentElement.offsetWidth;
+  if (canvas.width === 0) { setTimeout(renderStatsChart, 100); return; }
+  if (_statsChart) { try{_statsChart.destroy();}catch(e){} _statsChart=null; }
+
+  // Tek kayıt varsa etrafına padding ekle — curve düzgün görünsün
+  let vals = _statsData.map(d=>d.amount);
+  let labels = _statsData.map(d=>d.label);
+  let activeOffset = _statsActive;
+  if (vals.length === 1) {
+    vals = [vals[0]*0.85, vals[0], vals[0]*0.92];
+    labels = ['', labels[0], ''];
+    activeOffset = 1;
+  }
+
+  const ctx = canvas.getContext('2d');
+  const grad = ctx.createLinearGradient(0, 0, 0, 160);
+  grad.addColorStop(0,   'rgba(45,184,102,.55)');
+  grad.addColorStop(0.5, 'rgba(45,184,102,.18)');
+  grad.addColorStop(1,   'rgba(45,184,102,0)');
+
+  _statsChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets: [{ data: vals,
+      borderColor: 'rgba(45,184,102,.95)', borderWidth: 2.5,
+      backgroundColor: grad, tension: 0.45, fill: true,
+      pointBackgroundColor: vals.map((_,i)=>i===activeOffset?'#FFD60A':'transparent'),
+      pointBorderColor:     vals.map((_,i)=>i===activeOffset?'#0d1a0f':'transparent'),
+      pointBorderWidth:     vals.map((_,i)=>i===activeOffset?2.5:0),
+      pointRadius:          vals.map((_,i)=>i===activeOffset?8:3)
+    }]},
+    options: { responsive: false, animation: { duration: 500, easing: 'easeOutQuart' },
+      plugins: { legend:{display:false}, tooltip:{enabled:false} },
+      scales: {
+        x: { ticks:{color:'rgba(255,255,255,.25)',font:{family:'Montserrat',size:10,weight:'700'},maxRotation:0}, grid:{display:false}, border:{display:false} },
+        y: { display:false, min: Math.min(...vals)*0.78, max: Math.max(...vals)*1.12 }
+      },
+      onClick: (_,els)=>{ if(els.length && _statsData.length>1) updateStatsView(els[0].index); }
+    }
+  });
+
+  function getIdx(clientX) {
+    const rect=canvas.getBoundingClientRect(), x=clientX-rect.left;
+    const meta=_statsChart.getDatasetMeta(0);
+    let closest=0, minD=Infinity;
+    meta.data.forEach((pt,i)=>{ const d=Math.abs(pt.x-x); if(d<minD){minD=d;closest=i;} });
+    // Tek kayıt padding'i için offset düzelt
+    if (_statsData.length===1) return 0;
+    return closest;
+  }
+  canvas.addEventListener('mousemove',e=>{if(e.buttons===1)updateStatsView(getIdx(e.clientX));});
+  canvas.addEventListener('click',e=>updateStatsView(getIdx(e.clientX)));
+  canvas.addEventListener('touchmove',e=>{e.preventDefault();updateStatsView(getIdx(e.touches[0].clientX));},{passive:false});
+  canvas.addEventListener('touchstart',e=>updateStatsView(getIdx(e.touches[0].clientX)),{passive:true});
+}
+function updateStatsChartPoint(i) {
+  if (!_statsChart) return;
+  // Tek kayıt padding durumunda aktif nokta her zaman index 1
+  const activeIdx = _statsData.length === 1 ? 1 : i;
+  const len = _statsChart.data.datasets[0].data.length;
+  _statsChart.data.datasets[0].pointBackgroundColor = Array.from({length:len},(_,j)=>j===activeIdx?'#FFD60A':'transparent');
+  _statsChart.data.datasets[0].pointBorderColor =     Array.from({length:len},(_,j)=>j===activeIdx?'#0d1a0f':'transparent');
+  _statsChart.data.datasets[0].pointBorderWidth =     Array.from({length:len},(_,j)=>j===activeIdx?2.5:0);
+  _statsChart.data.datasets[0].pointRadius =          Array.from({length:len},(_,j)=>j===activeIdx?8:3);
+  _statsChart.update('none');
+}
+
 init();
 window.addEventListener('resize', () => { updatePillIndicator(currentTab); });
 </script>
+
+<!-- ÖDEME EKLEME SHEET -->
+<div class="add-sheet-overlay" id="recAddSheetOverlay" onclick="if(event.target===this)closeRecAddSheet()"></div>
+<div class="add-sheet" id="recAddSheet">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header">
+    <div class="add-sheet-title">Ödeme Ekle</div>
+    <button class="add-sheet-close" onclick="closeRecAddSheet()">&#215;</button>
+  </div>
+  <div class="add-sheet-body">
+    <div class="form-group"><label class="form-label">Açıklama</label>
+      <input type="text" id="recDescNew" class="form-input" placeholder="Kira, Netflix..." oninput="suggestRecCategoryNew()"></div>
+    <div class="rec-type-row">
+      <button class="rec-type-btn active" id="recTypeFixed" onclick="setRecType('fixed')">Sabit</button>
+      <button class="rec-type-btn" id="recTypeVar" onclick="setRecType('variable')">Değişebilir</button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <div class="form-group" style="flex:1"><label class="form-label" id="recAmountLabel">Tutar</label>
+        <input type="text" id="recAmountNew" class="form-input" placeholder="0" oninput="fmtInput(this)" inputmode="numeric"></div>
+      <div class="form-group" style="flex:1"><label class="form-label">Kategori</label>
+        <select id="recCategoryNew" class="form-select"></select></div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="addRecurringNew()">Kaydet</button>
+  </div>
+</div>
+
+<!-- BORÇ EKLEME SHEET -->
+<div class="add-sheet-overlay" id="debtAddSheetOverlay" onclick="if(event.target===this)closeDebtAddSheet()"></div>
+<div class="add-sheet" id="debtAddSheet">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header">
+    <div class="add-sheet-title">Borç / Taksit Ekle</div>
+    <button class="add-sheet-close" onclick="closeDebtAddSheet()">&#215;</button>
+  </div>
+  <div class="add-sheet-body">
+    <div class="form-group"><label class="form-label">Ödeme Adı</label>
+      <input type="text" id="debtNameNew" class="form-input" placeholder="Kira ödemesi, kredi..."></div>
+    <div style="display:flex;gap:8px">
+      <div class="form-group" style="flex:1"><label class="form-label">Toplam Tutar</label>
+        <input type="text" id="debtTotalNew" class="form-input" placeholder="20.000" oninput="fmtInput(this)" inputmode="numeric"></div>
+      <div class="form-group" style="flex:1"><label class="form-label">Taksit Sayısı</label>
+        <input type="text" id="debtInstallNew" class="form-input" placeholder="12" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+    </div>
+    <div class="form-group"><label class="form-label">İlk Taksit Ayı</label>
+      <input type="hidden" id="debtStartMonthNew">
+      <div class="form-input" id="debtStartMonthDisplayNew" onclick="openMonthPicker('debtStartMonthNew','debtStartMonthDisplayNew')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--text)">
+        <span id="debtStartMonthLabelNew" style="font-weight:600">Ay seç</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6"/></svg>
+      </div></div>
+    <button class="btn btn-primary btn-full" onclick="addDebtNew()">Kaydet</button>
+  </div>
+</div>
+
+<!-- BİRİKİM EKLEME SHEET -->
+<div class="add-sheet-overlay" id="goalAddSheetOverlay" onclick="if(event.target===this)closeGoalAddSheet()"></div>
+<div class="add-sheet" id="goalAddSheet">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header">
+    <div class="add-sheet-title">Birikim Ekle</div>
+    <button class="add-sheet-close" onclick="closeGoalAddSheet()">&#215;</button>
+  </div>
+  <div class="add-sheet-body">
+    <div id="emojiGridSheet" class="emoji-grid"></div>
+    <input type="hidden" id="goalEmojiNew" value="target">
+    <div class="form-group"><label class="form-label">Birikim Adı</label>
+      <input type="text" id="goalNameNew" class="form-input" placeholder="Tatil, araba, acil fon..."></div>
+    <div style="display:flex;gap:8px">
+      <div class="form-group" style="flex:1"><label class="form-label">Hedef Tutar</label>
+        <input type="text" id="goalTargetNew" class="form-input" placeholder="100.000" oninput="fmtInput(this)" inputmode="numeric"></div>
+      <div class="form-group" style="flex:1"><label class="form-label">Kaç Ayda?</label>
+        <input type="text" id="goalMonthsNew" class="form-input" placeholder="12" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');calcGoalMonthlyNew()"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" style="display:flex;justify-content:space-between"><span>Aylık Birikim</span><span id="goalMonthlyHintNew" style="color:var(--accent);font-weight:800"></span></label>
+      <input type="text" id="goalMonthlyNew" class="form-input" placeholder="Otomatik hesaplanır" oninput="fmtInput(this)" inputmode="numeric"></div>
+    <div class="form-group"><label class="form-label">Not <span style="color:var(--muted);font-weight:500">(isteğe bağlı)</span></label>
+      <input type="text" id="goalNoteNew" class="form-input" placeholder="Bu hedef hakkında bir not..."></div>
+    <button class="btn btn-primary btn-full" onclick="addGoalNew()">Kaydet</button>
+  </div>
+</div>
+
+<!-- DEĞİŞKEN TUTAR SHEET -->
+<div id="varAmtSheetOverlay">
+  <div id="varAmtSheet">
+    <div class="add-sheet-handle"></div>
+    <div class="add-sheet-header">
+      <div>
+        <div class="add-sheet-title" id="varAmtTitle">Bu ay ne kadar geldi?</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px" id="varAmtSub"></div>
+      </div>
+      <button class="add-sheet-close" onclick="closeVarAmtSheet()">&#215;</button>
+    </div>
+    <div style="padding:0 20px 8px">
+      <div style="position:relative;margin-bottom:8px">
+        <input type="text" id="varAmtInput" class="form-input" placeholder="0" oninput="fmtInput(this)" inputmode="numeric" style="font-size:28px;font-weight:900;letter-spacing:-1px;padding-right:36px">
+        <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:16px;font-weight:800;color:var(--muted)">&#8378;</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:16px" id="varAmtHint"></div>
+      <button class="btn btn-primary btn-full" onclick="confirmVarAmt()">Öde</button>
+    </div>
+  </div>
+</div>
+
+<!-- İSTATİSTİK SAYFASI -->
+<div id="statsPageOverlay" onclick="closeStatsPage()"></div>
+<div id="statsPage">
+  <div class="stats-drag-handle"></div>
+  <div class="stats-header">
+    <div style="font-size:15px;font-weight:800;color:#F2F1EB;letter-spacing:-.2px" id="statsItemLabel"></div>
+    <button class="stats-back" onclick="closeStatsPage()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="stats-hero">
+    <div class="stats-big-row">
+      <div class="stats-big-amt" id="statsBigAmt">&#8212;</div>
+      <div class="stats-change-pill flat" id="statsChangePill"></div>
+    </div>
+    <div class="stats-month-label" id="statsMonthLabel"></div>
+  </div>
+  <div class="stats-chart-wrap">
+    <canvas id="statsChart" height="160" style="width:100%;display:block"></canvas>
+  </div>
+  <div class="stats-list-wrap">
+    <div class="stats-list-header">
+      <span class="stats-list-label">Geçmiş</span>
+      <span class="stats-list-avg" id="statsAvgLabel"></span>
+    </div>
+    <div id="statsListEl"></div>
+  </div>
+</div>
 </body>
 </html>
