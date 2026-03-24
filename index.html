@@ -380,17 +380,37 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 .streak-card{
   position:relative;overflow:hidden;
-  background:linear-gradient(160deg,#111116,#16161e);
-  border-radius:24px;margin-bottom:14px;
-  border:1px solid rgba(255,255,255,.07);
-  box-shadow:0 2px 8px rgba(0,0,0,.15);
+  /* glassmorphism — koyu amber tintli yarı saydam cam */
+  background:linear-gradient(158deg,rgba(30,22,10,.78) 0%,rgba(16,14,20,.86) 60%,rgba(12,10,18,.92) 100%);
+  backdrop-filter:blur(28px) saturate(160%);
+  -webkit-backdrop-filter:blur(28px) saturate(160%);
+  border-radius:var(--radius);margin-bottom:14px;
+  /* çok katmanlı border: üst kenar parlak, geri kalan ince amber */
+  border:1px solid rgba(255,160,0,.16);
+  box-shadow:
+    0 12px 40px rgba(0,0,0,.45),
+    0 2px 0 0 rgba(255,180,0,.14) inset,
+    0 -1px 0 0 rgba(0,0,0,.5) inset,
+    0 0 0 0.5px rgba(255,120,0,.08) inset;
+  /* daralt — tab padding'ine ek olarak her yandan 6px daha içe al */
+  width:calc(100% - 12px);
+  margin-left:auto;margin-right:auto;
 }
+/* üst yarı subtle amber tülü */
+.streak-card::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 55% at 15% 0%,rgba(255,149,0,.09) 0%,transparent 60%),
+    linear-gradient(180deg,rgba(255,149,0,.05) 0%,transparent 45%);
+  pointer-events:none;z-index:0;
+}
+/* üst kenar alev gradyan çizgisi */
 .streak-card::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,165,0,.08),transparent);
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;z-index:2;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,214,10,.5) 35%,rgba(255,149,0,.6) 55%,rgba(255,80,0,.3) 75%,transparent 100%);
 }
 
-.streak-header{display:flex;align-items:center;gap:10px;padding:14px 16px 10px}
+.streak-header{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;position:relative;z-index:1}
 .streak-flame{font-size:28px;line-height:1;animation:streakFlame 4s ease-in-out infinite, streakGlow 3s ease-in-out infinite;display:inline-block;flex-shrink:0;transform-origin:bottom center}
 .streak-flame.dead{filter:grayscale(1);animation:none;opacity:.35}
 .streak-main{flex:1}
@@ -404,7 +424,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .streak-meta.dead{color:var(--muted)}
 
 
-.streak-dots-wrap{padding:0 16px 10px}
+.streak-dots-wrap{padding:0 16px 10px;position:relative;z-index:1}
 .streak-days-grid{display:flex;gap:3px;flex-wrap:wrap}
 .day-dot{
   width:20px;height:20px;border-radius:5px;
@@ -423,7 +443,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .streak-freeze-row{
   display:flex;align-items:center;justify-content:space-between;
   padding:8px 16px 12px;
-  border-top:1px solid rgba(255,255,255,.05);
+  border-top:1px solid rgba(255,149,0,.1);
+  position:relative;z-index:1;
 }
 .freeze-shields{display:flex;gap:6px}
 .freeze-shield{
@@ -447,11 +468,12 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   border:1px solid rgba(255,214,10,.16);
   display:flex;align-items:center;gap:8px;
   animation:badgeIn .4s cubic-bezier(.34,1.2,.64,1) both;
+  position:relative;z-index:1;
 }
 .milestone-title{font-size:11px;font-weight:800;color:#FFD60A}
 .milestone-sub{font-size:10px;color:rgba(255,214,10,.45);font-weight:600;margin-top:1px}
 
-.month-badge{margin:0 16px 10px;padding:8px 12px;border-radius:12px;display:flex;align-items:center;gap:8px}
+.month-badge{margin:0 16px 10px;padding:8px 12px;border-radius:12px;display:flex;align-items:center;gap:8px;position:relative;z-index:1}
 .month-badge.legendary{background:linear-gradient(135deg,rgba(191,90,242,.1),rgba(10,132,255,.07));border:1px solid rgba(191,90,242,.2)}
 .month-badge.disciplined{background:rgba(45,184,102,.07);border:1px solid rgba(45,184,102,.18)}
 .month-badge.trying{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)}
@@ -594,7 +616,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .emoji-opt.selected{border-color:var(--accent);background:var(--accent-dim)}
 
 /* ===== ÖZET ===== */
-.ozet-hero{background:linear-gradient(145deg,#141417,#1a1a20);border:1px solid var(--border);border-radius:24px;padding:28px 20px 22px;margin-bottom:14px;text-align:center;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.ozet-hero{background:linear-gradient(145deg,#141417,#1a1a20);border:1px solid var(--border);border-radius:var(--radius);padding:28px 20px 22px;margin-bottom:14px;text-align:center;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .ozet-hero::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,rgba(45,184,102,.04) 0%,transparent 65%);pointer-events:none}
 .ozet-hero-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
 .ozet-hero-balance{font-size:50px;font-weight:900;letter-spacing:-2.5px;line-height:1;margin-bottom:8px}
@@ -609,42 +631,81 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .chart-wrap{position:relative;min-height:180px;height:200px;margin-bottom:8px}
 
 /* YILLIK */
-.year-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.year-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .year-nav-label{font-size:17px;font-weight:900;letter-spacing:-.3px}
 .nav-btn{background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:17px;font-weight:700;transition:all .15s}
 .nav-btn:active{transform:scale(.9)}
-.year-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.year-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .year-stat{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px}
 .year-stat-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
 .year-stat-val{font-size:20px;font-weight:900;letter-spacing:-.5px}
+.year-stat-sub{font-size:10px;font-weight:600;color:var(--muted);margin-top:3px}
+/* Yıl hero */
+.year-hero-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:10px;animation:cardIn .35s cubic-bezier(.4,0,.2,1) both}
+.year-hero-top{padding:22px 20px 18px;display:flex;align-items:flex-start;justify-content:space-between;position:relative;overflow:hidden}
+.year-hero-left{position:relative;z-index:1}
+.year-hero-overline{font-size:10px;font-weight:800;color:rgba(45,184,102,.65);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.year-hero-overline-dot{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.year-hero-saving{font-size:44px;font-weight:900;letter-spacing:-2.5px;line-height:1;margin-bottom:6px}
+.year-hero-sub{font-size:12px;font-weight:600;color:var(--muted)}
+.year-hero-right{position:relative;z-index:1;text-align:right}
+.year-hero-score-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+/* borç & birikim highlights */
+.year-highlights-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.year-hl-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 14px}
+.year-hl-icon{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.year-hl-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.year-hl-val{font-size:18px;font-weight:900;letter-spacing:-.05em;line-height:1}
+.year-hl-sub{font-size:10px;font-weight:600;color:var(--muted);margin-top:3px;line-height:1.4}
+/* kategori top */
+.year-cats-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:10px}
+.year-cats-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px}
+.year-cat-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.year-cat-row:last-child{margin-bottom:0}
+.year-cat-name{font-size:13px;font-weight:700;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.year-cat-bar-track{flex:1.2;height:4px;background:var(--border);border-radius:99px;overflow:hidden}
+.year-cat-bar-fill{height:100%;border-radius:99px;transition:width .65s cubic-bezier(.4,0,.2,1)}
+.year-cat-amt{font-size:12px;font-weight:800;color:var(--muted);text-align:right;min-width:60px}
+/* en iyi / kötü ay */
+.year-extremes-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.year-ext-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 14px}
+.year-ext-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.year-ext-month{font-size:16px;font-weight:900;letter-spacing:-.03em;margin-bottom:3px}
+.year-ext-val{font-size:11px;font-weight:700;color:var(--muted)}
+/* aylık accordion */
+.year-months-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin:14px 0 8px}
+.year-month-item{border-bottom:1px solid var(--border);overflow:hidden}
+.year-month-item:last-child{border-bottom:none}
+.year-month-header{display:flex;align-items:center;gap:10px;padding:12px 4px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.year-month-header:active{background:var(--surface2)}
+.year-month-name{font-size:14px;font-weight:800;flex:1}
+.year-month-net{font-size:14px;font-weight:800;flex-shrink:0}
+.year-month-sav{font-size:11px;font-weight:700;flex-shrink:0;min-width:36px;text-align:right}
+.year-month-chevron{font-size:13px;color:var(--muted);transition:transform .25s;flex-shrink:0;margin-left:4px}
+.year-month-body{display:grid;grid-template-rows:0fr;overflow:hidden;transition:grid-template-rows .4s cubic-bezier(.4,0,.2,1)}
+.year-month-body.open{grid-template-rows:1fr}
+.year-month-detail{padding:0 4px 14px;display:flex;flex-direction:column;gap:8px;min-height:0}
+.ymb-bars{display:flex;flex-direction:column;gap:6px}
+.ymb-bar-row{display:flex;align-items:center;gap:8px}
+.ymb-bar-label{font-size:11px;font-weight:700;width:36px;flex-shrink:0}
+.ymb-bar-track{flex:1;height:5px;background:var(--border);border-radius:99px;overflow:hidden}
+.ymb-bar-fill{height:100%;border-radius:99px}
+.ymb-bar-amt{font-size:12px;font-weight:800;width:68px;text-align:right;flex-shrink:0}
+.ymb-footer{display:flex;justify-content:space-between;align-items:center;padding-top:4px}
+.ymb-sav-label{font-size:11px;font-weight:700;color:var(--muted)}
+.ymb-sav-val{font-size:13px;font-weight:800}
+.ymb-extra-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-top:1px solid rgba(255,255,255,.04)}
+.ymb-extra-label{font-size:11px;font-weight:600;color:var(--muted)}
+.ymb-extra-val{font-size:12px;font-weight:800}
 /* HISTORY */
 .history-wrap{background:var(--surface);width:100%;max-width:520px;height:100vh;display:flex;flex-direction:column}
 .history-header{padding:22px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .history-body{flex:1;overflow-y:auto;padding:16px 18px}
 
 /* CUSTOM DATE PICKER */
-.datepicker-wrap{position:fixed;inset:0;z-index:600;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(8px)}
-.datepicker-wrap.show{display:flex}
-.datepicker-sheet{background:var(--surface);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:20px 20px 40px;width:100%;max-width:520px;animation:tabEnter .25s cubic-bezier(.34,1.2,.64,1)}
-.datepicker-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.datepicker-title{font-size:15px;font-weight:800;color:var(--text)}
-.datepicker-nav{display:flex;align-items:center;gap:12px}
-.datepicker-nav button{background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:32px;height:32px;color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.datepicker-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px}
-.datepicker-dow{font-size:10px;font-weight:800;color:var(--muted);text-align:center;padding:4px 0;text-transform:uppercase;letter-spacing:.5px}
-.datepicker-day{height:36px;border-radius:10px;border:none;background:none;color:var(--text);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
-.datepicker-day:active{background:var(--surface3)}
-.datepicker-day.today{border:1.5px solid var(--border);font-weight:800}
-.datepicker-day.selected{background:var(--accent);color:#fff;font-weight:800}
-.datepicker-day.empty{pointer-events:none}
-/* Ay modu grid */
-.datepicker-month-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.datepicker-month-btn{height:44px;border-radius:12px;border:none;background:var(--surface2);color:var(--text);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;-webkit-tap-highlight-color:transparent}
-.datepicker-month-btn:active{opacity:.75}
-.datepicker-month-btn.selected{background:var(--accent);color:#fff}
-.datepicker-month-btn.current{border:1.5px solid var(--border)}
+/* datepicker CSS artık JS ile inject ediliyor */
 /* MODALS */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;visibility:hidden;transition:opacity .25s,visibility .25s}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;visibility:hidden;transition:opacity .25s,visibility .25s}
 .modal-overlay.show{opacity:1;pointer-events:auto;visibility:visible}
 .modal-sheet{background:var(--surface);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:28px 20px 48px;width:100%;max-width:520px;display:flex;flex-direction:column;gap:14px;max-height:92vh;overflow-y:auto;transform:translateY(40px);transition:transform .3s cubic-bezier(.34,1.2,.64,1)}
 .modal-overlay.show .modal-sheet{transform:translateY(0)}
@@ -833,7 +894,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   /* peek: tam genişlik değil, sağdan sonraki kart hafif görünsün */
   width:calc(100% - 28px);
   min-height:196px;
-  border-radius:22px;
+  border-radius:var(--radius);
   overflow:hidden;
   position:relative;
   scroll-snap-align:start;
@@ -2119,8 +2180,8 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <!-- STREAK CARD -->
   <div id="streakCardWrap"></div>
 
-  <!-- GÜNLÜK LİMİT İSTATİSTİKLERİ -->
-  <div id="dailyStatsCard"></div>
+  <!-- Finansal Tavsiyeler + Analiz Preview -->
+  <div id="financialAdviceBox"></div>
 
   <!-- Harcama / Gelir Dağılımı Donut -->
   <div class="chart-card">
@@ -2163,12 +2224,12 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <!-- HEDEFLER ÖZETİ -->
   <div id="wishSummaryCard"></div>
 
-  <!-- Finansal Tavsiyeler + Analiz Preview -->
-  <div id="financialAdviceBox"></div>
+  <!-- GÜNLÜK LİMİT İSTATİSTİKLERİ -->
+  <div id="dailyStatsCard"></div>
 
   <!-- Yıllık Özet -->
   <div class="card" style="padding:18px 18px 20px">
-    <div class="year-nav" style="margin-bottom:14px">
+    <div class="year-nav">
       <div style="font-size:13px;font-weight:800;color:var(--text);letter-spacing:-.2px">Yıllık Özet</div>
       <div style="display:flex;align-items:center;gap:10px">
         <button class="nav-btn" onclick="changeYear(-1)">‹</button>
@@ -2176,7 +2237,18 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         <button class="nav-btn" onclick="changeYear(1)">›</button>
       </div>
     </div>
+    <!-- Hero saving card -->
+    <div class="year-hero-card" id="yearHeroCard" style="display:none"></div>
+    <!-- 4 stat grid -->
     <div class="year-grid" id="yearSummaryCards"></div>
+    <!-- Borç & birikim highlights -->
+    <div class="year-highlights-row" id="yearHighlights" style="display:none"></div>
+    <!-- Top kategoriler -->
+    <div class="year-cats-card" id="yearTopCats" style="display:none"></div>
+    <!-- En iyi / kötü ay -->
+    <div class="year-extremes-row" id="yearExtremes" style="display:none"></div>
+    <!-- Aylık accordion -->
+    <div class="year-months-title" id="yearMonthsTitle" style="display:none">Aylara Göre</div>
     <div id="yearMonthList"></div>
   </div>
 </div>
@@ -2441,7 +2513,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
           oninput="autoDetectCategoryFromSheet(this.value)"
           autocomplete="off" autocorrect="off" autocapitalize="on">
       </div>
-      <div class="tx-opt-row" onclick="openDatePickerForSheet()">
+      <div class="tx-opt-row" onclick="openDatePicker()">
         <div class="tx-opt-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg>
         </div>
@@ -2454,37 +2526,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       <button class="tx-save-btn" id="txSaveBtn" onclick="txSheetSave()" disabled>Kaydet</button>
     </div>
     <div style="height:8px"></div>
-  </div>
-</div>
-
-<!-- CUSTOM DATE PICKER -->
-<div class="datepicker-wrap" id="datepickerWrap" onclick="if(event.target===this)closeDatePicker()">
-  <div class="datepicker-sheet">
-    <div class="datepicker-header">
-      <div class="datepicker-nav">
-        <button onclick="dpChangeMonth(-1)" id="dpPrevBtn">‹</button>
-        <span class="datepicker-title" id="dpMonthLabel"></span>
-        <button onclick="dpChangeMonth(1)" id="dpNextBtn">›</button>
-      </div>
-      <button onclick="closeDatePicker()" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:32px;height:32px;color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center">×</button>
-    </div>
-    <!-- Gün modu -->
-    <div id="dpDayMode">
-      <div class="datepicker-grid">
-        <div class="datepicker-dow">Pt</div>
-        <div class="datepicker-dow">Sa</div>
-        <div class="datepicker-dow">Ça</div>
-        <div class="datepicker-dow">Pe</div>
-        <div class="datepicker-dow">Cu</div>
-        <div class="datepicker-dow">Ct</div>
-        <div class="datepicker-dow">Pz</div>
-      </div>
-      <div class="datepicker-grid" id="dpDaysGrid"></div>
-    </div>
-    <!-- Ay modu -->
-    <div id="dpMonthMode" style="display:none">
-      <div class="datepicker-month-grid" id="dpMonthGrid"></div>
-    </div>
   </div>
 </div>
 
@@ -2921,12 +2962,11 @@ function load() {
         if (!g.paidMonths) g.paidMonths = [];
         if (!g.deposits) g.deposits = [];
       });
-      if (data.categoryKeywordOverrides) {
-        Object.entries(data.categoryKeywordOverrides).forEach(([id, words]) => {
-          const dc = DEFAULT_CATS.find(c => c.id === id);
-          if (dc) dc.keywords = words;
-        });
-      }
+      if (!data.categoryKeywordOverrides || typeof data.categoryKeywordOverrides !== 'object') data.categoryKeywordOverrides = {};
+      Object.entries(data.categoryKeywordOverrides).forEach(([id, words]) => {
+        const dc = DEFAULT_CATS.find(c => c.id === id);
+        if (dc) dc.keywords = words;
+      });
     }
   } catch(e) { console.warn('localStorage unavailable'); }
 
@@ -2952,6 +2992,7 @@ function esc(str) {
 // Türkçe sesli uyumu: sayının son rakamına göre doğru ek
 // "yüzde 30'u", "yüzde 45'i", "yüzde 60'ı" gibi
 function pct(n) {
+  if (n === 0) return "%0'ı";
   const last = n % 10;
   const tens = Math.floor(n % 100 / 10);
   if (last === 0) {
@@ -3207,6 +3248,8 @@ function switchTab(id) {
   }
   if (id === 'plan') {
     renderPlan();
+    const appWrap = document.getElementById('appWrap');
+    if (appWrap) appWrap.scrollTop = 0;
   }
   if (id === 'ayarlar') {
     const wni = document.getElementById('walletNameInput');
@@ -3433,7 +3476,7 @@ function renderStreakCard(sd) {
     </div>` : '';
 
   const noIncomeHint = !hasIncome ? `
-    <div style="margin:0 16px 12px;padding:10px 14px;background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.07)">
+    <div style="margin:0 16px 12px;padding:10px 14px;background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.07);position:relative;z-index:1">
       <div style="font-size:12px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px"><svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0 4h-2a2 2 0 0 0 -1.8 -1"/><path d="M12 7v10"/></svg> Bu ay gelir kaydı ekle, limit takibini başlat.</div>
     </div>` : '';
 
@@ -4221,9 +4264,12 @@ document.addEventListener('touchend', e => {
   if (dx < 0 && idx < TAB_ORDER.length - 1) {
     const nextId = TAB_ORDER[idx + 1];
     switchTab(nextId);
+    // Swipe tamamlandı — state sıfırla ki sonraki tap _wasTap()'ı bozmasın
+    _touchStartX = _touchEndX; _touchStartY = _touchEndY;
   } else if (dx > 0 && idx > 0) {
     const prevId = TAB_ORDER[idx - 1];
     switchTab(prevId);
+    _touchStartX = _touchEndX; _touchStartY = _touchEndY;
   }
 }, { passive: true });
 
@@ -4602,10 +4648,6 @@ function autoDetectCategoryFromSheet(desc) {
   }
 }
 
-function openDatePickerForSheet() {
-  // Mevcut date picker'ı sheet için de kullan
-  openDatePicker();
-}
 
 function txSheetSave() {
   const amtEl  = document.getElementById('txSheetAmount');
@@ -6301,10 +6343,10 @@ function _planCalcCore(fb, sc) {
 
 function _planGetScenario() {
   return {
-    extraIncome: parseNum((document.getElementById('scExtraIncome')||{}).value||''),
-    recDelta:    parseNum((document.getElementById('scRecDelta')   ||{}).value||''),
-    lifeDelta:   parseNum((document.getElementById('scLifeDelta')  ||{}).value||''),
-    plannedExp:  parseNum((document.getElementById('scPlannedExp') ||{}).value||''),
+    extraIncome: parseNum(document.getElementById('scExtraIncome')?.value || ''),
+    recDelta:    parseNum(document.getElementById('scRecDelta')?.value    || ''),
+    lifeDelta:   parseNum(document.getElementById('scLifeDelta')?.value   || ''),
+    plannedExp:  parseNum(document.getElementById('scPlannedExp')?.value  || ''),
   };
 }
 
@@ -7534,50 +7576,249 @@ function renderYillik() {
   const monthItems = [];
   for (let m = 1; m <= 12; m++) {
     const mk = viewYear + '-' + String(m).padStart(2,'0');
-    const { income, expense } = calcMonthData(mk);
+    const { income, expense, txs } = calcMonthData(mk);
+    // Borç ödemeleri bu ayda
+    const debtPaid = txs.filter(t => t.isDebt).reduce((s,t) => s + t.amount, 0);
+    // Birikim yatırımları bu ayda
+    const savDeposit = txs.filter(t => t.isGoalDeposit).reduce((s,t) => s + t.amount, 0);
+    // Gerçek değişken gider (borç + birikim hariç)
+    const varExp = Math.max(0, expense - debtPaid - savDeposit);
     totalIncome += income;
     totalExpense += expense;
-    monthItems.push({ mk, income, expense, net: income - expense, name: MONTH_NAMES[m-1] });
+    monthItems.push({ mk, income, expense, debtPaid, savDeposit, varExp, net: income - expense, name: MONTH_NAMES[m-1] });
   }
 
-  // ── Yıllık özet kartlar ──
+  const activeItems = monthItems.filter(m => m.income || m.expense);
+  const hasData = activeItems.length > 0;
+  const activeMos = activeItems.length || 1;
+  const saving = totalIncome - totalExpense;
+  const savRate = totalIncome > 0 ? Math.round((saving / totalIncome) * 100) : 0;
+  const savColor = savRate >= 20 ? 'var(--accent)' : savRate >= 0 ? 'var(--warning)' : 'var(--danger)';
+
+  // ── Hero card ──
+  const heroEl = document.getElementById('yearHeroCard');
+  if (heroEl) {
+    if (!hasData) {
+      heroEl.style.display = 'none';
+    } else {
+      heroEl.style.display = '';
+      const heroGlow = saving >= 0 ? 'rgba(45,184,102,.07)' : 'rgba(255,69,58,.07)';
+      const heroBorder = saving >= 0 ? 'rgba(45,184,102,.2)' : 'rgba(255,69,58,.2)';
+      heroEl.style.borderColor = saving >= 0 ? 'rgba(45,184,102,.18)' : 'rgba(255,69,58,.18)';
+      // Tasarruf skoru ring SVG
+      const ringR = 22, ringC = Math.round(2 * Math.PI * ringR);
+      const clampedRate = Math.max(0, Math.min(100, savRate));
+      const ringOffset = Math.round(ringC * (1 - clampedRate / 100));
+      const ringColor = savRate >= 20 ? '#2DB866' : savRate >= 0 ? '#FFD60A' : '#FF453A';
+      const ringSvg = `<svg width="56" height="56" viewBox="0 0 56 56">
+        <circle cx="28" cy="28" r="${ringR}" fill="none" stroke="var(--border)" stroke-width="5"/>
+        <circle cx="28" cy="28" r="${ringR}" fill="none" stroke="${ringColor}" stroke-width="5"
+          stroke-linecap="round" stroke-dasharray="${ringC}" stroke-dashoffset="${ringOffset}"
+          transform="rotate(-90 28 28)" style="transition:stroke-dashoffset .9s cubic-bezier(.4,0,.2,1)"/>
+        <text x="28" y="33" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="13" font-weight="800" fill="${ringColor}">%${Math.abs(savRate)}</text>
+      </svg>`;
+
+      const scoreLabel = savRate >= 30 ? 'Harika' : savRate >= 20 ? 'İyi' : savRate >= 10 ? 'Orta' : savRate >= 0 ? 'Zayıf' : 'Açık';
+
+      heroEl.innerHTML = `
+        <div class="year-hero-top" style="background:radial-gradient(ellipse 90% 100% at 100% 0%,${heroGlow} 0%,transparent 60%)">
+          <div class="year-hero-left">
+            <div class="year-hero-overline"><span class="year-hero-overline-dot"></span>NET TASARRUF</div>
+            <div class="year-hero-saving" style="color:${saving>=0?'var(--accent)':'var(--danger)'}">${saving>=0?'+':''}${fmtTL(Math.round(saving))}</div>
+            <div class="year-hero-sub">${activeMos} aktif ay · ort. ${fmtTL(Math.round(saving/activeMos))}/ay</div>
+          </div>
+          <div class="year-hero-right">
+            <div class="year-hero-score-label">${scoreLabel}</div>
+            ${ringSvg}
+          </div>
+        </div>
+        <div style="display:flex;border-top:1px solid rgba(255,255,255,.06)">
+          <div style="flex:1;padding:12px 16px;border-right:1px solid rgba(255,255,255,.06)">
+            <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Toplam Gelir</div>
+            <div style="font-size:16px;font-weight:900;letter-spacing:-.04em;color:var(--accent)">${fmtTL(totalIncome)}</div>
+          </div>
+          <div style="flex:1;padding:12px 16px">
+            <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Toplam Gider</div>
+            <div style="font-size:16px;font-weight:900;letter-spacing:-.04em;color:var(--danger)">${fmtTL(totalExpense)}</div>
+          </div>
+        </div>`;
+    }
+  }
+
+  // ── 4 stat kart ──
   const cardsEl = document.getElementById('yearSummaryCards');
   if (cardsEl) {
-    const saving = totalIncome - totalExpense;
-    const activeMos = monthItems.filter(m => m.income || m.expense).length || 1;
-    cardsEl.innerHTML = `
-      <div class="year-stat"><div class="year-stat-label">Toplam Gelir</div><div class="year-stat-val" style="color:var(--accent)">${fmtTL(totalIncome)}</div></div>
-      <div class="year-stat"><div class="year-stat-label">Toplam Gider</div><div class="year-stat-val" style="color:var(--danger)">${fmtTL(totalExpense)}</div></div>
-      <div class="year-stat"><div class="year-stat-label">Net Tasarruf</div><div class="year-stat-val" style="color:${saving>=0?'var(--accent)':'var(--danger)'}">${fmtTL(saving)}</div></div>
-      <div class="year-stat"><div class="year-stat-label">Ort. Gider/Ay</div><div class="year-stat-val">${fmtTL(Math.round(totalExpense/activeMos))}</div></div>`;
+    if (!hasData) {
+      cardsEl.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px;font-size:13px;grid-column:1/-1">Bu yıl için veri yok</div>';
+    } else {
+      const avgIncome  = Math.round(totalIncome  / activeMos);
+      const avgExpense = Math.round(totalExpense / activeMos);
+      const totalVarExp = activeItems.reduce((s,m) => s + m.varExp, 0);
+      const totalSavDep = activeItems.reduce((s,m) => s + m.savDeposit, 0);
+      cardsEl.innerHTML = `
+        <div class="year-stat">
+          <div class="year-stat-label">Ort. Aylık Gelir</div>
+          <div class="year-stat-val" style="color:var(--accent)">${fmtTL(avgIncome)}</div>
+          <div class="year-stat-sub">Toplam ${fmtTL(totalIncome)}</div>
+        </div>
+        <div class="year-stat">
+          <div class="year-stat-label">Ort. Aylık Gider</div>
+          <div class="year-stat-val" style="color:var(--danger)">${fmtTL(avgExpense)}</div>
+          <div class="year-stat-sub">Toplam ${fmtTL(totalExpense)}</div>
+        </div>
+        <div class="year-stat">
+          <div class="year-stat-label">Değişken Harcama</div>
+          <div class="year-stat-val">${fmtTL(Math.round(totalVarExp/activeMos))}</div>
+          <div class="year-stat-sub">Borç & birikim hariç</div>
+        </div>
+        <div class="year-stat">
+          <div class="year-stat-label">Birikime Yatırılan</div>
+          <div class="year-stat-val" style="color:#0A84FF">${fmtTL(totalSavDep)}</div>
+          <div class="year-stat-sub">${activeItems.filter(m=>m.savDeposit>0).length} ayda aktif</div>
+        </div>`;
+    }
   }
+
+  // ── Borç & birikim highlights ──
+  const hlEl = document.getElementById('yearHighlights');
+  if (hlEl) {
+    if (!hasData) {
+      hlEl.style.display = 'none';
+    } else {
+      const totalDebtPaid = activeItems.reduce((s,m) => s + m.debtPaid, 0);
+      const completedDebts = data.debts.filter(d => {
+        if (d.active) return false;
+        const lastPayMk = d.paidMonths ? d.paidMonths.filter(mk => mk.startsWith(String(viewYear))).sort().pop() : null;
+        return !!lastPayMk;
+      }).length;
+      const totalSavDep2 = activeItems.reduce((s,m) => s + m.savDeposit, 0);
+      const completedGoals = data.savingsGoals.filter(g => {
+        const total = (g.deposits||[]).filter(d => d.date && d.date.startsWith(String(viewYear))).reduce((s,d)=>s+d.amount,0);
+        return total > 0 && g.deposits.reduce((s,d)=>s+d.amount,0) >= g.target;
+      }).length;
+
+      if (totalDebtPaid > 0 || totalSavDep2 > 0) {
+        hlEl.style.display = '';
+        hlEl.innerHTML = `
+          <div class="year-hl-card">
+            <div class="year-hl-icon" style="background:rgba(255,69,58,.1)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg>
+            </div>
+            <div class="year-hl-label">Ödenen Borç</div>
+            <div class="year-hl-val" style="color:#FF453A">${fmtTL(totalDebtPaid)}</div>
+            <div class="year-hl-sub">${completedDebts > 0 ? completedDebts + ' taksit kapandı' : 'Bu yıl ödendi'}</div>
+          </div>
+          <div class="year-hl-card">
+            <div class="year-hl-icon" style="background:rgba(10,132,255,.1)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 8v-1a4 4 0 0 0 -4 -4h-2a4 4 0 0 0 -4 4v1"/><path d="M7 8h12a1 1 0 0 1 1 1v3a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -6 -6v-3a1 1 0 0 1 1 -1z"/><path d="M20 12h1a1 1 0 0 0 1 -1v-1a1 1 0 0 0 -1 -1h-1"/><path d="M9 17v2"/><path d="M15 17v2"/><path d="M11 12h2"/></svg>
+            </div>
+            <div class="year-hl-label">Birikime Yatırılan</div>
+            <div class="year-hl-val" style="color:#0A84FF">${fmtTL(totalSavDep2)}</div>
+            <div class="year-hl-sub">${completedGoals > 0 ? completedGoals + ' hedef tamamlandı' : 'Hedeflere eklendi'}</div>
+          </div>`;
+      } else {
+        hlEl.style.display = 'none';
+      }
+    }
+  }
+
+  // ── Top kategoriler ──
+  const catsEl = document.getElementById('yearTopCats');
+  if (catsEl) {
+    if (!hasData) {
+      catsEl.style.display = 'none';
+    } else {
+      const yearTxs = data.transactions.filter(t => t.date && t.date.startsWith(String(viewYear)) && t.type === 'expense' && !t.isGoalDeposit && !t.isDebt);
+      const byCat = {};
+      yearTxs.forEach(t => { byCat[t.category] = (byCat[t.category]||0) + t.amount; });
+      const sorted = Object.entries(byCat).sort((a,b) => b[1]-a[1]).slice(0,5);
+      if (sorted.length) {
+        catsEl.style.display = '';
+        const maxAmt = sorted[0][1];
+        catsEl.innerHTML = `<div class="year-cats-title">En Çok Harcanan Kategoriler</div>` +
+          sorted.map(([catId, amt]) => {
+            const cat = getCat(catId);
+            const pct2 = Math.round((amt / maxAmt) * 100);
+            const icon = catIconSvg(cat, 14);
+            return `<div class="year-cat-row">
+              <div style="display:flex;align-items:center;gap:6px;flex:1;min-width:0">
+                ${icon}
+                <span class="year-cat-name">${esc(cat.name)}</span>
+              </div>
+              <div class="year-cat-bar-track">
+                <div class="year-cat-bar-fill" style="width:0%;background:${cat.color}" data-w="${pct2}%"></div>
+              </div>
+              <span class="year-cat-amt">${fmtTL(Math.round(amt))}</span>
+            </div>`;
+          }).join('');
+        // Animate bars
+        requestAnimationFrame(() => {
+          catsEl.querySelectorAll('.year-cat-bar-fill').forEach(b => {
+            b.style.width = b.dataset.w;
+          });
+        });
+      } else {
+        catsEl.style.display = 'none';
+      }
+    }
+  }
+
+  // ── En iyi / en kötü ay ──
+  const extEl = document.getElementById('yearExtremes');
+  if (extEl) {
+    if (activeItems.length >= 2) {
+      extEl.style.display = '';
+      const withSav = activeItems.filter(m => m.income > 0);
+      if (withSav.length >= 1) {
+        const best  = withSav.reduce((a,b) => (b.net > a.net ? b : a));
+        const worst = withSav.reduce((a,b) => (b.net < a.net ? b : a));
+        const bestRate  = best.income  > 0 ? Math.round((best.net  / best.income)  * 100) : 0;
+        const worstRate = worst.income > 0 ? Math.round((worst.net / worst.income) * 100) : 0;
+        extEl.innerHTML = `
+          <div class="year-ext-card" style="border-color:rgba(45,184,102,.18)">
+            <div class="year-ext-label" style="color:rgba(45,184,102,.7)">En İyi Ay</div>
+            <div class="year-ext-month" style="color:var(--accent)">${best.name}</div>
+            <div class="year-ext-val">${best.net>=0?'+':''}${fmtTL(Math.round(best.net))} · %${bestRate}</div>
+          </div>
+          <div class="year-ext-card" style="border-color:rgba(255,69,58,.18)">
+            <div class="year-ext-label" style="color:rgba(255,69,58,.7)">En Zor Ay</div>
+            <div class="year-ext-month" style="color:var(--danger)">${worst.name}</div>
+            <div class="year-ext-val">${worst.net>=0?'+':''}${fmtTL(Math.round(worst.net))} · %${worstRate}</div>
+          </div>`;
+      } else {
+        extEl.style.display = 'none';
+      }
+    } else {
+      extEl.style.display = 'none';
+    }
+  }
+
+  // ── Aylık accordion başlık ──
+  const monthsTitle = document.getElementById('yearMonthsTitle');
+  if (monthsTitle) monthsTitle.style.display = activeItems.length ? '' : 'none';
 
   // ── Aylık accordion listesi ──
   const listEl = document.getElementById('yearMonthList');
   if (!listEl) return;
-  const activeItems = monthItems.filter(m => m.income || m.expense);
   if (!activeItems.length) {
-    listEl.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px;font-size:13px">Bu yıl için veri yok</div>';
+    listEl.innerHTML = '';
     return;
   }
 
-  // max değer → bar oranı için
-  const maxIncome  = Math.max(...activeItems.map(m => m.income), 1);
-  const maxExpense = Math.max(...activeItems.map(m => m.expense), 1);
-  const maxVal = Math.max(maxIncome, maxExpense);
+  const maxVal = Math.max(...activeItems.map(m => Math.max(m.income, m.expense)), 1);
 
   listEl.innerHTML = activeItems.map((m, i) => {
-    const savRate = m.income > 0 ? Math.round(((m.income - m.expense) / m.income) * 100) : 0;
+    const savRate2 = m.income > 0 ? Math.round(((m.income - m.expense) / m.income) * 100) : 0;
     const netColor = m.net >= 0 ? 'var(--accent)' : 'var(--danger)';
-    const savColor = savRate >= 20 ? 'var(--accent)' : savRate >= 0 ? 'var(--text)' : 'var(--danger)';
-    const incomePct = Math.round((m.income / maxVal) * 100);
+    const savColor2 = savRate2 >= 20 ? 'var(--accent)' : savRate2 >= 0 ? 'var(--text)' : 'var(--danger)';
+    const incomePct  = Math.round((m.income  / maxVal) * 100);
     const expensePct = Math.round((m.expense / maxVal) * 100);
     const ymId = 'ym_' + m.mk.replace('-','');
 
     return `<div class="year-month-item">
       <div class="year-month-header" onclick="toggleYearMonth('${ymId}')">
         <span class="year-month-name">${m.name}</span>
-        <span class="year-month-sav" style="color:${savColor}">%${savRate}</span>
+        <span class="year-month-sav" style="color:${savColor2}">%${savRate2}</span>
         <span class="year-month-net" style="color:${netColor}">${m.net>=0?'+':''}${fmtTL(m.net)}</span>
         <span class="year-month-chevron" id="chev_${ymId}">›</span>
       </div>
@@ -7599,9 +7840,12 @@ function renderYillik() {
               <span class="ymb-bar-amt" style="color:var(--danger)">${fmtTL(m.expense)}</span>
             </div>
           </div>
+          ${m.debtPaid > 0 ? `<div class="ymb-extra-row"><span class="ymb-extra-label">Ödenen borç/taksit</span><span class="ymb-extra-val" style="color:#FF453A">−${fmtTL(m.debtPaid)}</span></div>` : ''}
+          ${m.savDeposit > 0 ? `<div class="ymb-extra-row"><span class="ymb-extra-label">Birikime yatırılan</span><span class="ymb-extra-val" style="color:#0A84FF">−${fmtTL(m.savDeposit)}</span></div>` : ''}
+          ${m.varExp > 0 ? `<div class="ymb-extra-row"><span class="ymb-extra-label">Değişken harcama</span><span class="ymb-extra-val">${fmtTL(m.varExp)}</span></div>` : ''}
           <div class="ymb-footer">
             <span class="ymb-sav-label">Tasarruf oranı</span>
-            <span class="ymb-sav-val" style="color:${savColor}">%${savRate}</span>
+            <span class="ymb-sav-val" style="color:${savColor2}">%${savRate2}</span>
           </div>
         </div>
       </div>
@@ -7837,6 +8081,11 @@ function importData(input) {
       data.savingsGoals.forEach(g => { if (!g.paidMonths) g.paidMonths = []; if (!g.deposits) g.deposits = []; });
       const defaultIds = new Set(DEFAULT_CATS.map(c => c.id));
       data.categories = (data.categories || []).filter(c => !defaultIds.has(c.id));
+      if (!data.categoryKeywordOverrides || typeof data.categoryKeywordOverrides !== 'object') data.categoryKeywordOverrides = {};
+      Object.entries(data.categoryKeywordOverrides).forEach(([id, words]) => {
+        const dc = DEFAULT_CATS.find(c => c.id === id);
+        if (dc) dc.keywords = words;
+      });
       save(); renderAll();
       showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg> Veri içe aktarıldı');
     } catch(err) { showToast(TOAST_WARN + ' Dosya okunamadı'); }
@@ -7928,7 +8177,12 @@ function renderAll() {
     Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
     charts = {};
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      setTimeout(() => { renderYillik(); }, 60);
+      ['barChart','doughnutChart','lineChart'].forEach(cid => {
+        const el = document.getElementById(cid);
+        if (el) { const f = document.createElement('canvas'); f.id = cid; el.parentNode.replaceChild(f, el); }
+      });
+      setupChartObservers();
+      renderYillik();
     }));
   }
   updateCollapseSummaries();
@@ -7983,70 +8237,95 @@ function saveKeywords() {
 
 
 // ===== CUSTOM DATE PICKER =====
+// =================== DATE PICKER (inject-destroy) ===================
 let _dpYear = 0, _dpMonth = 0, _dpSelected = '';
-let _dpMode = 'day'; // 'day' | 'month'
-let _dpTargetId = null;    // hidden input id
-let _dpDisplayId = null;   // display div id
-let _dpLabelId   = null;   // span id for label text
+let _dpMode = 'day';
+let _dpTargetId  = null;
+let _dpLabelId   = null;
 
-// ── Gün picker — TX sheet için (mevcut davranış) ──
+function _dpBuild() {
+  const existing = document.getElementById('datepickerWrap');
+  if (existing) existing.remove();
+
+  const wrap = document.createElement('div');
+  wrap.id = 'datepickerWrap';
+  wrap.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.65)';
+  wrap.addEventListener('click', e => { if (e.target === wrap) closeDatePicker(); });
+
+  const sheet = document.createElement('div');
+  sheet.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:24px 24px 0 0;padding:20px 20px 40px;width:100%;max-width:520px;animation:tabEnter .25s cubic-bezier(.34,1.2,.64,1)';
+
+  // Header
+  const header = document.createElement('div');
+  header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:16px';
+  header.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px">
+      <button onclick="dpChangeMonth(-1)" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:32px;height:32px;color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">‹</button>
+      <span id="dpMonthLabel" style="font-size:15px;font-weight:800;color:var(--text)"></span>
+      <button onclick="dpChangeMonth(1)" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:32px;height:32px;color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">›</button>
+    </div>
+    <button onclick="closeDatePicker()" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:32px;height:32px;color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center">×</button>`;
+
+  sheet.appendChild(header);
+
+  if (_dpMode === 'day') {
+    const dowRow = document.createElement('div');
+    dowRow.style.cssText = 'display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px';
+    ['Pt','Sa','Ça','Pe','Cu','Ct','Pz'].forEach(d => {
+      const el = document.createElement('div');
+      el.style.cssText = 'font-size:10px;font-weight:800;color:var(--muted);text-align:center;padding:4px 0;text-transform:uppercase;letter-spacing:.5px';
+      el.textContent = d;
+      dowRow.appendChild(el);
+    });
+    sheet.appendChild(dowRow);
+    const grid = document.createElement('div');
+    grid.id = 'dpDaysGrid';
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px';
+    sheet.appendChild(grid);
+  } else {
+    const grid = document.createElement('div');
+    grid.id = 'dpMonthGrid';
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:8px';
+    sheet.appendChild(grid);
+  }
+
+  wrap.appendChild(sheet);
+  document.body.appendChild(wrap);
+}
+
 function openDatePicker() {
-  _dpMode = 'day';
-  _dpTargetId  = null;
-  _dpDisplayId = null;
-  _dpLabelId   = null;
+  _dpMode = 'day'; _dpTargetId = null; _dpLabelId = null;
   const cur = _dpSelected || today();
   const [y, m] = cur.split('-').map(Number);
   _dpYear = y; _dpMonth = m;
-  _renderDpMode();
-  renderDpGrid();
-  document.getElementById('datepickerWrap').classList.add('show');
+  _dpBuild(); renderDpGrid();
 }
 
-// ── Gün picker — edit modal için ──
 function openDayPicker(targetId, displayId) {
-  _dpMode = 'day';
-  _dpTargetId  = targetId;
-  _dpDisplayId = displayId;
-  _dpLabelId   = targetId + 'Label';
+  _dpMode = 'day'; _dpTargetId = targetId; _dpLabelId = displayId || (targetId + 'Label');
   const cur = document.getElementById(targetId)?.value || today();
   const [y, m] = cur.split('-').map(Number);
   _dpYear = y; _dpMonth = isNaN(m) ? new Date().getMonth() + 1 : m;
   _dpSelected = cur.length === 10 ? cur : today();
-  _renderDpMode();
-  renderDpGrid();
-  document.getElementById('datepickerWrap').classList.add('show');
+  _dpBuild(); renderDpGrid();
 }
 
-// ── Ay picker — borç formları için ──
 function openMonthPicker(targetId, displayId) {
-  _dpMode = 'month';
-  _dpTargetId  = targetId;
-  _dpDisplayId = displayId;
-  _dpLabelId   = targetId + 'Label';
+  _dpMode = 'month'; _dpTargetId = targetId; _dpLabelId = displayId || (targetId + 'Label');
   const cur = document.getElementById(targetId)?.value || monthKey();
   const [y] = cur.split('-').map(Number);
   _dpYear = isNaN(y) ? new Date().getFullYear() : y;
-  _renderDpMode();
-  renderDpMonthGrid();
-  document.getElementById('datepickerWrap').classList.add('show');
-}
-
-function _renderDpMode() {
-  const dayMode   = document.getElementById('dpDayMode');
-  const monthMode = document.getElementById('dpMonthMode');
-  if (dayMode)   dayMode.style.display   = _dpMode === 'day'   ? '' : 'none';
-  if (monthMode) monthMode.style.display = _dpMode === 'month' ? '' : 'none';
+  _dpBuild(); renderDpMonthGrid();
 }
 
 function closeDatePicker() {
-  document.getElementById('datepickerWrap').classList.remove('show');
+  const dp = document.getElementById('datepickerWrap');
+  if (dp) dp.remove();
 }
 
 function dpChangeMonth(dir) {
   if (_dpMode === 'month') {
-    _dpYear += dir;
-    renderDpMonthGrid();
+    _dpYear += dir; renderDpMonthGrid();
   } else {
     _dpMonth += dir;
     if (_dpMonth > 12) { _dpMonth = 1; _dpYear++; }
@@ -8058,13 +8337,11 @@ function dpChangeMonth(dir) {
 function dpSelectDay(dateStr) {
   _dpSelected = dateStr;
   if (_dpTargetId) {
-    // edit modal day picker
     const hidden = document.getElementById(_dpTargetId);
     if (hidden) hidden.value = dateStr;
     const lbl = document.getElementById(_dpLabelId);
     if (lbl) lbl.textContent = fmtDate(dateStr);
   } else {
-    // TX sheet picker (eski davranış)
     _sheetDateStr = dateStr;
     const sheetDateLabel = document.getElementById('txSheetDateLabel');
     if (sheetDateLabel) sheetDateLabel.textContent = fmtDate(dateStr);
@@ -8073,7 +8350,6 @@ function dpSelectDay(dateStr) {
 }
 
 function dpSelectMonth(monthStr) {
-  // monthStr: 'YYYY-MM'
   if (_dpTargetId) {
     const hidden = document.getElementById(_dpTargetId);
     if (hidden) hidden.value = monthStr;
@@ -8089,22 +8365,22 @@ function dpSelectMonth(monthStr) {
 function renderDpGrid() {
   const label = document.getElementById('dpMonthLabel');
   if (label) label.textContent = MONTH_NAMES[_dpMonth - 1] + ' ' + _dpYear;
-
   const grid = document.getElementById('dpDaysGrid');
   if (!grid) return;
-
   const todayStr = today();
   const firstDay = new Date(_dpYear, _dpMonth - 1, 1).getDay();
   const dim = daysInMonth(_dpYear + '-' + String(_dpMonth).padStart(2,'0'));
   const offset = (firstDay + 6) % 7;
-
   let html = '';
-  for (let i = 0; i < offset; i++) html += `<div class="datepicker-day empty"></div>`;
+  for (let i = 0; i < offset; i++) html += `<div style="height:36px"></div>`;
   for (let d = 1; d <= dim; d++) {
-    const dateStr = _dpYear + '-' + String(_dpMonth).padStart(2,'0') + '-' + String(d).padStart(2,'0');
-    const isToday = dateStr === todayStr;
-    const isSel   = dateStr === _dpSelected;
-    html += `<button class="datepicker-day${isToday?' today':''}${isSel?' selected':''}" onclick="dpSelectDay('${dateStr}')">${d}</button>`;
+    const ds = _dpYear + '-' + String(_dpMonth).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const isToday = ds === todayStr, isSel = ds === _dpSelected;
+    const bg    = isSel ? 'var(--accent)' : 'transparent';
+    const col   = isSel ? '#fff' : 'var(--text)';
+    const fw    = isSel || isToday ? '800' : '600';
+    const border = isToday && !isSel ? 'border:1.5px solid var(--border);' : 'border:none;';
+    html += `<button onclick="dpSelectDay('${ds}')" style="height:36px;border-radius:10px;${border}background:${bg};color:${col};font-family:'Montserrat',sans-serif;font-size:13px;font-weight:${fw};cursor:pointer;display:flex;align-items:center;justify-content:center">${d}</button>`;
   }
   grid.innerHTML = html;
 }
@@ -8112,20 +8388,20 @@ function renderDpGrid() {
 function renderDpMonthGrid() {
   const label = document.getElementById('dpMonthLabel');
   if (label) label.textContent = String(_dpYear);
-
   const grid = document.getElementById('dpMonthGrid');
   if (!grid) return;
-
   const nowMk = monthKey();
-  const selMk = document.getElementById(_dpTargetId)?.value || '';
-
+  const selMk = _dpTargetId ? (document.getElementById(_dpTargetId)?.value || '') : '';
   grid.innerHTML = MONTH_NAMES.map((name, i) => {
     const mk = _dpYear + '-' + String(i + 1).padStart(2,'0');
-    const isCur = mk === nowMk;
-    const isSel = mk === selMk;
-    return `<button class="datepicker-month-btn${isSel?' selected':isCur?' current':''}" onclick="dpSelectMonth('${mk}')">${name}</button>`;
+    const isSel = mk === selMk, isCur = mk === nowMk;
+    const bg = isSel ? 'var(--accent)' : 'var(--surface2)';
+    const col = isSel ? '#fff' : 'var(--text)';
+    const border = isCur && !isSel ? '1.5px solid var(--border)' : 'none';
+    return `<button onclick="dpSelectMonth('${mk}')" style="height:44px;border-radius:12px;border:${border};background:${bg};color:${col};font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer">${name}</button>`;
   }).join('');
 }
+
 
 
 function init() {
