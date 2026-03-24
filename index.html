@@ -235,6 +235,11 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 /* CATEGORY GRID */
 .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px 8px}
 .cat-cell{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;transition:all .15s cubic-bezier(.4,0,.2,1);-webkit-tap-highlight-color:transparent}
+/* Sheet içinde kompakt cat-cell */
+.add-sheet .cat-cell{padding:10px 4px;gap:4px}
+.add-sheet .cat-cell-icon{width:32px;height:32px;border-radius:10px}
+.add-sheet .cat-cell-name{font-size:9px}
+
 .cat-cell:active{transform:scale(.93)}
 .cat-cell.selected{border-color:var(--sheet-accent);background:var(--sheet-accent-dim);box-shadow:0 0 0 1px var(--sheet-accent)}
 .cat-cell-icon{width:38px;height:38px;border-radius:12px;background:var(--surface3);display:flex;align-items:center;justify-content:center}
@@ -2489,8 +2494,8 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         <div class="form-group">
           <label class="form-label">Tür</label>
           <div class="toggle-row" style="margin-bottom:0">
-            <button class="toggle-btn income active" id="newCatTypeIncome" onclick="setNewCatType('income')">Gelir</button>
-            <button class="toggle-btn expense" id="newCatTypeExpense" onclick="setNewCatType('expense')">Gider</button>
+            <button class="toggle-btn income" id="newCatTypeIncome" onclick="setNewCatType('income')">Gelir</button>
+            <button class="toggle-btn expense active" id="newCatTypeExpense" onclick="setNewCatType('expense')">Gider</button>
           </div>
         </div>
         <div class="form-group">
@@ -2616,10 +2621,14 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 </div>
 
 <!-- TX EDIT MODAL -->
-<div class="modal-overlay" id="txEditModal" onclick="if(event.target===this)closeTxEdit()">
-  <div class="modal-sheet" style="position:relative">
-    <button class="modal-close" onclick="closeTxEdit()">×</button>
-    <div class="modal-title">İşlemi Düzenle</div>
+<div class="add-sheet-overlay" id="txEditModal" onclick="if(event.target===this)closeTxEdit()"></div>
+<div class="add-sheet" id="txEditSheet" style="display:flex;flex-direction:column;max-height:88vh">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header">
+    <div class="add-sheet-title">İşlemi Düzenle</div>
+    <button class="add-sheet-close" onclick="closeTxEdit()">&#215;</button>
+  </div>
+  <div style="padding:0 20px;flex-shrink:0">
     <div class="form-group">
       <label class="form-label">Açıklama</label>
       <input type="text" id="editTxDesc" class="form-input">
@@ -2638,19 +2647,25 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         </div>
       </div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Kategori</label>
-      <div id="editTxCatGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:220px;overflow-y:auto;padding:2px 2px 4px"></div>
-    </div>
-    <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="saveTxEdit()">Kaydet</button>
+    <label class="form-label" style="margin-bottom:8px;display:block">Kategori</label>
+  </div>
+  <div style="height:300px;overflow-y:auto;padding:4px 20px 8px;flex-shrink:0">
+    <div id="editTxCatGrid" class="cat-grid" style="padding:0"></div>
+  </div>
+  <div style="padding:12px 20px 20px;flex-shrink:0;border-top:1px solid rgba(255,255,255,.06)">
+    <button class="btn btn-primary btn-full" onclick="saveTxEdit()">Kaydet</button>
   </div>
 </div>
 
 <!-- DEBT EDIT MODAL -->
-<div class="modal-overlay" id="debtEditModal" onclick="if(event.target===this)closeDebtEdit()">
-  <div class="modal-sheet" style="position:relative">
-    <button class="modal-close" onclick="closeDebtEdit()">×</button>
-    <div class="modal-title">Ödemeyi Düzenle</div>
+<div class="add-sheet-overlay" id="debtEditModal" onclick="if(event.target===this)closeDebtEdit()"></div>
+<div class="add-sheet" id="debtEditSheet">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header">
+    <div class="add-sheet-title">Borcu Düzenle</div>
+    <button class="add-sheet-close" onclick="closeDebtEdit()">&#215;</button>
+  </div>
+  <div class="add-sheet-body">
     <div class="form-group">
       <label class="form-label">Ödeme adı</label>
       <input type="text" id="editDebtName" class="form-input">
@@ -2673,16 +2688,20 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6"/></svg>
       </div>
     </div>
-    <div id="editDebtMonthlyHint" style="font-size:12px;color:var(--muted);margin:-8px 0 4px;text-align:right"></div>
-    <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="saveDebtEdit()">Kaydet</button>
+    <div id="editDebtMonthlyHint" style="font-size:12px;color:var(--muted);margin:-8px 0 8px;text-align:right"></div>
+    <button class="btn btn-primary btn-full" onclick="saveDebtEdit()">Kaydet</button>
   </div>
 </div>
 
 <!-- GOAL EDIT MODAL -->
-<div class="modal-overlay" id="goalEditModal" onclick="if(event.target===this)closeGoalEdit()">
-  <div class="modal-sheet" style="position:relative">
-    <button class="modal-close" onclick="closeGoalEdit()">×</button>
-    <div class="modal-title">Birikimi Düzenle</div>
+<div class="add-sheet-overlay" id="goalEditModal" onclick="if(event.target===this)closeGoalEdit()"></div>
+<div class="add-sheet" id="goalEditSheet">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header">
+    <div class="add-sheet-title">Birikimi Düzenle</div>
+    <button class="add-sheet-close" onclick="closeGoalEdit()">&#215;</button>
+  </div>
+  <div class="add-sheet-body">
     <div class="form-group">
       <label class="form-label">Birikim adı</label>
       <input type="text" id="editGoalName" class="form-input">
@@ -2697,7 +2716,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         <input type="text" id="editGoalMonthly" class="form-input" oninput="fmtInput(this)" inputmode="numeric">
       </div>
     </div>
-    <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="saveGoalEdit()">Kaydet</button>
+    <button class="btn btn-primary btn-full" onclick="saveGoalEdit()">Kaydet</button>
   </div>
 </div>
 
@@ -2740,10 +2759,14 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 </div>
 
 <!-- REC EDIT MODAL -->
-<div class="modal-overlay" id="recEditModal" onclick="if(event.target===this)closeRecEdit()">
-  <div class="modal-sheet" style="position:relative">
-    <button class="modal-close" onclick="closeRecEdit()">×</button>
-    <div class="modal-title">Sabit Gideri Düzenle</div>
+<div class="add-sheet-overlay" id="recEditModal" onclick="if(event.target===this)closeRecEdit()"></div>
+<div class="add-sheet" id="recEditSheet" style="display:flex;flex-direction:column;max-height:88vh">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header">
+    <div class="add-sheet-title">Ödemeyi Düzenle</div>
+    <button class="add-sheet-close" onclick="closeRecEdit()">&#215;</button>
+  </div>
+  <div style="padding:0 20px;flex-shrink:0">
     <div class="form-group">
       <label class="form-label">Açıklama</label>
       <input type="text" id="editRecDescModal" class="form-input">
@@ -2752,11 +2775,13 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       <label class="form-label">Tutar</label>
       <input type="text" id="editRecAmountModal" class="form-input" oninput="fmtInput(this)" inputmode="numeric">
     </div>
-    <div class="form-group">
-      <label class="form-label">Kategori</label>
-      <select id="editRecCatModal" class="form-select"></select>
-    </div>
-    <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="saveRecEditModal()">Kaydet</button>
+    <label class="form-label" style="margin-bottom:8px;display:block">Kategori</label>
+  </div>
+  <div style="height:300px;overflow-y:auto;padding:4px 20px 8px;flex-shrink:0">
+    <div id="editRecCatGrid" class="cat-grid" style="padding:0"></div>
+  </div>
+  <div style="padding:12px 20px 20px;flex-shrink:0;border-top:1px solid rgba(255,255,255,.06)">
+    <button class="btn btn-primary btn-full" onclick="saveRecEditModal()">Kaydet</button>
   </div>
 </div>
 
@@ -4457,10 +4482,10 @@ function openEditTx(id) {
         <div class="cat-cell-icon">${icon}</div>
         <div class="cat-cell-name">${esc(cat.name)}</div>
       </div>`;
-    }).join('');
+    }).join('') + _CAT_EDIT_CELL;
   }
 
-  document.getElementById('txEditModal').classList.add('show');
+  document.getElementById('txEditModal').classList.add('show');document.getElementById('txEditSheet').classList.add('show');document.body.style.overflow='hidden';
 }
 
 function selectEditCat(catId, accentColor, accentDim, accentBorder) {
@@ -4480,7 +4505,7 @@ function selectEditCat(catId, accentColor, accentDim, accentBorder) {
   }
 }
 function closeTxEdit() {
-  document.getElementById('txEditModal').classList.remove('show');
+  document.getElementById('txEditModal').classList.remove('show');document.getElementById('txEditSheet').classList.remove('show');document.body.style.overflow='';
   const amountEl  = document.getElementById('editTxAmount');
   const dateDisp  = document.getElementById('editTxDateDisplay');
   if (amountEl) { amountEl.readOnly = false; amountEl.style.opacity = '1'; }
@@ -5329,9 +5354,9 @@ function startEditDebt(id) {
   }
   _editDebtId = id;
   updateDebtMonthlyHint();
-  document.getElementById('debtEditModal').classList.add('show');
+  document.getElementById('debtEditModal').classList.add('show');document.getElementById('debtEditSheet').classList.add('show');document.body.style.overflow='hidden';
 }
-function closeDebtEdit() { document.getElementById('debtEditModal').classList.remove('show'); _editDebtId = null; }
+function closeDebtEdit() { document.getElementById('debtEditModal').classList.remove('show');document.getElementById('debtEditSheet').classList.remove('show');document.body.style.overflow=''; _editDebtId = null; }
 function updateDebtMonthlyHint() {
   const total = parseNum(document.getElementById('editDebtTotal')?.value||'0');
   const install = parseInt(document.getElementById('editDebtInstall')?.value)||0;
@@ -5596,9 +5621,9 @@ function startEditGoal(id) {
   document.getElementById('editGoalName').value = g.name;
   document.getElementById('editGoalTarget').value = fmtTL(g.target).replace('₺','');
   document.getElementById('editGoalMonthly').value = g.monthly ? fmtTL(g.monthly).replace('₺','') : '';
-  document.getElementById('goalEditModal').classList.add('show');
+  document.getElementById('goalEditModal').classList.add('show');document.getElementById('goalEditSheet').classList.add('show');document.body.style.overflow='hidden';
 }
-function closeGoalEdit() { document.getElementById('goalEditModal').classList.remove('show'); _editGoalId = null; }
+function closeGoalEdit() { document.getElementById('goalEditModal').classList.remove('show');document.getElementById('goalEditSheet').classList.remove('show');document.body.style.overflow=''; _editGoalId = null; }
 function saveGoalEdit() {
   const g = data.savingsGoals.find(g => g.id === _editGoalId);
   if (!g) return;
@@ -6168,26 +6193,49 @@ function renderWishList() {
 }
 
 let _editRecId = null;
+let _editRecCat = 'fatura';
+
 function openRecEditModal(id) {
   const r = data.recurring.find(r => r.id === id);
   if (!r) return;
   _editRecId = id;
+  _editRecCat = r.category || 'fatura';
   document.getElementById('editRecDescModal').value = r.desc;
   document.getElementById('editRecAmountModal').value = fmtTL(r.amount).replace('₺','');
-  document.getElementById('editRecCatModal').innerHTML = allCategories().map(c =>
-    `<option value="${c.id}"${c.id===r.category?' selected':''}>${c.name}</option>`
-  ).join('');
-  document.getElementById('recEditModal').classList.add('show');
+  // Cat grid
+  const grid = document.getElementById('editRecCatGrid');
+  if (grid) {
+    const cats = allCategories().filter(c => c.type !== 'income');
+    grid.innerHTML = cats.map(cat => {
+      const sel = cat.id === _editRecCat;
+      const icon = catIconSvg(cat, 20);
+      return `<div class="cat-cell${sel?' selected':''}" id="editreccell_${cat.id}"
+        style="${sel?'--sheet-accent:var(--accent);border-color:rgba(45,184,102,.45);background:var(--accent-dim)':''}"
+        onclick="selectEditRecCat('${cat.id}')">
+        <div class="cat-cell-icon">${icon}</div>
+        <div class="cat-cell-name">${esc(cat.name)}</div>
+      </div>`;
+    }).join('') + _CAT_EDIT_CELL;
+  }
+  document.getElementById('recEditModal').classList.add('show');document.getElementById('recEditSheet').classList.add('show');document.body.style.overflow='hidden';
 }
-function closeRecEdit() { document.getElementById('recEditModal').classList.remove('show'); _editRecId = null; }
+function selectEditRecCat(catId) {
+  _editRecCat = catId;
+  document.querySelectorAll('#editRecCatGrid .cat-cell').forEach(el => {
+    const sel = el.id === 'editreccell_' + catId;
+    el.classList.toggle('selected', sel);
+    el.style.borderColor = sel ? 'rgba(45,184,102,.45)' : '';
+    el.style.background  = sel ? 'var(--accent-dim)' : '';
+  });
+}
+function closeRecEdit() { document.getElementById('recEditModal').classList.remove('show');document.getElementById('recEditSheet').classList.remove('show');document.body.style.overflow=''; _editRecId = null; }
 function saveRecEditModal() {
   const r = data.recurring.find(r => r.id === _editRecId);
   if (!r) return;
   const desc = document.getElementById('editRecDescModal').value.trim();
   const amount = parseNum(document.getElementById('editRecAmountModal').value);
-  const category = document.getElementById('editRecCatModal').value;
   if (!desc || !amount) { showToast(TOAST_WARN + ' Açıklama ve tutar gerekli'); return; }
-  r.desc = desc; r.amount = amount; r.category = category;
+  r.desc = desc; r.amount = amount; r.category = _editRecCat;
   save(); closeRecEdit(); renderAll();
   showToast(TOAST_OK + ' Güncellendi');
 }
@@ -8021,7 +8069,7 @@ function renderCatList() {
   </div>`).join('');
 }
 
-let _newCatType = 'income';
+let _newCatType = 'expense';
 function toggleNewCatForm() {
   const form = document.getElementById('newCatForm');
   const btn  = document.getElementById('newCatToggleBtn');
@@ -8029,7 +8077,7 @@ function toggleNewCatForm() {
   const isOpen = form.style.display !== 'none';
   form.style.display = isOpen ? 'none' : 'block';
   btn.textContent = isOpen ? '+ Kategori Ekle' : '− Kapat';
-  if (!isOpen) buildNewCatIconPicker();
+  if (!isOpen) { setNewCatType('expense'); buildNewCatIconPicker(); }
 }
 
 function setNewCatType(type) {
@@ -8159,6 +8207,7 @@ function importData(input) {
       data.savingsGoals.forEach(g => { if (!g.paidMonths) g.paidMonths = []; if (!g.deposits) g.deposits = []; });
       const defaultIds = new Set(DEFAULT_CATS.map(c => c.id));
       data.categories = (data.categories || []).filter(c => !defaultIds.has(c.id));
+      data.categories.forEach(c => { if (!c.type) c.type = 'expense'; });
       if (!data.categoryKeywordOverrides || typeof data.categoryKeywordOverrides !== 'object') data.categoryKeywordOverrides = {};
       Object.entries(data.categoryKeywordOverrides).forEach(([id, words]) => {
         const dc = DEFAULT_CATS.find(c => c.id === id);
@@ -8528,14 +8577,47 @@ function setRecType(t) {
   if (lbl) lbl.textContent = t === 'variable' ? 'Tahmini Tutar' : 'Tutar';
 }
 
+let _recCatNew = 'fatura';
+
+// Kategori grid'inin sonuna eklenen "Düzenle" hücresi
+const _CAT_EDIT_CELL = `<div class="cat-cell" onclick="openCategories()" style="border-style:dashed;border-color:rgba(110,109,120,.35);background:rgba(110,109,120,.06)">
+  <div class="cat-cell-icon" style="background:rgba(110,109,120,.1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6E6D78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+  <div class="cat-cell-name">Düzenle</div>
+</div>`;
+
+function _buildRecCatGrid(selectedId) {
+  _recCatNew = selectedId || 'fatura';
+  const grid = document.getElementById('recCatGrid');
+  if (!grid) return;
+  const cats = allCategories().filter(c => c.type !== 'income');
+  grid.innerHTML = cats.map(cat => {
+    const sel = cat.id === _recCatNew;
+    const icon = catIconSvg(cat, 20);
+    return `<div class="cat-cell${sel?' selected':''}" id="reccatcell_${cat.id}"
+      style="${sel?'--sheet-accent:var(--accent);--sheet-accent-dim:var(--accent-dim);border-color:rgba(45,184,102,.45);background:var(--accent-dim)':''}"
+      onclick="selectRecCatNew('${cat.id}')">
+      <div class="cat-cell-icon">${icon}</div>
+      <div class="cat-cell-name">${esc(cat.name)}</div>
+    </div>`;
+  }).join('') + _CAT_EDIT_CELL;
+}
+
+function selectRecCatNew(catId) {
+  _recCatNew = catId;
+  document.querySelectorAll('#recCatGrid .cat-cell').forEach(el => {
+    const sel = el.id === 'reccatcell_' + catId;
+    el.classList.toggle('selected', sel);
+    el.style.borderColor = sel ? 'rgba(45,184,102,.45)' : '';
+    el.style.background  = sel ? 'var(--accent-dim)' : '';
+  });
+}
+
 function openRecAddSheet() {
   _recType = 'fixed';
   setRecType('fixed');
   document.getElementById('recDescNew').value = '';
   document.getElementById('recAmountNew').value = '';
-  const cats = allCategories().filter(c => c.type !== 'income');
-  const sel = document.getElementById('recCategoryNew');
-  if (sel) sel.innerHTML = cats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  _buildRecCatGrid('fatura');
   document.getElementById('recAddSheetOverlay').classList.add('show');
   document.getElementById('recAddSheet').classList.add('show');
   document.body.style.overflow = 'hidden';
@@ -8549,8 +8631,7 @@ function closeRecAddSheet() {
 
 function suggestRecCategoryNew() {
   const desc = (document.getElementById('recDescNew')?.value||'').trim().toLowerCase();
-  const sel = document.getElementById('recCategoryNew');
-  if (!sel || !desc) return;
+  if (!desc) return;
   let bestCat = null, bestScore = 0;
   for (const cat of allCategories()) {
     if (!cat.keywords || !cat.keywords.length) continue;
@@ -8558,13 +8639,13 @@ function suggestRecCategoryNew() {
       if (desc.includes(kw) && kw.length > bestScore) { bestScore = kw.length; bestCat = cat.id; }
     }
   }
-  if (bestCat) sel.value = bestCat;
+  if (bestCat) selectRecCatNew(bestCat);
 }
 
 function addRecurringNew() {
   const desc = document.getElementById('recDescNew').value.trim();
   const amount = parseNum(document.getElementById('recAmountNew').value);
-  const category = document.getElementById('recCategoryNew').value || 'fatura';
+  const category = _recCatNew || 'fatura';
   if (!desc || !amount) { showToast(TOAST_WARN + ' Tüm alanları doldur'); return; }
   data.recurring.push({ id: uid(), desc, amount, category, active: true, paidMonths: [], variable: _recType === 'variable', payHistory: {} });
   save(); closeRecAddSheet();
@@ -8868,25 +8949,27 @@ window.addEventListener('resize', () => { updatePillIndicator(currentTab); });
 
 <!-- ÖDEME EKLEME SHEET -->
 <div class="add-sheet-overlay" id="recAddSheetOverlay" onclick="if(event.target===this)closeRecAddSheet()"></div>
-<div class="add-sheet" id="recAddSheet">
+<div class="add-sheet" id="recAddSheet" style="display:flex;flex-direction:column;max-height:88vh">
   <div class="add-sheet-handle"></div>
   <div class="add-sheet-header">
     <div class="add-sheet-title">Ödeme Ekle</div>
     <button class="add-sheet-close" onclick="closeRecAddSheet()">&#215;</button>
   </div>
-  <div class="add-sheet-body">
+  <div style="padding:0 20px;flex-shrink:0">
     <div class="form-group"><label class="form-label">Açıklama</label>
       <input type="text" id="recDescNew" class="form-input" placeholder="Kira, Netflix..." oninput="suggestRecCategoryNew()"></div>
     <div class="rec-type-row">
       <button class="rec-type-btn active" id="recTypeFixed" onclick="setRecType('fixed')">Sabit</button>
       <button class="rec-type-btn" id="recTypeVar" onclick="setRecType('variable')">Değişebilir</button>
     </div>
-    <div style="display:flex;gap:8px">
-      <div class="form-group" style="flex:1"><label class="form-label" id="recAmountLabel">Tutar</label>
-        <input type="text" id="recAmountNew" class="form-input" placeholder="0" oninput="fmtInput(this)" inputmode="numeric"></div>
-      <div class="form-group" style="flex:1"><label class="form-label">Kategori</label>
-        <select id="recCategoryNew" class="form-select"></select></div>
-    </div>
+    <div class="form-group"><label class="form-label" id="recAmountLabel">Tutar</label>
+      <input type="text" id="recAmountNew" class="form-input" placeholder="0" oninput="fmtInput(this)" inputmode="numeric"></div>
+    <label class="form-label" style="margin-bottom:8px;display:block">Kategori</label>
+  </div>
+  <div style="height:300px;overflow-y:auto;padding:4px 20px 8px;flex-shrink:0">
+    <div id="recCatGrid" class="cat-grid" style="padding:0"></div>
+  </div>
+  <div style="padding:12px 20px 20px;flex-shrink:0;border-top:1px solid rgba(255,255,255,.06)">
     <button class="btn btn-primary btn-full" onclick="addRecurringNew()">Kaydet</button>
   </div>
 </div>
