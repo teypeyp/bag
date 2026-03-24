@@ -843,7 +843,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .plan-hero {
   border-radius:var(--radius);
   overflow:hidden;
-  margin-bottom:12px;
+  margin-bottom:8px;
   position:relative;
   animation:planIn .45s cubic-bezier(.4,0,.2,1) both;
 }
@@ -933,7 +933,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .plan-char-card {
   border-radius:var(--radius);
   overflow:hidden;
-  margin-bottom:12px;
+  margin-bottom:28px;
   position:relative;
   animation:planCharIn .5s cubic-bezier(.4,0,.2,1) .06s both;
 }
@@ -1067,27 +1067,15 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .plan-margin-proj-val { font-size:18px; font-weight:700; letter-spacing:-.04em; color:var(--accent); }
 
 /* ── Plan section header (risk, goal, simülasyon ortak stil) ── */
-.plan-section-header {
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:20px 22px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  display:flex; align-items:center; justify-content:space-between;
-  box-shadow:0 2px 8px rgba(0,0,0,.15);
-  transition:border-color .2s;
+/* plan-section-block: hero/char gibi borderless, akışa entegre */
+.plan-section-block {
+  margin-bottom: 28px;
 }
-.plan-section-overline {
-  font-size:11px; font-weight:600; letter-spacing:.1em;
-  text-transform:uppercase; color:var(--muted); margin-bottom:6px;
-}
-.plan-section-title {
-  font-size:22px; font-weight:800; letter-spacing:-.05em;
-  color:var(--text); line-height:1; margin-bottom:5px;
-}
-.plan-section-sub {
-  font-size:13px; font-weight:400; color:var(--muted); letter-spacing:-.01em;
+.plan-section-label {
+  font-size: 11px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 12px;
+  padding: 0 2px;
 }
 
 /* ── Risk / baskı kartları — referans tasarım dili ── */
@@ -1105,10 +1093,9 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 /* Baskı driver kartları — simülasyon sc-q-card stiliyle */
 .plan-driver-card {
   background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:16px 18px;
-  margin-bottom:8px;
+  border-radius:14px;
+  padding:14px 16px;
+  margin-bottom:6px;
   animation:planBlockIn .28s cubic-bezier(.4,0,.2,1) both;
 }
 .plan-driver-card:last-child { margin-bottom:0; }
@@ -1158,7 +1145,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 /* ── Hedef kartları — referans: big number, ring progress ── */
 .plan-goal-card {
   background:var(--surface2);
-  border:1px solid var(--border);
   border-radius:var(--radius);
   overflow:hidden;
   margin-bottom:8px;
@@ -1222,7 +1208,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 /* Marj projeksiyonu */
 .plan-margin-card {
   background:var(--surface2);
-  border:1px solid var(--border);
   border-radius:var(--radius); overflow:hidden; margin-top:8px;
 }
 .plan-margin-header {
@@ -1245,17 +1230,12 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* Her soru kendi kartı — referans: glassmorphism item card */
 .sc-q-card {
-  background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:16px 18px;
-  transition:border-color .2s, background .2s;
+  padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,.05);
   animation:scSlideUp .3s ease both;
 }
-.sc-q-card.active {
-  background:rgba(255,255,255,.04);
-  border-color:var(--sc-color, var(--accent));
-}
+.sc-q-card:last-of-type { border-bottom:none; }
+.sc-q-card.active .sc-q-label { color:var(--sc-color, var(--accent)); }
 .sc-q-top {
   display:flex; align-items:center; justify-content:space-between;
   margin-bottom:12px;
@@ -1379,6 +1359,68 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 }
 .sc-reset-btn:active { color:var(--text); }
 
+/* ── Analiz preview card (Özet sayfası) ── */
+@keyframes previewIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.plan-preview-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  animation: previewIn .4s cubic-bezier(.4,0,.2,1) both;
+  transition: border-color .2s;
+}
+.plan-preview-card:active { opacity:.88; }
+.plan-preview-gradient {
+  padding: 22px 22px 18px;
+  position: relative; overflow: hidden;
+}
+.plan-preview-gradient::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--prev-grad, rgba(45,184,102,.1));
+  pointer-events: none;
+}
+.plan-preview-overline {
+  font-size: 11px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 10px; position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 7px;
+}
+.plan-preview-overline-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--prev-color, var(--accent)); flex-shrink: 0;
+}
+/* Bold headline — hero ile aynı dil */
+.plan-preview-headline {
+  font-size: 26px; font-weight: 800; letter-spacing: -.05em;
+  line-height: 1.1; color: var(--text);
+  margin-bottom: 6px; position: relative; z-index: 1;
+}
+.plan-preview-headline em {
+  font-style: normal; color: var(--prev-color, var(--accent));
+}
+.plan-preview-char {
+  font-size: 13px; font-weight: 400; color: var(--muted);
+  position: relative; z-index: 1; letter-spacing: -.01em;
+}
+/* Footer — CTA row */
+.plan-preview-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 22px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.02);
+}
+.plan-preview-cta {
+  font-size: 13px; font-weight: 600;
+  color: var(--prev-color, var(--accent)); letter-spacing: -.01em;
+}
+.plan-preview-arrow {
+  font-size: 18px; color: var(--prev-color, var(--accent));
+  line-height: 1;
+}
+
 
 
 
@@ -1394,7 +1436,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .hero-balance.animating { animation: balancePop .4s cubic-bezier(.34,1.56,.64,1); }
 .ozet-stat-val.animating { animation: balancePop .4s cubic-bezier(.34,1.56,.64,1); }
 .ozet-hero-balance.animating { animation: balancePop .5s cubic-bezier(.34,1.56,.64,1); }
-.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px;margin-top:12px}
 .chart-card-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px}
 .chart-card-title{font-size:13px;font-weight:800;color:var(--text);letter-spacing:-.2px}
 .chart-card-sub{font-size:11px;font-weight:600;color:var(--muted)}
@@ -1745,13 +1787,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       </div>
       <span class="tab-btn-label">Özet</span>
     </button>
-    <!-- Plan -->
-    <button class="tab-btn" id="nav-plan" onclick="switchTab('plan')" aria-label="Plan">
-      <div class="tab-btn-dot">
-        <svg class="icon-outline" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/></svg>
-      </div>
-      <span class="tab-btn-label">Plan</span>
-    </button>
+
     <!-- Ayarlar -->
     <button class="tab-btn" id="nav-ayarlar" onclick="switchTab('ayarlar')" aria-label="Ayarlar">
       <div class="tab-btn-dot">
@@ -1986,6 +2022,9 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <!-- FİNANSAL TAVSİYELER -->
   <div id="financialAdviceBox"></div>
 
+  <!-- Analiz Preview Card -->
+  <div id="planPreviewCard" style="margin-bottom:16px;display:none"></div>
+
   <!-- Gelir / Gider Bar -->
   <div class="chart-card">
     <div class="chart-card-header">
@@ -2039,6 +2078,20 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 <!-- TAB: PLAN -->
 <div class="tab-content" id="tab-plan">
 
+  <!-- Geri butonu -->
+  <div style="display:flex;align-items:center;margin-bottom:4px;margin-top:-4px">
+    <button onclick="switchTab('ozet')" style="
+      display:inline-flex;align-items:center;gap:6px;
+      background:none;border:none;
+      font-size:14px;font-weight:500;color:var(--muted);
+      cursor:pointer;padding:8px 0;-webkit-tap-highlight-color:transparent;
+      letter-spacing:-.01em;
+    ">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      Özet
+    </button>
+  </div>
+
   <!-- 1. DURUM HERO -->
   <div id="planHero"></div>
 
@@ -2046,71 +2099,25 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <div id="planCharCard"></div>
 
   <!-- 3. BASKI ANALİZİ -->
-  <div style="margin-bottom:12px">
-    <div onclick="toggleSection('planRisk')" class="plan-section-header" id="planRiskHeader">
-      <div>
-        <div class="plan-section-overline" id="planRiskOverline">Baskı Analizi</div>
-        <div class="plan-section-title">Ne sıkıştırıyor?</div>
-        <div class="plan-section-sub" id="planRiskSummary">Neler hareket alanını kısıtlıyor?</div>
-      </div>
-      <span class="collapse-chevron" id="planRiskChevron" style="font-size:22px;color:var(--muted)">›</span>
-    </div>
-    <div class="collapsible-body collapsed" id="planRiskBody">
-      <div class="collapsible-inner" style="padding:2px 0 0">
-        <div id="planRiskDetail"></div>
-      </div>
-    </div>
+  <div class="plan-section-block" id="planRiskBlock">
+    <div class="plan-section-label" id="planRiskOverline">Baskı Analizi</div>
+    <div id="planRiskDetail"></div>
   </div>
 
   <!-- 4. HEDEF & ZAMAN -->
-  <div style="margin-bottom:12px">
-    <div onclick="toggleSection('planGoal')" class="plan-section-header" id="planGoalHeader">
-      <div>
-        <div class="plan-section-overline">Hedef & Zaman</div>
-        <div class="plan-section-title">Ne zaman ulaşırsın?</div>
-        <div class="plan-section-sub" id="planGoalSummary">Hedeflerinin zaman çizelgesi.</div>
-      </div>
-      <span class="collapse-chevron" id="planGoalChevron" style="font-size:22px;color:var(--muted)">›</span>
-    </div>
-    <div class="collapsible-body collapsed" id="planGoalBody">
-      <div class="collapsible-inner" style="padding:2px 0 0">
-        <div id="planGoalDetail"></div>
-      </div>
-    </div>
+  <div class="plan-section-block" id="planGoalBlock">
+    <div class="plan-section-label">Hedef & Zaman</div>
+    <div id="planGoalDetail"></div>
   </div>
 
   <!-- 5. SİMÜLASYON -->
-  <div id="planScenOuter" style="margin-bottom:12px">
-
-    <!-- Başlık — collapsible trigger -->
-    <div onclick="toggleSection('planScen')" style="
-      display:flex;align-items:center;justify-content:space-between;
-      padding:18px 20px 18px;cursor:pointer;-webkit-tap-highlight-color:transparent;
-      background:var(--surface);border:1px solid var(--border);
-      border-radius:var(--radius);box-shadow:0 2px 8px rgba(0,0,0,.15);
-      transition:border-color .2s;
-      " id="planScenHeader">
-      <div>
-        <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Simülasyon</div>
-        <div style="font-size:22px;font-weight:800;letter-spacing:-.05em;color:var(--text);line-height:1">Bir şey değişse?</div>
-        <div style="font-size:13px;font-weight:400;color:var(--muted);margin-top:5px;letter-spacing:-.01em" id="planScenSummary">Değişkenleri ayarla, etkisini gör.</div>
-      </div>
-      <span class="collapse-chevron" id="planScenChevron" style="font-size:22px;color:var(--muted)">›</span>
+  <div class="plan-section-block">
+    <div class="plan-section-label">Simülasyon</div>
+    <div style="background:var(--surface2);border-radius:var(--radius);overflow:hidden">
+      <div style="padding:4px 18px 8px" id="planScenSliders"></div>
     </div>
-
-    <!-- Collapsible gövde -->
-    <div class="collapsible-body collapsed" id="planScenBody">
-      <div class="collapsible-inner" style="padding:2px 0 0">
-
-        <!-- Slider'lar -->
-        <div id="planScenSliders" style="padding:4px 0 2px"></div>
-
-        <!-- Impact sonuç -->
-        <div id="planScenResult" style="margin-top:8px"></div>
-
-        <button class="sc-reset-btn" onclick="planScenReset()">Sıfırla</button>
-      </div>
-    </div>
+    <div id="planScenResult" style="margin-top:8px"></div>
+    <button class="sc-reset-btn" onclick="planScenReset()">Sıfırla</button>
   </div>
 
 
@@ -3044,7 +3051,7 @@ function finishOnboarding() {
 
 // =================== TABS ===================
 let currentTab = 'aylik';
-const sectionState = { rec: false, debt: false, goal: false, wish: false, planScen: false, planRisk: false, planGoal: false };
+const sectionState = { rec: false, debt: false, goal: false, wish: false };
 
 function switchTab(id) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -3679,7 +3686,7 @@ function renderWalletHero(balance, fb) {
           </div>
         </div>
       </div>
-    </div>`;
+    </div></div>`;
 
   // Render sonrası CSS variable'ları set et
   const ring = document.getElementById('heroRing');
@@ -4042,7 +4049,7 @@ let _touchEndY = 0;
 let _touchEndX = 0;
 let _touchOnInteractive = false;
 
-const TAB_ORDER = ['aylik', 'sabit', 'ozet', 'plan', 'ayarlar'];
+const TAB_ORDER = ['aylik', 'sabit', 'ozet', 'ayarlar'];
 
 document.addEventListener('touchstart', e => {
   _touchStartY = e.touches[0].clientY;
@@ -5976,7 +5983,26 @@ function _planCalcCore(fb, sc) {
   const adjIncome = fb.income + (sc.extraIncome||0);
   const adjRec    = Math.max(0, fb.recTotal + (sc.recDelta||0));
   const adjAvail  = adjIncome - adjRec - fb.debtTotal - fb.goalTotal - fb.savTarget;
-  const adjVar    = fb.varSpent + (sc.lifeDelta||0) + (sc.plannedExp||0);
+
+  // Tipik aylık değişken harcama: son 3 ayın ortalaması
+  // Bu "hayatta kalma maliyeti" — birikim bunu çıkardıktan sonra kalır
+  const _mk = monthKey();
+  const _months = [];
+  for (let i = 1; i <= 3; i++) {
+    const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - i);
+    _months.push(d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'));
+  }
+  const _pastVars = _months.map(m => {
+    const { txs } = calcMonthData(m);
+    const exp = txs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
+    const fixed = txs.filter(t=>t.isRecurring||t.isDebt||t.isGoalDeposit).reduce((s,t)=>s+t.amount,0);
+    return Math.max(0, exp - fixed);
+  }).filter(v => v > 0);
+  const typicalVar = _pastVars.length > 0
+    ? _pastVars.reduce((s,v)=>s+v,0) / _pastVars.length
+    : fb.varSpent;  // geçmiş yoksa bu ayı baz al
+
+  const adjVar    = typicalVar + (sc.lifeDelta||0) + (sc.plannedExp||0);
   const adjRemain = adjAvail - adjVar;
   const savPot    = Math.max(0, adjRemain);
   const fixedRatio= adjIncome > 0 ? (adjRec + fb.debtTotal) / adjIncome : 1;
@@ -6243,24 +6269,25 @@ function _renderPlanChar(core) {
 }
 
 
-// ── 3. Baskı Analizi — yeni tasarım dili ────────────────────────────────────
+// ── 3. Baskı Analizi ─────────────────────────────────────────────────────────
 function _renderPlanRiskDetail(core) {
   const el = document.getElementById('planRiskDetail');
   if (!el) return;
 
-  // Header overline rengini risk seviyesine göre güncelle
   const rlColor = { low:'var(--accent)', mid:'var(--warning)', high:'var(--danger)' }[core.riskLevel];
-  const rlLabel = { low:'Dengeli',       mid:'Dikkat',         high:'Baskılı'       }[core.riskLevel];
+  const rlLabel = { low:'Dengeli', mid:'Dikkat', high:'Baskılı' }[core.riskLevel];
+
+  // Label güncelle
   const ov = document.getElementById('planRiskOverline');
   if (ov) { ov.textContent = 'Baskı Analizi · ' + rlLabel; ov.style.color = rlColor; }
+  const rb = document.getElementById('planRiskBlock');
+  if (rb) rb.style.display = '';
 
   if (!core.drivers.length) {
     el.innerHTML = `
-      <div class="plan-driver-card" style="border-color:rgba(45,184,102,.2)">
-        <div class="plan-driver-top">
-          <div class="plan-driver-name" style="color:var(--accent)">Kritik baskı noktası yok.</div>
-        </div>
-        <div class="plan-driver-body">Sabit gider, borç ve birikim oranlarının tümü sağlıklı aralıkta.</div>
+      <div style="padding:16px 0 4px">
+        <div style="font-size:15px;font-weight:600;color:var(--accent);margin-bottom:6px">Kritik baskı noktası yok.</div>
+        <div style="font-size:13.5px;font-weight:400;color:var(--muted);line-height:1.75">Sabit gider, borç ve birikim oranlarının tümü sağlıklı aralıkta.</div>
       </div>`;
     return;
   }
@@ -6269,11 +6296,10 @@ function _renderPlanRiskDetail(core) {
   const lvlBg    = { high:'rgba(255,69,58,.14)', mid:'rgba(255,214,10,.11)', low:'transparent' };
   const lvlColor = { high:'var(--danger)', mid:'var(--warning)', low:'var(--muted)' };
 
-  // Görsel baskı barları — tam genişlik, referans bar chart
+  // Bar'lar — kutu yok, düz liste
   const visDrivers = core.drivers.filter(d => d.barPct > 0);
   const barsHtml = visDrivers.length ? `
-    <div class="plan-driver-card" style="margin-bottom:8px;padding:14px 18px">
-      <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Baskı Haritası</div>
+    <div style="margin-bottom:20px">
       ${visDrivers.map(d => `
       <div class="plan-bar-row">
         <div class="plan-bar-label">${d.label.split(' ').slice(0,2).join(' ')}</div>
@@ -6282,21 +6308,21 @@ function _renderPlanRiskDetail(core) {
       </div>`).join('')}
     </div>` : '';
 
-  // Driver kartları
+  // Driver açıklamaları — daha küçük, ikincil
   const driverHtml = core.drivers.map((d, i) => `
-    <div class="plan-driver-card" style="animation-delay:${i*45}ms">
-      <div class="plan-driver-top">
-        <div class="plan-driver-name">${d.label}</div>
-        ${d.level !== 'low' ? `<span class="plan-driver-level" style="background:${lvlBg[d.level]};color:${lvlColor[d.level]}">${lvlLabel[d.level]}</span>` : ''}
+    <div style="padding:12px 0;border-top:1px solid rgba(255,255,255,.05);animation:planBlockIn .28s ease ${i*40}ms both">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px">
+        <div style="font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.01em">${d.label}</div>
+        ${d.level !== 'low' ? `<span style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;flex-shrink:0;background:${lvlBg[d.level]};color:${lvlColor[d.level]}">${lvlLabel[d.level]}</span>` : ''}
       </div>
-      <div class="plan-driver-body">${d.detail}</div>
+      <div style="font-size:13px;font-weight:400;color:var(--muted);line-height:1.75;letter-spacing:-.01em">${d.detail}</div>
     </div>`).join('');
 
-  // Aksiyon önerileri
-  const actHtml = core.actions.slice(1).map((a, i) => `
-    <div class="plan-action-card" style="animation-delay:${(core.drivers.length+i)*45}ms">
-      <div class="plan-action-label">İlk adım</div>
-      <div class="plan-action-text">${a}</div>
+  // Aksiyon — en altta, vurgulu
+  const actHtml = core.actions.slice(1).map(a => `
+    <div style="margin-top:16px;padding:14px 16px;background:rgba(45,184,102,.07);border:1px solid rgba(45,184,102,.18);border-radius:14px">
+      <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px">İlk adım</div>
+      <div style="font-size:14px;font-weight:500;color:var(--text);line-height:1.7;letter-spacing:-.01em">${a}</div>
     </div>`).join('');
 
   el.innerHTML = barsHtml + driverHtml + actHtml;
@@ -6306,42 +6332,43 @@ function _renderPlanRiskDetail(core) {
 // ── 4. Hedef & Zaman — big number tasarım dili ───────────────────────────────
 function _renderPlanGoalDetail(fb, core) {
   const el    = document.getElementById('planGoalDetail');
-  const sumEl = document.getElementById('planGoalSummary');
   if (!el) return;
   const goals = core.goals;
 
   if (!goals.length) {
-    if (sumEl) sumEl.textContent = 'Henüz hedef tanımlanmamış.';
+  
     const m3  = Math.round(core.savPot * 3);
     const m6  = Math.round(core.savPot * 6);
     const m12 = Math.round(core.savPot * 12);
     el.innerHTML = `
-      <div class="plan-driver-card" style="margin-bottom:8px">
-        <div class="plan-driver-name" style="margin-bottom:8px">Tanımsız marj</div>
-        <div class="plan-driver-body">Aylık ${fmtTL(Math.round(core.savPot))} birikilebilir, ama bir hedefe bağlı değil. Bir hedef olmadığında, birikim potansiyeli sessizce erir.</div>
-      </div>
-      <div class="plan-margin-card">
-        <div class="plan-margin-header">Bu marjla ne olurdu?</div>
-        <div class="plan-margin-row">
-          <div class="plan-margin-label">3 ay</div>
-          <div class="plan-margin-val">${fmtTL(m3)}</div>
+      <div style="background:var(--surface2);border-radius:var(--radius);overflow:hidden">
+        <div style="padding:18px 20px 14px">
+          <div style="font-size:13px;font-weight:400;color:var(--muted);line-height:1.75;letter-spacing:-.01em">
+            Sabit giderler ve borçlar çıktıktan sonra aylık <strong style="color:var(--text);font-weight:600">${fmtTL(Math.round(core.savPot))}</strong> birikime kalıyor —
+            ama henüz bir hedefe bağlı değil. Hedefsiz birikim korunmaz.
+          </div>
         </div>
-        <div class="plan-margin-row">
-          <div class="plan-margin-label">6 ay</div>
-          <div class="plan-margin-val">${fmtTL(m6)}</div>
-        </div>
-        <div class="plan-margin-row">
-          <div class="plan-margin-label">1 yıl</div>
-          <div class="plan-margin-val">${fmtTL(m12)}</div>
+        <div style="border-top:1px solid rgba(255,255,255,.06)">
+          <div style="padding:10px 20px 4px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Bu marjla ne olurdu?</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 20px;border-top:1px solid rgba(255,255,255,.04)">
+            <div style="font-size:13px;font-weight:400;color:var(--muted)">3 ay</div>
+            <div style="font-size:20px;font-weight:800;letter-spacing:-.05em;color:var(--accent)">${fmtTL(m3)}</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 20px;border-top:1px solid rgba(255,255,255,.04)">
+            <div style="font-size:13px;font-weight:400;color:var(--muted)">6 ay</div>
+            <div style="font-size:20px;font-weight:800;letter-spacing:-.05em;color:var(--accent)">${fmtTL(m6)}</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 20px;border-top:1px solid rgba(255,255,255,.04)">
+            <div style="font-size:13px;font-weight:400;color:var(--muted)">1 yıl</div>
+            <div style="font-size:20px;font-weight:800;letter-spacing:-.05em;color:var(--accent)">${fmtTL(m12)}</div>
+          </div>
         </div>
       </div>`;
     return;
   }
 
   const mn = goals.filter(g => g.curMonths).map(g => g.curMonths);
-  if (sumEl) sumEl.textContent = mn.length > 0
-    ? goals.length + ' hedef · en yakını ' + Math.min(...mn) + ' ay'
-    : goals.length + ' hedef · aylık birikim atanmamış';
+
 
   const items = goals.map((g, i) => {
     const imp = (g.optMonths && g.curMonths && g.optMonths < g.curMonths)
@@ -6430,7 +6457,7 @@ function _planRenderSliders(fb) {
     const valColor = v!==0 ? d.color : 'var(--muted)';
     return `
     <div class="sc-q-card ${v!==0?'active':''}" id="scCard_${d.id}"
-         style="animation-delay:${i*55}ms;--sc-color:${d.color};margin-bottom:${i<defs.length-1?'8px':'0'}">
+         style="animation-delay:${i*55}ms;--sc-color:${d.color}">
       <div class="sc-q-top">
         <div class="sc-q-label">${d.q}</div>
         <div class="sc-q-bigval" id="scVal_${d.id}" style="color:${valColor}">${d.fmt(v)}</div>
@@ -6507,9 +6534,9 @@ function _updatePlanImpact(fb, core) {
     if (_impactRendered) {
       el.style.transition='opacity .22s'; el.style.opacity='0';
       setTimeout(()=>{ _impactRendered=false; el.style.opacity=''; el.style.transition='';
-        el.innerHTML=`<div class="sc-invite"><div class="sc-invite-text">Bir slider'ı değiştir.<br>Etkisi anında görünür.</div></div>`; }, 230);
+        el.innerHTML=`<div class="sc-invite"><div class="sc-invite-text">Değerleri ayarla, etkisini gör.</div></div>`; }, 230);
     } else {
-      el.innerHTML=`<div class="sc-invite"><div class="sc-invite-text">Bir slider'ı değiştir.<br>Etkisi anında görünür.</div></div>`;
+      el.innerHTML=`<div class="sc-invite"><div class="sc-invite-text">Değerleri ayarla, etkisini gör.</div></div>`;
     }
     return;
   }
@@ -6597,14 +6624,58 @@ function planScenReset() {
 
 
 function _syncPlanCollapseSummaries(core) {
-  const rl = { low:'Risk sinyali yok — yapı dengeli', mid:'Dikkat — bazı noktalar baskı yaratıyor', high:'Yapısal baskı var — müdahale gerekiyor' };
-  const rEl = document.getElementById('planRiskSummary');
-  if (rEl) rEl.textContent = rl[core.riskLevel];
 
-  const scEl = document.getElementById('planScenSummary');
-  const hasDelta = core.sc && Object.values(core.sc).some(v => v !== 0);
-  if (scEl) scEl.textContent = hasDelta ? 'Senaryo aktif' : 'Değiştirince ne olur?';
 }
+
+// ── Analiz preview card — Özet sayfasında ────────────────────────────────────
+function renderPlanPreview() {
+  const el = document.getElementById('planPreviewCard');
+  if (!el) return;
+
+  const mk   = currentMonth;
+  const fb   = calcFreeBudget(mk);
+
+  if (!fb.income) { el.style.display = 'none'; return; }
+
+  const sc   = { extraIncome:0, recDelta:0, lifeDelta:0, plannedExp:0 };
+  const core = _planCalcCore(fb, sc);
+  const ch   = core.character;
+
+  const rlColor = { low:'var(--accent)', mid:'var(--warning)', high:'var(--danger)' }[core.riskLevel];
+  const rlGrad  = {
+    low:  'rgba(45,184,102,.1)',
+    mid:  'rgba(255,214,10,.09)',
+    high: 'rgba(255,69,58,.1)',
+  }[core.riskLevel];
+
+  // Headline — hero ile aynı mantık
+  let headline = '';
+  if (core.adjRemain < 0)          headline = `Giderler geliri <em>aşıyor.</em>`;
+  else if (core.fixedRatio > 0.65) headline = `Sabit yapı <em>çok ağır.</em>`;
+  else if (core.fixedRatio > 0.50) headline = `Sabit yük <em>baskı yaratıyor.</em>`;
+  else if (core.debtRatio > 0.28)  headline = `Borç <em>alanı kısıtlıyor.</em>`;
+  else if (core.savRatio > 0.22)   headline = `Birikim marjı <em>güçlü.</em>`;
+  else if (core.savRatio > 0.10)   headline = `Yapı <em>dengeli.</em>`;
+  else                              headline = `Esneklik <em>hâlâ dar.</em>`;
+
+  el.style.display = '';
+  el.innerHTML = `
+    <div class="plan-preview-card" onclick="switchTab('plan')">
+      <div class="plan-preview-gradient" style="--prev-grad:${rlGrad};--prev-color:${rlColor}">
+        <div class="plan-preview-overline">
+          <span class="plan-preview-overline-dot" style="background:${rlColor}"></span>
+          Finansal Analiz
+        </div>
+        <div class="plan-preview-headline" style="--prev-color:${rlColor}">${headline}</div>
+        <div class="plan-preview-char">${ch.name} · ${ch.tagline.split('—')[0].trim()}</div>
+      </div>
+      <div class="plan-preview-footer">
+        <div class="plan-preview-cta" style="color:${rlColor}">Tam Analizi Gör</div>
+        <div class="plan-preview-arrow" style="color:${rlColor}">→</div>
+      </div>
+    </div>`;
+}
+
 
 function renderFinancialAdvice() {
   const mk = monthKey();
@@ -6662,8 +6733,42 @@ function renderFinancialAdvice() {
       </div>
     </div>`;
 
+  // Analiz preview card'ı tavsiyelerin altına ekle
+  const mk2   = currentMonth;
+  const fb2   = calcFreeBudget(mk2);
+  let previewHtml = '';
+  if (fb2.income) {
+    const core2 = _planCalcCore(fb2, {extraIncome:0,recDelta:0,lifeDelta:0,plannedExp:0});
+    const ch2   = core2.character;
+    const rlColor2 = {low:'var(--accent)',mid:'var(--warning)',high:'var(--danger)'}[core2.riskLevel];
+    const rlGrad2  = {low:'rgba(45,184,102,.1)',mid:'rgba(255,214,10,.09)',high:'rgba(255,69,58,.1)'}[core2.riskLevel];
+    let headline2 = '';
+    if (core2.adjRemain < 0)          headline2 = `Giderler geliri <em>aşıyor.</em>`;
+    else if (core2.fixedRatio > 0.65) headline2 = `Sabit yapı <em>çok ağır.</em>`;
+    else if (core2.fixedRatio > 0.50) headline2 = `Sabit yük <em>baskı yaratıyor.</em>`;
+    else if (core2.debtRatio > 0.28)  headline2 = `Borç <em>alanı kısıtlıyor.</em>`;
+    else if (core2.savRatio > 0.22)   headline2 = `Birikim marjı <em>güçlü.</em>`;
+    else if (core2.savRatio > 0.10)   headline2 = `Yapı <em>dengeli.</em>`;
+    else                               headline2 = `Esneklik <em>hâlâ dar.</em>`;
+    previewHtml = `
+    <div style="margin-top:16px"><div class="plan-preview-card" onclick="switchTab('plan')">
+      <div class="plan-preview-gradient" style="--prev-grad:${rlGrad2}">
+        <div class="plan-preview-overline">
+          <span class="plan-preview-overline-dot" style="background:${rlColor2}"></span>
+          Finansal Analiz
+        </div>
+        <div class="plan-preview-headline" style="--prev-color:${rlColor2}">${headline2}</div>
+        <div class="plan-preview-char" style="color:var(--muted)">${ch2.name} · ${ch2.tagline.split('—')[0].trim()}</div>
+      </div>
+      <div class="plan-preview-footer">
+        <div class="plan-preview-cta" style="color:${rlColor2}">Tam Analizi Gör</div>
+        <div class="plan-preview-arrow" style="color:${rlColor2}">→</div>
+      </div>
+    </div></div>`;
+  }
+
   const target = document.getElementById('financialAdviceBox');
-  if (target) target.innerHTML = html;
+  if (target) target.innerHTML = html + previewHtml;
 }
 
 function updateCollapseSummaries() {
@@ -7572,6 +7677,7 @@ function renderAll() {
   if (currentTab === 'sabit') renderSabit();
   if (currentTab === 'ozet') {
     renderOzetStats();
+    renderPlanPreview();
     Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
     charts = {};
     requestAnimationFrame(() => requestAnimationFrame(() => {
