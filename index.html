@@ -1066,6 +1066,178 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .plan-margin-proj-label { font-size:13px; font-weight:400; color:var(--muted); }
 .plan-margin-proj-val { font-size:18px; font-weight:700; letter-spacing:-.04em; color:var(--accent); }
 
+/* ── Plan section header (risk, goal, simülasyon ortak stil) ── */
+.plan-section-header {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px 22px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  display:flex; align-items:center; justify-content:space-between;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+  transition:border-color .2s;
+}
+.plan-section-overline {
+  font-size:11px; font-weight:600; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:6px;
+}
+.plan-section-title {
+  font-size:22px; font-weight:800; letter-spacing:-.05em;
+  color:var(--text); line-height:1; margin-bottom:5px;
+}
+.plan-section-sub {
+  font-size:13px; font-weight:400; color:var(--muted); letter-spacing:-.01em;
+}
+
+/* ── Risk / baskı kartları — referans tasarım dili ── */
+/* Bar satırı */
+.plan-bar-row {
+  display:flex; align-items:center; gap:14px;
+  padding:12px 0; border-bottom:1px solid rgba(255,255,255,.05);
+}
+.plan-bar-row:last-child { border-bottom:none; }
+.plan-bar-label { font-size:13px; font-weight:500; color:var(--text); width:110px; flex-shrink:0; }
+.plan-bar-pct   { font-size:13px; font-weight:700; letter-spacing:-.03em; width:36px; text-align:right; flex-shrink:0; }
+.plan-bar-track { flex:1; height:5px; background:rgba(255,255,255,.08); border-radius:99px; overflow:hidden; }
+.plan-bar-fill  { height:100%; border-radius:99px; transition:width .6s cubic-bezier(.4,0,.2,1); }
+
+/* Baskı driver kartları — simülasyon sc-q-card stiliyle */
+.plan-driver-card {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px 18px;
+  margin-bottom:8px;
+  animation:planBlockIn .28s cubic-bezier(.4,0,.2,1) both;
+}
+.plan-driver-card:last-child { margin-bottom:0; }
+.plan-driver-top {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  gap:10px; margin-bottom:8px;
+}
+.plan-driver-name {
+  font-size:15px; font-weight:600; color:var(--text);
+  letter-spacing:-.02em; line-height:1.3; flex:1;
+}
+.plan-driver-level {
+  font-size:10px; font-weight:700; letter-spacing:.06em;
+  text-transform:uppercase; padding:3px 9px; border-radius:6px;
+  flex-shrink:0; margin-top:2px;
+}
+.plan-driver-body {
+  font-size:13.5px; font-weight:400; color:var(--muted);
+  line-height:1.8; letter-spacing:-.01em;
+}
+
+/* Aksiyon kartı — referans: glassmorphism action item */
+.plan-action-card {
+  background:var(--surface2);
+  border:1px solid rgba(45,184,102,.2);
+  border-radius:16px;
+  padding:16px 18px;
+  margin-bottom:8px;
+  animation:planBlockIn .28s cubic-bezier(.4,0,.2,1) both;
+  position:relative; overflow:hidden;
+}
+.plan-action-card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, var(--accent), transparent);
+}
+.plan-action-card:last-child { margin-bottom:0; }
+.plan-action-label {
+  font-size:11px; font-weight:600; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--accent); margin-bottom:7px;
+}
+.plan-action-text {
+  font-size:14px; font-weight:500; color:var(--text);
+  line-height:1.7; letter-spacing:-.01em;
+}
+
+/* ── Hedef kartları — referans: big number, ring progress ── */
+.plan-goal-card {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  margin-bottom:8px;
+  animation:planBlockIn .28s cubic-bezier(.4,0,.2,1) both;
+}
+.plan-goal-card:last-child { margin-bottom:0; }
+.plan-goal-card-top {
+  padding:20px 20px 16px;
+}
+.plan-goal-card-name {
+  font-size:18px; font-weight:700; color:var(--text);
+  letter-spacing:-.03em; margin-bottom:4px;
+}
+.plan-goal-card-frac {
+  font-size:12px; font-weight:400; color:var(--muted); letter-spacing:-.01em;
+  margin-bottom:14px;
+}
+/* Thin progress bar */
+.plan-goal-prog-track {
+  height:3px; background:rgba(255,255,255,.08);
+  border-radius:99px; margin-bottom:18px; overflow:hidden;
+}
+.plan-goal-prog-fill {
+  height:100%; border-radius:99px; background:var(--accent);
+  transition:width .6s cubic-bezier(.4,0,.2,1);
+}
+/* Big number grid — referans: "24 Days" */
+.plan-goal-time-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:8px;
+}
+.plan-goal-time-block {
+  background:var(--surface3); border-radius:14px; padding:14px 16px;
+}
+.plan-goal-time-label {
+  font-size:11px; font-weight:600; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:7px;
+}
+.plan-goal-time-bignum {
+  font-size:28px; font-weight:800; letter-spacing:-.07em;
+  line-height:1; color:var(--text);
+}
+.plan-goal-time-unit {
+  font-size:13px; font-weight:500; opacity:.5; margin-left:2px;
+}
+/* İyileştirme notu */
+.plan-goal-improve-row {
+  padding:12px 20px;
+  border-top:1px solid rgba(255,255,255,.05);
+  font-size:13px; font-weight:500; color:var(--accent);
+  letter-spacing:-.01em;
+  background:rgba(45,184,102,.06);
+}
+/* Uzun vade uyarısı */
+.plan-goal-long-note {
+  padding:12px 20px;
+  border-top:1px solid rgba(255,255,255,.05);
+  font-size:13px; font-weight:400; color:var(--muted);
+  line-height:1.7; letter-spacing:-.01em;
+}
+
+/* Marj projeksiyonu */
+.plan-margin-card {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:var(--radius); overflow:hidden; margin-top:8px;
+}
+.plan-margin-header {
+  padding:14px 20px 4px;
+  font-size:11px; font-weight:600; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted);
+}
+.plan-margin-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:12px 20px; border-top:1px solid rgba(255,255,255,.04);
+}
+.plan-margin-label { font-size:13px; font-weight:400; color:var(--muted); }
+.plan-margin-val   { font-size:20px; font-weight:800; letter-spacing:-.05em; color:var(--accent); }
+
+
 /* ── Simülasyon — referans: bold cards, gradient, big impact ── */
 @keyframes scCardIn    { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 @keyframes scSlideUp   { from{opacity:0;transform:translateY(6px)}  to{opacity:1;transform:translateY(0)} }
@@ -1873,42 +2045,38 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <!-- 2. KARAKTER KARTI -->
   <div id="planCharCard"></div>
 
-  <!-- 3. YAPIŞAL BASKI — bar chart stili -->
-  <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
-    <div class="card-collapse-header" onclick="toggleSection('planRisk')">
-      <div class="collapse-left">
-        <div class="collapse-icon-wrap" id="planRiskIconWrap" style="background:rgba(255,69,58,.1);border:1px solid rgba(255,69,58,.2)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF453A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 3l18 18"/><path d="M10.584 10.587a2 2 0 0 0 2.828 2.83"/><path d="M9.363 5.365a9.466 9.466 0 0 1 2.637 -.365c4 0 7.333 2.333 10 7c-.778 1.361 -1.612 2.524 -2.503 3.488m-2.14 1.861c-1.631 1.1 -3.415 1.651 -5.357 1.651c-4 0 -7.333 -2.333 -10 -7c1.369 -2.395 2.913 -4.175 4.632 -5.341"/></svg>
-        </div>
-        <div>
-          <div class="collapse-title">Baskı Analizi</div>
-          <div class="collapse-summary" id="planRiskSummary">Neler hareket alanını kısıtlıyor?</div>
-        </div>
+  <!-- 3. BASKI ANALİZİ -->
+  <div style="margin-bottom:12px">
+    <div onclick="toggleSection('planRisk')" class="plan-section-header" id="planRiskHeader">
+      <div>
+        <div class="plan-section-overline" id="planRiskOverline">Baskı Analizi</div>
+        <div class="plan-section-title">Ne sıkıştırıyor?</div>
+        <div class="plan-section-sub" id="planRiskSummary">Neler hareket alanını kısıtlıyor?</div>
       </div>
-      <div class="collapse-right"><span class="collapse-chevron" id="planRiskChevron">›</span></div>
+      <span class="collapse-chevron" id="planRiskChevron" style="font-size:22px;color:var(--muted)">›</span>
     </div>
-    <div class="collapsible-body collapsed" id="planRiskBody"><div class="collapsible-inner">
-      <div id="planRiskDetail"></div>
-    </div></div>
+    <div class="collapsible-body collapsed" id="planRiskBody">
+      <div class="collapsible-inner" style="padding:2px 0 0">
+        <div id="planRiskDetail"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- 4. HEDEF & SÜRE -->
-  <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
-    <div class="card-collapse-header" onclick="toggleSection('planGoal')">
-      <div class="collapse-left">
-        <div class="collapse-icon-wrap" style="background:rgba(45,184,102,.1);border:1px solid rgba(45,184,102,.2)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2DB866" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg>
-        </div>
-        <div>
-          <div class="collapse-title">Hedef & Zaman</div>
-          <div class="collapse-summary" id="planGoalSummary">Ne zaman ulaşırsın?</div>
-        </div>
+  <!-- 4. HEDEF & ZAMAN -->
+  <div style="margin-bottom:12px">
+    <div onclick="toggleSection('planGoal')" class="plan-section-header" id="planGoalHeader">
+      <div>
+        <div class="plan-section-overline">Hedef & Zaman</div>
+        <div class="plan-section-title">Ne zaman ulaşırsın?</div>
+        <div class="plan-section-sub" id="planGoalSummary">Hedeflerinin zaman çizelgesi.</div>
       </div>
-      <div class="collapse-right"><span class="collapse-chevron" id="planGoalChevron">›</span></div>
+      <span class="collapse-chevron" id="planGoalChevron" style="font-size:22px;color:var(--muted)">›</span>
     </div>
-    <div class="collapsible-body collapsed" id="planGoalBody"><div class="collapsible-inner">
-      <div id="planGoalDetail"></div>
-    </div></div>
+    <div class="collapsible-body collapsed" id="planGoalBody">
+      <div class="collapsible-inner" style="padding:2px 0 0">
+        <div id="planGoalDetail"></div>
+      </div>
+    </div>
   </div>
 
   <!-- 5. SİMÜLASYON -->
@@ -6075,30 +6243,25 @@ function _renderPlanChar(core) {
 }
 
 
-// ── 3. Yapısal baskı — collapsible içi ───────────────────────────────────────
+// ── 3. Baskı Analizi — yeni tasarım dili ────────────────────────────────────
 function _renderPlanRiskDetail(core) {
   const el = document.getElementById('planRiskDetail');
   if (!el) return;
 
-  // Collapsible header ikonunu güncelle
-  const iconWrap = document.getElementById('planRiskIconWrap');
-  const rMeta = {
-    low:  { ic:'rgba(45,184,102,.1)',  bc:'rgba(45,184,102,.2)',  sc:'#2DB866' },
-    mid:  { ic:'rgba(255,214,10,.1)',  bc:'rgba(255,214,10,.2)',  sc:'#FFD60A' },
-    high: { ic:'rgba(255,69,58,.1)',   bc:'rgba(255,69,58,.2)',   sc:'#FF453A' },
-  }[core.riskLevel];
-  if (iconWrap) {
-    iconWrap.style.background = rMeta.ic;
-    iconWrap.style.border = '1px solid ' + rMeta.bc;
-    const svg = iconWrap.querySelector('svg');
-    if (svg) svg.setAttribute('stroke', rMeta.sc);
-  }
+  // Header overline rengini risk seviyesine göre güncelle
+  const rlColor = { low:'var(--accent)', mid:'var(--warning)', high:'var(--danger)' }[core.riskLevel];
+  const rlLabel = { low:'Dengeli',       mid:'Dikkat',         high:'Baskılı'       }[core.riskLevel];
+  const ov = document.getElementById('planRiskOverline');
+  if (ov) { ov.textContent = 'Baskı Analizi · ' + rlLabel; ov.style.color = rlColor; }
 
   if (!core.drivers.length) {
-    el.innerHTML = `<div class="plan-block">
-      <div class="plan-block-title" style="color:var(--accent)">Kritik baskı noktası yok.</div>
-      <div class="plan-block-body">Sabit gider, borç ve birikim oranlarının tümü sağlıklı aralıkta.</div>
-    </div>`;
+    el.innerHTML = `
+      <div class="plan-driver-card" style="border-color:rgba(45,184,102,.2)">
+        <div class="plan-driver-top">
+          <div class="plan-driver-name" style="color:var(--accent)">Kritik baskı noktası yok.</div>
+        </div>
+        <div class="plan-driver-body">Sabit gider, borç ve birikim oranlarının tümü sağlıklı aralıkta.</div>
+      </div>`;
     return;
   }
 
@@ -6106,42 +6269,41 @@ function _renderPlanRiskDetail(core) {
   const lvlBg    = { high:'rgba(255,69,58,.14)', mid:'rgba(255,214,10,.11)', low:'transparent' };
   const lvlColor = { high:'var(--danger)', mid:'var(--warning)', low:'var(--muted)' };
 
-  // Bar chart — görsel baskı haritası
+  // Görsel baskı barları — tam genişlik, referans bar chart
   const visDrivers = core.drivers.filter(d => d.barPct > 0);
   const barsHtml = visDrivers.length ? `
-    <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.05)">
+    <div class="plan-driver-card" style="margin-bottom:8px;padding:14px 18px">
+      <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Baskı Haritası</div>
       ${visDrivers.map(d => `
       <div class="plan-bar-row">
         <div class="plan-bar-label">${d.label.split(' ').slice(0,2).join(' ')}</div>
         <div class="plan-bar-track"><div class="plan-bar-fill" style="width:${d.barPct}%;background:${d.barColor}"></div></div>
-        <div class="plan-bar-val" style="color:${d.barColor}">${d.pct > 0 ? '%'+d.pct : '—'}</div>
+        <div class="plan-bar-pct" style="color:${d.barColor}">${d.pct>0?'%'+d.pct:'—'}</div>
       </div>`).join('')}
     </div>` : '';
 
-  // Driver blokları
+  // Driver kartları
   const driverHtml = core.drivers.map((d, i) => `
-    <div class="plan-block" style="animation:planIn .3s ease ${i*45}ms both">
-      <div class="plan-block-head">
-        <div class="plan-block-title">${d.label}</div>
-        ${d.level !== 'low' ? `<span class="plan-block-level" style="background:${lvlBg[d.level]};color:${lvlColor[d.level]}">${lvlLabel[d.level]}</span>` : ''}
+    <div class="plan-driver-card" style="animation-delay:${i*45}ms">
+      <div class="plan-driver-top">
+        <div class="plan-driver-name">${d.label}</div>
+        ${d.level !== 'low' ? `<span class="plan-driver-level" style="background:${lvlBg[d.level]};color:${lvlColor[d.level]}">${lvlLabel[d.level]}</span>` : ''}
       </div>
-      <div class="plan-block-body">${d.detail}</div>
+      <div class="plan-driver-body">${d.detail}</div>
     </div>`).join('');
 
-  // Aksiyon önerileri (ilki karakter kartında, geri kalanlar burada)
+  // Aksiyon önerileri
   const actHtml = core.actions.slice(1).map((a, i) => `
-    <div class="plan-block" style="animation:planIn .3s ease ${(core.drivers.length+i)*45}ms both">
-      <div class="plan-block-head">
-        <div class="plan-block-title">Önce şunu yap</div>
-      </div>
-      <div class="plan-block-body">${a}</div>
+    <div class="plan-action-card" style="animation-delay:${(core.drivers.length+i)*45}ms">
+      <div class="plan-action-label">İlk adım</div>
+      <div class="plan-action-text">${a}</div>
     </div>`).join('');
 
   el.innerHTML = barsHtml + driverHtml + actHtml;
 }
 
 
-// ── 4. Hedef & Zaman — big number style ──────────────────────────────────────
+// ── 4. Hedef & Zaman — big number tasarım dili ───────────────────────────────
 function _renderPlanGoalDetail(fb, core) {
   const el    = document.getElementById('planGoalDetail');
   const sumEl = document.getElementById('planGoalSummary');
@@ -6149,58 +6311,84 @@ function _renderPlanGoalDetail(fb, core) {
   const goals = core.goals;
 
   if (!goals.length) {
-    if (sumEl) sumEl.textContent = 'Hedef tanımlanmamış';
+    if (sumEl) sumEl.textContent = 'Henüz hedef tanımlanmamış.';
     const m3  = Math.round(core.savPot * 3);
     const m6  = Math.round(core.savPot * 6);
     const m12 = Math.round(core.savPot * 12);
     el.innerHTML = `
-      <div class="plan-block" style="margin-bottom:0">
-        <div class="plan-block-title" style="margin-bottom:8px">Tanımsız marj</div>
-        <div class="plan-block-body">Aylık ${fmtTL(Math.round(core.savPot))} birikilebilir, ama bir hedefe bağlı değil. Bir hedef olmadığında, birikim potansiyeli sessizce erir.</div>
+      <div class="plan-driver-card" style="margin-bottom:8px">
+        <div class="plan-driver-name" style="margin-bottom:8px">Tanımsız marj</div>
+        <div class="plan-driver-body">Aylık ${fmtTL(Math.round(core.savPot))} birikilebilir, ama bir hedefe bağlı değil. Bir hedef olmadığında, birikim potansiyeli sessizce erir.</div>
       </div>
-      <div class="plan-margin-proj" style="margin-top:10px">
-        <div class="plan-margin-proj-hdr">Bu marjla ne olurdu?</div>
-        <div class="plan-margin-proj-row"><div class="plan-margin-proj-label">3 ay</div><div class="plan-margin-proj-val">${fmtTL(m3)}</div></div>
-        <div class="plan-margin-proj-row"><div class="plan-margin-proj-label">6 ay</div><div class="plan-margin-proj-val">${fmtTL(m6)}</div></div>
-        <div class="plan-margin-proj-row"><div class="plan-margin-proj-label">1 yıl</div><div class="plan-margin-proj-val">${fmtTL(m12)}</div></div>
+      <div class="plan-margin-card">
+        <div class="plan-margin-header">Bu marjla ne olurdu?</div>
+        <div class="plan-margin-row">
+          <div class="plan-margin-label">3 ay</div>
+          <div class="plan-margin-val">${fmtTL(m3)}</div>
+        </div>
+        <div class="plan-margin-row">
+          <div class="plan-margin-label">6 ay</div>
+          <div class="plan-margin-val">${fmtTL(m6)}</div>
+        </div>
+        <div class="plan-margin-row">
+          <div class="plan-margin-label">1 yıl</div>
+          <div class="plan-margin-val">${fmtTL(m12)}</div>
+        </div>
       </div>`;
     return;
   }
 
-  const mn = goals.filter(g=>g.curMonths).map(g=>g.curMonths);
-  if (sumEl) sumEl.textContent = mn.length>0
-    ? goals.length+' hedef · en yakını '+Math.min(...mn)+' ay'
-    : goals.length+' hedef · aylık birikim atanmamış';
+  const mn = goals.filter(g => g.curMonths).map(g => g.curMonths);
+  if (sumEl) sumEl.textContent = mn.length > 0
+    ? goals.length + ' hedef · en yakını ' + Math.min(...mn) + ' ay'
+    : goals.length + ' hedef · aylık birikim atanmamış';
 
   const items = goals.map((g, i) => {
-    const imp = (g.optMonths && g.curMonths && g.optMonths < g.curMonths) ? g.curMonths - g.optMonths : 0;
-    const longNote = g.curMonths && g.curMonths > 48
-      ? `<div class="plan-block-body" style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.05)">${g.curMonths} ay uzun bir süre. Aylık miktarı artırmak süreci gerçekten kısaltır.</div>` : '';
+    const imp = (g.optMonths && g.curMonths && g.optMonths < g.curMonths)
+      ? g.curMonths - g.optMonths : 0;
+
+    // Big number — mevcut hız
+    const curNum  = g.curMonths !== null ? g.curMonths : null;
+    const optNum  = g.optMonths !== null ? g.optMonths : null;
+
+    const improveRow = imp > 0 ? `
+      <div class="plan-goal-improve-row">${imp} ay erken — mevcut marjın tamamını kullanırsan.</div>` : '';
+    const longNote = g.curMonths && g.curMonths > 48 ? `
+      <div class="plan-goal-long-note">${g.curMonths} ay uzun bir süre. Aylık miktarı artırmak süreci gerçekten kısaltır.</div>` : '';
+
     return `
-    <div class="plan-block" style="animation:planBlockIn .3s ease ${i*60}ms both;padding:18px">
-      <div class="plan-goal-header">
-        <div class="plan-goal-name">${esc(g.name)}</div>
-        <div class="plan-goal-frac">${fmtTL(Math.round(g.dep))} / ${fmtTL(g.target)}</div>
-      </div>
-      <div style="height:3px;background:var(--border);border-radius:99px;margin-bottom:14px;overflow:hidden">
-        <div style="height:100%;width:${g.pct}%;background:var(--accent);border-radius:99px"></div>
-      </div>
-      <div class="plan-goal-grid">
-        <div class="plan-goal-block">
-          <div class="plan-goal-block-label">Mevcut hız</div>
-          <div class="plan-goal-block-val" style="color:var(--text)">${g.curMonths!==null?g.curMonths+' <span style="font-size:14px;font-weight:500;opacity:.6">ay</span>':'—'}</div>
+    <div class="plan-goal-card" style="animation-delay:${i*60}ms">
+      <div class="plan-goal-card-top">
+        <div class="plan-goal-card-name">${esc(g.name)}</div>
+        <div class="plan-goal-card-frac">${fmtTL(Math.round(g.dep))} birikti / ${fmtTL(g.target)} hedef</div>
+        <div class="plan-goal-prog-track">
+          <div class="plan-goal-prog-fill" style="width:${g.pct}%"></div>
         </div>
-        <div class="plan-goal-block" style="${imp>0?'border:1px solid rgba(45,184,102,.2)':''}">
-          <div class="plan-goal-block-label">Tam kapasiteyle</div>
-          <div class="plan-goal-block-val" style="color:var(--accent)">${g.optMonths!==null?g.optMonths+' <span style="font-size:14px;font-weight:500;opacity:.7">ay</span>':'—'}</div>
+        <div class="plan-goal-time-grid">
+          <div class="plan-goal-time-block">
+            <div class="plan-goal-time-label">Mevcut hız</div>
+            <div>
+              ${curNum !== null
+                ? `<span class="plan-goal-time-bignum">${curNum}</span><span class="plan-goal-time-unit">ay</span>`
+                : `<span class="plan-goal-time-bignum" style="opacity:.3">—</span>`}
+            </div>
+          </div>
+          <div class="plan-goal-time-block" style="${imp>0?'border:1px solid rgba(45,184,102,.25);background:rgba(45,184,102,.06)':''}">
+            <div class="plan-goal-time-label">Tam kapasiteyle</div>
+            <div>
+              ${optNum !== null
+                ? `<span class="plan-goal-time-bignum" style="color:var(--accent)">${optNum}</span><span class="plan-goal-time-unit" style="color:var(--accent)">ay</span>`
+                : `<span class="plan-goal-time-bignum" style="opacity:.3">—</span>`}
+            </div>
+          </div>
         </div>
       </div>
-      ${imp>0?`<div class="plan-goal-improve" style="color:var(--accent);margin-top:6px">${imp} ay erken — mevcut marjın tamamını kullanırsan.</div>`:''}
+      ${improveRow}
       ${longNote}
     </div>`;
   });
 
-  el.innerHTML = `<div>${items.join('')}</div>`;
+  el.innerHTML = items.join('');
 }
 
 
