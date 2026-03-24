@@ -3062,6 +3062,12 @@ function load() {
         const dc = DEFAULT_CATS.find(c => c.id === id);
         if (dc) dc.keywords = words;
       });
+      // Custom kategori type migration — income default bug'ını düzelt, localStorage'a yaz
+      const _defIds = new Set(DEFAULT_CATS.map(c => c.id));
+      data.categories = (data.categories || []).filter(c => !_defIds.has(c.id));
+      let _migChanged = false;
+      data.categories.forEach(c => { if (!c.type || c.type === 'income') { c.type = 'expense'; _migChanged = true; } });
+      if (_migChanged) { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e) {} }
     }
   } catch(e) { console.warn('localStorage unavailable'); }
 
@@ -8039,11 +8045,40 @@ function openCategories() {
   buildNewCatIconPicker();
 }
 
-function closeCatModal() {
-  document.getElementById('catModal').classList.remove('show');
+let _catReturnSheet = null; // hangi sheet'ten gelindi
+
+function openCategoriesFromSheet() {
+  // Hangi sheet açık — bunu hatırla
+  if (document.getElementById('txEditSheet')?.classList.contains('show')) _catReturnSheet = 'txEdit';
+  else if (document.getElementById('recEditSheet')?.classList.contains('show')) _catReturnSheet = 'recEdit';
+  else if (document.getElementById('recAddSheet')?.classList.contains('show')) _catReturnSheet = 'recAdd';
+  else _catReturnSheet = null;
+
+  // Sheet'leri kapat
+  ['txEditModal','txEditSheet','recEditModal','recEditSheet','recAddSheetOverlay','recAddSheet'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  });
+  document.body.style.overflow = '';
+  setTimeout(() => openCategories(), 50);
 }
 
-let _catTab = 'expense';
+function closeCatModal() {
+  document.getElementById('catModal').classList.remove('show');
+  // Kategori modalından dönerken ilgili sheet'i yeniden aç
+  if (_catReturnSheet) {
+    setTimeout(() => {
+      if (_catReturnSheet === 'txEdit' && _editTxId) {
+        openEditTx(_editTxId);
+      } else if (_catReturnSheet === 'recEdit' && _editRecId) {
+        openRecEditModal(_editRecId);
+      } else if (_catReturnSheet === 'recAdd') {
+        openRecAddSheet();
+      }
+      _catReturnSheet = null;
+    }, 100);
+  }
+}
 function switchCatTab(tab) {
   _catTab = tab;
   document.getElementById('catTabExpense').classList.toggle('active', tab === 'expense');
@@ -8077,7 +8112,7 @@ function toggleNewCatForm() {
   const isOpen = form.style.display !== 'none';
   form.style.display = isOpen ? 'none' : 'block';
   btn.textContent = isOpen ? '+ Kategori Ekle' : '− Kapat';
-  if (!isOpen) { setNewCatType('expense'); buildNewCatIconPicker(); }
+  if (!isOpen) { setNewCatType(_catTab === 'income' ? 'income' : 'expense'); buildNewCatIconPicker(); }
 }
 
 function setNewCatType(type) {
@@ -8207,7 +8242,12 @@ function importData(input) {
       data.savingsGoals.forEach(g => { if (!g.paidMonths) g.paidMonths = []; if (!g.deposits) g.deposits = []; });
       const defaultIds = new Set(DEFAULT_CATS.map(c => c.id));
       data.categories = (data.categories || []).filter(c => !defaultIds.has(c.id));
-      data.categories.forEach(c => { if (!c.type) c.type = 'expense'; });
+      // Migration: income default bug'ından kaynaklanmış yanlış type'ları düzelt
+      // Custom kategori income olarak kaydedildiyse ve DEFAULT_CATS'ta income değilse expense yap
+      const defaultIncomeIds = new Set(DEFAULT_CATS.filter(c => c.type === 'income').map(c => c.id));
+      data.categories.forEach(c => {
+        if (!c.type || (c.type === 'income' && !defaultIncomeIds.has(c.id))) c.type = 'expense';
+      });
       if (!data.categoryKeywordOverrides || typeof data.categoryKeywordOverrides !== 'object') data.categoryKeywordOverrides = {};
       Object.entries(data.categoryKeywordOverrides).forEach(([id, words]) => {
         const dc = DEFAULT_CATS.find(c => c.id === id);
@@ -8579,8 +8619,7 @@ function setRecType(t) {
 
 let _recCatNew = 'fatura';
 
-// Kategori grid'inin sonuna eklenen "Düzenle" hücresi
-const _CAT_EDIT_CELL = `<div class="cat-cell" onclick="openCategories()" style="border-style:dashed;border-color:rgba(110,109,120,.35);background:rgba(110,109,120,.06)">
+const _CAT_EDIT_CELL = `<div class="cat-cell" onclick="openCategoriesFromSheet()" style="border-style:dashed;border-color:rgba(110,109,120,.35);background:rgba(110,109,120,.06)">
   <div class="cat-cell-icon" style="background:rgba(110,109,120,.1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6E6D78" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
   <div class="cat-cell-name">Düzenle</div>
 </div>`;
