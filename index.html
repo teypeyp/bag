@@ -198,10 +198,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
 .form-select{width:100%;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;outline:none;appearance:none;cursor:pointer;-webkit-appearance:none}
 .form-input[type="date"]{color-scheme:dark;color:var(--text)}
-.form-input[type="date"]::-webkit-calendar-picker-indicator{display:none !important}
-.form-input[type="month"]::-webkit-calendar-picker-indicator{display:none !important}
-.form-input[type="date"]::-webkit-inner-spin-button,.form-input[type="date"]::-webkit-outer-spin-button{display:none}
-.form-input[type="month"]::-webkit-inner-spin-button,.form-input[type="month"]::-webkit-outer-spin-button{display:none}
 .form-input::placeholder{color:rgba(255,255,255,.35);font-weight:700}
 
 /* BUTTONS */
@@ -641,6 +637,12 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .datepicker-day.today{border:1.5px solid var(--border);font-weight:800}
 .datepicker-day.selected{background:var(--accent);color:#fff;font-weight:800}
 .datepicker-day.empty{pointer-events:none}
+/* Ay modu grid */
+.datepicker-month-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.datepicker-month-btn{height:44px;border-radius:12px;border:none;background:var(--surface2);color:var(--text);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.datepicker-month-btn:active{opacity:.75}
+.datepicker-month-btn.selected{background:var(--accent);color:#fff}
+.datepicker-month-btn.current{border:1.5px solid var(--border)}
 /* MODALS */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;visibility:hidden;transition:opacity .25s,visibility .25s}
 .modal-overlay.show{opacity:1;pointer-events:auto;visibility:visible}
@@ -1996,7 +1998,11 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         </div>
         <div class="form-group">
           <label class="form-label">İlk Taksit Ayı</label>
-          <input type="month" id="debtStartMonth" class="form-input">
+          <input type="hidden" id="debtStartMonth">
+          <div class="form-input" id="debtStartMonthDisplay" onclick="openMonthPicker('debtStartMonth','debtStartMonthDisplay')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--text)">
+            <span id="debtStartMonthLabel" style="font-weight:600">Ay seç</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6"/></svg>
+          </div>
         </div>
         <button class="btn btn-primary btn-full" onclick="addDebt()">Kaydet</button>
       </div>
@@ -2116,10 +2122,17 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <!-- GÜNLÜK LİMİT İSTATİSTİKLERİ -->
   <div id="dailyStatsCard"></div>
 
-  <!-- Harcama Dağılımı Donut -->
+  <!-- Harcama / Gelir Dağılımı Donut -->
   <div class="chart-card">
-    <div class="chart-card-header">
+    <div class="chart-card-header" style="align-items:center">
       <span class="chart-card-title">Bu Ay Dağılım</span>
+      <div id="donutToggle" style="display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:3px;gap:2px">
+        <button id="donutBtnExp" onclick="switchDonut('expense')" style="padding:4px 10px;border:none;border-radius:99px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;cursor:pointer;background:var(--danger);color:#fff;transition:all .2s">Gider</button>
+        <button id="donutBtnInc" onclick="switchDonut('income')"  style="padding:4px 10px;border:none;border-radius:99px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;cursor:pointer;background:none;color:var(--muted);transition:all .2s">Gelir</button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+      <span style="font-size:11px;font-weight:600;color:var(--muted)" id="donutTypeLabel">Harcama dağılımı</span>
       <span class="chart-card-sub" id="doughnutTotal"></span>
     </div>
     <div class="chart-wrap" style="height:200px"><canvas id="doughnutChart"></canvas></div>
@@ -2449,22 +2462,29 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <div class="datepicker-sheet">
     <div class="datepicker-header">
       <div class="datepicker-nav">
-        <button onclick="dpChangeMonth(-1)">‹</button>
+        <button onclick="dpChangeMonth(-1)" id="dpPrevBtn">‹</button>
         <span class="datepicker-title" id="dpMonthLabel"></span>
-        <button onclick="dpChangeMonth(1)">›</button>
+        <button onclick="dpChangeMonth(1)" id="dpNextBtn">›</button>
       </div>
       <button onclick="closeDatePicker()" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;width:32px;height:32px;color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center">×</button>
     </div>
-    <div class="datepicker-grid">
-      <div class="datepicker-dow">Pt</div>
-      <div class="datepicker-dow">Sa</div>
-      <div class="datepicker-dow">Ça</div>
-      <div class="datepicker-dow">Pe</div>
-      <div class="datepicker-dow">Cu</div>
-      <div class="datepicker-dow">Ct</div>
-      <div class="datepicker-dow">Pz</div>
+    <!-- Gün modu -->
+    <div id="dpDayMode">
+      <div class="datepicker-grid">
+        <div class="datepicker-dow">Pt</div>
+        <div class="datepicker-dow">Sa</div>
+        <div class="datepicker-dow">Ça</div>
+        <div class="datepicker-dow">Pe</div>
+        <div class="datepicker-dow">Cu</div>
+        <div class="datepicker-dow">Ct</div>
+        <div class="datepicker-dow">Pz</div>
+      </div>
+      <div class="datepicker-grid" id="dpDaysGrid"></div>
     </div>
-    <div class="datepicker-grid" id="dpDaysGrid"></div>
+    <!-- Ay modu -->
+    <div id="dpMonthMode" style="display:none">
+      <div class="datepicker-month-grid" id="dpMonthGrid"></div>
+    </div>
   </div>
 </div>
 
@@ -2500,12 +2520,16 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       </div>
       <div class="form-group" style="flex:1">
         <label class="form-label">Tarih</label>
-        <input type="date" id="editTxDate" class="form-input">
+        <input type="hidden" id="editTxDate">
+        <div class="form-input" id="editTxDateDisplay" onclick="openDayPicker('editTxDate','editTxDateDisplay')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--text)">
+          <span id="editTxDateLabel" style="font-weight:600">Tarih seç</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6"/></svg>
+        </div>
       </div>
     </div>
     <div class="form-group">
       <label class="form-label">Kategori</label>
-      <select id="editTxCategory" class="form-select"></select>
+      <div id="editTxCatGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:220px;overflow-y:auto;padding:2px 2px 4px"></div>
     </div>
     <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="saveTxEdit()">Kaydet</button>
   </div>
@@ -2532,7 +2556,11 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     </div>
     <div class="form-group">
       <label class="form-label">Başlangıç ayı</label>
-      <input type="month" id="editDebtStartMonth" class="form-input">
+      <input type="hidden" id="editDebtStartMonth">
+      <div class="form-input" id="editDebtStartMonthDisplay" onclick="openMonthPicker('editDebtStartMonth','editDebtStartMonthDisplay')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--text)">
+        <span id="editDebtStartMonthLabel" style="font-weight:600">Ay seç</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6"/></svg>
+      </div>
     </div>
     <div id="editDebtMonthlyHint" style="font-size:12px;color:var(--muted);margin:-8px 0 4px;text-align:right"></div>
     <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="saveDebtEdit()">Kaydet</button>
@@ -3159,6 +3187,7 @@ function switchTab(id) {
   if (id === 'aylik') renderMonthly();
   if (id === 'sabit') { renderSabit(); }
   if (id === 'ozet') {
+    _donutMode = 'expense'; // tab açılınca gider moduna sıfırla
     renderOzetStats();
     Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
     charts = {};
@@ -3167,6 +3196,11 @@ function switchTab(id) {
         const el = document.getElementById(cid);
         if (el) { const f = document.createElement('canvas'); f.id = cid; el.parentNode.replaceChild(f, el); }
       });
+      // Toggle butonlarını gider moduna sıfırla
+      const expBtn = document.getElementById('donutBtnExp');
+      const incBtn = document.getElementById('donutBtnInc');
+      if (expBtn) { expBtn.style.background = 'var(--danger)'; expBtn.style.color = '#fff'; }
+      if (incBtn) { incBtn.style.background = 'none'; incBtn.style.color = 'var(--muted)'; }
       setupChartObservers();
       renderYillik();
     });
@@ -4260,35 +4294,81 @@ function toggleItemExpand(id) {
 
 // ===== TX EDIT MODAL =====
 let _editTxId = null;
+let _editTxCat = null; // seçili kategori id
+
 function openEditTx(id) {
   const tx = data.transactions.find(t => t.id === id);
   if (!tx) return;
   _editTxId = id;
+  _editTxCat = tx.category;
   const isFixed = tx.isRecurring || tx.isDebt || tx.isGoalDeposit;
-  const cats = tx.type === 'expense'
-    ? allCategories().filter(c => c.id !== 'gelir')
-    : allCategories();
+
   document.getElementById('editTxDesc').value = tx.desc;
   document.getElementById('editTxAmount').value = fmtTL(tx.amount).replace('₺','');
-  document.getElementById('editTxDate').value = tx.date;
-  document.getElementById('editTxCategory').innerHTML = cats.map(c =>
-    `<option value="${c.id}"${c.id===tx.category?' selected':''}>${c.name}</option>`
-  ).join('');
-  // Sabit/borç/birikim transaction'larında tutar ve tarih kilitli
+
+  // Tarih — hidden input + label
+  const hiddenDate = document.getElementById('editTxDate');
+  const dateLabel  = document.getElementById('editTxDateLabel');
+  const dateDisplay= document.getElementById('editTxDateDisplay');
+  if (hiddenDate) hiddenDate.value = tx.date;
+  if (dateLabel)  dateLabel.textContent = fmtDate(tx.date);
+  // Sabit/borç/birikim: tarih kilitli (tıklanamaz)
+  if (dateDisplay) {
+    dateDisplay.style.opacity      = isFixed ? '0.4' : '1';
+    dateDisplay.style.pointerEvents= isFixed ? 'none' : '';
+  }
+
+  // Tutar kilidi
   const amountEl = document.getElementById('editTxAmount');
-  const dateEl = document.getElementById('editTxDate');
   if (amountEl) { amountEl.readOnly = isFixed; amountEl.style.opacity = isFixed ? '0.4' : '1'; }
-  if (dateEl) { dateEl.readOnly = isFixed; dateEl.style.opacity = isFixed ? '0.4' : '1'; }
+
+  // Kategori grid — tipe göre filtrele
+  const cats = allCategories().filter(c => c.type === tx.type);
+  const accentColor = tx.type === 'income' ? 'var(--accent)' : 'var(--danger)';
+  const accentDim   = tx.type === 'income' ? 'rgba(45,184,102,.12)' : 'rgba(255,69,58,.1)';
+  const accentBorder= tx.type === 'income' ? 'rgba(45,184,102,.45)' : 'rgba(255,69,58,.45)';
+
+  const grid = document.getElementById('editTxCatGrid');
+  if (grid) {
+    grid.innerHTML = cats.map(cat => {
+      const icon = catIconSvg(cat, 20);
+      const sel  = cat.id === _editTxCat;
+      return `<div class="cat-cell${sel ? ' selected' : ''}" id="editcat_${cat.id}"
+        style="${sel ? `--sheet-accent:${accentColor};--sheet-accent-dim:${accentDim};border-color:${accentBorder};background:${accentDim}` : ''}"
+        onclick="selectEditCat('${cat.id}','${accentColor}','${accentDim}','${accentBorder}')">
+        <div class="cat-cell-icon">${icon}</div>
+        <div class="cat-cell-name">${esc(cat.name)}</div>
+      </div>`;
+    }).join('');
+  }
+
   document.getElementById('txEditModal').classList.add('show');
+}
+
+function selectEditCat(catId, accentColor, accentDim, accentBorder) {
+  _editTxCat = catId;
+  // Tüm hücreleri sıfırla
+  document.querySelectorAll('#editTxCatGrid .cat-cell').forEach(el => {
+    el.classList.remove('selected');
+    el.style.borderColor = '';
+    el.style.background  = '';
+  });
+  // Seçiliyi işaretle
+  const sel = document.getElementById('editcat_' + catId);
+  if (sel) {
+    sel.classList.add('selected');
+    sel.style.borderColor = accentBorder;
+    sel.style.background  = accentDim;
+  }
 }
 function closeTxEdit() {
   document.getElementById('txEditModal').classList.remove('show');
-  // Kilitleri sıfırla
-  const amountEl = document.getElementById('editTxAmount');
-  const dateEl = document.getElementById('editTxDate');
+  const amountEl  = document.getElementById('editTxAmount');
+  const dateDisp  = document.getElementById('editTxDateDisplay');
   if (amountEl) { amountEl.readOnly = false; amountEl.style.opacity = '1'; }
-  if (dateEl) { dateEl.readOnly = false; dateEl.style.opacity = '1'; }
-  _editTxId = null;
+  if (dateDisp)  { dateDisp.style.opacity = '1'; dateDisp.style.pointerEvents = ''; }
+  _editTxId  = null;
+  _editTxCat = null;
 }
 function saveTxEdit() {
   const tx = data.transactions.find(t => t.id === _editTxId);
@@ -4297,7 +4377,7 @@ function saveTxEdit() {
   const desc = document.getElementById('editTxDesc').value.trim();
   const amount = isFixed ? tx.amount : parseNum(document.getElementById('editTxAmount').value);
   const date = isFixed ? tx.date : document.getElementById('editTxDate').value;
-  const category = document.getElementById('editTxCategory').value;
+  const category = _editTxCat || tx.category;
   if (!desc || !amount) { showToast(TOAST_WARN + ' Açıklama ve tutar gerekli'); return; }
   tx.desc = desc; tx.amount = amount;
   if (date) tx.date = date;
@@ -4982,7 +5062,17 @@ function toggleDebtForm() {
   const f = document.getElementById('debtForm');
   const isOpen = f.style.display === 'block';
   f.style.display = isOpen ? 'none' : 'block';
-  if (!isOpen) { const sm=document.getElementById('debtStartMonth'); if(sm&&!sm.value)sm.value=monthKey(); setTimeout(()=>document.getElementById('debtName')?.focus(),100); }
+  if (!isOpen) {
+    const sm = document.getElementById('debtStartMonth');
+    const lbl = document.getElementById('debtStartMonthLabel');
+    const cur = monthKey();
+    if (sm && !sm.value) { sm.value = cur; }
+    if (lbl) {
+      const [y, m] = (sm?.value || cur).split('-').map(Number);
+      lbl.textContent = MONTH_NAMES[m - 1] + ' ' + y;
+    }
+    setTimeout(() => document.getElementById('debtName')?.focus(), 100);
+  }
 }
 
 function addDebt() {
@@ -4997,6 +5087,10 @@ function addDebt() {
   document.getElementById('debtName').value = '';
   document.getElementById('debtTotal').value = '';
   document.getElementById('debtInstall').value = '';
+  const smEl = document.getElementById('debtStartMonth');
+  const smLbl = document.getElementById('debtStartMonthLabel');
+  if (smEl) smEl.value = '';
+  if (smLbl) smLbl.textContent = 'Ay seç';
   document.getElementById('debtForm').style.display = 'none';
   showToast(TOAST_OK + ' Ödeme eklendi');
   renderAll();
@@ -5106,7 +5200,14 @@ function startEditDebt(id) {
   document.getElementById('editDebtName').value = d.name;
   document.getElementById('editDebtTotal').value = fmtTL(d.totalAmount).replace('₺','');
   document.getElementById('editDebtInstall').value = d.installments;
-  document.getElementById('editDebtStartMonth').value = d.startMonth || monthKey();
+  const smVal = d.startMonth || monthKey();
+  const smEl  = document.getElementById('editDebtStartMonth');
+  const smLbl = document.getElementById('editDebtStartMonthLabel');
+  if (smEl) smEl.value = smVal;
+  if (smLbl) {
+    const [y, m] = smVal.split('-').map(Number);
+    smLbl.textContent = MONTH_NAMES[m - 1] + ' ' + y;
+  }
   _editDebtId = id;
   updateDebtMonthlyHint();
   document.getElementById('debtEditModal').classList.add('show');
@@ -7252,6 +7353,90 @@ function renderDebtSummaryCard() {
     </div>`;
 }
 
+// =================== DONUT ===================
+let _donutMode = 'expense'; // 'expense' | 'income'
+
+function switchDonut(mode) {
+  _donutMode = mode;
+  // Toggle buton görünümü
+  const expBtn = document.getElementById('donutBtnExp');
+  const incBtn = document.getElementById('donutBtnInc');
+  if (expBtn && incBtn) {
+    if (mode === 'expense') {
+      expBtn.style.background = 'var(--danger)'; expBtn.style.color = '#fff';
+      incBtn.style.background = 'none';          incBtn.style.color = 'var(--muted)';
+    } else {
+      incBtn.style.background = 'var(--accent)'; incBtn.style.color = '#fff';
+      expBtn.style.background = 'none';          expBtn.style.color = 'var(--muted)';
+    }
+  }
+  const label = document.getElementById('donutTypeLabel');
+  if (label) label.textContent = mode === 'expense' ? 'Harcama dağılımı' : 'Gelir dağılımı';
+  // Mevcut chart'ı destroy et, yeni canvas oluştur
+  if (charts.doughnut) { try { charts.doughnut.destroy(); } catch(e){} delete charts.doughnut; }
+  const old = document.getElementById('doughnutChart');
+  if (old) { const fresh = document.createElement('canvas'); fresh.id = 'doughnutChart'; old.parentNode.replaceChild(fresh, old); }
+  renderDonut();
+}
+
+function renderDonut() {
+  const mk = currentMonth;
+  const mode = _donutMode;
+  const txs = data.transactions.filter(t => monthKey(t.date) === mk && t.type === mode);
+  const bycat = {};
+  txs.forEach(t => { bycat[t.category] = (bycat[t.category] || 0) + t.amount; });
+  const catEntries = Object.entries(bycat).sort((a,b) => b[1]-a[1]).slice(0, 6);
+  const total = catEntries.reduce((s,[,v]) => s+v, 0);
+
+  const doughnutSub = document.getElementById('doughnutTotal');
+  const dLegend     = document.getElementById('doughnutLegend');
+
+  if (!catEntries.length) {
+    if (doughnutSub) doughnutSub.textContent = 'Veri yok';
+    if (dLegend) dLegend.innerHTML = '';
+    return;
+  }
+
+  const dCtx = document.getElementById('doughnutChart')?.getContext('2d');
+  if (!dCtx) return;
+
+  // Gelir modunda kategoriler farklı renk tonu olabilir — getCat fallback'i var
+  charts.doughnut = new Chart(dCtx, {
+    type: 'doughnut',
+    data: {
+      labels: catEntries.map(([id]) => getCat(id).name),
+      datasets: [{
+        data: catEntries.map(([,v]) => v),
+        backgroundColor: catEntries.map(([id]) => getCat(id).color),
+        borderWidth: 3, borderColor: '#18181C', hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 1800, easing: 'easeOutQuart', animateRotate: true, animateScale: false },
+      cutout: '68%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(24,24,28,0.95)', borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1,
+          titleFont: { family: 'Montserrat', weight: '800' }, bodyFont: { family: 'Montserrat' },
+          callbacks: { label: ctx => { const pct = Math.round((ctx.raw / total) * 100); return ' ' + fmtNum(ctx.raw) + '₺  %' + pct; } }
+        }
+      }
+    }
+  });
+
+  if (doughnutSub) doughnutSub.textContent = fmtNum(Math.round(total)) + '₺ toplam';
+  if (dLegend) {
+    dLegend.innerHTML = '<div class="donut-legend">' +
+      catEntries.map(([id, amt]) => {
+        const cat = getCat(id);
+        const pct = Math.round((amt / total) * 100);
+        return `<div class="donut-legend-item"><div class="donut-legend-dot" style="background:${cat.color}"></div><span class="donut-legend-name">${esc(cat.name)}</span><span class="donut-legend-amt">%${pct}</span></div>`;
+      }).join('') + '</div>';
+  }
+}
+
 function setupChartObservers() {
   // Önceki observer'ları temizle (hafıza sızıntısı önleme)
   if (window._chartObservers) {
@@ -7317,27 +7502,7 @@ function setupChartObservers() {
     });
   });
 
-  observe('doughnutChart', () => {
-    const mk = currentMonth;
-    const txs = data.transactions.filter(t => monthKey(t.date) === mk && t.type === 'expense');
-    const bycat = {};
-    txs.forEach(t => { bycat[t.category] = (bycat[t.category] || 0) + t.amount; });
-    const catEntries = Object.entries(bycat).sort((a,b) => b[1]-a[1]).slice(0,6);
-    const totalExp = catEntries.reduce((s,[,v]) => s+v, 0);
-    const dCtx = document.getElementById('doughnutChart')?.getContext('2d');
-    const doughnutSub = document.getElementById('doughnutTotal');
-    if (!catEntries.length) { if (doughnutSub) doughnutSub.textContent = 'Veri yok'; const dLegend = document.getElementById('doughnutLegend'); if (dLegend) dLegend.innerHTML = ''; return; }
-    if (dCtx && catEntries.length) {
-      charts.doughnut = new Chart(dCtx, {
-        type: 'doughnut',
-        data: { labels: catEntries.map(([id]) => getCat(id).name), datasets: [{ data: catEntries.map(([,v]) => v), backgroundColor: catEntries.map(([id]) => getCat(id).color), borderWidth: 3, borderColor: '#18181C', hoverOffset: 8 }] },
-        options: { responsive: true, maintainAspectRatio: false, animation: { duration: 1800, easing: 'easeOutQuart', animateRotate: true, animateScale: false }, cutout: '68%', plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(24,24,28,0.95)', borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1, titleFont: { family: 'Montserrat', weight: '800' }, bodyFont: { family: 'Montserrat' }, callbacks: { label: ctx => { const pct = Math.round((ctx.raw / totalExp) * 100); return ' ' + fmtNum(ctx.raw) + '₺  %' + pct; } } } } }
-      });
-      if (doughnutSub) doughnutSub.textContent = fmtNum(Math.round(totalExp)) + '₺ toplam';
-      const legend = document.getElementById('doughnutLegend');
-      if (legend) { legend.innerHTML = '<div class="donut-legend">' + catEntries.map(([id, amt]) => { const cat = getCat(id); const pct = Math.round((amt / totalExp) * 100); return `<div class="donut-legend-item"><div class="donut-legend-dot" style="background:${cat.color}"></div><span class="donut-legend-name">${esc(cat.name)}</span><span class="donut-legend-amt">%${pct}</span></div>`; }).join('') + '</div>'; }
-    }
-  });
+  observe('doughnutChart', () => { renderDonut(); });
 
   observe('lineChart', () => {
     const cumulativeNets = months.map(mk => {
@@ -7819,13 +7984,59 @@ function saveKeywords() {
 
 // ===== CUSTOM DATE PICKER =====
 let _dpYear = 0, _dpMonth = 0, _dpSelected = '';
+let _dpMode = 'day'; // 'day' | 'month'
+let _dpTargetId = null;    // hidden input id
+let _dpDisplayId = null;   // display div id
+let _dpLabelId   = null;   // span id for label text
 
+// ── Gün picker — TX sheet için (mevcut davranış) ──
 function openDatePicker() {
+  _dpMode = 'day';
+  _dpTargetId  = null;
+  _dpDisplayId = null;
+  _dpLabelId   = null;
   const cur = _dpSelected || today();
   const [y, m] = cur.split('-').map(Number);
   _dpYear = y; _dpMonth = m;
+  _renderDpMode();
   renderDpGrid();
   document.getElementById('datepickerWrap').classList.add('show');
+}
+
+// ── Gün picker — edit modal için ──
+function openDayPicker(targetId, displayId) {
+  _dpMode = 'day';
+  _dpTargetId  = targetId;
+  _dpDisplayId = displayId;
+  _dpLabelId   = targetId + 'Label';
+  const cur = document.getElementById(targetId)?.value || today();
+  const [y, m] = cur.split('-').map(Number);
+  _dpYear = y; _dpMonth = isNaN(m) ? new Date().getMonth() + 1 : m;
+  _dpSelected = cur.length === 10 ? cur : today();
+  _renderDpMode();
+  renderDpGrid();
+  document.getElementById('datepickerWrap').classList.add('show');
+}
+
+// ── Ay picker — borç formları için ──
+function openMonthPicker(targetId, displayId) {
+  _dpMode = 'month';
+  _dpTargetId  = targetId;
+  _dpDisplayId = displayId;
+  _dpLabelId   = targetId + 'Label';
+  const cur = document.getElementById(targetId)?.value || monthKey();
+  const [y] = cur.split('-').map(Number);
+  _dpYear = isNaN(y) ? new Date().getFullYear() : y;
+  _renderDpMode();
+  renderDpMonthGrid();
+  document.getElementById('datepickerWrap').classList.add('show');
+}
+
+function _renderDpMode() {
+  const dayMode   = document.getElementById('dpDayMode');
+  const monthMode = document.getElementById('dpMonthMode');
+  if (dayMode)   dayMode.style.display   = _dpMode === 'day'   ? '' : 'none';
+  if (monthMode) monthMode.style.display = _dpMode === 'month' ? '' : 'none';
 }
 
 function closeDatePicker() {
@@ -7833,18 +8044,44 @@ function closeDatePicker() {
 }
 
 function dpChangeMonth(dir) {
-  _dpMonth += dir;
-  if (_dpMonth > 12) { _dpMonth = 1; _dpYear++; }
-  if (_dpMonth < 1)  { _dpMonth = 12; _dpYear--; }
-  renderDpGrid();
+  if (_dpMode === 'month') {
+    _dpYear += dir;
+    renderDpMonthGrid();
+  } else {
+    _dpMonth += dir;
+    if (_dpMonth > 12) { _dpMonth = 1; _dpYear++; }
+    if (_dpMonth < 1)  { _dpMonth = 12; _dpYear--; }
+    renderDpGrid();
+  }
 }
 
 function dpSelectDay(dateStr) {
   _dpSelected = dateStr;
-  _sheetDateStr = dateStr; // tx sheet ile senkron tut
-  const sheetDateLabel = document.getElementById('txSheetDateLabel');
-  if (sheetDateLabel) {
-    sheetDateLabel.textContent = fmtDate(dateStr);
+  if (_dpTargetId) {
+    // edit modal day picker
+    const hidden = document.getElementById(_dpTargetId);
+    if (hidden) hidden.value = dateStr;
+    const lbl = document.getElementById(_dpLabelId);
+    if (lbl) lbl.textContent = fmtDate(dateStr);
+  } else {
+    // TX sheet picker (eski davranış)
+    _sheetDateStr = dateStr;
+    const sheetDateLabel = document.getElementById('txSheetDateLabel');
+    if (sheetDateLabel) sheetDateLabel.textContent = fmtDate(dateStr);
+  }
+  closeDatePicker();
+}
+
+function dpSelectMonth(monthStr) {
+  // monthStr: 'YYYY-MM'
+  if (_dpTargetId) {
+    const hidden = document.getElementById(_dpTargetId);
+    if (hidden) hidden.value = monthStr;
+    const lbl = document.getElementById(_dpLabelId);
+    if (lbl) {
+      const [y, m] = monthStr.split('-').map(Number);
+      lbl.textContent = MONTH_NAMES[m - 1] + ' ' + y;
+    }
   }
   closeDatePicker();
 }
@@ -7857,23 +8094,39 @@ function renderDpGrid() {
   if (!grid) return;
 
   const todayStr = today();
-  const firstDay = new Date(_dpYear, _dpMonth - 1, 1).getDay(); // 0=Sun
+  const firstDay = new Date(_dpYear, _dpMonth - 1, 1).getDay();
   const dim = daysInMonth(_dpYear + '-' + String(_dpMonth).padStart(2,'0'));
-  // Pazartesi bazlı: Sun=0 → 6, Mon=1 → 0
   const offset = (firstDay + 6) % 7;
 
   let html = '';
-  for (let i = 0; i < offset; i++) {
-    html += `<div class="datepicker-day empty"></div>`;
-  }
+  for (let i = 0; i < offset; i++) html += `<div class="datepicker-day empty"></div>`;
   for (let d = 1; d <= dim; d++) {
     const dateStr = _dpYear + '-' + String(_dpMonth).padStart(2,'0') + '-' + String(d).padStart(2,'0');
     const isToday = dateStr === todayStr;
-    const isSel = dateStr === _dpSelected;
+    const isSel   = dateStr === _dpSelected;
     html += `<button class="datepicker-day${isToday?' today':''}${isSel?' selected':''}" onclick="dpSelectDay('${dateStr}')">${d}</button>`;
   }
   grid.innerHTML = html;
 }
+
+function renderDpMonthGrid() {
+  const label = document.getElementById('dpMonthLabel');
+  if (label) label.textContent = String(_dpYear);
+
+  const grid = document.getElementById('dpMonthGrid');
+  if (!grid) return;
+
+  const nowMk = monthKey();
+  const selMk = document.getElementById(_dpTargetId)?.value || '';
+
+  grid.innerHTML = MONTH_NAMES.map((name, i) => {
+    const mk = _dpYear + '-' + String(i + 1).padStart(2,'0');
+    const isCur = mk === nowMk;
+    const isSel = mk === selMk;
+    return `<button class="datepicker-month-btn${isSel?' selected':isCur?' current':''}" onclick="dpSelectMonth('${mk}')">${name}</button>`;
+  }).join('');
+}
+
 
 function init() {
   load();
