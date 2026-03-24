@@ -1218,17 +1218,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   border-radius:6px; flex-shrink:0; margin-top:2px;
 }
 
-/* Baskı barları */
-.plan-bar-row {
-  display:flex; align-items:center; gap:14px;
-  padding:11px 0; border-bottom:1px solid rgba(255,255,255,.04);
-}
-.plan-bar-row:last-child { border-bottom:none; }
-.plan-bar-label { font-size:13px; font-weight:500; color:var(--text); width:116px; flex-shrink:0; }
-.plan-bar-track { flex:1; height:4px; background:var(--border); border-radius:99px; overflow:hidden; }
-.plan-bar-fill  { height:100%; border-radius:99px; transition:width .55s cubic-bezier(.4,0,.2,1); }
-.plan-bar-val   { font-size:13px; font-weight:700; letter-spacing:-.02em; width:44px; text-align:right; }
-
 /* Hedef zaman */
 .plan-goal-header { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px; }
 .plan-goal-name   { font-size:16px; font-weight:600; color:var(--text); letter-spacing:-.02em; }
@@ -4321,7 +4310,7 @@ let _touchEndY = 0;
 let _touchEndX = 0;
 let _touchOnInteractive = false;
 
-const TAB_ORDER = ['aylik', 'sabit', 'ozet', 'ayarlar'];
+const TAB_ORDER = ['aylik', 'sabit', 'ozet', 'plan', 'ayarlar'];
 
 document.addEventListener('touchstart', e => {
   _touchStartY = e.touches[0].clientY;
@@ -4590,8 +4579,7 @@ function fmtDate(dateStr) {
   const yesterdayStr = yesterday.toISOString().slice(0, 10);
   if (dateStr === yesterdayStr) return 'Dün';
   const d = new Date(dateStr + 'T00:00:00');
-  const months = MONTH_NAMES;
-  return d.getDate() + ' ' + months[d.getMonth()];
+  return d.getDate() + ' ' + MONTH_NAMES[d.getMonth()];
 }
 
 // =================== TX SHEET ===================
@@ -8317,6 +8305,11 @@ function closeConfirm() {
   setTimeout(() => {
     modal.classList.remove('show', 'hiding');
     confirmCallback = null;
+    // Buton stillerini varsayılana sıfırla (reset tipinden sonra kirli kalmasın)
+    const okBtn = document.getElementById('confirmOkBtn');
+    const iconEl = document.getElementById('confirmIconWrap');
+    if (okBtn) { okBtn.style.background = ''; okBtn.style.color = ''; okBtn.style.boxShadow = ''; }
+    if (iconEl) { iconEl.style.background = ''; iconEl.style.borderColor = ''; const s = iconEl.querySelector('svg'); if (s) s.style.stroke = ''; }
   }, 220);
 }
 function updateAppLogo() {
@@ -8371,15 +8364,12 @@ function renderAll() {
 // =================== INIT ===================
 
 // ===== KEYWORD EDIT =====
-let editingKeywordCat = null;
-
 let _catEditId = null;
 
 function openKeywordEdit(catId) {
   const cat = allCategories().find(c => c.id === catId);
   if (!cat) return;
   _catEditId = catId;
-  editingKeywordCat = catId; // backward compat
 
   document.getElementById('catEditName').value = cat.name;
   document.getElementById('catEditColor').value = cat.color || '#4ADE80';
@@ -8432,7 +8422,6 @@ function closeCatEditModal() {
   document.getElementById('catEditSheet').classList.remove('show');
   document.body.style.overflow = '';
   _catEditId = null;
-  editingKeywordCat = null;
 }
 
 function saveCatEdit() {
@@ -8454,10 +8443,6 @@ function saveCatEdit() {
   showToast(TOAST_OK + ' Kategori güncellendi');
   openCategories();
 }
-
-// Eski saveKeywords — anahtar kelime override'larını koru ama modal yok
-function closeKeywordModal() { closeCatEditModal(); }
-function saveKeywords() { saveCatEdit(); }
 
 
 // ===== CUSTOM DATE PICKER =====
