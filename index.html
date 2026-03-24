@@ -2520,29 +2520,27 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 </div>
 
 <!-- KEYWORD EDIT MODAL -->
-<div class="modal-overlay" id="keywordModal" onclick="if(event.target===this)closeKeywordModal()">
-  <div class="modal-sheet" style="position:relative">
-    <button class="modal-close" onclick="closeKeywordModal()">×</button>
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
-      <div id="keywordModalEmoji" style="width:48px;height:48px;border-radius:14px;background:var(--surface2);display:flex;align-items:center;justify-content:center;cursor:default;border:1.5px solid var(--border)"></div>
-      <div>
-        <div id="keywordModalTitle" style="font-size:17px;font-weight:800"></div>
-        
-      </div>
+<div class="add-sheet-overlay" id="catEditModal" onclick="if(event.target===this)closeCatEditModal()"></div>
+<div class="add-sheet" id="catEditSheet">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header">
+    <div class="add-sheet-title">Kategoriyi Düzenle</div>
+    <button class="add-sheet-close" onclick="closeCatEditModal()">&#215;</button>
+  </div>
+  <div class="add-sheet-body">
+    <div class="form-group">
+      <label class="form-label">İkon</label>
+      <div id="catEditIconPicker" style="display:flex;flex-wrap:wrap;gap:6px;padding:8px;background:var(--surface2);border-radius:var(--radius-sm);border:1.5px solid var(--border)"></div>
     </div>
-
-    <div style="height:1px;background:var(--border);margin:16px 0"></div>
-
-    <div style="margin-bottom:6px">
-      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">Anahtar Kelimeler</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px">Bu kategori için otomatik eşleşme yapılacak kelimeler. Yeni işlem açıklamasına bu kelimelerden biri yazıldığında kategori otomatik seçilir.</div>
-      <textarea id="keywordEditInput" class="form-input" rows="4" placeholder="market, süpermarket, bim, migros..." style="resize:none;color:var(--muted);font-size:13px;line-height:1.6;font-family:'Montserrat',sans-serif"></textarea>
+    <div class="form-group">
+      <label class="form-label">İsim</label>
+      <input type="text" id="catEditName" class="form-input" placeholder="Kategori adı">
     </div>
-
-    <div style="display:flex;gap:8px;margin-top:4px">
-      <button class="btn btn-ghost" style="flex:1" onclick="closeKeywordModal()">İptal</button>
-      <button class="btn btn-primary" style="flex:1" onclick="saveKeywords()">Kaydet</button>
+    <div class="form-group">
+      <label class="form-label">Renk</label>
+      <input type="color" id="catEditColor" class="form-input" style="height:44px;padding:4px" oninput="updateCatEditIconColor(this.value)">
     </div>
+    <button class="btn btn-primary btn-full" onclick="saveCatEdit()">Kaydet</button>
   </div>
 </div>
 
@@ -8375,46 +8373,91 @@ function renderAll() {
 // ===== KEYWORD EDIT =====
 let editingKeywordCat = null;
 
+let _catEditId = null;
+
 function openKeywordEdit(catId) {
   const cat = allCategories().find(c => c.id === catId);
   if (!cat) return;
-  editingKeywordCat = catId;
+  _catEditId = catId;
+  editingKeywordCat = catId; // backward compat
 
-  const emojiEl = document.getElementById('keywordModalEmoji');
-  const titleEl = document.getElementById('keywordModalTitle');
-  const inputEl = document.getElementById('keywordEditInput');
+  document.getElementById('catEditName').value = cat.name;
+  document.getElementById('catEditColor').value = cat.color || '#4ADE80';
 
-  if (emojiEl) { emojiEl.innerHTML = catIconSvg(cat, 24); emojiEl.dataset.current = cat.id; }
-  if (titleEl) titleEl.textContent = cat.name;
-  if (inputEl) inputEl.value = (cat.keywords || []).join(', ');
+  // İkon picker
+  const picker = document.getElementById('catEditIconPicker');
+  if (picker) {
+    const PICKER_ICONS = [
+      ...Object.entries(CAT_ICONS).map(([id, svg]) => ({id, svg})),
+      ...GOAL_ICONS.filter(ic => !CAT_ICONS[ic.id]),
+    ];
+    const currentEmoji = cat.emoji || 'tag';
+    picker.innerHTML = PICKER_ICONS.map(({id, svg}) => {
+      const sel = id === currentEmoji;
+      const stroke = sel ? (cat.color || 'var(--accent)') : 'var(--muted)';
+      const svgStyled = svg.replace('<svg ', `<svg width="20" height="20" style="flex-shrink:0" `).replace('stroke-width="1.5"', `stroke-width="1.5" stroke="${stroke}"`);
+      return `<div onclick="selectCatEditIcon('${id}')" data-icon="${id}" style="width:36px;height:36px;border-radius:8px;background:${sel?'var(--accent-dim)':'var(--surface3)'};border:1.5px solid ${sel?(cat.color||'var(--accent)'):'var(--border)'};display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s">${svgStyled}</div>`;
+    }).join('');
+  }
 
-  document.getElementById('keywordModal').classList.add('show');
-  setTimeout(() => inputEl?.focus(), 200);
+  document.getElementById('catEditModal').classList.add('show');
+  document.getElementById('catEditSheet').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('catEditName')?.focus(), 300);
 }
 
+function selectCatEditIcon(id) {
+  const color = document.getElementById('catEditColor')?.value || 'var(--accent)';
+  document.querySelectorAll('#catEditIconPicker [data-icon]').forEach(d => {
+    const sel = d.dataset.icon === id;
+    d.style.background = sel ? 'var(--accent-dim)' : 'var(--surface3)';
+    d.style.borderColor = sel ? color : 'var(--border)';
+    const svg = d.querySelector('svg');
+    if (svg) svg.setAttribute('stroke', sel ? color : 'var(--muted)');
+    d.dataset.selected = sel ? '1' : '';
+  });
+}
 
-function closeKeywordModal() {
-  document.getElementById('keywordModal').classList.remove('show');
+function updateCatEditIconColor(color) {
+  const sel = document.querySelector('#catEditIconPicker [data-selected="1"]');
+  if (sel) {
+    sel.style.borderColor = color;
+    const svg = sel.querySelector('svg');
+    if (svg) svg.setAttribute('stroke', color);
+  }
+}
+
+function closeCatEditModal() {
+  document.getElementById('catEditModal').classList.remove('show');
+  document.getElementById('catEditSheet').classList.remove('show');
+  document.body.style.overflow = '';
+  _catEditId = null;
   editingKeywordCat = null;
 }
 
-function saveKeywords() {
-  if (!editingKeywordCat) return;
-  const words = document.getElementById('keywordEditInput').value
-    .split(',').map(w => w.trim().toLowerCase()).filter(Boolean);
+function saveCatEdit() {
+  if (!_catEditId) return;
+  const name = document.getElementById('catEditName').value.trim();
+  const color = document.getElementById('catEditColor').value;
+  const selEl = document.querySelector('#catEditIconPicker [data-selected="1"]');
+  const emoji = selEl ? selEl.dataset.icon : null;
+  if (!name) { showToast(TOAST_WARN + ' Kategori adı gerekli'); return; }
 
-  const dc = DEFAULT_CATS.find(c => c.id === editingKeywordCat);
-  if (dc) { dc.keywords = words; }
-  const uc = data.categories.find(c => c.id === editingKeywordCat);
-  if (uc) { uc.keywords = words; }
+  // Default veya custom — ikisini de güncelle
+  const dc = DEFAULT_CATS.find(c => c.id === _catEditId);
+  if (dc) { dc.name = name; dc.color = color; if (emoji) dc.emoji = emoji; }
+  const uc = data.categories.find(c => c.id === _catEditId);
+  if (uc) { uc.name = name; uc.color = color; if (emoji) uc.emoji = emoji; }
 
-  if (!data.categoryKeywordOverrides) data.categoryKeywordOverrides = {};
-  data.categoryKeywordOverrides[editingKeywordCat] = words;
-  closeKeywordModal();
   save();
+  closeCatEditModal();
   showToast(TOAST_OK + ' Kategori güncellendi');
   openCategories();
 }
+
+// Eski saveKeywords — anahtar kelime override'larını koru ama modal yok
+function closeKeywordModal() { closeCatEditModal(); }
+function saveKeywords() { saveCatEdit(); }
 
 
 // ===== CUSTOM DATE PICKER =====
