@@ -190,7 +190,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* CARDS */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
-.card-title{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px}
 
 /* FORMS */
 .form-group{margin-bottom:10px}
@@ -209,7 +208,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .btn{padding:11px 18px;border-radius:var(--radius-sm);border:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:transform .12s cubic-bezier(.4,0,.2,1),opacity .12s,box-shadow .12s;display:inline-flex;align-items:center;justify-content:center;gap:6px;-webkit-tap-highlight-color:transparent;letter-spacing:.1px}
 .btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 16px rgba(45,184,102,.25)}
 .btn-primary:active{box-shadow:none}
-.btn-danger{background:var(--danger);color:#fff;box-shadow:0 4px 16px rgba(255,69,58,.2)}
 .btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
 .btn-full{width:100%;padding:15px}
 .btn-sm{padding:0 13px;font-size:12px;border-radius:10px;height:38px}
@@ -455,7 +453,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   display:flex;align-items:center;gap:8px;
   animation:badgeIn .4s cubic-bezier(.34,1.2,.64,1) both;
 }
-.milestone-emoji{font-size:16px;flex-shrink:0}
 .milestone-title{font-size:11px;font-weight:800;color:#FFD60A}
 .milestone-sub{font-size:10px;color:rgba(255,214,10,.45);font-weight:600;margin-top:1px}
 
@@ -645,8 +642,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .datepicker-day.today{border:1.5px solid var(--border);font-weight:800}
 .datepicker-day.selected{background:var(--accent);color:#fff;font-weight:800}
 .datepicker-day.empty{pointer-events:none}
-.datepicker-trigger{width:100%;padding:12px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between}
-
 /* MODALS */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;visibility:hidden;transition:opacity .25s,visibility .25s}
 .modal-overlay.show{opacity:1;pointer-events:auto;visibility:visible}
@@ -758,7 +753,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .tx-item.tx-expanded .tx-sub-desc{display:block}
 
 /* ===== SETTINGS APPLE STYLE ===== */
-.settings-sheet{padding-bottom:40px!important;gap:8px!important}
 .settings-tab{padding:16px 0 24px;display:flex;flex-direction:column;gap:8px}
 .settings-section-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin:6px 0 0 4px}
 .settings-group{background:var(--surface2);border-radius:16px;border:1px solid var(--border);overflow:hidden}
@@ -2159,6 +2153,13 @@ function load() {
       }
     }
   } catch(e) { console.warn('localStorage unavailable'); }
+
+  // Ay başında freeze kullanım sayacını sıfırla (her uygulama açılışında bir kez)
+  const _loadMk = monthKey();
+  if (!data.streak.lastFreezeResetMonth || data.streak.lastFreezeResetMonth !== _loadMk) {
+    data.streak.freezesUsed = 0;
+    data.streak.lastFreezeResetMonth = _loadMk;
+  }
 }
 
 function save() {
@@ -6180,13 +6181,6 @@ function renderAll() {
   if (!Array.isArray(data.savingsGoals)) data.savingsGoals = [];
   if (!Array.isArray(data.wishlist)) data.wishlist = [];
   if (!Array.isArray(data.categories)) data.categories = [];
-  // Freeze reset: ay başında her zaman kontrol et (sadece ozet tabında değil)
-  const _thisMk = monthKey();
-  if (!data.streak.lastFreezeResetMonth || data.streak.lastFreezeResetMonth !== _thisMk) {
-    data.streak.freezesUsed = 0;
-    data.streak.lastFreezeResetMonth = _thisMk;
-    save();
-  }
   updateAppLogo();
   populateCatSelects();
   renderMonthly();
