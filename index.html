@@ -824,158 +824,199 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .advice-section-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* ===== PLAN VERTICAL — PREMIUM ===== */
-@keyframes planIn {
-  from { opacity:0; transform:translateY(10px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-@keyframes planCharIn {
-  from { opacity:0; transform:translateY(14px) scale(.99); }
-  to   { opacity:1; transform:translateY(0) scale(1); }
-}
+/* ===========================
+   PLAN VERTICAL — v34
+   Referans: bold typography,
+   gradient cards, big numbers,
+   glassmorphism, glow
+=========================== */
 
-/* ── Hero — editorial açılış ── */
+@keyframes planIn       { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes planCharIn   { from{opacity:0;transform:translateY(18px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+@keyframes planGlowPulse{ 0%,100%{opacity:.6} 50%{opacity:1} }
+@keyframes planBlockIn  { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes planNumIn    { from{opacity:.25;transform:translateY(-5px)} to{opacity:1;transform:translateY(0)} }
+@keyframes planRingDraw { from{stroke-dashoffset:var(--ring-circ)} to{stroke-dashoffset:var(--ring-offset)} }
+@keyframes scCardIn     { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── Hero block ── */
 .plan-hero {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 30px 22px 24px;
-  margin-bottom: 12px;
-  position: relative;
-  overflow: hidden;
-}
-.plan-hero::before {
-  content:'';
-  position:absolute; top:-100px; right:-80px;
-  width:260px; height:260px;
-  background:radial-gradient(circle, var(--plan-glow, rgba(45,184,102,.05)) 0%, transparent 65%);
-  pointer-events:none;
-}
-.plan-hero-eyebrow {
-  font-size:11px; font-weight:700; letter-spacing:.1em;
-  text-transform:uppercase; color:var(--muted);
-  margin-bottom:14px; position:relative;
-  display:flex; align-items:center; gap:8px;
-}
-.plan-hero-eyebrow::after {
-  content:''; flex:1; height:1px; background:var(--border);
-}
-.plan-hero-status {
-  font-size:32px; font-weight:800; letter-spacing:-.05em;
-  line-height:1.1; color:var(--text); margin-bottom:14px;
-  position:relative;
-}
-.plan-hero-status span { color: var(--plan-accent, var(--accent)); }
-.plan-hero-body {
-  font-size:15px; font-weight:400; color:var(--muted);
-  line-height:1.8; margin-bottom:20px; position:relative;
-  letter-spacing:-.01em;
-}
-.plan-hero-pills {
-  display:flex; gap:7px; flex-wrap:wrap; position:relative;
-}
-.plan-hero-pill {
-  display:inline-flex; align-items:center; gap:5px;
-  padding:6px 13px; border-radius:99px;
-  font-size:12px; font-weight:600; letter-spacing:-.01em;
-}
-.plan-hero-pill .pill-lbl { font-weight:500; opacity:.65; margin-right:1px; }
-
-/* ── Karakter — feature block ── */
-.plan-char-card {
-  margin-bottom:12px;
   border-radius:var(--radius);
   overflow:hidden;
-  border: 1px solid var(--border);
-  animation: planCharIn .5s cubic-bezier(.4,0,.2,1) .08s both;
+  margin-bottom:12px;
+  position:relative;
+  animation:planIn .45s cubic-bezier(.4,0,.2,1) both;
 }
-.plan-char-head {
-  padding: 26px 22px 20px;
-  position: relative;
+.plan-hero-inner {
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:32px 22px 26px;
+  position:relative;
+  overflow:hidden;
 }
-.plan-char-eyebrow {
-  font-size:11px; font-weight:700; letter-spacing:.1em;
-  text-transform:uppercase; margin-bottom:12px; opacity:.6;
+.plan-hero-glow {
+  position:absolute; top:-80px; right:-60px;
+  width:260px; height:260px; border-radius:50%;
+  background:radial-gradient(circle, var(--plan-glow,rgba(45,184,102,.09)) 0%, transparent 65%);
+  pointer-events:none;
 }
-.plan-char-name {
-  font-size:38px; font-weight:800; letter-spacing:-.06em;
-  line-height:1; margin-bottom:12px;
+.plan-hero-overline {
+  font-size:11px; font-weight:600; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--muted);
+  margin-bottom:16px;
+  display:flex; align-items:center; gap:8px;
+}
+.plan-hero-overline-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--plan-accent, var(--accent));
+  animation:planGlowPulse 2.5s ease-in-out infinite;
+  flex-shrink:0;
+}
+/* Big bold headline — referans: "You're on a wave of productivity!" */
+.plan-hero-headline {
+  font-size:36px; font-weight:800; letter-spacing:-.06em;
+  line-height:1.08; color:var(--text);
+  margin-bottom:14px;
+}
+.plan-hero-headline em {
+  font-style:normal;
+  color:var(--plan-accent, var(--accent));
+}
+.plan-hero-sub {
+  font-size:15px; font-weight:400; color:var(--muted);
+  line-height:1.75; letter-spacing:-.01em;
+  margin-bottom:22px;
+}
+/* Ring metric — referans: circular "Good / 8h 23m" */
+.plan-hero-ring-row {
+  display:flex; align-items:center; gap:20px;
+  flex-wrap:wrap;
+}
+.plan-ring-wrap { position:relative; flex-shrink:0; }
+.plan-ring-svg { display:block; }
+.plan-ring-bg  { fill:none; stroke:var(--border); stroke-width:6; }
+.plan-ring-fill{
+  fill:none; stroke-width:6; stroke-linecap:round;
+  stroke:var(--plan-accent,var(--accent));
+  stroke-dasharray:var(--ring-circ);
+  stroke-dashoffset:var(--ring-offset);
+  transform:rotate(-90deg); transform-origin:50% 50%;
+  transition:stroke-dashoffset .9s cubic-bezier(.4,0,.2,1), stroke .4s;
+}
+.plan-ring-center {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+}
+.plan-ring-score {
+  font-size:22px; font-weight:800; letter-spacing:-.06em;
+  line-height:1;
+}
+.plan-ring-label {
+  font-size:10px; font-weight:600; color:var(--muted);
+  letter-spacing:.04em; text-transform:uppercase; margin-top:2px;
+}
+.plan-hero-metrics {
+  display:flex; flex-direction:column; gap:10px; flex:1;
+}
+.plan-hero-metric-row {
+  display:flex; justify-content:space-between; align-items:baseline;
+}
+.plan-hero-metric-label {
+  font-size:12px; font-weight:500; color:var(--muted); letter-spacing:-.01em;
+}
+.plan-hero-metric-val {
+  font-size:16px; font-weight:700; letter-spacing:-.04em;
+}
+
+/* ── Karakter kartı — full-bleed gradient (referans: Jupiter/Saturn kartları) ── */
+.plan-char-card {
+  border-radius:var(--radius);
+  overflow:hidden;
+  margin-bottom:12px;
+  position:relative;
+  animation:planCharIn .5s cubic-bezier(.4,0,.2,1) .06s both;
+}
+.plan-char-gradient {
+  padding:30px 22px 0;
+  position:relative;
+  min-height:200px;
+  overflow:hidden;
+}
+.plan-char-gradient::before {
+  content:'';
+  position:absolute; inset:0;
+  background:var(--char-gradient);
+  opacity:.88;
+}
+/* Big name — referans: "Jupiter", "Saturn" büyük yazılar */
+.plan-char-overline {
+  font-size:11px; font-weight:600; letter-spacing:.1em;
+  text-transform:uppercase; color:rgba(255,255,255,.55);
+  margin-bottom:10px; position:relative; z-index:1;
+}
+.plan-char-bigname {
+  font-size:52px; font-weight:800; letter-spacing:-.07em;
+  line-height:.95; color:#fff;
+  position:relative; z-index:1;
+  margin-bottom:12px;
+  text-shadow:0 4px 32px rgba(0,0,0,.3);
 }
 .plan-char-tagline {
-  font-size:15px; font-weight:400; line-height:1.7;
-  opacity:.85; letter-spacing:-.01em;
+  font-size:15px; font-weight:400; color:rgba(255,255,255,.8);
+  line-height:1.65; letter-spacing:-.01em;
+  position:relative; z-index:1;
+  padding-bottom:26px;
 }
-.plan-char-body {
-  padding: 0 22px 20px;
-  border-top: 1px solid rgba(255,255,255,.06);
+/* Body — glassmorphism alt kısmı */
+.plan-char-glass {
+  background:rgba(10,10,13,.72);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-top:1px solid rgba(255,255,255,.08);
+  padding:20px 22px;
 }
-.plan-char-why-label {
-  font-size:11px; font-weight:700; letter-spacing:.08em;
+.plan-char-section-label {
+  font-size:11px; font-weight:600; letter-spacing:.08em;
   text-transform:uppercase; color:var(--muted);
-  margin: 18px 0 8px;
+  margin-bottom:8px;
 }
-.plan-char-why-text {
-  font-size:14px; font-weight:400; color:var(--muted);
-  line-height:1.8; letter-spacing:-.01em;
+.plan-char-section-text {
+  font-size:14px; font-weight:400; color:rgba(242,241,235,.75);
+  line-height:1.75; letter-spacing:-.01em;
 }
-.plan-char-action-block {
-  margin-top:18px; padding:14px 16px;
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.06);
+.plan-char-action-box {
+  margin-top:16px; padding:14px 16px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
   border-radius:14px;
 }
 .plan-char-action-label {
-  font-size:11px; font-weight:700; letter-spacing:.08em;
-  text-transform:uppercase; color:var(--muted); margin-bottom:7px;
+  font-size:11px; font-weight:600; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:6px;
 }
 .plan-char-action-text {
   font-size:14px; font-weight:500; color:var(--text);
   line-height:1.7; letter-spacing:-.01em;
 }
+/* "Next state" footer */
 .plan-char-next {
   display:flex; align-items:flex-start; gap:12px;
-  padding:15px 22px;
-  background:rgba(255,255,255,.02);
-  border-top:1px solid rgba(255,255,255,.05);
+  padding:14px 22px;
+  background:rgba(255,255,255,.025);
+  border-top:1px solid rgba(255,255,255,.06);
 }
-.plan-char-next-arrow {
-  font-size:16px; color:var(--muted); flex-shrink:0; margin-top:2px;
-}
+.plan-char-next-arrow { font-size:16px; color:var(--muted); margin-top:2px; flex-shrink:0; }
 .plan-char-next-text {
   font-size:13px; font-weight:400; color:var(--muted);
-  line-height:1.65; flex:1; letter-spacing:-.01em;
+  line-height:1.65; letter-spacing:-.01em; flex:1;
 }
-.plan-char-next-text strong { font-weight:600; color:var(--text); }
+.plan-char-next-text b { font-weight:600; color:var(--text); }
 
-/* ── Baskı barları ── */
-.plan-bar-row {
-  display:flex; align-items:center; gap:14px;
-  padding:11px 0;
-  border-bottom:1px solid rgba(255,255,255,.05);
-}
-.plan-bar-row:last-child { border-bottom:none; }
-.plan-bar-label {
-  font-size:13px; font-weight:500; color:var(--text);
-  width:116px; flex-shrink:0; letter-spacing:-.01em;
-}
-.plan-bar-track {
-  flex:1; height:4px; background:var(--border);
-  border-radius:99px; overflow:hidden;
-}
-.plan-bar-fill {
-  height:100%; border-radius:99px;
-  transition:width .55s cubic-bezier(.4,0,.2,1);
-}
-.plan-bar-val {
-  font-size:13px; font-weight:700; letter-spacing:-.02em;
-  width:44px; text-align:right; flex-shrink:0;
-}
-
-/* ── Editorial bloklar (collapsible içi) ── */
+/* ── Collapsible içi — editorial bloklar ── */
 .plan-block {
-  padding:16px 18px;
-  border-radius:16px;
-  margin-bottom:8px;
-  background:var(--surface2);
+  padding:16px 18px; border-radius:16px;
+  margin-bottom:8px; background:var(--surface2);
+  animation:planBlockIn .28s cubic-bezier(.4,0,.2,1) both;
 }
 .plan-block:last-child { margin-bottom:0; }
 .plan-block-head {
@@ -983,8 +1024,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   gap:10px; margin-bottom:8px;
 }
 .plan-block-title {
-  font-size:14px; font-weight:600; color:var(--text);
-  line-height:1.35; letter-spacing:-.02em; flex:1;
+  font-size:15px; font-weight:600; color:var(--text);
+  line-height:1.3; letter-spacing:-.02em; flex:1;
 }
 .plan-block-body {
   font-size:13.5px; font-weight:400; color:var(--muted);
@@ -995,182 +1036,173 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   text-transform:uppercase; padding:3px 9px;
   border-radius:6px; flex-shrink:0; margin-top:2px;
 }
-.plan-block-badge {
-  display:inline-block;
-  font-size:10px; font-weight:800; letter-spacing:.5px;
-  text-transform:uppercase; padding:2px 8px; border-radius:6px;
-  margin-bottom:7px;
-}
 
-/* ── Hedef zaman blokları ── */
-.plan-goal-name-row {
-  display:flex; align-items:baseline; justify-content:space-between;
-  margin-bottom:10px;
+/* Baskı barları */
+.plan-bar-row {
+  display:flex; align-items:center; gap:14px;
+  padding:11px 0; border-bottom:1px solid rgba(255,255,255,.04);
 }
-.plan-goal-name {
-  font-size:16px; font-weight:600; color:var(--text);
-  letter-spacing:-.02em;
+.plan-bar-row:last-child { border-bottom:none; }
+.plan-bar-label { font-size:13px; font-weight:500; color:var(--text); width:116px; flex-shrink:0; }
+.plan-bar-track { flex:1; height:4px; background:var(--border); border-radius:99px; overflow:hidden; }
+.plan-bar-fill  { height:100%; border-radius:99px; transition:width .55s cubic-bezier(.4,0,.2,1); }
+.plan-bar-val   { font-size:13px; font-weight:700; letter-spacing:-.02em; width:44px; text-align:right; }
+
+/* Hedef zaman */
+.plan-goal-header { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px; }
+.plan-goal-name   { font-size:16px; font-weight:600; color:var(--text); letter-spacing:-.02em; }
+.plan-goal-frac   { font-size:12px; font-weight:400; color:var(--muted); }
+.plan-goal-grid   { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px; }
+.plan-goal-block  { background:var(--surface3); border-radius:12px; padding:13px 14px; }
+.plan-goal-block-label { font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+/* Big number — referans: "24 Days" */
+.plan-goal-block-val { font-size:24px; font-weight:700; letter-spacing:-.06em; line-height:1; }
+.plan-goal-improve { font-size:13px; font-weight:500; padding-top:4px; letter-spacing:-.01em; }
+
+/* Marj proj */
+.plan-margin-proj { border-radius:16px; background:var(--surface2); overflow:hidden; margin-top:8px; }
+.plan-margin-proj-hdr { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:15px 18px 8px; }
+.plan-margin-proj-row { display:flex; justify-content:space-between; align-items:baseline; padding:10px 18px; border-top:1px solid rgba(255,255,255,.04); }
+.plan-margin-proj-label { font-size:13px; font-weight:400; color:var(--muted); }
+.plan-margin-proj-val { font-size:18px; font-weight:700; letter-spacing:-.04em; color:var(--accent); }
+
+/* ── Simülasyon — referans: bold cards, gradient, big impact ── */
+@keyframes scCardIn    { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes scSlideUp   { from{opacity:0;transform:translateY(6px)}  to{opacity:1;transform:translateY(0)} }
+
+
+/* Her soru kendi kartı — referans: glassmorphism item card */
+.sc-q-card {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px 18px;
+  transition:border-color .2s, background .2s;
+  animation:scSlideUp .3s ease both;
 }
-.plan-goal-progress-frac {
+.sc-q-card.active {
+  background:rgba(255,255,255,.04);
+  border-color:var(--sc-color, var(--accent));
+}
+.sc-q-top {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:12px;
+}
+.sc-q-label {
+  font-size:14px; font-weight:500; color:var(--text);
+  letter-spacing:-.01em; line-height:1.3; flex:1;
+}
+/* Big value display — referans: "24 Days", "67 BPM" büyük rakamlar */
+.sc-q-bigval {
+  font-size:22px; font-weight:800; letter-spacing:-.06em;
+  min-width:90px; text-align:right;
+  transition:color .2s ease;
+}
+.sc-q-hint {
   font-size:12px; font-weight:400; color:var(--muted);
-}
-.plan-goal-time-grid {
-  display:grid; grid-template-columns:1fr 1fr; gap:8px;
-  margin-bottom:8px;
-}
-.plan-goal-time-block {
-  background:var(--surface3); border-radius:12px; padding:13px 14px;
-}
-.plan-goal-time-label {
-  font-size:11px; font-weight:600; letter-spacing:.06em;
-  text-transform:uppercase; color:var(--muted); margin-bottom:6px;
-}
-.plan-goal-time-val {
-  font-size:22px; font-weight:700; letter-spacing:-.05em; line-height:1;
-}
-.plan-goal-improve {
-  font-size:13px; font-weight:500; padding-top:4px; letter-spacing:-.01em;
+  margin-bottom:12px; letter-spacing:-.01em;
 }
 
-/* ── Marj projeksiyon ── */
-.plan-margin-proj {
-  border-radius:16px; background:var(--surface2);
-  overflow:hidden; margin-top:8px; margin-bottom:0;
-}
-.plan-margin-proj-header {
-  font-size:11px; font-weight:700; letter-spacing:.08em;
-  text-transform:uppercase; color:var(--muted);
-  padding:15px 18px 8px;
-}
-.plan-margin-proj-row {
-  display:flex; justify-content:space-between; align-items:baseline;
-  padding:10px 18px; border-top:1px solid rgba(255,255,255,.04);
-}
-.plan-margin-proj-label {
-  font-size:13px; font-weight:400; color:var(--muted); letter-spacing:-.01em;
-}
-.plan-margin-proj-val {
-  font-size:18px; font-weight:700; letter-spacing:-.04em; color:var(--accent);
-}
-
-/* ===== PLAN ANİMASYONLARI + SİMÜLASYON ===== */
-@keyframes planSectionIn  { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-@keyframes planBlockIn    { from{opacity:0;transform:translateY(7px)}  to{opacity:1;transform:translateY(0)} }
-@keyframes planNumIn      { from{opacity:.3;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
-@keyframes planStatusIn   { from{opacity:0;transform:scale(.93)}       to{opacity:1;transform:scale(1)} }
-@keyframes scCardIn       { from{opacity:0;transform:translateY(8px)}  to{opacity:1;transform:translateY(0)} }
-
-/* Section entry */
-.plan-hero      { animation:planSectionIn .48s cubic-bezier(.4,0,.2,1) both; }
-.plan-char-card { animation:planSectionIn .48s cubic-bezier(.4,0,.2,1) .07s both; }
-.plan-block     { animation:planBlockIn .28s cubic-bezier(.4,0,.2,1) both; }
-
-/* Number transition */
-.plan-num-changed { animation:planNumIn .22s ease both; }
-
-/* ── Slider ── */
-.sc-slider-wrap {
-  padding:16px 0 12px;
-  border-bottom:1px solid rgba(255,255,255,.05);
-}
-.sc-slider-wrap:last-of-type { border-bottom:none; padding-bottom:2px; }
-.sc-slider-header {
-  display:flex; justify-content:space-between; align-items:flex-start;
-  gap:12px; margin-bottom:14px;
-}
-.sc-slider-q    { font-size:14px;font-weight:500;color:var(--text);letter-spacing:-.01em;line-height:1.35; }
-.sc-slider-hint { font-size:12px;font-weight:400;color:var(--muted);margin-top:3px;letter-spacing:-.01em; }
-.sc-slider-val  {
-  font-size:15px;font-weight:700;letter-spacing:-.03em;
-  flex-shrink:0;min-width:80px;text-align:right;
-  transition:color .22s ease;
-}
-.sc-slider-val.plan-num-changed { animation:planNumIn .22s ease both; }
-
+/* Range — Apple-like */
 input[type=range].sc-range {
   -webkit-appearance:none; appearance:none;
-  width:100%; height:4px;
+  width:100%; height:5px;
   background:linear-gradient(to right,
-    var(--sc-fill,var(--accent)) 0%,
-    var(--sc-fill,var(--accent)) var(--sc-pct,0%),
-    var(--border) var(--sc-pct,0%),
-    var(--border) 100%);
+    var(--sc-fill,var(--accent)) 0%, var(--sc-fill,var(--accent)) var(--sc-pct,0%),
+    rgba(255,255,255,.1) var(--sc-pct,0%), rgba(255,255,255,.1) 100%);
   border-radius:99px; outline:none; cursor:pointer;
-  transition:background .1s;
 }
 input[type=range].sc-range::-webkit-slider-thumb {
   -webkit-appearance:none; appearance:none;
-  width:22px; height:22px; border-radius:50%;
+  width:24px; height:24px; border-radius:50%;
   background:var(--sc-fill,var(--accent));
   border:3px solid var(--bg);
-  box-shadow:0 2px 8px rgba(0,0,0,.45);
+  box-shadow:0 2px 10px rgba(0,0,0,.5);
   cursor:pointer;
-  transition:transform .15s cubic-bezier(.4,0,.2,1), box-shadow .15s;
+  transition:transform .14s cubic-bezier(.4,0,.2,1), box-shadow .14s;
 }
 input[type=range].sc-range:active::-webkit-slider-thumb {
-  transform:scale(1.3);
-  box-shadow:0 4px 16px rgba(0,0,0,.5), 0 0 0 5px var(--sc-glow,rgba(45,184,102,.15));
+  transform:scale(1.35);
+  box-shadow:0 4px 18px rgba(0,0,0,.55), 0 0 0 6px var(--sc-glow,rgba(45,184,102,.15));
 }
 
-/* ── Impact kartı ── */
+/* Impact card — referans: "health $9,000 12%" büyük metric card */
 .sc-impact-card {
-  margin-top:14px; border-radius:16px;
-  overflow:hidden; border:1px solid var(--border);
-  background:var(--surface2);
-  animation:scCardIn .28s cubic-bezier(.4,0,.2,1) both;
+  border-radius:var(--radius);
+  overflow:hidden;
+  margin-top:4px;
+  animation:scCardIn .3s cubic-bezier(.4,0,.2,1) both;
 }
-.sc-impact-header {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:13px 18px; border-bottom:1px solid rgba(255,255,255,.05);
+.sc-impact-gradient {
+  padding:24px 22px 20px;
+  position:relative;
+  overflow:hidden;
 }
-.sc-impact-eyebrow {
-  font-size:11px;font-weight:600;letter-spacing:.08em;
-  text-transform:uppercase; color:var(--muted);
+.sc-impact-gradient::before {
+  content:'';
+  position:absolute; inset:0;
+  background:var(--sc-impact-bg, rgba(45,184,102,.12));
+  pointer-events:none;
 }
-.sc-status-pill {
-  font-size:12px;font-weight:700;letter-spacing:-.01em;
-  padding:4px 12px; border-radius:99px;
-  transition:background .35s ease, color .35s ease;
+.sc-impact-overline {
+  font-size:11px; font-weight:600; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:10px;
+  position:relative; z-index:1;
 }
-.sc-result-row {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:12px 18px; border-bottom:1px solid rgba(255,255,255,.04);
+/* Büyük durum etiketi — referans: "Good", "Dengeli" */
+.sc-impact-status {
+  font-size:36px; font-weight:800; letter-spacing:-.06em;
+  line-height:1; margin-bottom:16px; position:relative; z-index:1;
+  transition:color .35s ease;
 }
-.sc-result-row:last-child { border-bottom:none; }
-.sc-result-label { font-size:13px;font-weight:400;color:var(--muted);letter-spacing:-.01em; }
-.sc-result-val   {
-  font-size:18px;font-weight:700;letter-spacing:-.04em;
-  transition:color .25s ease;
+/* Metrik satırları */
+.sc-metric-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:8px; position:relative; z-index:1;
 }
-.sc-result-val.plan-num-changed { animation:planNumIn .22s ease both; }
-.sc-result-right { display:flex;align-items:center;gap:2px; }
+.sc-metric-block {
+  background:rgba(0,0,0,.25);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px; padding:12px 14px;
+}
+.sc-metric-label {
+  font-size:11px; font-weight:600; letter-spacing:.04em;
+  text-transform:uppercase; color:rgba(255,255,255,.5);
+  margin-bottom:5px;
+}
+/* Big metric number — referans */
+.sc-metric-val {
+  font-size:20px; font-weight:800; letter-spacing:-.05em; color:#fff;
+  transition:color .2s ease;
+}
 
-.sc-delta     { font-size:12px;font-weight:600;padding:2px 8px;border-radius:7px;letter-spacing:-.01em; }
-.sc-delta.pos { background:rgba(45,184,102,.13);color:var(--accent); }
-.sc-delta.neg { background:rgba(255,69,58,.11); color:var(--danger); }
-.sc-delta.neu { display:none; }
+.sc-metric-delta {
+  font-size:12px; font-weight:600; margin-top:3px;
+  letter-spacing:-.01em;
+}
+.sc-metric-delta.pos { color:var(--accent); }
+.sc-metric-delta.neg { color:var(--danger); }
+.sc-metric-delta.neu { display:none; }
 
+/* Shift notu */
 .sc-shift-note {
-  padding:11px 18px;border-top:1px solid rgba(255,255,255,.04);
-  font-size:13px;font-weight:500;letter-spacing:-.01em;line-height:1.5;
-  animation:planSectionIn .3s ease both;
+  padding:13px 22px;
+  border-top:1px solid rgba(255,255,255,.07);
+  font-size:13px; font-weight:500; letter-spacing:-.01em; line-height:1.5;
+  background:rgba(0,0,0,.2);
+  animation:scSlideUp .3s ease both;
 }
+/* Davet */
+.sc-invite { text-align:center; padding:24px 0 6px; }
+.sc-invite-text { font-size:14px; font-weight:400; color:var(--muted); line-height:1.7; letter-spacing:-.01em; }
 
-/* ── Davet (sıfır state) ── */
-.sc-invite {
-  text-align:center; padding:20px 0 4px;
-}
-.sc-invite-text {
-  font-size:13.5px;font-weight:400;color:var(--muted);
-  line-height:1.75;letter-spacing:-.01em;
-}
-
-/* ── Reset ── */
+/* Reset */
 .sc-reset-btn {
-  width:100%;padding:12px;background:none;border:none;
-  font-size:12.5px;font-weight:500;color:var(--muted);
-  cursor:pointer;letter-spacing:-.01em;
-  transition:color .15s;-webkit-tap-highlight-color:transparent;
+  width:100%; padding:13px; background:none; border:none;
+  font-size:13px; font-weight:500; color:var(--muted);
+  cursor:pointer; letter-spacing:-.01em;
+  transition:color .15s; -webkit-tap-highlight-color:transparent;
   margin-top:2px;
 }
 .sc-reset-btn:active { color:var(--text); }
@@ -1879,28 +1911,41 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     </div></div>
   </div>
 
-  <!-- 5. SENARYO -->
-  <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
-    <div class="card-collapse-header" onclick="toggleSection('planScen')">
-      <div class="collapse-left">
-        <div class="collapse-icon-wrap" style="background:rgba(10,132,255,.1);border:1px solid rgba(10,132,255,.2)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A84FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/></svg>
-        </div>
-        <div>
-          <div class="collapse-title">Simülasyon</div>
-          <div class="collapse-summary" id="planScenSummary">Bir değişiklik yapsaydın?</div>
-        </div>
+  <!-- 5. SİMÜLASYON -->
+  <div id="planScenOuter" style="margin-bottom:12px">
+
+    <!-- Başlık — collapsible trigger -->
+    <div onclick="toggleSection('planScen')" style="
+      display:flex;align-items:center;justify-content:space-between;
+      padding:18px 20px 18px;cursor:pointer;-webkit-tap-highlight-color:transparent;
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--radius);box-shadow:0 2px 8px rgba(0,0,0,.15);
+      transition:border-color .2s;
+      " id="planScenHeader">
+      <div>
+        <div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Simülasyon</div>
+        <div style="font-size:22px;font-weight:800;letter-spacing:-.05em;color:var(--text);line-height:1">Bir şey değişse?</div>
+        <div style="font-size:13px;font-weight:400;color:var(--muted);margin-top:5px;letter-spacing:-.01em" id="planScenSummary">Değişkenleri ayarla, etkisini gör.</div>
       </div>
-      <div class="collapse-right"><span class="collapse-chevron" id="planScenChevron">›</span></div>
+      <span class="collapse-chevron" id="planScenChevron" style="font-size:22px;color:var(--muted)">›</span>
     </div>
-    <div class="collapsible-body collapsed" id="planScenBody"><div class="collapsible-inner">
-      <div id="planScenSliders" style="padding:2px 0 4px">
-        <!-- Dinamik slider'lar buraya render edilir -->
+
+    <!-- Collapsible gövde -->
+    <div class="collapsible-body collapsed" id="planScenBody">
+      <div class="collapsible-inner" style="padding:2px 0 0">
+
+        <!-- Slider'lar -->
+        <div id="planScenSliders" style="padding:4px 0 2px"></div>
+
+        <!-- Impact sonuç -->
+        <div id="planScenResult" style="margin-top:8px"></div>
+
+        <button class="sc-reset-btn" onclick="planScenReset()">Sıfırla</button>
       </div>
-      <div id="planScenResult"></div>
-      <button class="sc-reset-btn" onclick="planScenReset()">Sıfırla</button>
-    </div></div>
+    </div>
   </div>
+
+
 </div>
 
 <!-- TAB: AYARLAR -->
@@ -5673,37 +5718,28 @@ const PLAN_CHARACTERS = {
     key: 'BORCLU',
     name: 'Borçlu',
     tagline: 'Nakit akışının büyük bölümü taahhütlere gidiyor — hareket alanı dar.',
-    headBg: 'linear-gradient(135deg, rgba(255,69,58,.12), rgba(255,69,58,.04))',
-    headBorder: 'rgba(255,69,58,.2)',
-    nameColor: '#FF453A',
-    eyebrowColor: 'rgba(255,69,58,.6)',
-    glowColor: 'rgba(255,69,58,.08)',
+    gradient: 'linear-gradient(145deg, #FF453A 0%, #8B1010 40%, #1a0808 100%)',
+    accentColor: '#FF6B6B',
     why: 'Borç yükü sadece ödeme yaratmaz; karar alanını da küçültür. Mevcut yapıda esneklik yok denecek kadar az — beklenmedik bir gider dengeyi anında bozar.',
-    nextLabel: 'Borçlu\'dan Biriktiren\'e',
-    next: 'En küçük borcu önce kapat. Her kapanan taksit aylık nefes alanı açar — o tutarı bir sonraki borca ekle. Hedef: borç oranını %20\'nin altına indirmek.',
+    nextLabel: "Borçlu → Biriktiren",
+    next: 'En küçük borcu önce kapat. Her kapanan taksit aylık nefes alanı açar — o tutarı bir sonraki borca ekle.',
   },
   BIRIKTIREN: {
     key: 'BIRIKTIREN',
     name: 'Biriktiren',
     tagline: 'Sistematik birikim var. Sıradaki mesele: bu disiplini büyütmek.',
-    headBg: 'linear-gradient(135deg, rgba(45,184,102,.12), rgba(45,184,102,.04))',
-    headBorder: 'rgba(45,184,102,.25)',
-    nameColor: '#2DB866',
-    eyebrowColor: 'rgba(45,184,102,.6)',
-    glowColor: 'rgba(45,184,102,.09)',
+    gradient: 'linear-gradient(145deg, #2DB866 0%, #0A5C2E 40%, #060f0a 100%)',
+    accentColor: '#4ADE80',
     why: 'Aylık birikim alışkanlığı var ve sabit yükler dengeli. Bu yapı büyümeye açık — eksik olan tek şey daha net bir hedef yönü.',
-    nextLabel: 'Biriktiren\'den Yatırımcı\'ya',
-    next: 'Acil fon 3 aylık gidere ulaştıktan sonra, fazla marjı sadece bekletmek yerine büyüme odaklı bir hedefe yönlendir.',
+    nextLabel: "Biriktiren → Yatırımcı",
+    next: 'Acil fon 3 aylık gidere ulaştıktan sonra, fazla marjı büyüme odaklı bir hedefe yönlendir.',
   },
   YATIRIMCI: {
     key: 'YATIRIMCI',
     name: 'Yatırımcı',
     tagline: 'Temel denge kurulmuş. Büyümeye gerçek alan var.',
-    headBg: 'linear-gradient(135deg, rgba(10,132,255,.12), rgba(10,132,255,.04))',
-    headBorder: 'rgba(10,132,255,.25)',
-    nameColor: '#0A84FF',
-    eyebrowColor: 'rgba(10,132,255,.6)',
-    glowColor: 'rgba(10,132,255,.09)',
+    gradient: 'linear-gradient(145deg, #0A84FF 0%, #004799 40%, #000d1a 100%)',
+    accentColor: '#60A5FA',
     why: 'Sabit yükler kontrol altında, birikim disiplini yerleşmiş, aylık marj kalıcı. Bu pozisyon artık savunmadan büyümeye odaklanmaya izin veriyor.',
     nextLabel: 'Şu an için önerilen yön',
     next: 'Mevcut birikim hedeflerini koru. Fazla marjın en az yarısını uzun vadeli bir büyüme aracına yönlendir.',
@@ -5712,11 +5748,8 @@ const PLAN_CHARACTERS = {
     key: 'HARCAYAN',
     name: 'Harcayan',
     tagline: 'Gelir yeterli — tanımsız harcamalar marjı sessizce eritiyor.',
-    headBg: 'linear-gradient(135deg, rgba(255,149,0,.1), rgba(255,149,0,.03))',
-    headBorder: 'rgba(255,149,0,.2)',
-    nameColor: '#FF9500',
-    eyebrowColor: 'rgba(255,149,0,.6)',
-    glowColor: 'rgba(255,149,0,.08)',
+    gradient: 'linear-gradient(145deg, #FF9500 0%, #7A4200 40%, #150a00 100%)',
+    accentColor: '#FBBF24',
     why: 'Sabit yapı sorunlu değil. Değişken harcamalar bütçeyi düzensiz tüketiyor. Tanımsız kalan para çoğu zaman en hızlı kaybolan paradır.',
     nextLabel: 'Bir sonraki adım',
     next: 'Aylık marjın en az yarısına bir isim ver. Hedefsiz birikim korunmaz — küçük bir hedef bile bu parayı saklar.',
@@ -5725,11 +5758,8 @@ const PLAN_CHARACTERS = {
     key: 'KIRILGAN',
     name: 'Kırılgan',
     tagline: 'Denge var, ama tampon yok. Küçük bir sarsıntı yeterli.',
-    headBg: 'linear-gradient(135deg, rgba(255,214,10,.09), rgba(255,214,10,.03))',
-    headBorder: 'rgba(255,214,10,.2)',
-    nameColor: '#FFD60A',
-    eyebrowColor: 'rgba(255,214,10,.6)',
-    glowColor: 'rgba(255,214,10,.07)',
+    gradient: 'linear-gradient(145deg, #BF5AF2 0%, #5B1A8B 40%, #0d0014 100%)',
+    accentColor: '#D88FFF',
     why: 'Aylık rakamlar iyi görünebilir — ama acil durum tamponu olmadan bu denge kırılgan. Beklenmedik bir gider tüm yapıyı zorlayabilir.',
     nextLabel: 'Öncelikli adım',
     next: '3 aylık gider kadar bir acil fon oluştur. Bu tampon kurulmadan uzun vadeli plan anlamlı değil.',
@@ -5905,113 +5935,141 @@ function renderPlan() {
   _syncPlanCollapseSummaries(core);
 }
 
-// ── 1. Durum hero — editorial açılış ─────────────────────────────────────────
+// ── 1. Durum hero — bold headline + SVG ring ─────────────────────────────────
 function _renderPlanHero(fb, core) {
   const el = document.getElementById('planHero');
   if (!el) return;
 
   if (!fb.income) {
-    el.innerHTML = `<div class="plan-hero" style="--plan-accent:var(--muted);--plan-glow:rgba(110,109,120,.05)">
-      <div class="plan-hero-eyebrow">Finansal Durum</div>
-      <div class="plan-hero-status">Henüz veri yok.</div>
-      <div class="plan-hero-body">Gelir ve gider eklenince bu bölüm yapının tam analizini gösterir.</div>
+    el.innerHTML = `<div class="plan-hero">
+      <div class="plan-hero-inner">
+        <div class="plan-hero-glow"></div>
+        <div class="plan-hero-overline"><span class="plan-hero-overline-dot"></span>Finansal Durum</div>
+        <div class="plan-hero-headline">Veri <em>bekleniyor.</em></div>
+        <div class="plan-hero-sub">Gelir eklenince yapının tam analizi başlar.</div>
+      </div>
     </div>`;
     return;
   }
 
-  const riskMeta = {
-    low:  { label:'Dengeli',  color:'var(--accent)',  glow:'rgba(45,184,102,.06)' },
-    mid:  { label:'Dikkat',   color:'var(--warning)', glow:'rgba(255,214,10,.06)' },
-    high: { label:'Baskılı',  color:'var(--danger)',  glow:'rgba(255,69,58,.06)' },
-  }[core.riskLevel];
+  const rl = core.riskLevel;
+  const accentColor = rl==='low' ? '#2DB866' : rl==='mid' ? '#FFD60A' : '#FF453A';
+  const glowColor   = rl==='low' ? 'rgba(45,184,102,.1)' : rl==='mid' ? 'rgba(255,214,10,.1)' : 'rgba(255,69,58,.1)';
+  const rlLabel     = { low:'Dengeli', mid:'Dikkat', high:'Baskılı' }[rl];
 
-  // Güçlü tek cümle — dataya özgü
+  // Headline — referans: bold, tek güçlü cümle
   let headline = '';
   if (core.adjRemain < 0)
-    headline = 'Bu ay giderler geliri <span>aşıyor.</span>';
+    headline = `Giderler geliri <em>aşıyor.</em>`;
   else if (core.fixedRatio > 0.65)
-    headline = 'Sabit yapı <span>çok ağır.</span>';
+    headline = `Sabit yapı <em>çok ağır.</em>`;
   else if (core.fixedRatio > 0.50)
-    headline = 'Sabit yük <span>baskı yaratıyor.</span>';
+    headline = `Sabit yük <em>baskı yaratıyor.</em>`;
   else if (core.debtRatio > 0.28)
-    headline = 'Borç taahhütleri <span>hareket alanını kısıtlıyor.</span>';
+    headline = `Borç <em>hareket alanını kısıtlıyor.</em>`;
   else if (core.savRatio > 0.22)
-    headline = 'Birikim marjı <span>güçlü.</span>';
+    headline = `Birikim marjı <em>güçlü.</em>`;
   else if (core.savRatio > 0.10)
-    headline = 'Yapı <span>dengeli.</span>';
+    headline = `Yapı <em>dengeli.</em>`;
   else
-    headline = 'Esneklik <span>hâlâ dar.</span>';
+    headline = `Esneklik <em>hâlâ dar.</em>`;
 
-  // İkinci satır — daha derin, okuma değeri var
-  let subline = '';
+  let sub = '';
   if (core.adjRemain < 0)
-    subline = 'Sorun yapısal olmak zorunda değil. Değişken harcamaları kısmak dengeyi hızlı toparlar.';
+    sub = 'Sorun yapısal olmak zorunda değil. Değişken harcamaları kısmak dengeyi hızlı toparlar.';
   else if (core.fixedRatio > 0.55)
-    subline = 'Sorun günlük harcamalar değil; yapının sabit yükü fazla ağır. Bir veya iki kalemin azaltılması tüm dengeyi değiştirir.';
+    sub = 'Sorun günlük harcamalar değil; yapının sabit yükü fazla ağır. Bir veya iki kalemin azaltılması tüm dengeyi değiştirir.';
   else if (core.debtRatio > 0.28)
-    subline = 'Gelir zayıf değil — baskıyı yaratan şey yapısal taahhütler. Her kapanan taksit bu denklemi kalıcı olarak değiştiriyor.';
-  else if (core.savRatio > 0.15 && data.savingsGoals.filter(g=>g.monthly>0).length === 0)
-    subline = 'Bir hedef olmadığında, birikim potansiyeli sessizce erir. Bu marjı tanımlamak değeri korur.';
+    sub = 'Gelir zayıf değil — baskıyı yaratan şey yapısal taahhütler. Her kapanan taksit bu denklemi kalıcı değiştiriyor.';
+  else if (core.savRatio > 0.15 && !data.savingsGoals.filter(g=>g.monthly>0).length)
+    sub = 'Bir hedef olmadığında, birikim potansiyeli sessizce erir. Bu marjı tanımlamak değeri korur.';
   else if (core.savRatio > 0.15)
-    subline = 'Disiplin var ve yapı bunu destekliyor. Şimdi mesele hızı artırmak.';
-  else if (core.savRatio > 0.05)
-    subline = 'Denge makul. Küçük yapısal değişiklikler birikim hızını belirgin şekilde artırabilir.';
+    sub = 'Disiplin var ve yapı bunu destekliyor. Şimdi mesele hızı artırmak.';
   else
-    subline = 'Esneklik alanı dar olduğunda küçük bir gider bile tüm düzeni bozar. Önce tampon oluşturmak gerekiyor.';
+    sub = 'Esneklik alanı dar olduğunda küçük bir gider bile tüm düzeni bozar. Önce tampon oluşturmak gerekiyor.';
 
-  const pills = [
-    { lbl:'Sabit yük', val:'%'+Math.round(core.fixedRatio*100),
-      bg: core.fixedRatio > 0.55 ? 'rgba(255,69,58,.12)' : core.fixedRatio > 0.40 ? 'rgba(255,214,10,.1)' : 'rgba(45,184,102,.1)',
-      color: core.fixedRatio > 0.55 ? 'var(--danger)' : core.fixedRatio > 0.40 ? 'var(--warning)' : 'var(--accent)' },
-    { lbl:'Birikim marjı', val:'%'+Math.round(core.savRatio*100),
-      bg: core.savRatio < 0.05 ? 'rgba(255,69,58,.12)' : core.savRatio < 0.12 ? 'rgba(255,214,10,.1)' : 'rgba(45,184,102,.1)',
-      color: core.savRatio < 0.05 ? 'var(--danger)' : core.savRatio < 0.12 ? 'var(--warning)' : 'var(--accent)' },
-    { lbl:'Kalan', val:fmtTL(Math.round(core.adjRemain)),
-      bg: core.adjRemain < 0 ? 'rgba(255,69,58,.12)' : 'rgba(45,184,102,.1)',
-      color: core.adjRemain < 0 ? 'var(--danger)' : 'var(--accent)' },
+  // SVG ring — 80px, referans circular metric
+  const score = core.rs !== undefined ? Math.max(0, Math.min(100, 100 - core.rs * 11)) : 60;
+  const R = 32, circ = 2 * Math.PI * R;
+  const filled = (score / 100) * circ;
+  const offset = circ - filled;
+
+  // Metrikler
+  const metrics = [
+    { label:'Sabit yük', val:'%'+Math.round(core.fixedRatio*100), color: core.fixedRatio>.55?'var(--danger)':core.fixedRatio>.40?'var(--warning)':'var(--accent)' },
+    { label:'Birikim marjı', val:'%'+Math.round(core.savRatio*100), color: core.savRatio<.05?'var(--danger)':core.savRatio<.12?'var(--warning)':'var(--accent)' },
+    { label:'Aylık kalan', val:fmtTL(Math.round(core.adjRemain)), color: core.adjRemain<0?'var(--danger)':'var(--accent)' },
   ];
 
-  el.innerHTML = `<div class="plan-hero" style="--plan-accent:${riskMeta.color};--plan-glow:${riskMeta.glow}">
-    <div class="plan-hero-eyebrow">Finansal Durum<span style="margin-left:4px;color:${riskMeta.color}">${riskMeta.label}</span></div>
-    <div class="plan-hero-status">${headline}</div>
-    <div class="plan-hero-body">${subline}</div>
-    <div class="plan-hero-pills">
-      ${pills.map(p => `<div class="plan-hero-pill" style="background:${p.bg};color:${p.color}">
-        <span class="pill-lbl">${p.lbl}</span>${p.val}
-      </div>`).join('')}
+  el.innerHTML = `<div class="plan-hero">
+    <div class="plan-hero-inner" style="--plan-accent:${accentColor}">
+      <div class="plan-hero-glow" style="background:radial-gradient(circle,${glowColor} 0%,transparent 65%)"></div>
+      <div class="plan-hero-overline">
+        <span class="plan-hero-overline-dot" style="background:${accentColor}"></span>
+        Finansal Durum · ${rlLabel}
+      </div>
+      <div class="plan-hero-headline" style="--plan-accent:${accentColor}">${headline}</div>
+      <div class="plan-hero-sub">${sub}</div>
+      <div class="plan-hero-ring-row">
+        <div class="plan-ring-wrap">
+          <svg class="plan-ring-svg" width="80" height="80" viewBox="0 0 80 80">
+            <circle class="plan-ring-bg" cx="40" cy="40" r="${R}"/>
+            <circle class="plan-ring-fill" cx="40" cy="40" r="${R}"
+              style="--ring-circ:${circ.toFixed(1)};--ring-offset:${offset.toFixed(1)};stroke:${accentColor};stroke-dashoffset:${circ.toFixed(1)}"
+              stroke-dasharray="${circ.toFixed(1)}"
+              stroke-dashoffset="${offset.toFixed(1)}"/>
+          </svg>
+          <div class="plan-ring-center">
+            <div class="plan-ring-score" style="color:${accentColor}">${score}</div>
+            <div class="plan-ring-label">skor</div>
+          </div>
+        </div>
+        <div class="plan-hero-metrics">
+          ${metrics.map(m => `<div class="plan-hero-metric-row">
+            <div class="plan-hero-metric-label">${m.label}</div>
+            <div class="plan-hero-metric-val" style="color:${m.color}">${m.val}</div>
+          </div>`).join('')}
+        </div>
+      </div>
     </div>
   </div>`;
+
+  // Ring animasyonu — render sonrası
+  requestAnimationFrame(() => {
+    const ring = el.querySelector('.plan-ring-fill');
+    if (ring) {
+      ring.style.transition = 'stroke-dashoffset .9s cubic-bezier(.4,0,.2,1)';
+      ring.style.strokeDashoffset = offset.toFixed(1);
+    }
+  });
 }
 
 
-// ── 2. Karakter kartı — feature block ───────────────────────────────────────
+// ── 2. Karakter kartı — full-bleed gradient + 52px isim ──────────────────────
 function _renderPlanChar(core) {
   const el = document.getElementById('planCharCard');
   if (!el) return;
   const ch = core.character;
-
-  // Aksiyon: sadece varsa ve birden fazlaysa göster
   const firstAction = core.actions[0] || '';
 
   el.innerHTML = `
-    <div class="plan-char-card" style="background:var(--surface)">
-      <div class="plan-char-head" style="background:${ch.headBg};border-bottom:1px solid ${ch.headBorder}">
-        <div class="plan-char-eyebrow" style="color:${ch.eyebrowColor}">Finansal Karakter</div>
-        <div class="plan-char-name" style="color:${ch.nameColor}">${ch.name}</div>
-        <div class="plan-char-tagline" style="color:var(--text)">${ch.tagline}</div>
+    <div class="plan-char-card">
+      <div class="plan-char-gradient" style="--char-gradient:${ch.gradient}">
+        <div class="plan-char-overline">Finansal Karakter</div>
+        <div class="plan-char-bigname" style="color:${ch.accentColor||'#fff'}">${ch.name}</div>
+        <div class="plan-char-tagline">${ch.tagline}</div>
       </div>
-      <div class="plan-char-body">
-        <div class="plan-char-why-label">Bu yapıda neden bu karakter?</div>
-        <div class="plan-char-why-text">${ch.why}</div>
-        ${firstAction ? `
-        <div class="plan-char-action-block">
+      <div class="plan-char-glass">
+        <div class="plan-char-section-label">Bu yapıda neden bu karakter?</div>
+        <div class="plan-char-section-text">${ch.why}</div>
+        ${firstAction ? `<div class="plan-char-action-box">
           <div class="plan-char-action-label">İlk adım</div>
           <div class="plan-char-action-text">${firstAction}</div>
         </div>` : ''}
       </div>
       <div class="plan-char-next">
         <div class="plan-char-next-arrow">→</div>
-        <div class="plan-char-next-text"><strong>${ch.nextLabel}:</strong> ${ch.next}</div>
+        <div class="plan-char-next-text"><b>${ch.nextLabel}:</b> ${ch.next}</div>
       </div>
     </div>`;
 }
@@ -6083,16 +6141,15 @@ function _renderPlanRiskDetail(core) {
 }
 
 
-// ── 4. Hedef & süre — collapsible içi ────────────────────────────────────────
+// ── 4. Hedef & Zaman — big number style ──────────────────────────────────────
 function _renderPlanGoalDetail(fb, core) {
   const el    = document.getElementById('planGoalDetail');
   const sumEl = document.getElementById('planGoalSummary');
   if (!el) return;
-
   const goals = core.goals;
 
   if (!goals.length) {
-    if (sumEl) sumEl.textContent = 'Henüz hedef tanımlanmamış';
+    if (sumEl) sumEl.textContent = 'Hedef tanımlanmamış';
     const m3  = Math.round(core.savPot * 3);
     const m6  = Math.round(core.savPot * 6);
     const m12 = Math.round(core.savPot * 12);
@@ -6102,59 +6159,48 @@ function _renderPlanGoalDetail(fb, core) {
         <div class="plan-block-body">Aylık ${fmtTL(Math.round(core.savPot))} birikilebilir, ama bir hedefe bağlı değil. Bir hedef olmadığında, birikim potansiyeli sessizce erir.</div>
       </div>
       <div class="plan-margin-proj" style="margin-top:10px">
-        <div class="plan-margin-proj-header">Bu marjla ne olurdu?</div>
-        <div class="plan-margin-proj-row">
-          <div class="plan-margin-proj-label">3 ay</div>
-          <div class="plan-margin-proj-val">${fmtTL(m3)}</div>
-        </div>
-        <div class="plan-margin-proj-row">
-          <div class="plan-margin-proj-label">6 ay</div>
-          <div class="plan-margin-proj-val">${fmtTL(m6)}</div>
-        </div>
-        <div class="plan-margin-proj-row">
-          <div class="plan-margin-proj-label">1 yıl</div>
-          <div class="plan-margin-proj-val">${fmtTL(m12)}</div>
-        </div>
+        <div class="plan-margin-proj-hdr">Bu marjla ne olurdu?</div>
+        <div class="plan-margin-proj-row"><div class="plan-margin-proj-label">3 ay</div><div class="plan-margin-proj-val">${fmtTL(m3)}</div></div>
+        <div class="plan-margin-proj-row"><div class="plan-margin-proj-label">6 ay</div><div class="plan-margin-proj-val">${fmtTL(m6)}</div></div>
+        <div class="plan-margin-proj-row"><div class="plan-margin-proj-label">1 yıl</div><div class="plan-margin-proj-val">${fmtTL(m12)}</div></div>
       </div>`;
     return;
   }
 
-  const mn = goals.filter(g => g.curMonths).map(g => g.curMonths);
-  if (sumEl) sumEl.textContent = mn.length > 0
-    ? goals.length + ' hedef · en yakını ' + Math.min(...mn) + ' ay'
-    : goals.length + ' hedef · aylık birikim atanmamış';
+  const mn = goals.filter(g=>g.curMonths).map(g=>g.curMonths);
+  if (sumEl) sumEl.textContent = mn.length>0
+    ? goals.length+' hedef · en yakını '+Math.min(...mn)+' ay'
+    : goals.length+' hedef · aylık birikim atanmamış';
 
   const items = goals.map((g, i) => {
-    const imp = (g.optMonths && g.curMonths && g.optMonths < g.curMonths)
-      ? g.curMonths - g.optMonths : 0;
+    const imp = (g.optMonths && g.curMonths && g.optMonths < g.curMonths) ? g.curMonths - g.optMonths : 0;
     const longNote = g.curMonths && g.curMonths > 48
       ? `<div class="plan-block-body" style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.05)">${g.curMonths} ay uzun bir süre. Aylık miktarı artırmak süreci gerçekten kısaltır.</div>` : '';
-
     return `
-    <div class="plan-block" style="animation:planIn .3s ease ${i*60}ms both;padding:18px">
-      <div class="plan-goal-name-row">
+    <div class="plan-block" style="animation:planBlockIn .3s ease ${i*60}ms both;padding:18px">
+      <div class="plan-goal-header">
         <div class="plan-goal-name">${esc(g.name)}</div>
-        <div class="plan-goal-progress-frac">${fmtTL(Math.round(g.dep))} / ${fmtTL(g.target)}</div>
+        <div class="plan-goal-frac">${fmtTL(Math.round(g.dep))} / ${fmtTL(g.target)}</div>
       </div>
       <div style="height:3px;background:var(--border);border-radius:99px;margin-bottom:14px;overflow:hidden">
         <div style="height:100%;width:${g.pct}%;background:var(--accent);border-radius:99px"></div>
       </div>
-      <div class="plan-goal-time-grid">
-        <div class="plan-goal-time-block">
-          <div class="plan-goal-time-label">Mevcut hız</div>
-          <div class="plan-goal-time-val" style="color:var(--text)">${g.curMonths !== null ? g.curMonths + ' ay' : '—'}</div>
+      <div class="plan-goal-grid">
+        <div class="plan-goal-block">
+          <div class="plan-goal-block-label">Mevcut hız</div>
+          <div class="plan-goal-block-val" style="color:var(--text)">${g.curMonths!==null?g.curMonths+' <span style="font-size:14px;font-weight:500;opacity:.6">ay</span>':'—'}</div>
         </div>
-        <div class="plan-goal-time-block" style="${imp > 0 ? 'border:1px solid rgba(45,184,102,.25)' : ''}">
-          <div class="plan-goal-time-label">Tam kapasiteyle</div>
-          <div class="plan-goal-time-val" style="color:var(--accent)">${g.optMonths !== null ? g.optMonths + ' ay' : '—'}</div>
+        <div class="plan-goal-block" style="${imp>0?'border:1px solid rgba(45,184,102,.2)':''}">
+          <div class="plan-goal-block-label">Tam kapasiteyle</div>
+          <div class="plan-goal-block-val" style="color:var(--accent)">${g.optMonths!==null?g.optMonths+' <span style="font-size:14px;font-weight:500;opacity:.7">ay</span>':'—'}</div>
         </div>
       </div>
-      ${imp > 0 ? `<div class="plan-goal-improve" style="color:var(--accent);margin-top:6px">${imp} ay erken — mevcut marjın tamamını kullanırsan.</div>` : ''}
+      ${imp>0?`<div class="plan-goal-improve" style="color:var(--accent);margin-top:6px">${imp} ay erken — mevcut marjın tamamını kullanırsan.</div>`:''}
       ${longNote}
     </div>`;
   });
 
-  el.innerHTML = `<div style="padding-bottom:2px">${items.join('')}</div>`;
+  el.innerHTML = `<div>${items.join('')}</div>`;
 }
 
 
@@ -6162,20 +6208,21 @@ function _renderPlanGoalDetail(fb, core) {
 let _sc = { extraIncome:0, recDelta:0, lifeDelta:0, plannedExp:0 };
 let _impactRendered = false;
 
+// ─── Soru tanımları ─────────────────────────────────────────────────────────
 function _planGetSliderDefs(fb) {
-  const inc   = Math.max(fb.income || 10000, 2000);
-  const fixed = Math.max(fb.recTotal || 2000, 500);
-  const vari  = Math.max(fb.varSpent || 2000, 500);
-  function stp(r) { return r<=2000?100:r<=10000?500:1000; }
-  const mInc  = Math.round(inc*0.5/500)*500;
-  const mRec  = Math.round(fixed*0.4/200)*200;
-  const mLife = Math.round(vari*0.4/200)*200;
-  const mPlan = Math.round(inc*0.4/500)*500;
+  const inc  = Math.max(fb.income   || 10000, 2000);
+  const fix  = Math.max(fb.recTotal || 2000,  500);
+  const vari = Math.max(fb.varSpent || 2000,  500);
+  function stp(r){ return r<=2000?100:r<=10000?500:1000; }
+  const mI = Math.round(inc*.5/500)*500;
+  const mR = Math.round(fix*.4/200)*200;
+  const mL = Math.round(vari*.4/200)*200;
+  const mP = Math.round(inc*.4/500)*500;
   return [
-    { id:'extraIncome', question:'Ek bir gelir gelse?',        hint:'Freelance, kira, ikramiye…',           min:0,     max:mInc,   step:stp(mInc),  color:'var(--accent)',  glow:'rgba(45,184,102,.15)',  fmt:v=>v===0?'—':'+'+fmtTL(v) },
-    { id:'recDelta',    question:'Sabit giderler azalsa?',      hint:'Abonelik, servis, kira müzakeresi…',   min:-mRec, max:0,      step:stp(mRec),  color:'var(--warning)', glow:'rgba(255,214,10,.15)',  fmt:v=>v===0?'—':(v>0?'+':'')+fmtTL(v) },
-    { id:'lifeDelta',   question:'Değişken harcamalar değişse?',hint:'Yeme-içme, alışveriş, eğlence…',      min:-mLife,max:Math.round(mLife*0.5/200)*200,step:stp(mLife),color:'#BF5AF2',glow:'rgba(191,90,242,.15)',fmt:v=>v===0?'—':(v>0?'+':'')+fmtTL(v) },
-    { id:'plannedExp',  question:'Planladığın bir gider var mı?',hint:'Tatil, elektronik, tamirat…',         min:0,     max:mPlan,  step:stp(mPlan), color:'var(--blue)',    glow:'rgba(10,132,255,.15)',  fmt:v=>v===0?'—':'−'+fmtTL(v) },
+    { id:'extraIncome', q:'Ek bir gelir gelse?',         hint:'Freelance, kira, ikramiye…',           min:0,  max:mI,  step:stp(mI), color:'var(--accent)',  glow:'rgba(45,184,102,.18)',  fmt:v=>v===0?'—':'+'+fmtTL(v) },
+    { id:'recDelta',    q:'Sabit giderler azalsa?',       hint:'Abonelik, servis, kira müzakeresi…',   min:-mR,max:0,   step:stp(mR), color:'var(--warning)', glow:'rgba(255,214,10,.18)',  fmt:v=>v===0?'—':(v>0?'+':'')+fmtTL(v) },
+    { id:'lifeDelta',   q:'Harcama ritmi değişse?',       hint:'Yeme-içme, alışveriş, eğlence…',       min:-mL,max:Math.round(mL*.5/200)*200,step:stp(mL),color:'#BF5AF2',glow:'rgba(191,90,242,.18)',fmt:v=>v===0?'—':(v>0?'+':'')+fmtTL(v) },
+    { id:'plannedExp',  q:'Planladığın bir gider var mı?',hint:'Tatil, elektronik, tamirat…',          min:0,  max:mP,  step:stp(mP), color:'var(--blue)',    glow:'rgba(10,132,255,.18)',  fmt:v=>v===0?'—':'−'+fmtTL(v) },
   ];
 }
 
@@ -6184,135 +6231,173 @@ function _sliderPct(d, v) {
   return Math.round(((v-d.min)/(d.max-d.min))*100);
 }
 
+// ─── Slider render — her soru kendi kartı ───────────────────────────────────
 function _planRenderSliders(fb) {
   const el = document.getElementById('planScenSliders');
   if (!el) return;
   const defs = _planGetSliderDefs(fb);
-  el.innerHTML = defs.map((d,i) => {
+
+  el.innerHTML = defs.map((d, i) => {
     const v = _sc[d.id]||0, pct = _sliderPct(d,v);
-    return `<div class="sc-slider-wrap" style="animation:planBlockIn .32s ease ${i*50}ms both">
-      <div class="sc-slider-header">
-        <div><div class="sc-slider-q">${d.question}</div><div class="sc-slider-hint">${d.hint}</div></div>
-        <div class="sc-slider-val" id="scVal_${d.id}" style="color:${v!==0?d.color:'var(--muted)'}">${d.fmt(v)}</div>
+    const valColor = v!==0 ? d.color : 'var(--muted)';
+    return `
+    <div class="sc-q-card ${v!==0?'active':''}" id="scCard_${d.id}"
+         style="animation-delay:${i*55}ms;--sc-color:${d.color};margin-bottom:${i<defs.length-1?'8px':'0'}">
+      <div class="sc-q-top">
+        <div class="sc-q-label">${d.q}</div>
+        <div class="sc-q-bigval" id="scVal_${d.id}" style="color:${valColor}">${d.fmt(v)}</div>
       </div>
+      <div class="sc-q-hint">${d.hint}</div>
       <input type="range" class="sc-range" id="scRange_${d.id}"
         min="${d.min}" max="${d.max}" step="${d.step}" value="${v}"
         style="--sc-fill:${d.color};--sc-glow:${d.glow};--sc-pct:${pct}%"
-        oninput="_scSliderMove('${d.id}',this)">
+        oninput="_scMove('${d.id}',this)">
     </div>`;
   }).join('');
 }
 
-function _scSliderMove(id, input) {
+// ─── Slider hareketi ─────────────────────────────────────────────────────────
+function _scMove(id, input) {
   const mk=currentMonth, fb=calcFreeBudget(mk);
   const def=_planGetSliderDefs(fb).find(d=>d.id===id);
   if (!def) return;
   const v=parseFloat(input.value);
   _sc[id]=v;
+
+  // Track rengi
   input.style.setProperty('--sc-pct', _sliderPct(def,v)+'%');
+
+  // Kart aktif state
+  const card=document.getElementById('scCard_'+id);
+  if (card) { card.classList.toggle('active', v!==0); }
+
+  // Big val — animasyonlu
   const valEl=document.getElementById('scVal_'+id);
   if (valEl) {
-    const t=def.fmt(v);
-    if (valEl.textContent!==t) { valEl.classList.remove('plan-num-changed'); void valEl.offsetWidth; valEl.classList.add('plan-num-changed'); setTimeout(()=>valEl.classList.remove('plan-num-changed'),250); }
-    valEl.textContent=t;
+    valEl.textContent=def.fmt(v);
     valEl.style.color=v!==0?def.color:'var(--muted)';
   }
+
   const core=_planCalcCore(fb,{..._sc});
-  _updatePlanImpact(fb,core);
+  _updatePlanImpact(fb, core);
   _syncPlanCollapseSummaries(core);
 }
 
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 function _planGetScenario() {
-  return { extraIncome:_sc.extraIncome||0, recDelta:_sc.recDelta||0, lifeDelta:_sc.lifeDelta||0, plannedExp:_sc.plannedExp||0 };
+  return { extraIncome:_sc.extraIncome||0, recDelta:_sc.recDelta||0,
+           lifeDelta:_sc.lifeDelta||0, plannedExp:_sc.plannedExp||0 };
+}
+function _animNum(id, text, color) {
+  const el=document.getElementById(id); if (!el) return;
+  el.textContent=text;
+  if(color) el.style.color=color;
+}
+function _dc(v){ return Math.abs(v)<50?'neu':v>0?'pos':'neg'; }
+function _df(v){ return Math.abs(v)<50?'':(v>0?'+':'')+fmtTL(Math.round(v)); }
+function _planGetBestGoal(core,base){
+  const g=core.goals.filter(g=>g.optMonths!=null).sort((a,b)=>(a.optMonths||999)-(b.optMonths||999))[0];
+  if(!g)return{goal:null,delta:0};
+  const bg=base.goals.find(x=>x.id===g.id);
+  return{goal:g, delta:(bg&&bg.optMonths&&g.optMonths)?bg.optMonths-g.optMonths:0};
 }
 
 function planScenCalc() {
-  const mk=currentMonth, fb=calcFreeBudget(mk), sc=_planGetScenario();
+  const mk=currentMonth,fb=calcFreeBudget(mk),sc=_planGetScenario();
   const core=_planCalcCore(fb,sc);
   _renderPlanHero(fb,core); _renderPlanChar(core);
   _renderPlanRiskDetail(core); _renderPlanGoalDetail(fb,core);
   _updatePlanImpact(fb,core); _syncPlanCollapseSummaries(core);
 }
 
-function _animNum(id, text, color) {
-  const el=document.getElementById(id); if (!el) return;
-  if (el.textContent===text) { if(color) el.style.color=color; return; }
-  el.classList.remove('plan-num-changed'); void el.offsetWidth; el.classList.add('plan-num-changed');
-  el.textContent=text; if(color) el.style.color=color;
-  setTimeout(()=>el.classList.remove('plan-num-changed'),250);
-}
-function _dc(v) { return Math.abs(v)<50?'neu':v>0?'pos':'neg'; }
-function _df(v) { return Math.abs(v)<50?'':(v>0?'+':'')+fmtTL(Math.round(v)); }
-
+// ─── Impact card — referans: büyük status + metric grid ──────────────────────
 function _updatePlanImpact(fb, core) {
   const el=document.getElementById('planScenResult'); if (!el) return;
   const hasDelta=Object.values(core.sc||{}).some(v=>v!==0);
+
   if (!hasDelta) {
     if (_impactRendered) {
       el.style.transition='opacity .22s'; el.style.opacity='0';
       setTimeout(()=>{ _impactRendered=false; el.style.opacity=''; el.style.transition='';
-        el.innerHTML=`<div class="sc-invite"><div class="sc-invite-text">Bir slider'ı kaydır.<br>Etkisi anında görünür.</div></div>`; }, 230);
+        el.innerHTML=`<div class="sc-invite"><div class="sc-invite-text">Bir slider'ı değiştir.<br>Etkisi anında görünür.</div></div>`; }, 230);
     } else {
-      el.innerHTML=`<div class="sc-invite"><div class="sc-invite-text">Bir slider'ı kaydır.<br>Etkisi anında görünür.</div></div>`;
+      el.innerHTML=`<div class="sc-invite"><div class="sc-invite-text">Bir slider'ı değiştir.<br>Etkisi anında görünür.</div></div>`;
     }
     return;
   }
+
   const base=_planCalcCore(fb,{extraIncome:0,recDelta:0,lifeDelta:0,plannedExp:0});
   const rd=core.adjRemain-base.adjRemain, sd=core.savPot-base.savPot;
   const rc=core.riskLevel!==base.riskLevel, cc=core.character.key!==base.character.key;
-  const rlC={low:'var(--accent)',mid:'var(--warning)',high:'var(--danger)'};
-  const rlB={low:'rgba(45,184,102,.12)',mid:'rgba(255,214,10,.1)',high:'rgba(255,69,58,.1)'};
-  const rlL={low:'Dengeli',mid:'Dikkat',high:'Baskılı'};
+  const rlLabel={low:'Dengeli',mid:'Dikkat',high:'Baskılı'}[core.riskLevel];
+  const rlColor={low:'var(--accent)',mid:'var(--warning)',high:'var(--danger)'}[core.riskLevel];
+  // Gradient arka plan — risk seviyesine göre
+  const rlBgGrad={
+    low: 'linear-gradient(135deg,rgba(45,184,102,.22) 0%,rgba(45,184,102,.06) 100%)',
+    mid: 'linear-gradient(135deg,rgba(255,214,10,.18) 0%,rgba(255,214,10,.05) 100%)',
+    high:'linear-gradient(135deg,rgba(255,69,58,.2) 0%,rgba(255,69,58,.05) 100%)',
+  }[core.riskLevel];
+
   const bg=_planGetBestGoal(core,base);
 
   if (_impactRendered) {
-    _animNum('scResRem', fmtTL(Math.round(core.adjRemain)), core.adjRemain>=0?'var(--accent)':'var(--danger)');
-    _animNum('scResSav', fmtTL(Math.round(core.savPot)),    'var(--accent)');
-    const dr=document.getElementById('scDRem'), ds=document.getElementById('scDSav');
-    if(dr){dr.textContent=_df(rd);dr.className='sc-delta '+_dc(rd);}
-    if(ds){ds.textContent=_df(sd);ds.className='sc-delta '+_dc(sd);}
-    const pill=document.getElementById('scPill');
-    if(pill){pill.style.background=rlB[core.riskLevel];pill.style.color=rlC[core.riskLevel];pill.textContent=rlL[core.riskLevel];}
-    if(bg.goal){
-      _animNum('scResGoal',bg.goal.optMonths+' ay','var(--blue)');
-      const dg=document.getElementById('scDGoal');
-      if(dg){dg.textContent=bg.delta>0?bg.delta+' ay erken':'';dg.className='sc-delta '+(bg.delta>0?'pos':'neu');}
+    // In-place güncelle
+    _animNum('scImpStatus', rlLabel, rlColor);
+    _animNum('scImpRem',    fmtTL(Math.round(core.adjRemain)), core.adjRemain>=0?'#fff':'var(--danger)');
+    _animNum('scImpSav',    fmtTL(Math.round(core.savPot)),    '#fff');
+    const dRem=document.getElementById('scDRem'), dSav=document.getElementById('scDSav');
+    if(dRem){dRem.textContent=_df(rd);dRem.className='sc-metric-delta '+_dc(rd);}
+    if(dSav){dSav.textContent=_df(sd);dSav.className='sc-metric-delta '+_dc(sd);}
+    if(bg.goal){ _animNum('scImpGoal',bg.goal.optMonths+' ay','#fff'); }
+    const grad=document.getElementById('scImpGrad');
+    if(grad) grad.style.setProperty('--sc-impact-bg',rlBgGrad);
+    const note=document.getElementById('scImpNote');
+    if(note){
+      if(rc||cc){
+        note.style.color=rlColor;
+        note.textContent=rc?`Risk ${core.riskLevel==='low'?'iyileşti':'arttı'} — ${rlLabel.toLowerCase()}`+(cc?` · ${core.character.name}`:''): `Karakter: ${core.character.name}`;
+        note.style.display='';
+      } else note.style.display='none';
     }
-    const note=document.getElementById('scNote');
-    if(note){ if(rc||cc){ note.style.color=rlC[core.riskLevel]; note.textContent=_shiftText(rc,cc,core,rlL); note.style.display=''; } else note.style.display='none'; }
     return;
   }
 
-  const shift=rc||cc?_shiftText(rc,cc,core,rlL):'';
-  el.innerHTML=`<div class="sc-impact-card">
-    <div class="sc-impact-header">
-      <div class="sc-impact-eyebrow">Bu senaryoda</div>
-      <div class="sc-status-pill" id="scPill" style="background:${rlB[core.riskLevel]};color:${rlC[core.riskLevel]}">${rlL[core.riskLevel]}</div>
-    </div>
-    <div>
-      <div class="sc-result-row"><div class="sc-result-label">Aylık kalan</div>
-        <div class="sc-result-right"><div class="sc-result-val" id="scResRem" style="color:${core.adjRemain>=0?'var(--accent)':'var(--danger)'}">${fmtTL(Math.round(core.adjRemain))}</div><span class="sc-delta ${_dc(rd)}" id="scDRem">${_df(rd)}</span></div></div>
-      <div class="sc-result-row"><div class="sc-result-label">Birikim potansiyeli</div>
-        <div class="sc-result-right"><div class="sc-result-val" id="scResSav" style="color:var(--accent)">${fmtTL(Math.round(core.savPot))}</div><span class="sc-delta ${_dc(sd)}" id="scDSav">${_df(sd)}</span></div></div>
-      ${bg.goal?`<div class="sc-result-row"><div class="sc-result-label">${esc(bg.goal.name)}</div>
-        <div class="sc-result-right"><div class="sc-result-val" id="scResGoal" style="color:var(--blue)">${bg.goal.optMonths} ay</div><span class="sc-delta ${bg.delta>0?'pos':'neu'}" id="scDGoal">${bg.delta>0?bg.delta+' ay erken':''}</span></div></div>`:''}
-    </div>
-    <div class="sc-shift-note" id="scNote" style="color:${rlC[core.riskLevel]};${shift?'':'display:none'}">${shift}</div>
-  </div>`;
+  // ─── İlk tam render ───────────────────────────────────────────────────────
+  const shiftText = (rc||cc)
+    ? (rc?`Risk ${core.riskLevel==='low'?'iyileşti':'arttı'} — ${rlLabel.toLowerCase()}`+(cc?` · ${core.character.name}`:''):`Karakter: ${core.character.name}`)
+    : '';
+
+  el.innerHTML = `
+    <div class="sc-impact-card">
+      <div class="sc-impact-gradient" id="scImpGrad" style="--sc-impact-bg:${rlBgGrad}">
+        <div class="sc-impact-overline">Bu senaryoda</div>
+        <div class="sc-impact-status" id="scImpStatus" style="color:${rlColor}">${rlLabel}</div>
+        <div class="sc-metric-grid">
+          <div class="sc-metric-block">
+            <div class="sc-metric-label">Aylık kalan</div>
+            <div class="sc-metric-val" id="scImpRem" style="color:${core.adjRemain<0?'var(--danger)':'#fff'}">${fmtTL(Math.round(core.adjRemain))}</div>
+            <div class="sc-metric-delta ${_dc(rd)}" id="scDRem">${_df(rd)}</div>
+          </div>
+          <div class="sc-metric-block">
+            <div class="sc-metric-label">Birikim potansiyeli</div>
+            <div class="sc-metric-val" id="scImpSav">${fmtTL(Math.round(core.savPot))}</div>
+            <div class="sc-metric-delta ${_dc(sd)}" id="scDSav">${_df(sd)}</div>
+          </div>
+          ${bg.goal?`<div class="sc-metric-block">
+            <div class="sc-metric-label">${esc(bg.goal.name)}</div>
+            <div class="sc-metric-val" id="scImpGoal">${bg.goal.optMonths} ay</div>
+            <div class="sc-metric-delta ${bg.delta>0?'pos':'neu'}">${bg.delta>0?bg.delta+' ay erken':''}</div>
+          </div>`:''}
+          <div class="sc-metric-block">
+            <div class="sc-metric-label">Karakter</div>
+            <div class="sc-metric-val" style="font-size:16px;color:${core.character.accentColor||'#fff'}">${core.character.name}</div>
+            <div class="sc-metric-delta ${cc?'pos':'neu'}">${cc?'Değişti':''}</div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-shift-note" id="scImpNote" style="color:${rlColor};${shiftText?'':'display:none'}">${shiftText}</div>
+    </div>`;
   _impactRendered=true;
-}
-
-function _shiftText(rc,cc,core,rlL) {
-  if (rc) return 'Risk '+(core.riskLevel==='low'?'iyileşti':'arttı')+' — '+rlL[core.riskLevel].toLowerCase()+(cc?' · '+core.character.name:'');
-  return 'Finansal karakter: '+core.character.name;
-}
-
-function _planGetBestGoal(core, base) {
-  const goal=core.goals.filter(g=>g.optMonths!=null).sort((a,b)=>(a.optMonths||999)-(b.optMonths||999))[0];
-  if (!goal) return {goal:null,delta:0};
-  const bg=base.goals.find(g=>g.id===goal.id);
-  const delta=(bg&&bg.optMonths&&goal.optMonths)?bg.optMonths-goal.optMonths:0;
-  return {goal,delta};
 }
 
 function planScenReset() {
