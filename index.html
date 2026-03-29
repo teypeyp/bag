@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -44,7 +44,7 @@
   --blue:#0A84FF;--purple:#BF5AF2;
   --radius:20px;--radius-sm:12px;--radius-xs:8px;
 }
-html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased;overflow:hidden}#appWrap{max-width:520px;margin:0 auto;height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:52px;padding-bottom:116px}
+html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased;overflow:hidden}#appWrap{max-width:520px;margin:0 auto;height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:calc(52px + env(safe-area-inset-top, 0px));padding-bottom:116px}
 ::-webkit-scrollbar{width:0;height:0;display:none}
 
 /* ANIMATIONS */
@@ -80,7 +80,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 #toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:var(--surface3);border:1px solid var(--border);border-radius:24px;padding:11px 20px;font-size:13px;font-weight:700;z-index:999;display:none;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.5);backdrop-filter:blur(8px)}
 
 /* HEADER */
-.app-header{display:flex;align-items:center;justify-content:flex-start;padding:12px 18px;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;z-index:50;height:56px;background:rgba(10,10,13,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.app-header{display:flex;align-items:center;justify-content:flex-start;padding:12px 18px;padding-top:calc(12px + env(safe-area-inset-top, 0px));position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;z-index:50;height:calc(56px + env(safe-area-inset-top, 0px));background:rgba(10,10,13,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
 .app-logo{font-size:22px;font-weight:900;color:var(--accent);letter-spacing:2px;text-shadow:0 0 16px rgba(45,184,102,.3);text-transform:uppercase}
 
 /* FLOATING PILL NAV */
