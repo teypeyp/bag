@@ -2856,6 +2856,7 @@ let data = {
   onboarded: false,
   walletName: '',
   monthlyTargets: {},
+  dailyOverride: {},
   streak: {
     current: 0,
     best: 0,
@@ -3047,6 +3048,7 @@ function load() {
         if (!g.deposits) g.deposits = [];
       });
       if (!data.categoryKeywordOverrides || typeof data.categoryKeywordOverrides !== 'object') data.categoryKeywordOverrides = {};
+      if (!data.dailyOverride || typeof data.dailyOverride !== 'object') data.dailyOverride = {};
       Object.entries(data.categoryKeywordOverrides).forEach(([id, words]) => {
         const dc = DEFAULT_CATS.find(c => c.id === id);
         if (dc) dc.keywords = words;
@@ -3813,7 +3815,8 @@ function calcFreeBudget(mk) {
   // Son gün (daysLeft=0): kalan tüm bütçe bugünün limiti
   const pastVarSpent = varSpent - todayVarSpent;
   const remainingBudget = available - pastVarSpent;
-  const daily = daysLeft > 0 ? remainingBudget / daysLeft : remainingBudget;
+  const overrideDaily = data.dailyOverride[mk] || 0;
+  const daily = overrideDaily > 0 ? overrideDaily : (daysLeft > 0 ? remainingBudget / daysLeft : remainingBudget);
 
   // Bugün için kalan (limitten bugün ne kadar harcandı)
   const todayRemaining = daily - todayVarSpent;
@@ -9159,7 +9162,7 @@ function openDailyLimitSheet() {
   }
 
   // Mevcut manuel hedef varsa manuel moda geç
-  const curTarget = data.monthlyTargets[mk];
+  const curTarget = data.dailyOverride[mk];
   if (curTarget > 0) {
     dlSwitchMode('manual');
     const inp = document.getElementById('dlManualInput');
@@ -9182,11 +9185,11 @@ function closeDailyLimitSheet() {
 function saveDailyLimitSheet() {
   const mk = currentMonth;
   if (_dlMode === 'auto') {
-    delete data.monthlyTargets[mk];
+    delete data.dailyOverride[mk];
   } else {
     const val = parseNum(document.getElementById('dlManualInput')?.value || '0');
-    if (val > 0) data.monthlyTargets[mk] = val;
-    else delete data.monthlyTargets[mk];
+    if (val > 0) data.dailyOverride[mk] = val;
+    else delete data.dailyOverride[mk];
   }
   save();
   closeDailyLimitSheet();
