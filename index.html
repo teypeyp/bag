@@ -1799,6 +1799,8 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 #varAmtSheetOverlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:400;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px)}
 #varAmtSheetOverlay.show{display:flex}
 #varAmtSheet{background:var(--surface);border-radius:24px 24px 0 0;width:100%;max-width:520px;padding:10px 20px 48px;animation:tabEnter .3s cubic-bezier(.34,1.1,.64,1)}
+/* günlük limit sheet */
+#dailyLimitSheet{background:var(--surface);border-radius:24px 24px 0 0;width:100%;max-width:520px;animation:tabEnter .3s cubic-bezier(.34,1.1,.64,1)}
 </style>
 </head>
 <body>
@@ -3797,7 +3799,7 @@ function calcFreeBudget(mk) {
   const isCurrentMonth = mk === monthKey();
   const todayD = new Date().getDate();
   const dim = daysInMonth(mk);
-  const daysLeft = isCurrentMonth ? Math.max(0, dim - todayD) : 0;
+  const daysLeft = isCurrentMonth ? Math.max(1, dim - todayD + 1) : 0;
 
   // Bugünün harcaması — günlük limite dahil değil, ayrı gösterilir
   const todayStr = today();
@@ -3924,10 +3926,11 @@ function renderWalletHero(balance, fb) {
   const dailySection = fb.income > 0 ? `
     <div style="height:1px;background:rgba(255,255,255,.06);margin:16px 0 14px"></div>
     <div style="display:flex;justify-content:space-between;align-items:flex-start">
-      <div>
+      <div onclick="openDailyLimitSheet()" style="cursor:pointer;-webkit-tap-highlight-color:transparent">
         <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Günlük Limit</div>
         <div style="font-size:36px;font-weight:900;letter-spacing:-1.5px;line-height:1;color:${dailyColor}">${fb.daily < 0 ? '−' : ''}${fmtTL(Math.abs(Math.round(fb.daily)))}</div>
         <div style="margin-top:6px;font-size:11px;font-weight:600;color:${spentColor}">${spentLabel}</div>
+        ${fb.daysLeft > 1 ? `<div style="margin-top:3px;font-size:11px;font-weight:600;color:var(--muted)">Yarın → <span style="color:var(--text)">${fmtTL(Math.round((fb.remaining - fb.todayVarSpent) / (fb.daysLeft - 1)))}</span></div>` : ''}
       </div>
       <div style="text-align:right;flex-shrink:0">
         <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Kalan Para</div>
@@ -9010,6 +9013,63 @@ function updateStatsChartPoint(i) {
   _statsChart.update('none');
 }
 
+function openDailyLimitSheet() {
+  const mk = currentMonth;
+  const fb = calcFreeBudget(mk);
+  if (fb.income <= 0) return;
+
+  // Büyük rakam
+  const bigEl = document.getElementById('dlSheetBigNum');
+  const dailyColor = fb.daily < 0 ? 'var(--danger)' : fb.daily < 150 ? 'var(--warning)' : 'var(--accent)';
+  if (bigEl) { bigEl.textContent = (fb.daily < 0 ? '−' : '') + fmtTL(Math.abs(Math.round(fb.daily))); bigEl.style.color = dailyColor; }
+
+  // Context
+  const ctxEl = document.getElementById('dlSheetContext');
+  if (ctxEl) ctxEl.innerHTML = `<span style="color:var(--text)">${fmtTL(Math.round(fb.remaining))}</span> kaldı · <span style="color:var(--text)">${fb.daysLeft} güne</span> bölündü`;
+
+  // Yarın
+  const tomorrowRow = document.getElementById('dlSheetTomorrowRow');
+  const tomorrowAmt = document.getElementById('dlSheetTomorrowAmt');
+  const tomorrowSub = document.getElementById('dlSheetTomorrowSub');
+  if (fb.daysLeft > 1) {
+    const tomorrowDaily = Math.round((fb.remaining - fb.todayVarSpent) / (fb.daysLeft - 1));
+    if (tomorrowAmt) tomorrowAmt.textContent = fmtTL(tomorrowDaily);
+    if (tomorrowSub) {
+      const diff = tomorrowDaily - Math.round(fb.daily);
+      tomorrowSub.textContent = diff > 0 ? `bugün az harcadın +${fmtTL(diff)}` : diff < 0 ? `bugün fazla harcadın ${fmtTL(diff)}` : 'limitin aynı kalacak';
+    }
+    if (tomorrowRow) tomorrowRow.style.display = '';
+  } else {
+    if (tomorrowRow) tomorrowRow.style.display = 'none';
+  }
+
+  // Mevcut birikim hedefini input'a yaz
+  const savInput = document.getElementById('dlSheetSavInput');
+  const curTarget = data.monthlyTargets[mk] || 0;
+  if (savInput) savInput.value = curTarget > 0 ? fmtNum(curTarget) : '';
+
+  document.getElementById('dailyLimitOverlay').classList.add('show');
+  document.getElementById('dailyLimitSheet').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDailyLimitSheet() {
+  document.getElementById('dailyLimitOverlay').classList.remove('show');
+  document.getElementById('dailyLimitSheet').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function saveDailyLimitSheet() {
+  const mk = currentMonth;
+  const val = parseNum(document.getElementById('dlSheetSavInput').value);
+  if (val > 0) data.monthlyTargets[mk] = val;
+  else delete data.monthlyTargets[mk];
+  save();
+  closeDailyLimitSheet();
+  renderAll();
+  showToast(TOAST_OK + ' Bütçe hedefi kaydedildi');
+}
+
 init();
 window.addEventListener('resize', () => { updatePillIndicator(currentTab); });
 </script>
@@ -9146,5 +9206,39 @@ window.addEventListener('resize', () => { updatePillIndicator(currentTab); });
     <div id="statsListEl"></div>
   </div>
 </div>
+<!-- GÜNLÜK LİMİT SHEET -->
+<div class="add-sheet-overlay" id="dailyLimitOverlay" onclick="if(event.target===this)closeDailyLimitSheet()"></div>
+<div class="add-sheet" id="dailyLimitSheet">
+  <div class="add-sheet-handle"></div>
+  <div style="padding:28px 20px 0">
+    <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px" id="dlSheetOverline">Günlük Limit</div>
+    <div style="font-size:64px;font-weight:900;letter-spacing:-4px;line-height:1;margin-bottom:6px" id="dlSheetBigNum">—</div>
+    <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:24px" id="dlSheetContext"></div>
+    <div style="height:1px;background:rgba(255,255,255,.06);margin-bottom:20px"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" id="dlSheetTomorrowRow">
+      <div style="font-size:14px;font-weight:600;color:var(--muted)">Yarın</div>
+      <div style="text-align:right">
+        <div style="font-size:22px;font-weight:900;letter-spacing:-1px;color:var(--text)" id="dlSheetTomorrowAmt">—</div>
+        <div style="font-size:11px;font-weight:600;color:var(--muted);margin-top:2px" id="dlSheetTomorrowSub"></div>
+      </div>
+    </div>
+    <div style="height:1px;background:rgba(255,255,255,.06);margin-bottom:20px"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div style="font-size:14px;font-weight:600;color:var(--muted)">Bu aydan biriktir</div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <span style="font-size:16px;font-weight:800;color:var(--muted)">₺</span>
+        <input type="text" id="dlSheetSavInput" class="form-input" inputmode="numeric"
+          placeholder="0"
+          oninput="fmtInput(this)"
+          style="width:110px;text-align:right;font-size:18px;font-weight:800;padding:8px 10px;border-radius:10px">
+      </div>
+    </div>
+  </div>
+  <div class="tx-save-wrap">
+    <button class="tx-save-btn" style="background:var(--accent);box-shadow:0 6px 24px rgba(45,184,102,.28)" onclick="saveDailyLimitSheet()">Kaydet</button>
+  </div>
+  <div style="height:8px"></div>
+</div>
+
 </body>
 </html>
