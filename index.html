@@ -3930,7 +3930,6 @@ function renderWalletHero(balance, fb) {
         <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Günlük Limit</div>
         <div style="font-size:36px;font-weight:900;letter-spacing:-1.5px;line-height:1;color:${dailyColor}">${fb.daily < 0 ? '−' : ''}${fmtTL(Math.abs(Math.round(fb.daily)))}</div>
         <div style="margin-top:6px;font-size:11px;font-weight:600;color:${spentColor}">${spentLabel}</div>
-        ${fb.daysLeft > 1 ? `<div style="margin-top:3px;font-size:11px;font-weight:600;color:var(--muted)">Yarın → <span style="color:var(--muted)">${fmtTL(Math.round(fb.remaining / (fb.daysLeft - 1)))}</span></div>` : ''}
       </div>
       <div style="text-align:right;flex-shrink:0">
         <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Kalan Para</div>
@@ -6459,15 +6458,6 @@ function _planCalcCore(fb, sc) {
     adjIncome, adjRec, adjAvail, adjVar, adjRemain, savPot,
     fixedRatio, debtRatio, savRatio, rs, riskLevel,
     character, drivers, actions, goals, sc,
-  };
-}
-
-function _planGetScenario() {
-  return {
-    extraIncome: parseNum(document.getElementById('scExtraIncome')?.value || ''),
-    recDelta:    parseNum(document.getElementById('scRecDelta')?.value    || ''),
-    lifeDelta:   parseNum(document.getElementById('scLifeDelta')?.value   || ''),
-    plannedExp:  parseNum(document.getElementById('scPlannedExp')?.value  || ''),
   };
 }
 
@@ -9106,6 +9096,26 @@ function openDailyLimitSheet() {
   const dailyColor = fb.daily < 0 ? 'var(--danger)' : fb.daily < 150 ? 'var(--warning)' : 'var(--accent)';
   if (autoAmt) { autoAmt.textContent = (fb.daily < 0 ? '−' : '') + fmtTL(Math.abs(Math.round(fb.daily))); autoAmt.style.color = dailyColor; }
   if (autoSub) autoSub.innerHTML = `<span style="color:var(--text)">${fmtTL(Math.round(fb.remaining))}</span> kalan · <span style="color:var(--text)">${fb.daysLeft} güne</span> bölündü`;
+  const todayEl = document.getElementById('dlAutoToday');
+  if (todayEl) {
+    if (fb.todayVarSpent > 0) {
+      const spentRatio = fb.daily > 0 ? fb.todayVarSpent / fb.daily : 0;
+      const spentColor = fb.todayVarSpent > fb.daily ? 'var(--danger)' : spentRatio > 0.75 ? 'var(--warning)' : 'var(--accent)';
+      const spentLabel = fb.todayVarSpent > fb.daily ? `${fmtTL(Math.round(fb.todayVarSpent))} harcandı — limiti aştın` : `${fmtTL(Math.round(fb.todayVarSpent))} harcandı`;
+      todayEl.innerHTML = `<span style="color:${spentColor};font-weight:700">${spentLabel}</span>`;
+    } else {
+      todayEl.textContent = '';
+    }
+  }
+  const tomorrowEl = document.getElementById('dlAutoTomorrow');
+  if (tomorrowEl) {
+    if (fb.daysLeft > 1) {
+      const tomorrowDaily = fb.remaining / (fb.daysLeft - 1);
+      tomorrowEl.textContent = `Yarın → ${fmtTL(Math.round(tomorrowDaily))}`;
+    } else {
+      tomorrowEl.textContent = '';
+    }
+  }
 
   // Geçen ay ortalaması
   const prevDate = new Date(); prevDate.setMonth(prevDate.getMonth() - 1);
@@ -9339,7 +9349,9 @@ window.addEventListener('resize', () => { updatePillIndicator(currentTab); });
     <!-- otomatik block -->
     <div id="dlAutoBlock">
       <div style="font-size:64px;font-weight:900;letter-spacing:-4px;line-height:1;color:var(--accent);margin-bottom:10px" id="dlAutoAmount">—</div>
-      <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:24px" id="dlAutoSub"></div>
+      <div style="font-size:12px;font-weight:700;margin-bottom:6px;margin-top:8px" id="dlAutoToday"></div>
+      <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px" id="dlAutoSub"></div>
+      <div style="font-size:10px;font-weight:600;color:var(--muted);opacity:.5;margin-bottom:24px" id="dlAutoTomorrow"></div>
       <div style="height:1px;background:rgba(255,255,255,.06);margin-bottom:24px"></div>
       <div id="dlAutoAvg" style="display:none;align-items:center;gap:8px;background:var(--surface2);border-radius:12px;padding:12px 16px;font-size:13px;font-weight:600;color:var(--muted)"></div>
     </div>
