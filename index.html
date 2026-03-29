@@ -9018,6 +9018,17 @@ function dlSwitchMode(mode) {
     btnAuto.style.background = 'var(--surface3)'; btnAuto.style.color = 'var(--text)';
     btnManual.style.background = 'none'; btnManual.style.color = 'var(--muted)';
     autoBlock.style.display = 'block'; manualBlock.style.display = 'none';
+    // Override'sız hesabı anlık göster
+    const mk = currentMonth;
+    const fb = calcFreeBudget(mk);
+    const autoDaily = (() => {
+      const pastVarSpent = fb.varSpent - fb.todayVarSpent;
+      const remainingBudget = fb.available - pastVarSpent;
+      return fb.daysLeft > 0 ? remainingBudget / fb.daysLeft : remainingBudget;
+    })();
+    const dailyColor = autoDaily < 0 ? 'var(--danger)' : autoDaily < 150 ? 'var(--warning)' : 'var(--accent)';
+    const autoAmt = document.getElementById('dlAutoAmount');
+    if (autoAmt) { autoAmt.textContent = (autoDaily < 0 ? '−' : '') + fmtTL(Math.abs(Math.round(autoDaily))); autoAmt.style.color = dailyColor; }
   } else {
     btnManual.style.background = 'var(--surface3)'; btnManual.style.color = 'var(--text)';
     btnAuto.style.background = 'none'; btnAuto.style.color = 'var(--muted)';
