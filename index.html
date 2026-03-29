@@ -3930,7 +3930,7 @@ function renderWalletHero(balance, fb) {
         <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Günlük Limit</div>
         <div style="font-size:36px;font-weight:900;letter-spacing:-1.5px;line-height:1;color:${dailyColor}">${fb.daily < 0 ? '−' : ''}${fmtTL(Math.abs(Math.round(fb.daily)))}</div>
         <div style="margin-top:6px;font-size:11px;font-weight:600;color:${spentColor}">${spentLabel}</div>
-        ${fb.daysLeft > 1 ? `<div style="margin-top:3px;font-size:11px;font-weight:600;color:var(--muted)">Yarın → <span style="color:var(--text)">${fmtTL(Math.round((fb.remaining - fb.todayVarSpent) / (fb.daysLeft - 1)))}</span></div>` : ''}
+        ${fb.daysLeft > 1 ? `<div style="margin-top:3px;font-size:11px;font-weight:600;color:var(--muted)">Yarın → <span style="color:var(--muted)">${fmtTL(Math.round(fb.remaining / (fb.daysLeft - 1)))}</span></div>` : ''}
       </div>
       <div style="text-align:right;flex-shrink:0">
         <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Kalan Para</div>
@@ -9013,40 +9013,152 @@ function updateStatsChartPoint(i) {
   _statsChart.update('none');
 }
 
+let _dlMode = 'auto';
+
+function dlSwitchMode(mode) {
+  _dlMode = mode;
+  const btnAuto   = document.getElementById('dlBtnAuto');
+  const btnManual = document.getElementById('dlBtnManual');
+  const autoBlock   = document.getElementById('dlAutoBlock');
+  const manualBlock = document.getElementById('dlManualBlock');
+  if (mode === 'auto') {
+    btnAuto.style.background = 'var(--surface3)'; btnAuto.style.color = 'var(--text)';
+    btnManual.style.background = 'none'; btnManual.style.color = 'var(--muted)';
+    autoBlock.style.display = 'block'; manualBlock.style.display = 'none';
+  } else {
+    btnManual.style.background = 'var(--surface3)'; btnManual.style.color = 'var(--text)';
+    btnAuto.style.background = 'none'; btnAuto.style.color = 'var(--muted)';
+    autoBlock.style.display = 'none'; manualBlock.style.display = 'block';
+    setTimeout(() => { document.getElementById('dlManualInput')?.focus(); dlUpdateProj(); }, 50);
+  }
+}
+
+function dlSelectChip(val) {
+  const inp = document.getElementById('dlManualInput');
+  if (inp) { inp.value = fmtNum(val); dlUpdateProj(); }
+  document.querySelectorAll('.dl-chip').forEach(c => {
+    c.style.borderColor = parseInt(c.dataset.val) === val ? 'rgba(45,184,102,.5)' : 'rgba(255,255,255,.1)';
+    c.style.color = parseInt(c.dataset.val) === val ? 'var(--accent)' : 'var(--muted)';
+    c.style.background = parseInt(c.dataset.val) === val ? 'rgba(45,184,102,.08)' : 'none';
+  });
+}
+
+function dlUpdateProj() {
+  const mk = currentMonth;
+  const fb = calcFreeBudget(mk);
+  const val = parseNum(document.getElementById('dlManualInput')?.value || '0');
+  const daysLeft = fb.daysLeft;
+  const totalSpend = val * daysLeft;
+  const endBalance = fb.remaining - totalSpend;
+  const ratio = fb.daily > 0 ? val / fb.daily : 0;
+
+  // renk durumu
+  let state = 'ok';
+  if (ratio > 1.2) state = 'danger';
+  else if (ratio > 0.85) state = 'warn';
+
+  const accentColor = state === 'danger' ? 'var(--danger)' : state === 'warn' ? 'var(--warning)' : 'var(--accent)';
+  const accentGlow  = state === 'danger' ? 'rgba(255,69,58,.12)' : state === 'warn' ? 'rgba(255,214,10,.1)' : 'rgba(45,184,102,.12)';
+
+  // input + currency rengi
+  const inp = document.getElementById('dlManualInput');
+  const cur = document.getElementById('dlManualCurrency');
+  const line = document.getElementById('dlInputLine');
+  const box  = document.getElementById('dlProjBox');
+  if (inp)  inp.style.color = accentColor;
+  if (cur)  cur.style.color = accentColor;
+  if (line) line.style.background = state === 'danger' ? 'rgba(255,69,58,.35)' : state === 'warn' ? 'rgba(255,214,10,.3)' : 'rgba(45,184,102,.25)';
+  if (box)  box.style.background = state !== 'ok' ? accentGlow : 'var(--surface2)';
+
+  // proj değerleri
+  const daysLbl = document.getElementById('dlProjDaysLabel');
+  const spendEl = document.getElementById('dlProjSpend');
+  const endEl   = document.getElementById('dlProjEnd');
+  if (daysLbl) daysLbl.textContent = `${daysLeft} günde harcanacak`;
+  if (spendEl) spendEl.textContent = fmtTL(Math.round(totalSpend));
+  if (endEl) {
+    const newText = (endBalance >= 0 ? '+' : '−') + fmtTL(Math.abs(Math.round(endBalance)));
+    if (endEl.textContent !== newText) {
+      endEl.style.animation = 'none'; void endEl.offsetWidth;
+      endEl.style.animation = 'tikPop .2s cubic-bezier(.4,0,.2,1)';
+    }
+    endEl.textContent = newText;
+    endEl.style.color = endBalance >= 0 ? (state === 'ok' ? 'var(--accent)' : accentColor) : 'var(--danger)';
+  }
+
+  // chip seçimi güncelle
+  document.querySelectorAll('.dl-chip').forEach(c => {
+    const isSelected = Math.round(parseNum(inp?.value || '0')) === parseInt(c.dataset.val);
+    c.style.borderColor = isSelected ? 'rgba(45,184,102,.5)' : 'rgba(255,255,255,.1)';
+    c.style.color = isSelected ? 'var(--accent)' : 'var(--muted)';
+    c.style.background = isSelected ? 'rgba(45,184,102,.08)' : 'none';
+  });
+}
+
 function openDailyLimitSheet() {
   const mk = currentMonth;
   const fb = calcFreeBudget(mk);
   if (fb.income <= 0) return;
 
-  // Büyük rakam
-  const bigEl = document.getElementById('dlSheetBigNum');
+  // Otomatik block
+  const autoAmt = document.getElementById('dlAutoAmount');
+  const autoSub = document.getElementById('dlAutoSub');
   const dailyColor = fb.daily < 0 ? 'var(--danger)' : fb.daily < 150 ? 'var(--warning)' : 'var(--accent)';
-  if (bigEl) { bigEl.textContent = (fb.daily < 0 ? '−' : '') + fmtTL(Math.abs(Math.round(fb.daily))); bigEl.style.color = dailyColor; }
+  if (autoAmt) { autoAmt.textContent = (fb.daily < 0 ? '−' : '') + fmtTL(Math.abs(Math.round(fb.daily))); autoAmt.style.color = dailyColor; }
+  if (autoSub) autoSub.innerHTML = `<span style="color:var(--text)">${fmtTL(Math.round(fb.remaining))}</span> kalan · <span style="color:var(--text)">${fb.daysLeft} güne</span> bölündü`;
 
-  // Context
-  const ctxEl = document.getElementById('dlSheetContext');
-  if (ctxEl) ctxEl.innerHTML = `<span style="color:var(--text)">${fmtTL(Math.round(fb.remaining))}</span> kaldı · <span style="color:var(--text)">${fb.daysLeft} güne</span> bölündü`;
+  // Geçen ay ortalaması
+  const prevDate = new Date(); prevDate.setMonth(prevDate.getMonth() - 1);
+  const prevMk = prevDate.getFullYear() + '-' + String(prevDate.getMonth()+1).padStart(2,'0');
+  const prevData = calcMonthData(prevMk);
+  const prevDim = daysInMonth(prevMk);
+  const prevAvg = prevData.expense > 0 ? Math.round(prevData.expense / prevDim) : 0;
 
-  // Yarın
-  const tomorrowRow = document.getElementById('dlSheetTomorrowRow');
-  const tomorrowAmt = document.getElementById('dlSheetTomorrowAmt');
-  const tomorrowSub = document.getElementById('dlSheetTomorrowSub');
-  if (fb.daysLeft > 1) {
-    const tomorrowDaily = Math.round((fb.remaining - fb.todayVarSpent) / (fb.daysLeft - 1));
-    if (tomorrowAmt) tomorrowAmt.textContent = fmtTL(tomorrowDaily);
-    if (tomorrowSub) {
-      const diff = tomorrowDaily - Math.round(fb.daily);
-      tomorrowSub.textContent = diff > 0 ? `bugün az harcadın +${fmtTL(diff)}` : diff < 0 ? `bugün fazla harcadın ${fmtTL(diff)}` : 'limitin aynı kalacak';
+  // Otomatik blok — geçen ay avg
+  const autoAvg = document.getElementById('dlAutoAvg');
+  if (autoAvg) {
+    if (prevAvg > 0) {
+      autoAvg.style.display = 'flex';
+      autoAvg.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"/><path d="M3 6h18"/><path d="M3 18h18"/></svg>Geçen ay günde ort. <span style="color:var(--text);font-weight:700;margin-left:4px">${fmtTL(prevAvg)}</span> harcadın`;
+    } else {
+      autoAvg.style.display = 'none';
     }
-    if (tomorrowRow) tomorrowRow.style.display = '';
-  } else {
-    if (tomorrowRow) tomorrowRow.style.display = 'none';
   }
 
-  // Mevcut birikim hedefini input'a yaz
-  const savInput = document.getElementById('dlSheetSavInput');
-  const curTarget = data.monthlyTargets[mk] || 0;
-  if (savInput) savInput.value = curTarget > 0 ? fmtNum(curTarget) : '';
+  // Manuel blok — geçen ay hint
+  const lastMonthHint = document.getElementById('dlLastMonthHint');
+  if (lastMonthHint) {
+    lastMonthHint.textContent = prevAvg > 0 ? `Geçen ay günde ort. ${fmtTL(prevAvg)} harcadın` : '';
+    lastMonthHint.style.display = prevAvg > 0 ? 'block' : 'none';
+  }
+
+  // Chip'ler — Tasarruflu / Dengeli / Otomatik / Cömert
+  const chipsEl = document.getElementById('dlChips');
+  if (chipsEl) {
+    const base = Math.round(fb.daily);
+    const suggestions = [
+      { val: Math.round(base * 0.6), label: 'Tasarruflu' },
+      { val: Math.round(base * 0.8), label: 'Dengeli' },
+      { val: base,                   label: 'Otomatik' },
+      { val: Math.round(base * 1.2), label: 'Cömert' },
+    ];
+    chipsEl.innerHTML = suggestions.map(s => `
+      <button class="dl-chip" data-val="${s.val}" onclick="dlSelectChip(${s.val})"
+        style="padding:7px 13px;border:1.5px solid rgba(255,255,255,.1);border-radius:99px;background:none;font-family:'Montserrat',sans-serif;cursor:pointer;transition:all .15s;text-align:center">
+        <div style="font-size:12px;font-weight:800;color:var(--muted)">${fmtTL(s.val)}</div>
+        <div style="font-size:9px;font-weight:600;color:var(--muted);opacity:.7;margin-top:1px">${s.label}</div>
+      </button>`).join('');
+  }
+
+  // Mevcut manuel hedef varsa manuel moda geç
+  const curTarget = data.monthlyTargets[mk];
+  if (curTarget > 0) {
+    dlSwitchMode('manual');
+    const inp = document.getElementById('dlManualInput');
+    if (inp) { inp.value = fmtNum(curTarget); dlUpdateProj(); }
+  } else {
+    dlSwitchMode('auto');
+  }
 
   document.getElementById('dailyLimitOverlay').classList.add('show');
   document.getElementById('dailyLimitSheet').classList.add('show');
@@ -9061,13 +9173,17 @@ function closeDailyLimitSheet() {
 
 function saveDailyLimitSheet() {
   const mk = currentMonth;
-  const val = parseNum(document.getElementById('dlSheetSavInput').value);
-  if (val > 0) data.monthlyTargets[mk] = val;
-  else delete data.monthlyTargets[mk];
+  if (_dlMode === 'auto') {
+    delete data.monthlyTargets[mk];
+  } else {
+    const val = parseNum(document.getElementById('dlManualInput')?.value || '0');
+    if (val > 0) data.monthlyTargets[mk] = val;
+    else delete data.monthlyTargets[mk];
+  }
   save();
   closeDailyLimitSheet();
   renderAll();
-  showToast(TOAST_OK + ' Bütçe hedefi kaydedildi');
+  showToast(TOAST_OK + ' Günlük limit kaydedildi');
 }
 
 init();
@@ -9208,29 +9324,52 @@ window.addEventListener('resize', () => { updatePillIndicator(currentTab); });
 </div>
 <!-- GÜNLÜK LİMİT SHEET -->
 <div class="add-sheet-overlay" id="dailyLimitOverlay" onclick="if(event.target===this)closeDailyLimitSheet()"></div>
-<div class="add-sheet" id="dailyLimitSheet">
+<div class="add-sheet" id="dailyLimitSheet" style="min-height:72vh;display:flex;flex-direction:column">
   <div class="add-sheet-handle"></div>
-  <div style="padding:28px 20px 0">
-    <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px" id="dlSheetOverline">Günlük Limit</div>
-    <div style="font-size:64px;font-weight:900;letter-spacing:-4px;line-height:1;margin-bottom:6px" id="dlSheetBigNum">—</div>
-    <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:24px" id="dlSheetContext"></div>
-    <div style="height:1px;background:rgba(255,255,255,.06);margin-bottom:20px"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" id="dlSheetTomorrowRow">
-      <div style="font-size:14px;font-weight:600;color:var(--muted)">Yarın</div>
-      <div style="text-align:right">
-        <div style="font-size:22px;font-weight:900;letter-spacing:-1px;color:var(--text)" id="dlSheetTomorrowAmt">—</div>
-        <div style="font-size:11px;font-weight:600;color:var(--muted);margin-top:2px" id="dlSheetTomorrowSub"></div>
+  <div style="padding:28px 22px 0;flex:1">
+    <!-- başlık + toggle -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px">
+      <div style="font-size:17px;font-weight:800;color:var(--text);letter-spacing:-.3px">Günlük Limit</div>
+      <div style="display:flex;background:var(--surface2);border-radius:99px;padding:3px;gap:2px">
+        <button id="dlBtnAuto" onclick="dlSwitchMode('auto')" style="padding:6px 16px;border:none;border-radius:99px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;cursor:pointer;background:var(--surface3);color:var(--text);transition:all .2s">Otomatik</button>
+        <button id="dlBtnManual" onclick="dlSwitchMode('manual')" style="padding:6px 16px;border:none;border-radius:99px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;cursor:pointer;background:none;color:var(--muted);transition:all .2s">Manuel</button>
       </div>
     </div>
-    <div style="height:1px;background:rgba(255,255,255,.06);margin-bottom:20px"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-      <div style="font-size:14px;font-weight:600;color:var(--muted)">Bu aydan biriktir</div>
-      <div style="display:flex;align-items:center;gap:4px">
-        <span style="font-size:16px;font-weight:800;color:var(--muted)">₺</span>
-        <input type="text" id="dlSheetSavInput" class="form-input" inputmode="numeric"
-          placeholder="0"
-          oninput="fmtInput(this)"
-          style="width:110px;text-align:right;font-size:18px;font-weight:800;padding:8px 10px;border-radius:10px">
+
+    <!-- otomatik block -->
+    <div id="dlAutoBlock">
+      <div style="font-size:64px;font-weight:900;letter-spacing:-4px;line-height:1;color:var(--accent);margin-bottom:10px" id="dlAutoAmount">—</div>
+      <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:24px" id="dlAutoSub"></div>
+      <div style="height:1px;background:rgba(255,255,255,.06);margin-bottom:24px"></div>
+      <div id="dlAutoAvg" style="display:none;align-items:center;gap:8px;background:var(--surface2);border-radius:12px;padding:12px 16px;font-size:13px;font-weight:600;color:var(--muted)"></div>
+    </div>
+
+    <!-- manuel block -->
+    <div id="dlManualBlock" style="display:none">
+      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:4px">
+        <input type="text" id="dlManualInput" inputmode="numeric" placeholder="0"
+          oninput="fmtInput(this);dlUpdateProj()"
+          style="background:none;border:none;outline:none;font-family:'Montserrat',sans-serif;font-size:64px;font-weight:900;letter-spacing:-4px;color:var(--accent);flex:1;caret-color:var(--accent);width:100%;transition:color .25s">
+        <span id="dlManualCurrency" style="font-size:32px;font-weight:900;color:var(--accent);transition:color .25s">₺</span>
+      </div>
+      <div id="dlInputLine" style="height:2px;background:rgba(45,184,102,.25);border-radius:1px;margin-bottom:18px;transition:background .25s"></div>
+
+      <!-- geçen ay referansı -->
+      <div id="dlLastMonthHint" style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:14px"></div>
+
+      <!-- hızlı chip'ler -->
+      <div id="dlChips" style="display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap"></div>
+
+      <!-- projeksiyon -->
+      <div id="dlProjBox" style="background:var(--surface2);border-radius:14px;overflow:hidden;transition:background .3s">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.05)">
+          <span style="font-size:13px;color:var(--muted);font-weight:600" id="dlProjDaysLabel">Kalan günlerde harcanacak</span>
+          <span style="font-size:14px;font-weight:800;color:var(--text)" id="dlProjSpend">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px">
+          <span style="font-size:13px;color:var(--muted);font-weight:600">Ay sonunda kalacak</span>
+          <span style="font-size:18px;font-weight:900;color:var(--accent);transition:color .25s" id="dlProjEnd">—</span>
+        </div>
       </div>
     </div>
   </div>
