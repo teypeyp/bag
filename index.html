@@ -3483,12 +3483,12 @@ function calcStreakData() {
   // Freeze kalan
   const freezesLeft = (data.streak.freezeTotal || 2) - (data.streak.freezesUsed || 0);
 
-  // Haftalık freeze hediyesi: her 7 günde +1, max 2
+  // Haftalık freeze hediyesi: her 7 günde +1, max 5
   const weeklyGiftKey = Math.floor(streak / 7) + '_' + monthKey();
   if (streak > 0 && streak % 7 === 0 && data.streak.lastWeeklyFreezeGift !== weeklyGiftKey) {
     data.streak.lastWeeklyFreezeGift = weeklyGiftKey;
-    if ((data.streak.freezeTotal || 2) < 2) {
-      data.streak.freezeTotal = 2;
+    if ((data.streak.freezeTotal || 2) < 5) {
+      data.streak.freezeTotal = (data.streak.freezeTotal || 2) + 1;
       _needsSave = true;
     }
   }
@@ -3497,10 +3497,10 @@ function calcStreakData() {
   let milestone = null;
   const milestones = [
     {days:3,  title:'İlk adım atıldı!',      sub:'3 gün boyunca limitin altında kaldın.'},
-    {days:7,  title:'Bir hafta disiplin!',    sub:'Bütçen artık senin için çalışıyor.'},
-    {days:14, title:'İki haftadır kararlısın!', sub:'Bu alışkanlık haline geliyor.'},
-    {days:21, title:'21 gün — yeni bir alışkanlık!', sub:'Araştırmalar 21 günün kritik eşik olduğunu söylüyor.'},
-    {days:30, title:'Tam ay — efsanevi kontrol!', sub:'Aylık bütçe disiplininde zirveye ulaştın.'},
+    {days:7,  title:'Bir hafta disiplin!',    sub:'Harika — 1 koruma hakkı kazandın!'},
+    {days:14, title:'İki haftadır kararlısın!', sub:'14 günlük seri. 1 koruma hakkı daha kazandın!'},
+    {days:21, title:'21 gün — yeni bir alışkanlık!', sub:'Araştırmalar 21 günün kritik eşik olduğunu söylüyor. +1 koruma!'},
+    {days:30, title:'Tam ay — efsanevi kontrol!', sub:'Aylık bütçe disiplininde zirveye ulaştın. +1 koruma hakkı!'},
   ];
   milestones.forEach(ms => { if (streak === ms.days) milestone = ms; });
 
@@ -3509,7 +3509,7 @@ function calcStreakData() {
     const months = streak / 30;
     milestone = {
       title: `${months} aylık seri!`,
-      sub: `${streak} gün boyunca bütçe disiplinini korudun. Bu artık bir yaşam biçimi.`
+      sub: `${streak} gün boyunca bütçe disiplinini korudun. Bu artık bir yaşam biçimi. +1 koruma!`
     };
   }
   // 30+ streak: her 7 günde küçük milestone (30'un katı değilse)
@@ -3517,7 +3517,7 @@ function calcStreakData() {
     const weeks = Math.floor(streak / 7);
     milestone = {
       title: `${weeks}. haftayı tamamladın!`,
-      sub: `${streak} günlük zincir devam ediyor. Kırmak için hiçbir neden yok.`
+      sub: `${streak} günlük zincir devam ediyor. +1 koruma hakkı kazandın!`
     };
   }
 
