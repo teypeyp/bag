@@ -2000,11 +2000,11 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       <span class="tab-btn-label">Cüzdan</span>
     </button>
     <!-- Giderler -->
-    <button class="tab-btn" id="nav-sabit" onclick="switchTab('sabit')" aria-label="Giderler">
+    <button class="tab-btn" id="nav-sabit" onclick="switchTab('sabit')" aria-label="Aylık Plan">
       <div class="tab-btn-dot">
         <svg class="icon-outline" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/><path d="M11 15h1"/><path d="M12 15v3"/></svg>
       </div>
-      <span class="tab-btn-label">Giderler</span>
+      <span class="tab-btn-label">Aylık Plan</span>
     </button>
     <!-- Özet -->
     <button class="tab-btn" id="nav-ozet" onclick="switchTab('ozet')" aria-label="Özet">
@@ -4932,7 +4932,9 @@ function renderDailyLimit() {
       <div style="position:absolute;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 100% 80% at 80% -10%,rgba(45,184,102,.05) 0%,transparent 55%)"></div>
       <div style="position:absolute;top:0;left:0;right:0;height:1px;z-index:1;background:linear-gradient(90deg,transparent,rgba(45,184,102,.12),rgba(45,184,102,.05))"></div>
 
-      <div style="position:relative;z-index:2;padding:16px 20px 10px;display:flex;gap:8px">
+      <div style="position:relative;z-index:2;padding:16px 20px 10px">
+        <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Bu Ay</div>
+        <div style="display:flex;gap:8px">
         <div style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;background:rgba(45,184,102,.12);border:1px solid rgba(45,184,102,.25);cursor:default;position:relative"
           ontouchstart="document.getElementById('dlChipTT0').style.opacity='1'"
           ontouchend="setTimeout(()=>document.getElementById('dlChipTT0').style.opacity='0',1800)"
@@ -4940,7 +4942,7 @@ function renderDailyLimit() {
           onmouseleave="document.getElementById('dlChipTT0').style.opacity='0'">
           <span style="font-size:11px;color:#2DB866">↑</span>
           <span style="font-size:12px;font-weight:800;color:#2DB866">${fmtTL(fb.income)}</span>
-          <div id="dlChipTT0" style="position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);opacity:0;transition:opacity .15s;pointer-events:none;background:rgba(15,15,18,.97);border:1px solid rgba(45,184,102,.25);border-radius:8px;padding:6px 10px;white-space:nowrap;z-index:99;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.7)">Bu ay kasaya giren</div>
+          <div id="dlChipTT0" style="position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);opacity:0;transition:opacity .15s;pointer-events:none;background:rgba(15,15,18,.97);border:1px solid rgba(45,184,102,.25);border-radius:8px;padding:6px 10px;white-space:nowrap;z-index:99;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.7)">Bu ay kasaya giren</div>
         </div>
         <div style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;background:rgba(255,69,58,.1);border:1px solid rgba(255,69,58,.22);cursor:default;position:relative"
           ontouchstart="document.getElementById('dlChipTT1').style.opacity='1'"
@@ -4949,8 +4951,9 @@ function renderDailyLimit() {
           onmouseleave="document.getElementById('dlChipTT1').style.opacity='0'">
           <span style="font-size:11px;color:#FF453A">↓</span>
           <span style="font-size:12px;font-weight:800;color:#FF453A">${fmtTL(fb.recTotal + fb.debtTotal + fb.goalTotal + fb.savTarget + fb.varSpent)}</span>
-          <div id="dlChipTT1" style="position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);opacity:0;transition:opacity .15s;pointer-events:none;background:rgba(15,15,18,.97);border:1px solid rgba(255,69,58,.22);border-radius:8px;padding:6px 10px;white-space:nowrap;z-index:99;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.7)">Bu ay planlanan tüm çıkış</div>
+          <div id="dlChipTT1" style="position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);opacity:0;transition:opacity .15s;pointer-events:none;background:rgba(15,15,18,.97);border:1px solid rgba(255,69,58,.22);border-radius:8px;padding:6px 10px;white-space:nowrap;z-index:99;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.7)">Bu ay planlanan tüm çıkış</div>
         </div>
+      </div>
       </div>
 
       <div style="position:relative;z-index:2;padding:0 4px 4px" id="dlChartWrap">
