@@ -1747,7 +1747,8 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 /* ===== ADD SHEET ===== */
 .add-sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:200;pointer-events:none;transition:background .3s ease}
 .add-sheet-overlay.show{background:rgba(0,0,0,.65);pointer-events:all;backdrop-filter:blur(2px)}
-.add-sheet{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:520px;background:var(--surface);border-radius:24px 24px 0 0;z-index:201;transition:transform .38s cubic-bezier(.32,0,.15,1);padding-bottom:env(safe-area-inset-bottom,0px);max-height:92vh;overflow-y:auto}
+.add-sheet{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:520px;background:var(--surface);border-radius:24px 24px 0 0;z-index:201;transition:transform .38s cubic-bezier(.32,0,.15,1),visibility 0s linear .38s;padding-bottom:env(safe-area-inset-bottom,0px);max-height:92vh;overflow-y:auto;visibility:hidden}
+.add-sheet.show{transform:translateX(-50%) translateY(0);visibility:visible;transition:transform .38s cubic-bezier(.32,0,.15,1),visibility 0s linear 0s}
 .add-sheet.show{transform:translateX(-50%) translateY(0)}
 .add-sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
 .add-sheet-header{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between}
@@ -1768,7 +1769,8 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 /* istatistik sayfası */
 #statsPageOverlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:290;display:none;pointer-events:none;transition:background .3s,backdrop-filter .3s;-webkit-backdrop-filter:blur(0px);backdrop-filter:blur(0px)}
 #statsPageOverlay.show{display:block;pointer-events:auto;background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
-#statsPage{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:520px;height:88vh;background:linear-gradient(180deg,#0d1a0f 0%,#070d08 45%,#0A0A0D 100%);border-radius:28px 28px 0 0;z-index:300;display:flex;flex-direction:column;overflow:hidden;transition:transform .4s cubic-bezier(.32,0,.15,1)}
+#statsPage{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:520px;height:88vh;background:linear-gradient(180deg,#0d1a0f 0%,#070d08 45%,#0A0A0D 100%);border-radius:28px 28px 0 0;z-index:300;display:flex;flex-direction:column;overflow:hidden;transition:transform .4s cubic-bezier(.32,0,.15,1),visibility 0s linear .4s;visibility:hidden}
+#statsPage.show{transform:translateX(-50%) translateY(0);visibility:visible;transition:transform .4s cubic-bezier(.32,0,.15,1),visibility 0s linear 0s}
 #statsPage.show{transform:translateX(-50%) translateY(0)}
 .stats-drag-handle{width:36px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:12px auto 0;flex-shrink:0}
 .stats-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;flex-shrink:0}
