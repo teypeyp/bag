@@ -2273,18 +2273,30 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <!-- Harcama / Gelir Dağılımı Donut -->
   <div class="chart-card">
     <div class="chart-card-header" style="align-items:center">
-      <span class="chart-card-title">Bu Ay Dağılım</span>
+      <span class="chart-card-title" id="donutMonthLabel">Bu Ay Dağılım</span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button onclick="changeDonutMonth(-1)" style="width:24px;height:24px;border:none;background:var(--surface2);border-radius:6px;color:var(--muted);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center">‹</button>
+        <button onclick="changeDonutMonth(1)" id="donutMonthNext" style="width:24px;height:24px;border:none;background:var(--surface2);border-radius:6px;color:var(--muted);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center">›</button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
       <div id="donutToggle" style="display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:3px;gap:2px">
         <button id="donutBtnExp" onclick="switchDonut('expense')" style="padding:4px 10px;border:none;border-radius:99px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;cursor:pointer;background:var(--danger);color:#fff;transition:all .2s">Gider</button>
         <button id="donutBtnInc" onclick="switchDonut('income')"  style="padding:4px 10px;border:none;border-radius:99px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;cursor:pointer;background:none;color:var(--muted);transition:all .2s">Gelir</button>
       </div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
-      <span style="font-size:11px;font-weight:600;color:var(--muted)" id="donutTypeLabel">Harcama dağılımı</span>
       <span class="chart-card-sub" id="doughnutTotal"></span>
     </div>
     <div class="chart-wrap" style="height:200px"><canvas id="doughnutChart"></canvas></div>
     <div id="doughnutLegend" style="margin-top:14px"></div>
+  </div>
+
+  <!-- Aylık Kalan Geçmişi -->
+  <div class="chart-card" id="monthlyRemainingCard">
+    <div class="chart-card-header">
+      <span class="chart-card-title">Aylık Kalan Para</span>
+      <span class="chart-card-sub">Son 6 ay</span>
+    </div>
+    <div id="monthlyRemainingList"></div>
   </div>
 
   <!-- Gelir / Gider Bar -->
@@ -3346,6 +3358,7 @@ function switchTab(id) {
   if (id === 'sabit') { renderSabit(); }
   if (id === 'ozet') {
     _donutMode = 'expense'; // tab açılınca gider moduna sıfırla
+    _donutMonth = monthKey(); // ay seçiciyi bu aya sıfırla
     renderOzetStats();
     Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
     charts = {};
@@ -3823,32 +3836,28 @@ function calcFreeBudget(mk) {
 
   const available = income - recTotal - debtTotal - goalTotal - savTarget;
   const remaining = available - varSpent;
+  const unpaidFixed = Math.max(0, (recTotal + debtTotal + goalTotal) - paidFixed);
 
   const isCurrentMonth = mk === monthKey();
   const todayD = new Date().getDate();
   const dim = daysInMonth(mk);
   const daysLeft = isCurrentMonth ? Math.max(1, dim - todayD + 1) : 0;
 
-  // Bugünün harcaması — günlük limite dahil değil, ayrı gösterilir
   const todayStr = today();
   const todayVarSpent = isCurrentMonth
     ? txs.filter(t => t.date === todayStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
         .reduce((s, t) => s + t.amount, 0)
     : 0;
 
-  // Günlük limit: bugünkü harcama HARİÇ kalan serbest para / kalan gün
-  // Bugün harcanan yarın hesaba katılır — gün içinde limit değişmez
-  // Son gün (daysLeft=0): kalan tüm bütçe bugünün limiti
   const pastVarSpent = varSpent - todayVarSpent;
   const remainingBudget = available - pastVarSpent;
   const overrideDaily = data.dailyOverride[mk] || 0;
   const daily = overrideDaily > 0 ? overrideDaily : (daysLeft > 0 ? remainingBudget / daysLeft : remainingBudget);
 
-  // Bugün için kalan (limitten bugün ne kadar harcandı)
   const todayRemaining = daily - todayVarSpent;
   const baseDaily = available > 0 ? available / dim : 0;
 
-  return { income, expense, savTarget, recTotal, debtTotal, goalTotal, paidFixed, varSpent, available, remaining, daysLeft, daily, baseDaily, todayVarSpent, todayRemaining };
+  return { income, expense, savTarget, recTotal, debtTotal, goalTotal, paidFixed, varSpent, available, remaining, unpaidFixed, daysLeft, daily, baseDaily, todayVarSpent, todayRemaining };
 }
 
 // =================== RENDER MONTHLY ===================
@@ -3907,8 +3916,8 @@ function renderMonthly() {
   }
 
   renderFeedbackPill(fb);
-  const monthTxs = data.transactions.filter(t => monthKey(t.date) === mk);
-  renderTxList(document.getElementById('txList'), monthTxs.slice().reverse(), true);
+  const allTxsSorted = data.transactions.slice().sort((a,b) => b.date.localeCompare(a.date) || 0);
+  renderTxList(document.getElementById('txList'), allTxsSorted, true);
 }
 
 function renderWalletHero(balance, fb) {
@@ -5221,11 +5230,34 @@ function toggleRecIncome(id) {
 }
 
 function deleteRecIncome(id) {
-  showConfirm('Bu tekrarlayan geliri ve bağlı işlemleri kalıcı olarak sileceksin.', () => {
-    data.recurringIncome = (data.recurringIncome || []).filter(r => r.id !== id);
-    data.transactions = data.transactions.filter(t => t.recurringIncomeId !== id);
-    save(); renderAll();
-  }, 'Sil', 'Geliri Sil');
+  const r = (data.recurringIncome || []).find(r => r.id === id);
+  if (!r) return;
+  const hasTx = data.transactions.some(t => t.recurringIncomeId === id);
+  if (hasTx) {
+    showConfirm(
+      `"${r.desc}" listeden kaldırılacak. Geçmiş gelir kayıtları korunsun mu?`,
+      () => {
+        data.recurringIncome = (data.recurringIncome || []).filter(r => r.id !== id);
+        save(); renderAll();
+        showToast(TOAST_OK + ' Gelir kaldırıldı, kayıtlar korundu');
+        setTimeout(() => {
+          showConfirm(
+            'Geçmiş gelir kayıtlarını da silmek ister misin?',
+            () => {
+              data.transactions = data.transactions.filter(t => t.recurringIncomeId !== id);
+              save(); renderAll();
+              showToast(TOAST_OK + ' Gelir kayıtları da silindi');
+            }, 'Kayıtları Sil', 'Geçmiş Kayıtları Sil', 'del'
+          );
+        }, 300);
+      }, 'Geçmişi Koru', 'Geliri Sil'
+    );
+  } else {
+    showConfirm('Bu tekrarlayan geliri listeden kaldıracaksın.', () => {
+      data.recurringIncome = (data.recurringIncome || []).filter(r => r.id !== id);
+      save(); renderAll();
+    }, 'Kaldır', 'Geliri Sil');
+  }
 }
 
 // — Gelir Ekleme Sheet —
@@ -5401,11 +5433,36 @@ function togglePaidRecurring(id) {
 }
 
 function deleteRecurring(id) {
-  showConfirm('Bu sabit gideri ve bağlı işlemleri kalıcı olarak sileceksin.', () => {
-    data.recurring = data.recurring.filter(r => r.id !== id);
-    data.transactions = data.transactions.filter(t => t.recurringId !== id);
-    save(); renderAll();
-  }, 'Sil', 'Sabit Gideri Sil');
+  const r = data.recurring.find(r => r.id === id);
+  if (!r) return;
+  const hasTx = data.transactions.some(t => t.recurringId === id);
+  if (hasTx) {
+    showConfirm(
+      `"${r.desc}" listeden kaldırılacak. Geçmiş ödemeler korunsun mu?`,
+      () => {
+        // Sadece listeyi sil, tx'leri bırak
+        data.recurring = data.recurring.filter(r => r.id !== id);
+        save(); renderAll();
+        showToast(TOAST_OK + ' Sabit gider kaldırıldı, ödemeler korundu');
+        // İkinci seçenek: ödemeleri de sil
+        setTimeout(() => {
+          showConfirm(
+            'Geçmiş ödemeleri de silmek ister misin?',
+            () => {
+              data.transactions = data.transactions.filter(t => t.recurringId !== id);
+              save(); renderAll();
+              showToast(TOAST_OK + ' Ödemeler de silindi');
+            }, 'Ödemeleri Sil', 'Geçmiş Ödemeleri Sil', 'del'
+          );
+        }, 300);
+      }, 'Geçmişi Koru', 'Sabit Gideri Kaldır'
+    );
+  } else {
+    showConfirm('Bu sabit gideri listeden kaldıracaksın.', () => {
+      data.recurring = data.recurring.filter(r => r.id !== id);
+      save(); renderAll();
+    }, 'Kaldır', 'Sabit Gideri Sil');
+  }
 }
 
 // =================== BORÇLAR ===================
@@ -5592,11 +5649,34 @@ function saveDebtEdit() {
 }
 
 function deleteDebt(id) {
-  showConfirm('Bu ödemeyi ve bağlı taksit işlemlerini kalıcı olarak sileceksin.', () => {
-    data.debts = data.debts.filter(d => d.id !== id);
-    data.transactions = data.transactions.filter(t => t.debtId !== id);
-    save(); renderAll();
-  }, 'Sil', 'Ödemeyi Sil');
+  const d = data.debts.find(d => d.id === id);
+  if (!d) return;
+  const hasTx = data.transactions.some(t => t.debtId === id);
+  if (hasTx) {
+    showConfirm(
+      `"${d.name}" listeden kaldırılacak. Geçmiş taksit ödemeleri korunsun mu?`,
+      () => {
+        data.debts = data.debts.filter(d => d.id !== id);
+        save(); renderAll();
+        showToast(TOAST_OK + ' Borç kaldırıldı, ödemeler korundu');
+        setTimeout(() => {
+          showConfirm(
+            'Geçmiş taksit ödemelerini de silmek ister misin?',
+            () => {
+              data.transactions = data.transactions.filter(t => t.debtId !== id);
+              save(); renderAll();
+              showToast(TOAST_OK + ' Taksit ödemeleri de silindi');
+            }, 'Ödemeleri Sil', 'Geçmiş Ödemeleri Sil', 'del'
+          );
+        }, 300);
+      }, 'Geçmişi Koru', 'Borcu Sil'
+    );
+  } else {
+    showConfirm('Bu borcu listeden kaldıracaksın.', () => {
+      data.debts = data.debts.filter(d => d.id !== id);
+      save(); renderAll();
+    }, 'Kaldır', 'Borcu Sil');
+  }
 }
 
 // =================== GOALS ===================
@@ -7396,6 +7476,8 @@ function renderOzetStats() {
   renderDailyStats();
   renderDebtSummaryCard();
   renderWishSummaryCard();
+  renderMonthlyRemaining();
+  _updateDonutMonthLabel();
 }
 
 function renderDailyStats() {
@@ -7730,10 +7812,49 @@ function renderDebtSummaryCard() {
 
 // =================== DONUT ===================
 let _donutMode = 'expense'; // 'expense' | 'income'
+let _donutMonth = monthKey(); // hangi ay gösteriliyor
+
+function renderMonthlyRemaining() {
+  const el = document.getElementById('monthlyRemainingList');
+  if (!el) return;
+
+  const months = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(1);
+    d.setMonth(d.getMonth() - i);
+    const mk = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    const fb = calcFreeBudget(mk);
+    if (fb.income <= 0) continue;
+    months.push({ mk, fb });
+  }
+
+  if (!months.length) { el.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:8px 0">Veri yok</div>'; return; }
+
+  const maxAbs = Math.max(...months.map(m => Math.abs(m.fb.remaining)), 1);
+
+  el.innerHTML = months.map(({ mk, fb }) => {
+    const [y, m] = mk.split('-').map(Number);
+    const isCurrent = mk === monthKey();
+    const label = isCurrent ? 'Bu ay' : MONTH_NAMES[m-1] + ' ' + y;
+    const rem = Math.round(fb.remaining);
+    const isPos = rem >= 0;
+    const color = isPos ? 'var(--accent)' : 'var(--danger)';
+    const barW = Math.round((Math.abs(rem) / maxAbs) * 100);
+    return `<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+        <span style="font-size:12px;font-weight:${isCurrent?'800':'600'};color:${isCurrent?'var(--text)':'var(--muted)'}">${label}</span>
+        <span style="font-size:13px;font-weight:800;color:${color}">${isPos?'+':''}${fmtTL(rem)}</span>
+      </div>
+      <div style="height:3px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden">
+        <div style="height:100%;width:${barW}%;background:${color};border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
 
 function switchDonut(mode) {
   _donutMode = mode;
-  // Toggle buton görünümü
   const expBtn = document.getElementById('donutBtnExp');
   const incBtn = document.getElementById('donutBtnInc');
   if (expBtn && incBtn) {
@@ -7745,17 +7866,36 @@ function switchDonut(mode) {
       expBtn.style.background = 'none';          expBtn.style.color = 'var(--muted)';
     }
   }
-  const label = document.getElementById('donutTypeLabel');
-  if (label) label.textContent = mode === 'expense' ? 'Harcama dağılımı' : 'Gelir dağılımı';
-  // Mevcut chart'ı destroy et, yeni canvas oluştur
   if (charts.doughnut) { try { charts.doughnut.destroy(); } catch(e){} delete charts.doughnut; }
   const old = document.getElementById('doughnutChart');
   if (old) { const fresh = document.createElement('canvas'); fresh.id = 'doughnutChart'; old.parentNode.replaceChild(fresh, old); }
   renderDonut();
 }
 
+function changeDonutMonth(dir) {
+  const [y, m] = _donutMonth.split('-').map(Number);
+  const d = new Date(y, m - 1 + dir, 1);
+  const newMk = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+  if (newMk > monthKey()) return; // geleceğe gitme
+  _donutMonth = newMk;
+  _updateDonutMonthLabel();
+  if (charts.doughnut) { try { charts.doughnut.destroy(); } catch(e){} delete charts.doughnut; }
+  const old = document.getElementById('doughnutChart');
+  if (old) { const fresh = document.createElement('canvas'); fresh.id = 'doughnutChart'; old.parentNode.replaceChild(fresh, old); }
+  renderDonut();
+}
+
+function _updateDonutMonthLabel() {
+  const [y, m] = _donutMonth.split('-').map(Number);
+  const isCurrent = _donutMonth === monthKey();
+  const label = document.getElementById('donutMonthLabel');
+  if (label) label.textContent = isCurrent ? 'Bu Ay Dağılım' : MONTH_NAMES[m-1] + ' ' + y + ' Dağılım';
+  const nextBtn = document.getElementById('donutMonthNext');
+  if (nextBtn) nextBtn.style.opacity = isCurrent ? '0.3' : '1';
+}
+
 function renderDonut() {
-  const mk = currentMonth;
+  const mk = _donutMonth;
   const mode = _donutMode;
   const txs = data.transactions.filter(t => monthKey(t.date) === mk && t.type === mode);
   const bycat = {};
@@ -8561,8 +8701,7 @@ function renderAll() {
         expBtn.style.background = 'none';          expBtn.style.color = 'var(--muted)';
       }
     }
-    const donutLabel = document.getElementById('donutTypeLabel');
-    if (donutLabel) donutLabel.textContent = _donutMode === 'expense' ? 'Harcama dağılımı' : 'Gelir dağılımı';
+    _updateDonutMonthLabel();
     Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
     charts = {};
     requestAnimationFrame(() => requestAnimationFrame(() => {
