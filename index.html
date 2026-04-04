@@ -704,7 +704,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .ymb-extra-val{font-size:12px;font-weight:800}
 /* HISTORY */
 .history-wrap{background:var(--surface);width:100%;max-width:520px;height:100vh;display:flex;flex-direction:column}
-.history-header{padding:22px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.history-header{padding:calc(22px + env(safe-area-inset-top, 0px)) 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .history-body{flex:1;overflow-y:auto;padding:16px 18px}
 
 /* CUSTOM DATE PICKER */
