@@ -385,57 +385,58 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 .streak-card{
   position:relative;overflow:hidden;
-  /* glassmorphism — koyu amber tintli yarı saydam cam */
   background:linear-gradient(158deg,rgba(30,22,10,.78) 0%,rgba(16,14,20,.86) 60%,rgba(12,10,18,.92) 100%);
   backdrop-filter:blur(28px) saturate(160%);
   -webkit-backdrop-filter:blur(28px) saturate(160%);
   border-radius:var(--radius);margin-bottom:14px;
-  /* çok katmanlı border: üst kenar parlak, geri kalan ince amber */
   border:1px solid rgba(255,160,0,.16);
-  box-shadow:
-    0 12px 40px rgba(0,0,0,.45),
-    0 2px 0 0 rgba(255,180,0,.14) inset,
-    0 -1px 0 0 rgba(0,0,0,.5) inset,
-    0 0 0 0.5px rgba(255,120,0,.08) inset;
-  /* daralt — tab padding'ine ek olarak her yandan 6px daha içe al */
-  width:calc(100% - 12px);
-  margin-left:auto;margin-right:auto;
+  box-shadow:0 12px 40px rgba(0,0,0,.45),0 2px 0 0 rgba(255,180,0,.14) inset,0 -1px 0 0 rgba(0,0,0,.5) inset;
+  width:calc(100% - 12px);margin-left:auto;margin-right:auto;
 }
-/* üst yarı subtle amber tülü */
 .streak-card::before{
   content:'';position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse 80% 55% at 15% 0%,rgba(255,149,0,.09) 0%,transparent 60%),
-    linear-gradient(180deg,rgba(255,149,0,.05) 0%,transparent 45%);
+  background:radial-gradient(ellipse 80% 55% at 15% 0%,rgba(255,149,0,.09) 0%,transparent 60%),linear-gradient(180deg,rgba(255,149,0,.05) 0%,transparent 45%);
   pointer-events:none;z-index:0;
 }
-/* üst kenar alev gradyan çizgisi */
 .streak-card::after{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;z-index:2;
   background:linear-gradient(90deg,transparent 0%,rgba(255,214,10,.5) 35%,rgba(255,149,0,.6) 55%,rgba(255,80,0,.3) 75%,transparent 100%);
 }
 
-.streak-header{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;position:relative;z-index:1}
-.streak-flame{font-size:28px;line-height:1;animation:streakFlame 4s ease-in-out infinite, streakGlow 3s ease-in-out infinite;display:inline-block;flex-shrink:0;transform-origin:bottom center}
+.streak-header{display:flex;align-items:center;gap:12px;padding:14px 16px 12px;position:relative;z-index:1}
+.streak-flame-wrap{position:relative;width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.streak-flame-bg{position:absolute;inset:0;background:rgba(255,149,0,.1);border-radius:50%}
+.streak-flame{animation:streakFlame 4s ease-in-out infinite,streakGlow 3s ease-in-out infinite;display:inline-block;flex-shrink:0;transform-origin:bottom center}
 .streak-flame.dead{filter:grayscale(1);animation:none;opacity:.35}
-.streak-main{flex:1}
+.streak-main{flex:1;min-width:0}
 .streak-count{
-  font-size:36px;font-weight:900;letter-spacing:-2px;line-height:1;
+  font-size:40px;font-weight:900;letter-spacing:-2px;line-height:1;
   background:linear-gradient(135deg,#FFD60A 0%,#FF9500 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .streak-count.dead{background:linear-gradient(135deg,#444,#2a2a2a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.streak-meta{font-size:11px;font-weight:700;color:rgba(255,214,10,.45);margin-top:2px;display:flex;align-items:center;gap:6px}
+.streak-meta{font-size:11px;font-weight:700;color:rgba(255,214,10,.45);margin-top:2px}
 .streak-meta.dead{color:var(--muted)}
+.streak-best{font-size:10px;font-weight:800;color:rgba(255,149,0,.5);text-align:right;flex-shrink:0;align-self:flex-start;line-height:1.4}
 
+.streak-stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 16px 12px;position:relative;z-index:1}
+.streak-stat-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:9px 10px;text-align:center}
+.streak-stat-val{font-size:14px;font-weight:900;color:var(--text);line-height:1}
+.streak-stat-lbl{font-size:9px;font-weight:700;color:var(--muted);margin-top:3px;letter-spacing:.3px}
 
 .streak-dots-wrap{padding:0 16px 10px;position:relative;z-index:1}
-.streak-days-grid{display:flex;gap:3px;flex-wrap:wrap}
+.streak-month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.streak-month-label{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px}
+.streak-nav-btn{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:background .15s}
+.streak-nav-btn:active{background:rgba(255,255,255,.14)}
+.streak-days-header{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
+.streak-day-head{font-size:8px;font-weight:700;color:var(--muted);text-align:center;opacity:.6}
+.streak-days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
 .day-dot{
-  width:20px;height:20px;border-radius:5px;
+  aspect-ratio:1;border-radius:5px;
   display:flex;align-items:center;justify-content:center;
   font-size:9px;font-weight:800;
-  cursor:default;flex-shrink:0;
+  cursor:default;
 }
 .day-dot.green{background:rgba(45,184,102,.18);border:1.5px solid rgba(45,184,102,.35);color:var(--accent)}
 .day-dot.green.today{background:rgba(45,184,102,.32);border-color:var(--accent);box-shadow:0 0 8px rgba(45,184,102,.28)}
@@ -443,6 +444,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .day-dot.frozen{background:rgba(10,132,255,.1);border:1.5px solid rgba(10,132,255,.28);color:var(--blue)}
 .day-dot.empty{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);color:rgba(255,255,255,.15)}
 .day-dot.future{background:transparent;border:1.5px dashed rgba(255,255,255,.07);color:transparent}
+.day-dot.blank{background:transparent;border:none}
 .day-dot-pop{animation:dayDotPop .3s cubic-bezier(.34,1.56,.64,1) both}
 
 .streak-freeze-row{
@@ -452,17 +454,14 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   position:relative;z-index:1;
 }
 .freeze-shields{display:flex;gap:6px}
-.freeze-shield{
-  width:36px;height:36px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-}
+.freeze-shield{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;}
 .freeze-shield.active{background:rgba(10,132,255,.14);border:1.5px solid rgba(10,132,255,.35)}
 .freeze-shield.used{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);filter:grayscale(1);opacity:.25}
 .freeze-btn{
-  height:32px;padding:0 10px;border-radius:10px;border:1.5px solid rgba(10,132,255,.35);
+  height:32px;padding:0 12px;border-radius:10px;border:1.5px solid rgba(10,132,255,.35);
   background:rgba(10,132,255,.12);
   cursor:pointer;transition:all .15s;
-  display:flex;align-items:center;justify-content:center;gap:2px;
+  display:flex;align-items:center;justify-content:center;gap:4px;
 }
 .freeze-btn:active{transform:scale(.9);background:rgba(10,132,255,.25)}
 .freeze-btn:disabled{opacity:.2;cursor:default;pointer-events:none}
@@ -3070,7 +3069,7 @@ function load() {
       if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
       if (!data.streak.frozenDays) data.streak.frozenDays = [];
       if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
-      if (typeof data.streak.freezeTotal !== 'number' || data.streak.freezeTotal > 2) data.streak.freezeTotal = 2; // max 2
+      if (typeof data.streak.freezeTotal !== 'number' || data.streak.freezeTotal > 5) data.streak.freezeTotal = 5; // max 5
       if (data.streak.lastWeeklyFreezeGift === undefined) data.streak.lastWeeklyFreezeGift = '';
       if (data.streak.lastFreezeResetMonth === undefined) data.streak.lastFreezeResetMonth = '';
       data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; if (!r.payHistory) r.payHistory = {}; if (r.variable === undefined) r.variable = false; });
@@ -3092,7 +3091,7 @@ function load() {
       const _defIds = new Set(DEFAULT_CATS.map(c => c.id));
       data.categories = (data.categories || []).filter(c => !_defIds.has(c.id));
       let _migChanged = false;
-      data.categories.forEach(c => { if (!c.type || c.type === 'income') { c.type = 'expense'; _migChanged = true; } });
+      data.categories.forEach(c => { if (!c.type) { c.type = 'expense'; _migChanged = true; } });
       if (_migChanged) { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e) {} }
     }
   } catch(e) { console.warn('localStorage unavailable'); }
@@ -3408,21 +3407,19 @@ function toggleSection(name) {
 
 // =================== GAMIFICATION ENGINE ===================
 
-function getDayStatus(dateStr) {
+function getDayInfo(dateStr) {
   const todayStr = today();
-  if (dateStr > todayStr) return 'future';
-  if (data.streak.frozenDays.includes(dateStr)) return 'frozen';
+  if (dateStr > todayStr) return { status: 'future', spent: 0, limit: 0 };
+  if (data.streak.frozenDays.includes(dateStr)) return { status: 'frozen', spent: 0, limit: 0 };
 
   const mk = monthKey(dateStr);
   const txsUntilDay = data.transactions.filter(t => t.date <= dateStr && monthKey(t.date) === mk);
   const incomeUntil = txsUntilDay.filter(t => t.type === 'income').reduce((s,t) => s + t.amount, 0);
 
-  if (!incomeUntil) return 'empty';
+  if (!incomeUntil) return { status: 'empty', spent: 0, limit: 0 };
 
   const dayTxs = data.transactions.filter(t => t.date === dateStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit);
   const daySpent = dayTxs.reduce((s,t) => s + t.amount, 0);
-
-  if (!daySpent) return 'green';
 
   const [,,d] = dateStr.split('-').map(Number);
   const dim = daysInMonth(mk);
@@ -3435,15 +3432,18 @@ function getDayStatus(dateStr) {
   const savTarget = data.monthlyTargets[mk] || 0;
   const available = incomeUntil - recTotal - debtTotal - goalTotal - savTarget;
 
-  // O güne kadar değişken harcama (o günün harcaması HARİÇ — önceki günler)
   const paidFixed = txsUntilDay.filter(t => t.isRecurring || t.isDebt || t.isGoalDeposit).reduce((s,t) => s + t.amount, 0);
   const varSpentUntil = Math.max(0, expUntil - paidFixed);
-  const pastVarSpent = Math.max(0, varSpentUntil - daySpent); // bugün hariç
-
-  // O günün limiti: (serbest para - önceki günler harcaması) / kalan gün
+  const pastVarSpent = Math.max(0, varSpentUntil - daySpent);
   const dailyAllowance = daysLeftThatDay > 0 ? (available - pastVarSpent) / daysLeftThatDay : 0;
+  const limit = Math.max(0, dailyAllowance);
 
-  return daySpent <= Math.max(0, dailyAllowance) ? 'green' : 'red';
+  if (!daySpent) return { status: 'green', spent: 0, limit };
+  return { status: daySpent <= limit ? 'green' : 'red', spent: daySpent, limit };
+}
+
+function getDayStatus(dateStr) {
+  return getDayInfo(dateStr).status;
 }
 
 function calcStreakData() {
@@ -3451,46 +3451,49 @@ function calcStreakData() {
   const [y, m] = mk.split('-').map(Number);
   const dim = daysInMonth(mk);
   const todayD = new Date().getDate();
-  // Bu ayki her gün için status
+
+  // Bu ayki her gün için info (status + spent + limit)
   const days = [];
   for (let d = 1; d <= dim; d++) {
     const dateStr = y + '-' + String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0');
-    days.push({ dateStr, d, status: getDayStatus(dateStr) });
+    const info = getDayInfo(dateStr);
+    days.push({ dateStr, d, ...info });
+  }
+
+  // Geçen ayın günleri
+  const prevDate = new Date(y, m - 2, 1);
+  const prevY = prevDate.getFullYear();
+  const prevM = prevDate.getMonth() + 1;
+  const prevMk = prevY + '-' + String(prevM).padStart(2,'0');
+  const prevDim = daysInMonth(prevMk);
+  const prevDays = [];
+  for (let pd = 1; pd <= prevDim; pd++) {
+    const dateStr = prevY + '-' + String(prevM).padStart(2,'0') + '-' + String(pd).padStart(2,'0');
+    const info = getDayInfo(dateStr);
+    prevDays.push({ dateStr, d: pd, ...info });
   }
 
   // Streak: bugüne kadar ardışık green/frozen günler (geriye doğru)
-  // empty = harcama yok veya gelir yok → streak'i KIRMAZ ama sayılmaz
-  // red = limit aşıldı → kırar
-  // Ay sınırını aşmak için: bu ayki günler bittikten sonra önceki aya da bak
   let streak = 0;
-  // Önce bu ayı tara
   let hitRed = false;
   for (let i = Math.min(todayD, dim) - 1; i >= 0; i--) {
     const s = days[i].status;
     if (s === 'red') { hitRed = true; break; }
     if (s === 'green' || s === 'frozen') streak++;
   }
-  // Eğer bu ayın ilk gününe ulaştık ve red yoksa → önceki aya geç
   if (!hitRed) {
-    const prevDate = new Date(y, m - 2, 1); // önceki ay
-    const prevY = prevDate.getFullYear();
-    const prevM = prevDate.getMonth() + 1;
-    const prevMk = prevY + '-' + String(prevM).padStart(2,'0');
-    const prevDim = daysInMonth(prevMk);
     for (let pd = prevDim; pd >= 1; pd--) {
-      const dateStr = prevY + '-' + String(prevM).padStart(2,'0') + '-' + String(pd).padStart(2,'0');
-      const s = getDayStatus(dateStr);
+      const s = prevDays[pd - 1].status;
       if (s === 'red') break;
       if (s === 'green' || s === 'frozen') streak++;
     }
   }
 
-  // En iyi streak (tarihsel — all time)
   data.streak.current = streak;
   let _needsSave = false;
   if (streak > (data.streak.best || 0)) { data.streak.best = streak; _needsSave = true; }
 
-  // Aylık skor: kaç gün green/frozen
+  // Aylık skor: kaç gün green/frozen (bu ay)
   const greenDays = days.filter(d => d.d <= todayD && (d.status==='green'||d.status==='frozen')).length;
   const totalPastDays = Math.min(todayD, dim);
   const score = totalPastDays > 0 ? Math.round((greenDays / totalPastDays) * 100) : 0;
@@ -3511,45 +3514,35 @@ function calcStreakData() {
   // Milestone
   let milestone = null;
   const milestones = [
-    {days:3,  title:'İlk adım atıldı!',      sub:'3 gün boyunca limitin altında kaldın.'},
-    {days:7,  title:'Bir hafta disiplin!',    sub:'Harika — 1 koruma hakkı kazandın!'},
-    {days:14, title:'İki haftadır kararlısın!', sub:'14 günlük seri. 1 koruma hakkı daha kazandın!'},
-    {days:21, title:'21 gün — yeni bir alışkanlık!', sub:'Araştırmalar 21 günün kritik eşik olduğunu söylüyor. +1 koruma!'},
-    {days:30, title:'Tam ay — efsanevi kontrol!', sub:'Aylık bütçe disiplininde zirveye ulaştın. +1 koruma hakkı!'},
+    {days:3,  title:'\u0130lk ad\u0131m at\u0131ld\u0131!',      sub:'3 g\u00fcn boyunca limitin alt\u0131nda kald\u0131n.'},
+    {days:7,  title:'Bir hafta disiplin!',    sub:'Harika \u2014 1 koruma hakk\u0131 kazand\u0131n!'},
+    {days:14, title:'\u0130ki haftad\u0131r kararl\u0131s\u0131n!', sub:'14 g\u00fcnl\u00fck seri. 1 koruma hakk\u0131 daha kazand\u0131n!'},
+    {days:21, title:'21 g\u00fcn \u2014 yeni bir al\u0131\u015fkanl\u0131k!', sub:'Ara\u015ft\u0131rmalar 21 g\u00fcn\u00fcn kritik e\u015fik oldu\u011funu s\u00f6yl\u00fcyor. +1 koruma!'},
+    {days:30, title:'Tam ay \u2014 efsanevi kontrol!', sub:'Ayl\u0131k b\u00fct\u00e7e disiplininde zirveye ula\u015ft\u0131n. +1 koruma hakk\u0131!'},
   ];
   milestones.forEach(ms => { if (streak === ms.days) milestone = ms; });
-
-  // 30+ streak: her 30 günde büyük milestone
   if (!milestone && streak > 30 && streak % 30 === 0) {
     const months = streak / 30;
-    milestone = {
-      title: `${months} aylık seri!`,
-      sub: `${streak} gün boyunca bütçe disiplinini korudun. Bu artık bir yaşam biçimi. +1 koruma!`
-    };
+    milestone = { title: `${months} ayl\u0131k seri!`, sub: `${streak} g\u00fcn boyunca b\u00fct\u00e7e disiplinini korudun. Bu art\u0131k bir ya\u015fam bi\u00e7imi. +1 koruma!` };
   }
-  // 30+ streak: her 7 günde küçük milestone (30'un katı değilse)
   if (!milestone && streak > 30 && streak % 7 === 0) {
     const weeks = Math.floor(streak / 7);
-    milestone = {
-      title: `${weeks}. haftayı tamamladın!`,
-      sub: `${streak} günlük zincir devam ediyor. +1 koruma hakkı kazandın!`
-    };
+    milestone = { title: `${weeks}. haftay\u0131 tamamlad\u0131n!`, sub: `${streak} g\u00fcnl\u00fck zincir devam ediyor. +1 koruma hakk\u0131 kazand\u0131n!` };
   }
 
   // Ay sonu rozeti
   let monthBadge = null;
   if (todayD === dim || mk < monthKey()) {
-    if (score >= 90) monthBadge = { cls:'legendary', emoji:'<svg width="20" height="20" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4z"/></svg>', title:'Efsane Ay', sub:`%${score} yeşil gün — mükemmel bütçe kontrolü` };
-    else if (score >= 70) monthBadge = { cls:'disciplined', emoji:'<svg width="20" height="20" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 15m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M12 12v-8"/><path d="M8 4h8"/><path d="M9 4l3 4l3 -4"/></svg>', title:'Disiplinli Ay', sub:`%${score} yeşil gün — harika iş` };
-    else monthBadge = { cls:'trying', emoji:'<svg width="20" height="20" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#34D399" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l4 -4l4 4l4 -6l4 4"/><path d="M14 7l3 0l0 3"/></svg>', title:'Gelişiyorsun', sub:`%${score} yeşil gün — devam et` };
+    if (score >= 90) monthBadge = { cls:'legendary', emoji:'<svg width="20" height="20" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#BF5AF2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4z"/></svg>', title:'Efsane Ay', sub:`%${score} ye\u015fil g\u00fcn \u2014 m\u00fckemmel b\u00fct\u00e7e kontrol\u00fc` };
+    else if (score >= 70) monthBadge = { cls:'disciplined', emoji:'<svg width="20" height="20" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 15m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M12 12v-8"/><path d="M8 4h8"/><path d="M9 4l3 4l3 -4"/></svg>', title:'Disiplinli Ay', sub:`%${score} ye\u015fil g\u00fcn \u2014 harika i\u015f` };
+    else monthBadge = { cls:'trying', emoji:'<svg width="20" height="20" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#34D399" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 17l4 -4l4 4l4 -6l4 4"/><path d="M14 7l3 0l0 3"/></svg>', title:'Geli\u015fiyorsun', sub:`%${score} ye\u015fil g\u00fcn \u2014 devam et` };
   }
 
   if (_needsSave) save();
   const fb = calcFreeBudget(mk);
   const monthlySavings = fb.remaining;
-  return { days, streak, score, greenDays, totalPastDays, freezesLeft, milestone, monthBadge, dim, todayD, monthlySavings };
+  return { days, prevDays, prevMk, streak, score, greenDays, totalPastDays, freezesLeft, milestone, monthBadge, dim, todayD, monthlySavings };
 }
-
 function useFreeze() {
   if ((data.streak.freezesUsed || 0) >= (data.streak.freezeTotal || 2)) { showToast(TOAST_SHIELD + ' Bu ay freeze hakkın kalmadı'); return; }
   const todayStr = today();
@@ -3564,7 +3557,7 @@ function useFreeze() {
 }
 
 function renderStreakCard(sd) {
-  const { days, streak, freezesLeft, milestone, monthBadge, dim, todayD } = sd;
+  const { days, streak, score, greenDays, totalPastDays, freezesLeft, milestone, monthBadge, dim, todayD } = sd;
   const isDead = streak === 0;
   const mk = currentMonth;
   const hasIncome = calcMonthData(mk).income > 0;
@@ -3572,33 +3565,23 @@ function renderStreakCard(sd) {
   const shieldsHtml = Array.from({length: data.streak.freezeTotal || 2}, (_,i) => {
     const used = i >= freezesLeft;
     const svg = used
-      ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="rgba(255,255,255,.2)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg>'
-      : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg>';
+      ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="rgba(255,255,255,.2)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg>'
+      : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg>';
     return `<div class="freeze-shield ${used?'used':'active'}">${svg}</div>`;
   }).join('');
 
-  const dotsHtml = days.map((day, i) => {
-    const isToday = day.d === todayD;
-    const delay = i * 15;
-    let icon = '';
-    if (day.status === 'green') icon = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg>';
-    else if (day.status === 'red') icon = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg>';
-    else if (day.status === 'frozen') icon = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l0 18"/><path d="M3 12l18 0"/><path d="M12 3l3 3"/><path d="M12 3l-3 3"/><path d="M12 21l3 -3"/><path d="M12 21l-3 -3"/><path d="M3 12l3 -3"/><path d="M3 12l3 3"/><path d="M21 12l-3 3"/><path d="M21 12l-3 -3"/></svg>';
-    // future ve empty: boş
-    return `<div class="day-dot ${day.status}${isToday?' today':''} day-dot-pop" style="animation-delay:${delay}ms" title="${day.dateStr}">${icon}</div>`;
-  }).join('');
+  const streakColor = isDead ? 'var(--muted)' : '#FF9500';
+  const scoreColor  = score >= 80 ? 'var(--accent)' : score >= 50 ? 'var(--warning)' : 'var(--danger)';
 
   const milestoneHtml = milestone ? `
     <div class="streak-milestone">
-      <div>
-        <div class="milestone-title">${milestone.title}</div>
-        <div class="milestone-sub">${milestone.sub}</div>
-      </div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6l4 6l5-4l-2 10h-14l-2-10l5 4z"/></svg>
+      <div><div class="milestone-title">${milestone.title}</div><div class="milestone-sub">${milestone.sub}</div></div>
     </div>` : '';
 
   const monthBadgeHtml = monthBadge ? `
     <div class="month-badge ${monthBadge.cls}">
-      <span style="font-size:20px">${monthBadge.emoji}</span>
+      <span style="font-size:18px">${monthBadge.emoji}</span>
       <div>
         <div style="font-size:12px;font-weight:800;margin-bottom:2px">${monthBadge.title}</div>
         <div style="font-size:11px;color:var(--muted);font-weight:600">${monthBadge.sub}</div>
@@ -3606,39 +3589,208 @@ function renderStreakCard(sd) {
     </div>` : '';
 
   const noIncomeHint = !hasIncome ? `
-    <div style="margin:0 16px 12px;padding:10px 14px;background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.07);position:relative;z-index:1">
-      <div style="font-size:12px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px"><svg width="18" height="18" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0 4h-2a2 2 0 0 0 -1.8 -1"/><path d="M12 7v10"/></svg> Bu ay gelir kaydı ekle, limit takibini başlat.</div>
+    <div style="margin:0 16px 10px;padding:10px 14px;background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.07);position:relative;z-index:1">
+      <div style="font-size:12px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px"><svg width="16" height="16" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M14.8 9a2 2 0 0 0-1.8-1h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0 4h-2a2 2 0 0 0-1.8-1"/><path d="M12 7v10"/></svg> Bu ay gelir kaydı ekle, limit takibini başlat.</div>
     </div>` : '';
 
+  const flameSvg = isDead
+    ? '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#888" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2-2.96 0-7-1-8c0 3.038-1.773 4.741-3 6c-1.226 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.532-1.056-3.94-2-5c-1.786 3-2.791 3-4 2z"/></svg>'
+    : '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2-2.96 0-7-1-8c0 3.038-1.773 4.741-3 6c-1.226 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.532-1.056-3.94-2-5c-1.786 3-2.791 3-4 2z"/></svg>';
+
+  const DAY_HEADS = ['Pt','Sa','Ça','Pe','Cu','Ct','Pz'].map(d=>`<div class="streak-day-head">${d}</div>`).join('');
+
   return `
-  <div class="streak-card">
+  <div class="streak-card" id="streakCard">
     <div class="streak-header">
-      <span class="streak-flame${isDead?' dead':''}">${isDead ? '<svg width="44" height="44" style="flex-shrink:0;filter:grayscale(1);opacity:.35" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#888" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>' : '<svg width="44" height="44" style="flex-shrink:0;transform-origin:bottom center" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg>'}</span>
+      <div class="streak-flame-wrap">
+        <div class="streak-flame-bg"></div>
+        <span class="streak-flame${isDead?' dead':''}">${flameSvg}</span>
+      </div>
       <div class="streak-main">
         <div class="streak-count${isDead?' dead':''}">${streak}</div>
         <div class="streak-meta${isDead?' dead':''}">
-          ${hasIncome ? 'gün limit altında' : 'streak henüz başlamadı'}
+          ${hasIncome ? 'günlük seri' : 'streak henüz başlamadı'}
         </div>
       </div>
-      <div style="font-size:11px;font-weight:800;color:rgba(255,149,0,.6);text-align:right;flex-shrink:0;align-self:flex-start">EN UZUN SERİ: ${data.streak.best || 0}</div>
+      <div class="streak-best">EN UZUN<br>${data.streak.best || 0} GÜN</div>
     </div>
 
-    ${noIncomeHint}
-    ${milestoneHtml}
-    ${monthBadgeHtml}
+    <div class="streak-stat-row">
+      <div class="streak-stat-box"><div class="streak-stat-val" style="color:${streakColor}">${streak}</div><div class="streak-stat-lbl">aktif seri</div></div>
+      <div class="streak-stat-box"><div class="streak-stat-val" style="color:${scoreColor}">%${score}</div><div class="streak-stat-lbl">bu ay skoru</div></div>
+      <div class="streak-stat-box"><div class="streak-stat-val">${greenDays}/${totalPastDays}</div><div class="streak-stat-lbl">yeşil gün</div></div>
+    </div>
+
+    ${noIncomeHint}${milestoneHtml}${monthBadgeHtml}
 
     <div class="streak-dots-wrap">
-      <div class="streak-days-grid">${dotsHtml}</div>
+      <div class="streak-month-nav">
+        <button class="streak-nav-btn" onclick="streakChangeMonth(-1)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6l6 6"/></svg>
+        </button>
+        <span class="streak-month-label" id="streakMonthLabel"></span>
+        <button class="streak-nav-btn" id="streakNextBtn" onclick="streakChangeMonth(1)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"/></svg>
+        </button>
+      </div>
+      <div class="streak-days-header">${DAY_HEADS}</div>
+      <div class="streak-days-grid" id="streakDotGrid"></div>
+    </div>
+
+    <div id="streakDayPopup" style="display:none;margin:0 16px 8px;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;position:relative;z-index:2">
+      <div id="sdpDate" style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:7px"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:11px;font-weight:600;color:var(--muted)">Günlük limit</span>
+        <span id="sdpLimit" style="font-size:13px;font-weight:800;color:var(--text)"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+        <span style="font-size:11px;font-weight:600;color:var(--muted)">Harcama</span>
+        <span id="sdpSpent" style="font-size:13px;font-weight:800"></span>
+      </div>
+      <div style="height:3px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden;margin-bottom:4px">
+        <div id="sdpBar" style="height:100%;border-radius:99px;transition:width .25s"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span id="sdpLeft" style="font-size:9px;font-weight:700"></span>
+        <span id="sdpRight" style="font-size:9px;font-weight:700;color:var(--muted)"></span>
+      </div>
     </div>
 
     <div class="streak-freeze-row">
       <div class="freeze-shields">${shieldsHtml}</div>
-      <button class="freeze-btn" onclick="useFreeze()" ${freezesLeft<=0?'disabled':''} title="Bugünü dondur — limit aşsan bile streak devam eder">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg>
-        <span style="font-size:10px;font-weight:800;color:#0A84FF;margin-left:4px">Koru</span>
+      <button class="freeze-btn" onclick="useFreeze()" ${freezesLeft<=0?'disabled':''}>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg>
+        <span style="font-size:10px;font-weight:800;color:#0A84FF">Bugünü koru</span>
       </button>
     </div>
   </div>`;
+}
+
+// ── Streak takvim state ───────────────────────────────────────────────────────
+let _streakViewY = 0;
+let _streakViewM = 0;
+let _sdpActiveDot = null;
+
+function _streakOldestMk() {
+  // En eski işlem ayını bul; yoksa bu ay
+  if (!data.transactions || !data.transactions.length) return monthKey();
+  const oldest = data.transactions.reduce((min, t) => t.date < min ? t.date : min, data.transactions[0].date);
+  return monthKey(oldest);
+}
+
+function _streakInitView() {
+  const now = new Date();
+  _streakViewY = now.getFullYear();
+  _streakViewM = now.getMonth(); // 0-based
+  _streakRenderGrid();
+}
+
+function streakChangeMonth(dir) {
+  const newM = _streakViewM + dir;
+  const newY = newM < 0 ? _streakViewY - 1 : newM > 11 ? _streakViewY + 1 : _streakViewY;
+  const adjM = ((newM % 12) + 12) % 12;
+  const targetMk = newY + '-' + String(adjM + 1).padStart(2,'0');
+  const oldestMk = _streakOldestMk();
+  const now = new Date();
+  const currentMk = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2,'0');
+  if (targetMk < oldestMk || targetMk > currentMk) return;
+  _streakViewY = newY;
+  _streakViewM = adjM;
+  _sdpActiveDot = null;
+  const popup = document.getElementById('streakDayPopup');
+  if (popup) popup.style.display = 'none';
+  _streakRenderGrid();
+}
+
+function _streakRenderGrid() {
+  const grid = document.getElementById('streakDotGrid');
+  const label = document.getElementById('streakMonthLabel');
+  const nextBtn = document.getElementById('streakNextBtn');
+  const prevBtn = document.querySelector('.streak-nav-btn:first-child');
+  if (!grid) return;
+
+  const now = new Date();
+  const currentMk = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2,'0');
+  const oldestMk  = _streakOldestMk();
+  const viewMk = _streakViewY + '-' + String(_streakViewM + 1).padStart(2,'0');
+
+  const isCurrentMonth = viewMk === currentMk;
+  const isOldestMonth  = viewMk <= oldestMk;
+
+  if (nextBtn) { nextBtn.style.opacity = isCurrentMonth ? '0.2' : '1'; nextBtn.style.pointerEvents = isCurrentMonth ? 'none' : ''; }
+  if (prevBtn) { prevBtn.style.opacity = isOldestMonth  ? '0.2' : '1'; prevBtn.style.pointerEvents = isOldestMonth  ? 'none' : ''; }
+
+  if (label) label.textContent = MONTH_NAMES[_streakViewM].toUpperCase() + ' ' + _streakViewY;
+
+  const mk = viewMk;
+  const dim = daysInMonth(mk);
+  const firstDow = new Date(_streakViewY, _streakViewM, 1).getDay();
+  const offset = (firstDow + 6) % 7;
+
+  const iconCheck = '<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10-10"/></svg>';
+  const iconX     = '<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6l-12 12M6 6l12 12"/></svg>';
+  const iconSnow  = '<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l0 18M3 12l18 0M12 3l3 3M12 3l-3 3M12 21l3-3M12 21l-3-3M3 12l3-3M3 12l3 3M21 12l-3 3M21 12l-3-3"/></svg>';
+
+  let html = Array.from({length: offset}, () => '<div class="day-dot blank"></div>').join('');
+
+  for (let d = 1; d <= dim; d++) {
+    const dateStr = _streakViewY + '-' + String(_streakViewM+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const info = getDayInfo(dateStr);
+    let icon = '';
+    if (info.status === 'green') icon = iconCheck;
+    else if (info.status === 'red') icon = iconX;
+    else if (info.status === 'frozen') icon = iconSnow;
+    const isToday = isCurrentMonth && d === now.getDate();
+    const clickable = (info.status==='green'||info.status==='red'||info.status==='frozen')
+      ? `onclick="showDayPopup(this,'${dateStr}',${Math.round(info.spent)},${Math.round(info.limit)})"` : '';
+    html += `<div class="day-dot ${info.status}${isToday?' today':''} day-dot-pop" ${clickable} title="${dateStr}">${icon}</div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+function showDayPopup(el, dateStr, spent, limit) {
+  const popup = document.getElementById('streakDayPopup');
+  if (!popup) return;
+  if (_sdpActiveDot === el) {
+    el.style.outline = '';
+    _sdpActiveDot = null;
+    popup.style.display = 'none';
+    return;
+  }
+  if (_sdpActiveDot) _sdpActiveDot.style.outline = '';
+  _sdpActiveDot = el;
+  el.style.outline = '2px solid rgba(255,255,255,.3)';
+  el.style.outlineOffset = '1px';
+
+  const [dy, dm, dd] = dateStr.split('-').map(Number);
+  const DOW_TR = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+  const dow = DOW_TR[new Date(dy, dm-1, dd).getDay()];
+  document.getElementById('sdpDate').textContent = dd + ' ' + MONTH_NAMES[dm-1] + ' · ' + dow;
+
+  const isOver = limit > 0 && spent > limit;
+  const ratio = limit > 0 ? Math.min(100, Math.round(spent/limit*100)) : 0;
+  const color = isOver ? 'var(--danger)' : ratio > 80 ? 'var(--warning)' : 'var(--accent)';
+
+  document.getElementById('sdpLimit').textContent = limit > 0 ? fmtTL(limit) : '—';
+  document.getElementById('sdpSpent').textContent = fmtTL(spent);
+  document.getElementById('sdpSpent').style.color = spent === 0 ? 'var(--muted)' : color;
+  document.getElementById('sdpBar').style.width = ratio + '%';
+  document.getElementById('sdpBar').style.background = color;
+
+  if (isOver) {
+    document.getElementById('sdpLeft').textContent = fmtTL(spent - limit) + ' aşıldı';
+    document.getElementById('sdpLeft').style.color = 'var(--danger)';
+  } else if (limit > 0 && spent > 0) {
+    document.getElementById('sdpLeft').textContent = fmtTL(limit - spent) + ' kaldı';
+    document.getElementById('sdpLeft').style.color = 'var(--accent)';
+  } else {
+    document.getElementById('sdpLeft').textContent = 'Harcama yok';
+    document.getElementById('sdpLeft').style.color = 'var(--muted)';
+  }
+  document.getElementById('sdpRight').textContent = limit > 0 && spent > 0 ? '%' + ratio + ' kullanıldı' : '';
+
+  popup.style.display = 'block';
 }
 
 // =================== KUTLAMA ANİMASYONU ===================
@@ -7470,6 +7622,7 @@ function renderOzetStats() {
   if (scWrap) {
     const sd = calcStreakData();
     scWrap.innerHTML = renderStreakCard(sd);
+    requestAnimationFrame(() => _streakInitView());
   }
 
   renderFinancialAdvice();
@@ -8037,13 +8190,33 @@ function setupChartObservers() {
 // =================== YILLIK ===================
 function changeYear(dir) {
   const thisYear = new Date().getFullYear();
-  viewYear = Math.max(2020, Math.min(thisYear, viewYear + dir));
+  const oldestYear = data.transactions && data.transactions.length
+    ? Math.min(...data.transactions.map(t => parseInt(t.date.slice(0,4))).filter(y => !isNaN(y)))
+    : thisYear;
+  viewYear = Math.max(oldestYear, Math.min(thisYear, viewYear + dir));
+  // Prev/next buton opacity
+  requestAnimationFrame(() => {
+    const prevBtn = document.querySelector('#tab-ozet .nav-btn:first-of-type');
+    const nextBtn = document.querySelector('#tab-ozet .nav-btn:last-of-type');
+    if (prevBtn) { prevBtn.style.opacity = viewYear <= oldestYear ? '0.2' : '1'; prevBtn.style.pointerEvents = viewYear <= oldestYear ? 'none' : ''; }
+    if (nextBtn) { nextBtn.style.opacity = viewYear >= thisYear  ? '0.2' : '1'; nextBtn.style.pointerEvents = viewYear >= thisYear  ? 'none' : ''; }
+  });
   renderYillik();
 }
 
 function renderYillik() {
   const el = document.getElementById('yearLabel');
   if (el) el.textContent = viewYear;
+
+  // Buton sınır durumu
+  const thisYear = new Date().getFullYear();
+  const oldestYear = data.transactions && data.transactions.length
+    ? Math.min(...data.transactions.map(t => parseInt(t.date.slice(0,4))).filter(y => !isNaN(y)))
+    : thisYear;
+  const prevBtn = document.querySelector('#tab-ozet .nav-btn:first-of-type');
+  const nextBtn = document.querySelector('#tab-ozet .nav-btn:last-of-type');
+  if (prevBtn) { prevBtn.style.opacity = viewYear <= oldestYear ? '0.2' : '1'; prevBtn.style.pointerEvents = viewYear <= oldestYear ? 'none' : ''; }
+  if (nextBtn) { nextBtn.style.opacity = viewYear >= thisYear  ? '0.2' : '1'; nextBtn.style.pointerEvents = viewYear >= thisYear  ? 'none' : ''; }
 
   let totalIncome = 0, totalExpense = 0;
   const monthItems = [];
@@ -8056,9 +8229,12 @@ function renderYillik() {
     const savDeposit = txs.filter(t => t.isGoalDeposit).reduce((s,t) => s + t.amount, 0);
     // Gerçek değişken gider (borç + birikim hariç)
     const varExp = Math.max(0, expense - debtPaid - savDeposit);
+    // Kasada kalan: o ayın serbest bütçesinden artakalan (geçmiş ay için fixed)
+    const fb = calcFreeBudget(mk);
+    const kasadaKalan = fb.remaining;
     totalIncome += income;
     totalExpense += expense;
-    monthItems.push({ mk, income, expense, debtPaid, savDeposit, varExp, net: income - expense, name: MONTH_NAMES[m-1] });
+    monthItems.push({ mk, income, expense, debtPaid, savDeposit, varExp, net: income - expense, kasadaKalan, name: MONTH_NAMES[m-1] });
   }
 
   const activeItems = monthItems.filter(m => m.income || m.expense);
@@ -8316,6 +8492,7 @@ function renderYillik() {
           ${m.debtPaid > 0 ? `<div class="ymb-extra-row"><span class="ymb-extra-label">Ödenen borç/taksit</span><span class="ymb-extra-val" style="color:#FF453A">−${fmtTL(m.debtPaid)}</span></div>` : ''}
           ${m.savDeposit > 0 ? `<div class="ymb-extra-row"><span class="ymb-extra-label">Birikime yatırılan</span><span class="ymb-extra-val" style="color:#0A84FF">−${fmtTL(m.savDeposit)}</span></div>` : ''}
           ${m.varExp > 0 ? `<div class="ymb-extra-row"><span class="ymb-extra-label">Değişken harcama</span><span class="ymb-extra-val">${fmtTL(m.varExp)}</span></div>` : ''}
+          ${m.income > 0 ? `<div class="ymb-extra-row" style="border-top:1px solid rgba(255,255,255,.06);margin-top:6px;padding-top:6px"><span class="ymb-extra-label" style="font-weight:800;color:var(--text)">Kasada kalan</span><span class="ymb-extra-val" style="font-weight:900;color:${m.kasadaKalan >= 0 ? 'var(--accent)' : 'var(--danger)'}">${m.kasadaKalan >= 0 ? '+' : ''}${fmtTL(Math.round(m.kasadaKalan))}</span></div>` : ''}
           <div class="ymb-footer">
             <span class="ymb-sav-label">Tasarruf oranı</span>
             <span class="ymb-sav-val" style="color:${savColor2}">%${savRate2}</span>
@@ -8577,7 +8754,7 @@ function importData(input) {
       if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
       if (!Array.isArray(data.streak.frozenDays)) data.streak.frozenDays = [];
       if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
-      if (typeof data.streak.freezeTotal !== 'number' || data.streak.freezeTotal > 2) data.streak.freezeTotal = 2; // max 2
+      if (typeof data.streak.freezeTotal !== 'number' || data.streak.freezeTotal > 5) data.streak.freezeTotal = 5; // max 5
       if (!data.monthlyTargets || typeof data.monthlyTargets !== 'object') data.monthlyTargets = {};
       data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; if (!r.payHistory) r.payHistory = {}; if (r.variable === undefined) r.variable = false; });
       data.debts.forEach(d => { if (!d.paidMonths) d.paidMonths = []; if (!d.startMonth) d.startMonth = monthKey(); });
@@ -8588,7 +8765,7 @@ function importData(input) {
       // Custom kategori income olarak kaydedildiyse ve DEFAULT_CATS'ta income değilse expense yap
       const defaultIncomeIds = new Set(DEFAULT_CATS.filter(c => c.type === 'income').map(c => c.id));
       data.categories.forEach(c => {
-        if (!c.type || (c.type === 'income' && !defaultIncomeIds.has(c.id))) c.type = 'expense';
+        if (!c.type) c.type = 'expense';
       });
       if (!data.categoryKeywordOverrides || typeof data.categoryKeywordOverrides !== 'object') data.categoryKeywordOverrides = {};
       Object.entries(data.categoryKeywordOverrides).forEach(([id, words]) => {
