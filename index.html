@@ -2092,23 +2092,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       </div>
     </div>
     <div class="collapsible-body collapsed" id="recBody"><div class="collapsible-inner">
-      <div id="recForm" style="display:none;margin-bottom:14px;padding:12px;background:var(--surface2);border-radius:var(--radius-sm)">
-        <div class="form-group">
-          <label class="form-label">Açıklama</label>
-          <input type="text" id="recDesc" class="form-input" onkeydown="if(event.key==='Enter')addRecurring()" placeholder="Kira, Netflix..." oninput="suggestRecCategory()">
-        </div>
-        <div style="display:flex;gap:8px">
-          <div class="form-group" style="flex:1">
-            <label class="form-label">Tutar</label>
-            <input type="text" id="recAmount" class="form-input" onkeydown="if(event.key==='Enter')addRecurring()" placeholder="0" oninput="fmtInput(this)" inputmode="numeric">
-          </div>
-          <div class="form-group" style="flex:1">
-            <label class="form-label">Kategori</label>
-            <select id="recCategory" class="form-select"></select>
-          </div>
-        </div>
-        <button class="btn btn-primary btn-full" onclick="addRecurring()">Kaydet</button>
-      </div>
       <div id="recList"></div>
     </div></div>
   </div>
@@ -2128,31 +2111,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       </div>
     </div>
     <div class="collapsible-body collapsed" id="debtBody"><div class="collapsible-inner">
-      <div id="debtForm" style="display:none;margin-bottom:14px;padding:12px;background:var(--surface2);border-radius:var(--radius-sm)">
-        <div class="form-group">
-          <label class="form-label">Ödeme Adı</label>
-          <input type="text" id="debtName" class="form-input" onkeydown="if(event.key==='Enter')addDebt()" placeholder="Kira ödemesi, kredi...">
-        </div>
-        <div style="display:flex;gap:8px">
-          <div class="form-group" style="flex:1">
-            <label class="form-label">Toplam Tutar</label>
-            <input type="text" id="debtTotal" class="form-input" placeholder="20.000" oninput="fmtInput(this)" inputmode="numeric">
-          </div>
-          <div class="form-group" style="flex:1">
-            <label class="form-label">Taksit Sayısı</label>
-            <input type="text" id="debtInstall" class="form-input" placeholder="12" inputmode="numeric" onkeydown="if(event.key==='Enter')addDebt()" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">İlk Taksit Ayı</label>
-          <input type="hidden" id="debtStartMonth">
-          <div class="form-input" id="debtStartMonthDisplay" onclick="openMonthPicker('debtStartMonth','debtStartMonthDisplay')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--text)">
-            <span id="debtStartMonthLabel" style="font-weight:600">Ay seç</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6"/></svg>
-          </div>
-        </div>
-        <button class="btn btn-primary btn-full" onclick="addDebt()">Kaydet</button>
-      </div>
       <div id="debtList"></div>
       <div id="debtSummary"></div>
     </div></div>
@@ -2173,33 +2131,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       </div>
     </div>
     <div class="collapsible-body collapsed" id="goalBody"><div class="collapsible-inner">
-      <div id="goalForm" style="display:none;margin-bottom:14px;padding:12px;background:var(--surface2);border-radius:var(--radius-sm)">
-        <div id="emojiGrid" class="emoji-grid"></div>
-        <input type="hidden" id="goalEmoji" value="target">
-        <div class="form-group">
-          <label class="form-label">Birikim Adı</label>
-          <input type="text" id="goalName" class="form-input" onkeydown="if(event.key==='Enter')addGoal()" placeholder="Tatil, araba, acil fon...">
-        </div>
-        <div style="display:flex;gap:8px">
-          <div class="form-group" style="flex:1">
-            <label class="form-label">Hedef Tutar</label>
-            <input type="text" id="goalTarget" class="form-input" onkeydown="if(event.key==='Enter')addGoal()" placeholder="100.000" oninput="fmtInput(this)" inputmode="numeric">
-          </div>
-          <div class="form-group" style="flex:1">
-            <label class="form-label">Kaç Ayda?</label>
-            <input type="text" id="goalMonths" class="form-input" placeholder="12" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');calcGoalMonthly()">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label" style="display:flex;justify-content:space-between"><span>Aylık Birikim</span><span id="goalMonthlyHint" style="color:var(--accent);font-weight:800"></span></label>
-          <input type="text" id="goalMonthly" class="form-input" placeholder="Otomatik hesaplanır" onkeydown="if(event.key==='Enter')addGoal()" oninput="fmtInput(this)" inputmode="numeric">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Not <span style="color:var(--muted);font-weight:500">(isteğe bağlı)</span></label>
-          <input type="text" id="goalNote" class="form-input" placeholder="Bu hedef hakkında bir not..." onkeydown="if(event.key==='Enter')addGoal()">
-        </div>
-        <button class="btn btn-primary btn-full" onclick="addGoal()">Kaydet</button>
-      </div>
       <div id="goalsList"></div>
     </div></div>
   </div>
@@ -2863,7 +2794,7 @@ const CAT_ICON_BORC = '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" s
 
 function catIconSvg(cat, size) {
   const sz = size || 20;
-  const raw = CAT_ICONS[cat.id] || CAT_ICONS.diger;
+  const raw = CAT_ICONS[cat.id] || CAT_ICONS[cat.emoji] || CAT_ICONS.diger;
   const stroke = cat.color || 'currentColor';
   return raw.replace('<svg ', `<svg width="${sz}" height="${sz}" style="flex-shrink:0" `).replace(/stroke-width="1\.5"/g, `stroke-width="1.5" stroke="${stroke}"`);
 }
@@ -4557,20 +4488,12 @@ document.addEventListener('touchend', e => {
 
 // Form dışına tıklayınca boş formları kapat + hamburger kapat
 document.addEventListener('click', e => {
-  // Boş formları kapat
-  const forms = [
-    { id: 'recForm',  emptyCheck: () => !document.getElementById('recDesc')?.value.trim() && !document.getElementById('recAmount')?.value.trim() },
-    { id: 'debtForm', emptyCheck: () => !document.getElementById('debtName')?.value.trim() && !document.getElementById('debtTotal')?.value.trim() },
-    { id: 'goalForm', emptyCheck: () => !document.getElementById('goalName')?.value.trim() && !document.getElementById('goalTarget')?.value.trim() },
-    { id: 'wishForm', emptyCheck: () => !document.getElementById('wishName')?.value.trim() && !document.getElementById('wishPrice')?.value.trim() },
-  ];
-  forms.forEach(({ id, emptyCheck }) => {
-    const form = document.getElementById(id);
-    if (!form || form.style.display !== 'block') return;
-    if (form.contains(e.target)) return;
-    if (!emptyCheck()) return;
-    form.style.display = 'none';
-  });
+  // Boş wishForm'u kapat
+  const wishForm = document.getElementById('wishForm');
+  if (wishForm && wishForm.style.display === 'block' && !wishForm.contains(e.target)) {
+    const wishEmpty = !document.getElementById('wishName')?.value.trim() && !document.getElementById('wishPrice')?.value.trim();
+    if (wishEmpty) wishForm.style.display = 'none';
+  }
 
 });
 
@@ -5286,43 +5209,7 @@ function dlToggleBreakdown() {
   }
 }
 
-function toggleRecForm() {
-  if (!sectionState.rec) { sectionState.rec = true; const b=document.getElementById('recBody'),cv=document.getElementById('recChevron'); if(b)b.classList.remove('collapsed'); if(cv)cv.classList.add('open'); }
-  const f = document.getElementById('recForm');
-  const isOpen = f.style.display === 'block';
-  f.style.display = isOpen ? 'none' : 'block';
-  if (!isOpen) { populateCatSelects(); setTimeout(()=>document.getElementById('recDesc')?.focus(),100); }
-}
 
-function suggestRecCategory() {
-  const desc = (document.getElementById('recDesc')?.value||'').trim().toLowerCase();
-  const sel = document.getElementById('recCategory');
-  if (!sel || !desc) return;
-  let bestCat = null, bestScore = 0;
-  for (const cat of allCategories()) {
-    if (!cat.keywords || !cat.keywords.length) continue;
-    for (const kw of cat.keywords) {
-      if (desc.includes(kw) && kw.length > bestScore) {
-        bestScore = kw.length; bestCat = cat.id;
-      }
-    }
-  }
-  if (bestCat) sel.value = bestCat;
-}
-
-function addRecurring() {
-  const desc = document.getElementById('recDesc').value.trim();
-  const amount = parseNum(document.getElementById('recAmount').value);
-  const category = document.getElementById('recCategory').value || 'fatura';
-  if (!desc || !amount) { showToast(TOAST_WARN + ' Tüm alanları doldur'); return; }
-  data.recurring.push({ id: uid(), desc, amount, category, active: true, paidMonths: [], variable: false, payHistory: {} });
-  save();
-  document.getElementById('recDesc').value = '';
-  document.getElementById('recAmount').value = '';
-  document.getElementById('recForm').style.display = 'none';
-  showToast(TOAST_OK + ' Sabit gider eklendi');
-  renderAll();
-}
 
 // =================== TEKİ TEKRARLAYAN GELİRLER ===================
 
@@ -5618,44 +5505,7 @@ function deleteRecurring(id) {
 }
 
 // =================== BORÇLAR ===================
-function toggleDebtForm() {
-  if (!sectionState.debt) { sectionState.debt = true; const b=document.getElementById('debtBody'),cv=document.getElementById('debtChevron'); if(b)b.classList.remove('collapsed'); if(cv)cv.classList.add('open'); }
-  const f = document.getElementById('debtForm');
-  const isOpen = f.style.display === 'block';
-  f.style.display = isOpen ? 'none' : 'block';
-  if (!isOpen) {
-    const sm = document.getElementById('debtStartMonth');
-    const lbl = document.getElementById('debtStartMonthLabel');
-    const cur = monthKey();
-    if (sm && !sm.value) { sm.value = cur; }
-    if (lbl) {
-      const [y, m] = (sm?.value || cur).split('-').map(Number);
-      lbl.textContent = MONTH_NAMES[m - 1] + ' ' + y;
-    }
-    setTimeout(() => document.getElementById('debtName')?.focus(), 100);
-  }
-}
 
-function addDebt() {
-  const name = document.getElementById('debtName').value.trim();
-  const totalAmount = parseNum(document.getElementById('debtTotal').value);
-  const installments = parseInt(document.getElementById('debtInstall').value) || 1;
-  const startMonth = document.getElementById('debtStartMonth').value || monthKey();
-  if (!name || !totalAmount) { showToast(TOAST_WARN + ' Ödeme adı ve tutar gerekli'); return; }
-  const monthlyAmount = Math.round(totalAmount / installments);
-  data.debts.push({ id: uid(), name, totalAmount, installments, monthlyAmount, paidCount: 0, active: true, paidMonths: [], startMonth });
-  save();
-  document.getElementById('debtName').value = '';
-  document.getElementById('debtTotal').value = '';
-  document.getElementById('debtInstall').value = '';
-  const smEl = document.getElementById('debtStartMonth');
-  const smLbl = document.getElementById('debtStartMonthLabel');
-  if (smEl) smEl.value = '';
-  if (smLbl) smLbl.textContent = 'Ay seç';
-  document.getElementById('debtForm').style.display = 'none';
-  showToast(TOAST_OK + ' Ödeme eklendi');
-  renderAll();
-}
 
 function renderDebtList() {
   const mk = currentMonth;
@@ -5856,25 +5706,7 @@ function selectEmoji(id) {
   });
 }
 
-function toggleGoalForm() {
-  if (!sectionState.goal) { sectionState.goal = true; const b=document.getElementById('goalBody'),cv=document.getElementById('goalChevron'); if(b)b.classList.remove('collapsed'); if(cv)cv.classList.add('open'); }
-  const f = document.getElementById('goalForm');
-  const isOpen = f.style.display === 'block';
-  f.style.display = isOpen ? 'none' : 'block';
-  if (!isOpen) { buildEmojiGrid(); setTimeout(()=>document.getElementById('goalName')?.focus(),100); }
-}
 
-function calcGoalMonthly() {
-  const target = parseNum(document.getElementById('goalTarget')?.value||'0');
-  const months = parseInt(document.getElementById('goalMonths')?.value)||0;
-  const hint = document.getElementById('goalMonthlyHint');
-  const inp = document.getElementById('goalMonthly');
-  if (target && months) {
-    const m = Math.ceil(target/months);
-    if (hint) hint.textContent = fmtTL(m)+'/ay';
-    if (inp) inp.value = String(m).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  } else if (hint) hint.textContent='';
-}
 
 function acceptWishChallenge(wishId, monthlyAmount, wishName) {
   // Aynı isimde zaten var mı?
@@ -5901,23 +5733,7 @@ function acceptWishChallenge(wishId, monthlyAmount, wishName) {
   showToast('Birikim hedefine eklendi — ' + fmtTL(monthlyAmount) + '/ay');
 }
 
-function addGoal() {
-  const name = document.getElementById('goalName').value.trim();
-  const target = parseNum(document.getElementById('goalTarget').value);
-  const monthly = parseNum(document.getElementById('goalMonthly').value);
-  const note = document.getElementById('goalNote')?.value.trim() || '';
-  const emoji = document.getElementById('goalEmoji').value || 'target';
-  if (!name || !target) { showToast(TOAST_WARN + ' Ad ve hedef tutar gerekli'); return; }
-  data.savingsGoals.push({ id: uid(), name, emoji, target, monthly, note, deposits: [], paidMonths: [] });
-  save();
-  document.getElementById('goalName').value = '';
-  document.getElementById('goalTarget').value = '';
-  const gn = document.getElementById('goalNote'); if(gn) gn.value = '';
-  document.getElementById('goalMonthly').value = '';
-  document.getElementById('goalForm').style.display='none'; const gm=document.getElementById('goalMonths'); if(gm)gm.value=''; const gh=document.getElementById('goalMonthlyHint'); if(gh)gh.textContent='';
-  showToast(TOAST_OK + ' Hedef eklendi');
-  renderAll();
-}
+
 
 function renderGoalsList() {
   const mk = currentMonth;
