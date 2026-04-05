@@ -9463,18 +9463,18 @@ function renderStatsList() {
   if (avgEl) avgEl.textContent = 'Ort. '+fmtTL(avgVal);
   el.innerHTML = [..._statsData].reverse().map((d,i,arr) => {
     const origIdx = arr.length-1-i;
-    const isActive = origIdx === _statsActive;
+    const isLatest = origIdx === _statsData.length - 1;
     let pctHtml = '';
     if (origIdx > 0) {
       const pct = Math.round(((d.amount-_statsData[origIdx-1].amount)/_statsData[origIdx-1].amount)*100);
       if (pct>0) pctHtml=`<span class="stats-row-pct" style="color:#FF453A">▲${pct}%</span>`;
       else if (pct<0) pctHtml=`<span class="stats-row-pct" style="color:#2DB866">▼${Math.abs(pct)}%</span>`;
     }
-    return `<div class="stats-row" onclick="updateStatsView(${origIdx})">
-      <div class="stats-row-month" style="color:${isActive?'#fff':'rgba(255,255,255,.3)'}">${d.label}</div>
-      <div class="stats-row-bar-wrap"><div class="stats-row-bar" style="width:${Math.round(d.amount/maxVal*100)}%;background:${isActive?'#2DB866':'rgba(45,184,102,.25)'}"></div></div>
+    return `<div class="stats-row">
+      <div class="stats-row-month" style="color:${isLatest?'#fff':'rgba(255,255,255,.45)'};font-weight:${isLatest?800:600}">${d.label}</div>
+      <div class="stats-row-bar-wrap"><div class="stats-row-bar" style="width:${Math.round(d.amount/maxVal*100)}%;background:${isLatest?'#2DB866':'rgba(45,184,102,.3)'}"></div></div>
       <div class="stats-row-right">
-        <span class="stats-row-amt" style="color:${isActive?'#2DB866':'rgba(255,255,255,.35)'};font-weight:${isActive?900:600}">${fmtTL(d.amount)}</span>
+        <span class="stats-row-amt" style="color:${isLatest?'#2DB866':'rgba(255,255,255,.5)'};font-weight:${isLatest?900:600}">${fmtTL(d.amount)}</span>
         ${pctHtml}
       </div>
     </div>`;
@@ -9487,15 +9487,11 @@ function renderStatsChart() {
   if (canvas.width === 0) { setTimeout(renderStatsChart, 100); return; }
   if (_statsChart) { try{_statsChart.destroy();}catch(e){} _statsChart=null; }
 
-  // Tek kayıt varsa etrafına padding ekle — curve düzgün görünsün
-  let vals = _statsData.map(d=>d.amount);
-  let labels = _statsData.map(d=>d.label);
-  let activeOffset = _statsActive;
-  if (vals.length === 1) {
-    vals = [vals[0]*0.85, vals[0], vals[0]*0.92];
-    labels = ['', labels[0], ''];
-    activeOffset = 1;
-  }
+  const vals   = _statsData.map(d=>d.amount);
+  const labels = _statsData.map(d=>d.label);
+
+  const minY = Math.min(...vals) * 0.78;
+  const maxY = Math.max(...vals) * 1.18;
 
   const ctx = canvas.getContext('2d');
   const grad = ctx.createLinearGradient(0, 0, 0, 160);
@@ -9507,46 +9503,36 @@ function renderStatsChart() {
     type: 'line',
     data: { labels, datasets: [{ data: vals,
       borderColor: 'rgba(45,184,102,.95)', borderWidth: 2.5,
-      backgroundColor: grad, tension: 0.45, fill: true,
-      pointBackgroundColor: vals.map((_,i)=>i===activeOffset?'#FFD60A':'transparent'),
-      pointBorderColor:     vals.map((_,i)=>i===activeOffset?'#0d1a0f':'transparent'),
-      pointBorderWidth:     vals.map((_,i)=>i===activeOffset?2.5:0),
-      pointRadius:          vals.map((_,i)=>i===activeOffset?8:3)
+      backgroundColor: grad, tension: 0.35, fill: true,
+      pointBackgroundColor: '#2DB866',
+      pointBorderColor:     '#0d1a0f',
+      pointBorderWidth:     2,
+      pointRadius:          vals.length === 1 ? 6 : 4,
+      pointHoverRadius:     7
     }]},
-    options: { responsive: false, animation: { duration: 500, easing: 'easeOutQuart' },
-      plugins: { legend:{display:false}, tooltip:{enabled:false} },
+    options: { responsive: false, animation: { duration: 600, easing: 'easeOutQuart' },
+      plugins: { legend:{display:false}, tooltip:{
+        enabled: true,
+        backgroundColor: 'rgba(10,10,13,.95)',
+        borderColor: 'rgba(45,184,102,.25)',
+        borderWidth: 1,
+        titleFont: {family:'Montserrat',weight:'800',size:11},
+        bodyFont:  {family:'Montserrat',weight:'700',size:13},
+        callbacks: {
+          title: ctx => ctx[0].label,
+          label: ctx => ' ' + fmtTL(ctx.raw)
+        },
+        displayColors: false
+      }},
       scales: {
-        x: { ticks:{color:'rgba(255,255,255,.25)',font:{family:'Montserrat',size:10,weight:'700'},maxRotation:0}, grid:{display:false}, border:{display:false} },
-        y: { display:false, min: Math.min(...vals)*0.78, max: Math.max(...vals)*1.12 }
-      },
-      onClick: (_,els)=>{ if(els.length && _statsData.length>1) updateStatsView(els[0].index); }
+        x: { ticks:{color:'rgba(255,255,255,.25)',font:{family:'Montserrat',size:10,weight:'700'},maxRotation:0, autoSkip:false}, grid:{display:false}, border:{display:false} },
+        y: { display:false, min: minY, max: maxY }
+      }
     }
   });
-
-  function getIdx(clientX) {
-    const rect=canvas.getBoundingClientRect(), x=clientX-rect.left;
-    const meta=_statsChart.getDatasetMeta(0);
-    let closest=0, minD=Infinity;
-    meta.data.forEach((pt,i)=>{ const d=Math.abs(pt.x-x); if(d<minD){minD=d;closest=i;} });
-    // Tek kayıt padding'i için offset düzelt
-    if (_statsData.length===1) return 0;
-    return closest;
-  }
-  canvas.addEventListener('mousemove',e=>{if(e.buttons===1)updateStatsView(getIdx(e.clientX));});
-  canvas.addEventListener('click',e=>updateStatsView(getIdx(e.clientX)));
-  canvas.addEventListener('touchmove',e=>{e.preventDefault();updateStatsView(getIdx(e.touches[0].clientX));},{passive:false});
-  canvas.addEventListener('touchstart',e=>updateStatsView(getIdx(e.touches[0].clientX)),{passive:true});
 }
 function updateStatsChartPoint(i) {
-  if (!_statsChart) return;
-  // Tek kayıt padding durumunda aktif nokta her zaman index 1
-  const activeIdx = _statsData.length === 1 ? 1 : i;
-  const len = _statsChart.data.datasets[0].data.length;
-  _statsChart.data.datasets[0].pointBackgroundColor = Array.from({length:len},(_,j)=>j===activeIdx?'#FFD60A':'transparent');
-  _statsChart.data.datasets[0].pointBorderColor =     Array.from({length:len},(_,j)=>j===activeIdx?'#0d1a0f':'transparent');
-  _statsChart.data.datasets[0].pointBorderWidth =     Array.from({length:len},(_,j)=>j===activeIdx?2.5:0);
-  _statsChart.data.datasets[0].pointRadius =          Array.from({length:len},(_,j)=>j===activeIdx?8:3);
-  _statsChart.update('none');
+  // Grafik artık tüm noktaları gösteriyor, seçili nokta yok
 }
 
 let _dlMode = 'auto';
