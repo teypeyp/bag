@@ -2792,9 +2792,16 @@ const CAT_ICONS = {
 };
 const CAT_ICON_BORC = '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg>';
 
+function _iconSvgById(id) {
+  if (!id) return null;
+  if (CAT_ICONS[id]) return CAT_ICONS[id];
+  const gi = GOAL_ICONS.find(ic => ic.id === id);
+  return gi ? gi.svg : null;
+}
+
 function catIconSvg(cat, size) {
   const sz = size || 20;
-  const raw = CAT_ICONS[cat.id] || CAT_ICONS[cat.emoji] || CAT_ICONS.diger;
+  const raw = _iconSvgById(cat.id) || _iconSvgById(cat.emoji) || CAT_ICONS.diger;
   const stroke = cat.color || 'currentColor';
   return raw.replace('<svg ', `<svg width="${sz}" height="${sz}" style="flex-shrink:0" `).replace(/stroke-width="1\.5"/g, `stroke-width="1.5" stroke="${stroke}"`);
 }
@@ -4395,7 +4402,7 @@ function renderTxList(container, txs, limitTo5, prefix) {
       const domId = pfx + t.id;
       const catName = cat.name;
       const hasDesc = t.desc && t.desc !== catName;
-      const rawIcon = CAT_ICONS[cat.id] || CAT_ICONS.diger;
+      const rawIcon = _iconSvgById(cat.id) || _iconSvgById(cat.emoji) || CAT_ICONS.diger;
       const iconHtml = rawIcon
         .replace('<svg ', `<svg width="20" height="20" style="flex-shrink:0" `)
         .replace(/stroke-width="1\.5"/g, `stroke-width="1.5" stroke="${iconStroke}"`);
@@ -8741,7 +8748,7 @@ function openKeywordEdit(catId) {
       const sel = id === currentEmoji;
       const stroke = sel ? (cat.color || 'var(--accent)') : 'var(--muted)';
       const svgStyled = svg.replace('<svg ', `<svg width="20" height="20" style="flex-shrink:0" `).replace('stroke-width="1.5"', `stroke-width="1.5" stroke="${stroke}"`);
-      return `<div onclick="selectCatEditIcon('${id}')" data-icon="${id}" style="width:36px;height:36px;border-radius:8px;background:${sel?'var(--accent-dim)':'var(--surface3)'};border:1.5px solid ${sel?(cat.color||'var(--accent)'):'var(--border)'};display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s">${svgStyled}</div>`;
+      return `<div onclick="selectCatEditIcon('${id}')" data-icon="${id}" data-selected="${sel?'1':''}" style="width:36px;height:36px;border-radius:8px;background:${sel?'var(--accent-dim)':'var(--surface3)'};border:1.5px solid ${sel?(cat.color||'var(--accent)'):'var(--border)'};display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s">${svgStyled}</div>`;
     }).join('');
   }
 
