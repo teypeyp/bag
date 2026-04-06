@@ -1748,7 +1748,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .add-sheet-overlay.show{background:rgba(0,0,0,.65);pointer-events:all;backdrop-filter:blur(2px)}
 .add-sheet{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:520px;background:var(--surface);border-radius:24px 24px 0 0;z-index:201;transition:transform .38s cubic-bezier(.32,0,.15,1),visibility 0s linear .38s;padding-bottom:env(safe-area-inset-bottom,0px);max-height:92vh;overflow-y:auto;visibility:hidden}
 .add-sheet.show{transform:translateX(-50%) translateY(0);visibility:visible;transition:transform .38s cubic-bezier(.32,0,.15,1),visibility 0s linear 0s}
-.add-sheet.show{transform:translateX(-50%) translateY(0)}
 .add-sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
 .add-sheet-header{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between}
 .add-sheet-title{font-size:16px;font-weight:800;letter-spacing:-.3px}
@@ -1770,7 +1769,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 #statsPageOverlay.show{display:block;pointer-events:auto;background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
 #statsPage{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:520px;height:88vh;background:linear-gradient(180deg,#0d1a0f 0%,#070d08 45%,#0A0A0D 100%);border-radius:28px 28px 0 0;z-index:300;display:flex;flex-direction:column;overflow:hidden;transition:transform .4s cubic-bezier(.32,0,.15,1),visibility 0s linear .4s;visibility:hidden}
 #statsPage.show{transform:translateX(-50%) translateY(0);visibility:visible;transition:transform .4s cubic-bezier(.32,0,.15,1),visibility 0s linear 0s}
-#statsPage.show{transform:translateX(-50%) translateY(0)}
 .stats-drag-handle{width:36px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:12px auto 0;flex-shrink:0}
 .stats-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;flex-shrink:0}
 .stats-back{width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.07);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
@@ -3492,6 +3490,7 @@ function useFreeze() {
   save();
   showToast(TOAST_SHIELD + ' Bugün donduruldu — streak korundu!');
   renderOzetStats();
+  _streakRenderGrid();
 }
 
 function renderStreakCard(sd) {
@@ -5689,30 +5688,6 @@ function deleteDebt(id) {
 }
 
 // =================== GOALS ===================
-function buildEmojiGrid() {
-  const el = document.getElementById('emojiGrid');
-  if (!el) return;
-  const cur = document.getElementById('goalEmoji').value || 'target';
-  el.innerHTML = GOAL_ICONS.map(ic => {
-    const sel = ic.id === cur;
-    const strokeColor = sel ? 'var(--accent)' : 'var(--muted)';
-    const svgStyled = ic.svg
-      .replace('<svg ', `<svg width="22" height="22" style="flex-shrink:0" `)
-      .replace('stroke-width="1.5"', `stroke-width="1.5" stroke="${strokeColor}"`);
-    return `<div class="emoji-opt${sel?' selected':''}" onclick="selectEmoji('${ic.id}')" data-icon="${ic.id}">${svgStyled}</div>`;
-  }).join('');
-}
-
-function selectEmoji(id) {
-  document.getElementById('goalEmoji').value = id;
-  document.querySelectorAll('#emojiGrid .emoji-opt').forEach(el => {
-    const sel = el.dataset.icon === id;
-    el.classList.toggle('selected', sel);
-    const svg = el.querySelector('svg');
-    if (svg) svg.setAttribute('stroke', sel ? 'var(--accent)' : 'var(--muted)');
-  });
-}
-
 
 
 function acceptWishChallenge(wishId, monthlyAmount, wishName) {
@@ -6613,7 +6588,6 @@ function _planCalcCore(fb, sc) {
 
   // Tipik aylık değişken harcama: son 3 ayın ortalaması
   // Bu "hayatta kalma maliyeti" — birikim bunu çıkardıktan sonra kalır
-  const _mk = monthKey();
   const _months = [];
   for (let i = 1; i <= 3; i++) {
     const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - i);
@@ -6985,8 +6959,6 @@ function _renderPlanGoalDetail(fb, core) {
     return;
   }
 
-  const mn = goals.filter(g => g.curMonths).map(g => g.curMonths);
-
 
   const items = goals.map((g, i) => {
     const imp = (g.optMonths && g.curMonths && g.optMonths < g.curMonths)
@@ -7258,7 +7230,6 @@ function renderFinancialAdvice() {
   const tips = [];
 
   const iconHeart = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>`;
-  const iconTarget = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12 12m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M15 15l3.35 3.35"/></svg>`;
   const iconRocket = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 13a8 8 0 0 1 7 7a6 6 0 0 0 3 -5a9 9 0 0 0 6 -8a3 3 0 0 0 -3 -3a9 9 0 0 0 -8 6a6 6 0 0 0 -5 3"/><path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3"/><path d="M15 9m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>`;
   const iconStop  = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M5.7 5.7l12.6 12.6"/></svg>`;
 
@@ -8065,7 +8036,6 @@ function renderYillik() {
   const activeMos = activeItems.length || 1;
   const saving = totalIncome - totalExpense;
   const savRate = totalIncome > 0 ? Math.round((saving / totalIncome) * 100) : 0;
-  const savColor = savRate >= 20 ? 'var(--accent)' : savRate >= 0 ? 'var(--warning)' : 'var(--danger)';
 
   // ── Hero card ──
   const heroEl = document.getElementById('yearHeroCard');
@@ -8075,7 +8045,6 @@ function renderYillik() {
     } else {
       heroEl.style.display = '';
       const heroGlow = saving >= 0 ? 'rgba(45,184,102,.07)' : 'rgba(255,69,58,.07)';
-      const heroBorder = saving >= 0 ? 'rgba(45,184,102,.2)' : 'rgba(255,69,58,.2)';
       heroEl.style.borderColor = saving >= 0 ? 'rgba(45,184,102,.18)' : 'rgba(255,69,58,.18)';
       // Tasarruf skoru ring SVG
       const ringR = 22, ringC = Math.round(2 * Math.PI * ringR);
@@ -8366,15 +8335,7 @@ function closeHistory() {
 
 // =================== CATEGORIES ===================
 function populateCatSelects() {
-  const cats = allCategories();
-  const expenseCats = cats.filter(c => c.type !== 'income');
-  const expenseOpts = expenseCats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-  const recCat = document.getElementById('recCategory');
-  if (recCat) {
-    const prev = recCat.value;
-    recCat.innerHTML = expenseOpts;
-    if (prev && recCat.querySelector(`option[value="${prev}"]`)) recCat.value = prev;
-  }
+  // Category selects artık cat-grid ile yönetiliyor
 }
 
 function openCategories() {
@@ -8534,6 +8495,7 @@ function deleteCustomCat(id) {
   data.categories = data.categories.filter(c => c.id !== id);
   data.transactions.forEach(t => { if (t.category === id) t.category = 'diger'; });
   data.recurring.forEach(r => { if (r.category === id) r.category = 'diger'; });
+  (data.recurringIncome || []).forEach(r => { if (r.category === id) r.category = 'gelir_diger'; });
   save(); renderCatList(); populateCatSelects();
 }
 
@@ -8592,7 +8554,6 @@ function importData(input) {
       data.categories = (data.categories || []).filter(c => !defaultIds.has(c.id));
       // Migration: income default bug'ından kaynaklanmış yanlış type'ları düzelt
       // Custom kategori income olarak kaydedildiyse ve DEFAULT_CATS'ta income değilse expense yap
-      const defaultIncomeIds = new Set(DEFAULT_CATS.filter(c => c.type === 'income').map(c => c.id));
       data.categories.forEach(c => {
         if (!c.type) c.type = 'expense';
       });
