@@ -5828,12 +5828,12 @@ function saveDepositModal() {
   const celebData = total >= g.target ? {
     emoji: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FFD60A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6l4 6l5 -4l-2 10h-14l-2 -10l5 4z"/></svg>',
     title: 'Hedefe Ulaştın!',
-    sub: `${g.name} için ${fmtTL(g.target)} biriktirdin.\nTebrikler, harika iş çıkardın! <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h2"/><path d="M5 4v2"/><path d="M11.5 4l-.5 2"/><path d="M18 5h2"/><path d="M19 4v2"/><path d="M15 9l-1 1"/><path d="M18 13l2 -.5"/><path d="M18 19h2"/><path d="M19 18v2"/><path d="M14 16.518l-6.518 -6.518l-4.39 9.58a1 1 0 0 0 1.329 1.329l9.579 -4.39z"/></svg>`,
+    sub: `${esc(g.name)} için ${fmtTL(g.target)} biriktirdin.\nTebrikler, harika iş çıkardın! <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h2"/><path d="M5 4v2"/><path d="M11.5 4l-.5 2"/><path d="M18 5h2"/><path d="M19 4v2"/><path d="M15 9l-1 1"/><path d="M18 13l2 -.5"/><path d="M18 19h2"/><path d="M19 18v2"/><path d="M14 16.518l-6.518 -6.518l-4.39 9.58a1 1 0 0 0 1.329 1.329l9.579 -4.39z"/></svg>`,
     tag: 'Tamamlandı'
   } : {
     emoji: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#2DB866" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 0 0 4h-2a2 2 0 0 0 -1.8 -1"/><path d="M12 7v10"/></svg>',
     title: `${fmtTL(amount)} Eklendi!`,
-    sub: `${g.name} — %${pct} tamamlandı.\n${fmtTL(g.target - total)} kaldı.`,
+    sub: `${esc(g.name)} — %${pct} tamamlandı.\n${fmtTL(g.target - total)} kaldı.`,
     tag: 'Birikim'
   };
 
@@ -5845,11 +5845,34 @@ function saveDepositModal() {
 }
 
 function deleteGoal(id) {
-  showConfirm('Bu birikim hedefini ve tüm yatırılan tutarları kalıcı olarak sileceksin.', () => {
-    data.savingsGoals = data.savingsGoals.filter(g => g.id !== id);
-    data.transactions = data.transactions.filter(t => !(t.isGoalDeposit && (t.goalId === id || t.goalMonthlyId === id)));
-    save(); renderAll();
-  }, 'Sil', 'Hedefi Sil');
+  const g = data.savingsGoals.find(g => g.id === id);
+  if (!g) return;
+  const hasTx = data.transactions.some(t => t.isGoalDeposit && (t.goalId === id || t.goalMonthlyId === id));
+  if (hasTx) {
+    showConfirm(
+      `"${esc(g.name)}" hedefi kaldırılacak. Geçmiş yatırım kayıtları korunsun mu?`,
+      () => {
+        data.savingsGoals = data.savingsGoals.filter(g => g.id !== id);
+        save(); renderAll();
+        showToast(TOAST_OK + ' Hedef kaldırıldı, kayıtlar korundu');
+        setTimeout(() => {
+          showConfirm(
+            'Geçmiş yatırım kayıtlarını da silmek ister misin?',
+            () => {
+              data.transactions = data.transactions.filter(t => !(t.isGoalDeposit && (t.goalId === id || t.goalMonthlyId === id)));
+              save(); renderAll();
+              showToast(TOAST_OK + ' Yatırım kayıtları da silindi');
+            }, 'Kayıtları Sil', 'Geçmiş Kayıtları Sil', 'del'
+          );
+        }, 300);
+      }, 'Geçmişi Koru', 'Hedefi Sil'
+    );
+  } else {
+    showConfirm('Bu birikim hedefini listeden kaldıracaksın.', () => {
+      data.savingsGoals = data.savingsGoals.filter(g => g.id !== id);
+      save(); renderAll();
+    }, 'Kaldır', 'Hedefi Sil');
+  }
 }
 
 let _editGoalId = null;
@@ -5912,12 +5935,25 @@ function addWish() {
 }
 
 function deleteWish(id) {
-  showConfirm('Bu hedefi ve bağlı birikim planını kalıcı olarak sileceksin.', () => {
-    data.wishlist = data.wishlist.filter(w => w.id !== id);
-    // İlişkili savingsGoals kaydını da temizle (orphan önleme)
-    data.savingsGoals = data.savingsGoals.filter(g => g.wishId !== id);
-    save(); renderAll();
-  }, 'Sil', 'Hedefi Sil');
+  const w = data.wishlist.find(w => w.id === id);
+  if (!w) return;
+  const linkedGoal = data.savingsGoals.find(g => g.wishId === id);
+  if (linkedGoal) {
+    showConfirm(
+      `"${esc(w.name)}" silinecek. Bağlı birikim planı da kaldırılsın mı?`,
+      () => {
+        data.wishlist = data.wishlist.filter(w => w.id !== id);
+        data.savingsGoals = data.savingsGoals.filter(g => g.wishId !== id);
+        save(); renderAll();
+        showToast(TOAST_OK + ' Hedef ve birikim planı silindi');
+      }, 'İkisini de Sil', 'Hedefi Sil'
+    );
+  } else {
+    showConfirm('Bu hedefi kalıcı olarak sileceksin.', () => {
+      data.wishlist = data.wishlist.filter(w => w.id !== id);
+      save(); renderAll();
+    }, 'Sil', 'Hedefi Sil');
+  }
 }
 
 const WISH_ICONS = [
