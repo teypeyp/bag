@@ -1800,6 +1800,33 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 #varAmtSheet{background:var(--surface);border-radius:24px 24px 0 0;width:100%;max-width:520px;padding:10px 20px 48px;animation:tabEnter .3s cubic-bezier(.34,1.1,.64,1)}
 /* günlük limit sheet */
 #dailyLimitSheet{background:var(--surface);border-radius:24px 24px 0 0;width:100%;max-width:520px;animation:tabEnter .3s cubic-bezier(.34,1.1,.64,1)}
+
+/* ── V68: ANALİZ SAYFASI — ÖNCELİKLİ ADIMLAR + AYLIK KARNE ── */
+.plan-step-row{display:flex;gap:12px;padding:13px 0;border-top:1px solid rgba(255,255,255,.05)}
+.plan-step-row:first-child{border-top:none;padding-top:6px}
+.plan-step-num{width:26px;height:26px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;margin-top:1px}
+.plan-step-num.bad{background:rgba(255,69,58,.14);color:var(--danger)}
+.plan-step-num.warn{background:rgba(255,214,10,.12);color:var(--warning)}
+.plan-step-num.good{background:rgba(45,184,102,.14);color:var(--accent)}
+.plan-step-body{flex:1;min-width:0}
+.plan-step-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:4px}
+.plan-step-title{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.01em;line-height:1.4}
+.plan-step-val{font-size:13px;font-weight:900;flex-shrink:0;white-space:nowrap}
+.plan-step-val.bad{color:var(--danger)}
+.plan-step-val.warn{color:var(--warning)}
+.plan-step-val.good{color:var(--accent)}
+.plan-step-sub{font-size:13px;font-weight:400;color:var(--muted);line-height:1.75;letter-spacing:-.01em}
+.plan-step-btn{margin-top:10px;padding:9px 16px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(45,184,102,.22)}
+.plan-step-btn.bad{background:var(--danger);box-shadow:0 4px 14px rgba(255,69,58,.22)}
+.plan-step-btn:active{opacity:.85}
+.report-card{background:var(--surface2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:18px}
+.report-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.report-nav-btn{width:26px;height:26px;border:none;background:var(--surface3);border-radius:8px;color:var(--muted);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif}
+.report-grade{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;flex-shrink:0}
+.report-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px}
+.report-row-label{color:var(--muted);font-weight:600}
+.report-row-val{font-weight:800}
+.report-focus{margin-top:10px;padding:10px 12px;background:rgba(45,184,102,.06);border:1px solid rgba(45,184,102,.15);border-radius:10px;font-size:12px;font-weight:600;color:var(--text);line-height:1.55}
 </style>
 </head>
 <body>
@@ -2310,10 +2337,22 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     <div id="planRiskDetail"></div>
   </div>
 
+  <!-- 3.5 ÖNCELİKLİ ADIMLAR -->
+  <div class="plan-section-block" id="planStepsBlock">
+    <div class="plan-section-label">Öncelikli Adımlar</div>
+    <div id="planStepsList"></div>
+  </div>
+
   <!-- 4. HEDEF & ZAMAN -->
   <div class="plan-section-block" id="planGoalBlock">
     <div class="plan-section-label">Hedef & Zaman</div>
     <div id="planGoalDetail"></div>
+  </div>
+
+  <!-- 4.5 AYLIK KARNE -->
+  <div class="plan-section-block" id="planReportBlock">
+    <div class="plan-section-label">Aylık Karne</div>
+    <div id="monthlyReportBox"></div>
   </div>
 
   <!-- 5. SİMÜLASYON -->
@@ -2752,6 +2791,14 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 </div><!-- /appWrap -->
 
 <script>
+// ─── V68: ANALİZ SAYFASI GELİŞTİRMESİ ────────────────────────────
+// Özet sekmesi (Finansal Tavsiyeler + Finansal Analiz kartı) V66 ile BİREBİR AYNI — dokunulmadı.
+// "Tam Analizi Gör" sayfasına iki yeni bölüm eklendi:
+// • Öncelikli Adımlar: skora göre sıralı kişisel yol haritası — acil fon (tek dokunuşla hedef
+//   oluşturma), kapanan taksiti birikime yönlendirme, kartopu, borçsuzluk tarihi, harcama temposu,
+//   kategori anomalisi + otomatik toparlanma takibi, abonelik denetimi (kullanılmayan + yıllık
+//   maliyet), aksayan birikim hedefi, tek gelir kaynağı riski
+// • Aylık Karne: not (A–D), tasarruf oranı, limit uyumu, kalemler, odak — ‹ › ile geçmiş ay arşivi
 // ─── V66 BAKIM NOTU ──────────────────────────────────────────────
 // • deleteTx: tekrarlayan gelir işlemi silinince "Alındı" durumu geri alınır
 // • Ay hesapları: setMonth taşması giderildi (prevMonthKey), "Dün" yerel saatle (localDateStr)
@@ -6776,6 +6823,427 @@ function _planCalcCore(fb, sc) {
   };
 }
 
+// =================== ANALİZ SAYFASI: ÖNCELİKLİ ADIMLAR + AYLIK KARNE (V68) ===================
+// Özet sekmesine dokunmaz — yalnızca "Tam Analizi Gör" sayfasını zenginleştirir.
+
+function addMonthsToMk(mk, n) {
+  const [y, m] = mk.split('-').map(Number);
+  const d = new Date(y, m - 1 + n, 1);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+}
+function _mkLabel(mk) { const [y, m] = mk.split('-').map(Number); return MONTH_NAMES[m-1] + ' ' + y; }
+function _catMonthTotal(mk, catId) {
+  return data.transactions
+    .filter(t => monthKey(t.date) === mk && t.type === 'expense' && t.category === catId && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+    .reduce((s, t) => s + t.amount, 0);
+}
+
+// ── Aksiyonlar ──
+function adviceCreateEmergency(target, monthly) {
+  if (data.savingsGoals.some(g => g.isEmergency)) { showToast('Acil fon hedefin zaten var'); return; }
+  data.savingsGoals.push({ id: uid(), name: 'Acil Fon', emoji: 'coin', isEmergency: true, target: target, monthly: monthly, note: '3 aylık yaşam maliyeti tamponu', deposits: [], paidMonths: [] });
+  save(); renderAll();
+  showToast(TOAST_OK + ' Acil Fon hedefi oluşturuldu — Aylık Plan > Birikim bölümünde');
+}
+function adviceGoRec() {
+  switchTab('sabit');
+  if (!sectionState.rec) toggleSection('rec');
+  const aw = document.getElementById('appWrap'); if (aw) aw.scrollTop = 0;
+}
+function adviceGoDebt() {
+  switchTab('sabit');
+  if (!sectionState.debt) toggleSection('debt');
+  const aw = document.getElementById('appWrap'); if (aw) aw.scrollTop = 0;
+}
+function adviceRollover(debtId) {
+  const dd = data.debts.find(d => d.id === debtId);
+  if (!dd) return;
+  switchTab('sabit');
+  openGoalAddSheet();
+  setTimeout(() => {
+    const mEl = document.getElementById('goalMonthlyNew');
+    if (mEl) mEl.value = fmtNum(dd.monthlyAmount);
+    const hEl = document.getElementById('goalMonthlyHintNew');
+    if (hEl) hEl.textContent = 'Boşalan taksitten';
+  }, 420);
+}
+
+// ── Bağlam ──
+function _adviceCtx() {
+  const mk = currentMonth;
+  const fb = calcFreeBudget(mk);
+  const prevMks = [prevMonthKey(1), prevMonthKey(2), prevMonthKey(3)];
+  const catAvgSum = {}, catCnt = {}, prevVar = [];
+  prevMks.forEach(pmk => {
+    const txs = data.transactions.filter(t => monthKey(t.date) === pmk && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit);
+    if (txs.length) {
+      prevVar.push(txs.reduce((s, t) => s + t.amount, 0));
+      const by = {};
+      txs.forEach(t => { by[t.category] = (by[t.category] || 0) + t.amount; });
+      Object.entries(by).forEach(([id, amt]) => { catAvgSum[id] = (catAvgSum[id] || 0) + amt; catCnt[id] = (catCnt[id] || 0) + 1; });
+    }
+  });
+  const catAvg = {};
+  Object.keys(catAvgSum).forEach(id => { catAvg[id] = catAvgSum[id] / catCnt[id]; });
+  const avgVar3 = prevVar.length ? prevVar.reduce((a, b) => a + b, 0) / prevVar.length : fb.varSpent;
+  const activeDebts = data.debts.filter(d => d.active);
+  const monthlyDebtLoad = activeDebts.reduce((s, d) => s + d.monthlyAmount, 0);
+  const structCap = Math.max(0, Math.round(fb.income - fb.recTotal - fb.debtTotal - avgVar3));
+  const emergencyGoal = data.savingsGoals.find(g => g.isEmergency) ||
+    data.savingsGoals.find(g => ['acil', 'yedek fon', 'acil fon'].some(k => (g.name || '').toLowerCase().includes(k)));
+  return { mk, fb, catAvg, avgVar3, activeDebts, monthlyDebtLoad, structCap, emergencyGoal,
+    debtRatio: fb.income > 0 ? monthlyDebtLoad / fb.income : 0 };
+}
+
+// ── Adım üretimi: skor = etki × aciliyet ──
+function _buildAdviceCards(ctx) {
+  const cards = [];
+  const { fb, mk } = ctx;
+  const dayD = new Date().getDate();
+  const dim = daysInMonth(mk);
+
+  if (fb.income <= 0) return cards;
+
+  // OTOMATİK TAKİP: geçen ay sapan kategori bu ay toparlandıysa kendiliğinden raporla
+  if (dayD >= 10) {
+    const pm1 = prevMonthKey(1);
+    const baseMks = [prevMonthKey(2), prevMonthKey(3), prevMonthKey(4)];
+    const catsLast = {};
+    data.transactions
+      .filter(t => monthKey(t.date) === pm1 && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+      .forEach(t => { catsLast[t.category] = (catsLast[t.category] || 0) + t.amount; });
+    let bestImp = null;
+    Object.entries(catsLast).forEach(([id, lastAmt]) => {
+      const bases = baseMks.map(m => _catMonthTotal(m, id)).filter(v => v > 0);
+      if (!bases.length) return;
+      const baseAvg = bases.reduce((a, b) => a + b, 0) / bases.length;
+      if (lastAmt < baseAvg * 1.3 || (lastAmt - baseAvg) < 250) return;
+      const nowAmt = _catMonthTotal(mk, id);
+      const paceNow = (nowAmt / dayD) * dim;
+      if (paceNow < lastAmt * 0.85) {
+        const imp = lastAmt - paceNow;
+        if (!bestImp || imp > bestImp.imp) bestImp = { id, imp, p: Math.max(1, Math.round((1 - paceNow / lastAmt) * 100)) };
+      }
+    });
+    if (bestImp) {
+      const cat = getCat(bestImp.id);
+      cards.push({ id: 'takip_' + bestImp.id, score: 58, cls: 'good', val: '−%' + bestImp.p,
+        title: `${esc(cat.name)} toparlanıyor`,
+        sub: `Geçen ay ortalamanın üstüne çıkan bu kalem, bu ayki tempoyla %${bestImp.p} daha düşük bitiyor. Davranış değişikliği işe yaramış — aynı ritmi koru.` });
+    }
+  }
+
+  // ACİL FON
+  const efTarget = Math.round((fb.recTotal + fb.debtTotal + ctx.avgVar3) * 3);
+  if (efTarget > 0) {
+    if (!ctx.emergencyGoal) {
+      const monthly = ctx.structCap > 200
+        ? Math.max(200, Math.min(Math.ceil(efTarget / 6), Math.round(ctx.structCap * 0.5)))
+        : Math.max(100, Math.ceil(efTarget / 24));
+      const months = Math.max(1, Math.ceil(efTarget / monthly));
+      cards.push({ id: 'emergency', score: ctx.debtRatio > 0.4 ? 82 : 90, cls: 'warn', val: fmtTL(efTarget), 
+        title: 'Acil fon oluştur — planın ilk adımı bu',
+        sub: `Sabit gider + taksit + ortalama harcamana göre 3 aylık yaşam maliyetin ${fmtTL(efTarget)}. Bu tampon olmadan beklenmedik tek bir gider yapıyı borca iter. Ayda ${fmtTL(monthly)} ile ${months} ayda dolar.`,
+        action: { label: 'Acil fon hedefi oluştur', js: `adviceCreateEmergency(${efTarget},${monthly})` } });
+    } else {
+      const g = ctx.emergencyGoal;
+      const dep = (g.deposits || []).reduce((s, d) => s + d.amount, 0);
+      const gt = g.target || efTarget;
+      if (dep < gt) {
+        const p = Math.min(99, Math.round((dep / gt) * 100));
+        const left = gt - dep;
+        const mLeft = ctx.structCap > 0 ? Math.ceil(left / ctx.structCap) : null;
+        cards.push({ id: 'emergency_progress', score: 62, cls: 'good', val: '%' + p,
+          title: 'Acil fon dolduruluyor',
+          sub: `${fmtTL(dep)} / ${fmtTL(gt)} — ${fmtTL(left)} kaldı${mLeft ? `, mevcut marjla ~${mLeft} ayda tamamlanır` : ''}. Dolana kadar bu katkı diğer hedeflerden önce gelir.` });
+      } else {
+        cards.push({ id: 'emergency_done', score: 18, cls: 'good', val: fmtTL(dep),
+          title: 'Acil fonun hazır',
+          sub: 'Tampon güvende — artık marjı büyüme hedeflerine yönlendirebilirsin.' });
+      }
+    }
+  }
+
+  // ROLLOVER: yeni kapanan taksit → birikime yönlendir
+  data.debts.filter(d => !d.active && Array.isArray(d.paidMonths) && d.paidMonths.length).forEach(d => {
+    const last = [...d.paidMonths].sort().pop();
+    if (last >= prevMonthKey(1)) {
+      cards.push({ id: 'rollover_' + d.id, score: 80, cls: 'good', val: '+' + fmtTL(d.monthlyAmount),
+        title: `"${esc(d.name)}" kapandı — taksiti birikime çevir`,
+        sub: `Aylık ${fmtTL(d.monthlyAmount)} serbest kaldı. Davranışsal kural: boşalan taksit 2–3 ay içinde sessizce harcamaya karışır. Aynı tutarı bugün bir hedefe bağlarsan hissetmeden birikir.`,
+        action: { label: 'Birikime yönlendir', js: `adviceRollover('${d.id}')` } });
+    }
+  });
+
+  // BORÇ STRATEJİSİ
+  if (ctx.activeDebts.length) {
+    if (ctx.debtRatio > 0.3) {
+      cards.push({ id: 'nonewdebt', score: 76, cls: 'bad', val: '%' + Math.round(ctx.debtRatio * 100),
+        title: 'Yeni borç alma',
+        sub: `Taksitler gelirinin ${pct(Math.round(ctx.debtRatio * 100))} götürüyor. Bu oranda yeni kredi/taksit, tek gecikmede zincirleme soruna dönüşür. Mevcutlar kapanana kadar başvuru yok.` });
+    }
+    if (ctx.activeDebts.length > 1) {
+      const sm = [...ctx.activeDebts].sort((a, b) =>
+        ((a.installments - a.paidCount) * a.monthlyAmount) - ((b.installments - b.paidCount) * b.monthlyAmount))[0];
+      const left = Math.max(0, (sm.installments - sm.paidCount) * sm.monthlyAmount);
+      const mo = Math.max(0, sm.installments - sm.paidCount);
+      if (left > 0) cards.push({ id: 'snowball', score: 52, cls: 'warn', val: fmtTL(Math.round(left)),
+        title: `Kartopu: önce "${esc(sm.name)}" borcunu bitir`,
+        sub: `${mo} ay kaldı. En küçük borcu önce kapatmak psikolojik olarak en güçlü yöntem: erken zafer, diğer borçları kapatma motivasyonunu ayakta tutar. Bitince taksitini bir sonraki borca ekle.`,
+        action: { label: 'Borçlara git', js: 'adviceGoDebt()' } });
+    }
+    let maxEnd = null;
+    ctx.activeDebts.forEach(d => {
+      const rem = Math.max(0, d.installments - d.paidCount);
+      if (!rem) return;
+      let startOff = 0;
+      if (d.startMonth && d.startMonth > mk) {
+        const [y1, m1] = mk.split('-').map(Number);
+        const [y2, m2] = d.startMonth.split('-').map(Number);
+        startOff = (y2 - y1) * 12 + (m2 - m1);
+      }
+      const off = startOff > 0 ? startOff + rem - 1 : (isPaidThisMonth(d, mk) ? rem : rem - 1);
+      const end = addMonthsToMk(mk, Math.max(0, off));
+      if (!maxEnd || end > maxEnd) maxEnd = end;
+    });
+    if (maxEnd) {
+      cards.push({ id: 'debtfree', score: 30, cls: 'good', val: _mkLabel(maxEnd),
+        title: 'Borçsuzluk tarihin',
+        sub: `Bu tempoda son taksit ${_mkLabel(maxEnd)}'de kapanıyor. Her ekstra ödeme bu tarihi öne çeker; o güne kadar yeni taahhüt almamak en büyük kazanım.` });
+    }
+  } else {
+    cards.push({ id: 'nodebt', score: 16, cls: 'good', val: '0₺',
+      title: 'Borçsuz yaşıyorsun',
+      sub: 'Finansal özgürlüğün en sağlam temeli bu. Şimdi tüm marj birikime çalışabilir.' });
+  }
+
+  // HARCAMA TEMPOSU
+  if (fb.available > 0 && dayD >= 8 && dayD <= dim - 3) {
+    const expected = fb.available * (dayD / dim);
+    if (fb.varSpent > expected * 1.4 && (fb.varSpent - expected) >= 300) {
+      cards.push({ id: 'pacing', score: 75, cls: 'warn', val: '%' + Math.min(999, Math.round((fb.varSpent / fb.available) * 100)),
+        title: 'Harcama temposu ayın önünde',
+        sub: `Ayın ${pct(Math.round((dayD / dim) * 100))} geçti ama değişken bütçenin ${pct(Math.min(999, Math.round((fb.varSpent / fb.available) * 100)))} harcandı. Ay başı rahatlığı en yaygın bütçe tuzağı — bu haftayı günlük limite sadık geçir.` });
+    }
+  }
+
+  // KATEGORİ ANOMALİSİ
+  {
+    const by = {};
+    data.transactions
+      .filter(t => monthKey(t.date) === mk && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+      .forEach(t => { by[t.category] = (by[t.category] || 0) + t.amount; });
+    let best = null;
+    Object.entries(by).forEach(([id, amt]) => {
+      const avg = ctx.catAvg[id] || 0;
+      if (avg >= 200 && amt > avg * 1.3 && (amt - avg) >= 250) {
+        const over = amt - avg;
+        if (!best || over > best.over) best = { id, amt, avg, over };
+      }
+    });
+    if (best) {
+      const cat = getCat(best.id);
+      cards.push({ id: 'cat_' + best.id, score: 65, cls: 'warn', val: '+' + fmtTL(Math.round(best.over)),
+        title: `${esc(cat.name)} sessizce yükseliyor`,
+        sub: `3 aylık ortalaman ${fmtTL(Math.round(best.avg))}; bu ay şimdiden ${fmtTL(Math.round(best.amt))}. Tek kategorideki sessiz artış, toplam bütçedeki bozulmanın en yaygın nedenidir. Bu ay bu kalemi toparlarsan gelecek ay burada raporlanır.` });
+    }
+  }
+
+  // ABONELİK DENETİMİ
+  {
+    const activeRecs = data.recurring.filter(r => r.active);
+    activeRecs.forEach(r => {
+      if (!Array.isArray(r.paidMonths) || !r.paidMonths.length) return;
+      const last = [...r.paidMonths].sort().pop();
+      if (last <= prevMonthKey(3)) {
+        cards.push({ id: 'unusedsub_' + r.id, score: 60, cls: 'warn', val: fmtTL(r.amount * 12) + '/yıl',
+          title: `"${esc(r.desc)}" hâlâ gerekli mi?`,
+          sub: `Son ödeme ${_mkLabel(last)} — aylardır işaretlenmiyor. Kullanmıyorsan iptali yılda ${fmtTL(r.amount * 12)} kazandırır; kullanıyorsan listedeki tutarı güncelle.`,
+          action: { label: 'Gözden geçir', js: 'adviceGoRec()' } });
+      }
+    });
+    const top = [...activeRecs].sort((a, b) => b.amount - a.amount)[0];
+    if (top && top.amount >= fb.income * 0.08) {
+      cards.push({ id: 'bigsub_' + top.id, score: 36, cls: 'warn', val: fmtTL(top.amount * 12) + '/yıl',
+        title: `En büyük sabit kalem: ${esc(top.desc)}`,
+        sub: `${fmtTL(top.amount)}/ay, yılda ${fmtTL(top.amount * 12)}. Yıllık bakınca pazarlık/alternatif aramaya değer — %10 indirim bile yılda ${fmtTL(Math.round(top.amount * 1.2))} eder.`,
+        action: { label: 'Gözden geçir', js: 'adviceGoRec()' } });
+    }
+  }
+
+  // HEDEF GERÇEKÇİLİĞİ
+  data.savingsGoals.forEach(g => {
+    if (!g.monthly) return;
+    const hist = Array.isArray(g.paidMonths) ? g.paidMonths : [];
+    if (!hist.length) return;
+    const last = [...hist].sort().pop();
+    if (last <= prevMonthKey(2) && !hist.includes(mk)) {
+      cards.push({ id: 'goalslip_' + g.id, score: 55, cls: 'warn', val: fmtTL(g.monthly),
+        title: `"${esc(g.name)}" birikimi aksadı`,
+        sub: `Aylık ${fmtTL(g.monthly)} katkı ${_mkLabel(last)}'ten beri işaretlenmemiş. Birikimde istikrar tutardan önemlidir: tutarı %30–50 düşürüp kesintisiz devam etmek, yüksek ama aksayan hedeften daha hızlı sonuç verir.`,
+        action: { label: 'Hedefi düzenle', js: `startEditGoal('${g.id}')` } });
+    }
+  });
+
+  // GELİR KIRILGANLIĞI
+  {
+    const activeInc = (data.recurringIncome || []).filter(r => r.active);
+    if (activeInc.length === 1) {
+      cards.push({ id: 'singleincome', score: 26, cls: 'warn', val: '1 kaynak',
+        title: 'Tüm yapı tek gelir kaynağına bağlı',
+        sub: 'Tek kaynak, bütçedeki en büyük yoğunlaşma riski: kaynak aksarsa tüm sistem durur. Küçük bir ikinci akış (freelance, satış, kira) bile yapıyı belirgin şekilde dayanıklı yapar.' });
+    }
+  }
+
+  return cards;
+}
+
+// ── Render: Öncelikli Adımlar (analiz sayfası bloğu) ──
+function _renderPlanSteps() {
+  const el = document.getElementById('planStepsList');
+  if (!el) return;
+  const ctx = _adviceCtx();
+  if (ctx.fb.income <= 0) {
+    el.innerHTML = '<div style="font-size:13px;font-weight:400;color:var(--muted);line-height:1.75;padding:4px 0 8px">Gelir kaydı eklenince kişisel yol haritan burada oluşur.</div>';
+    return;
+  }
+  const cards = _buildAdviceCards(ctx).sort((a, b) => b.score - a.score).slice(0, 6);
+  if (!cards.length) {
+    el.innerHTML = '<div style="font-size:13px;font-weight:400;color:var(--muted);line-height:1.75;padding:4px 0 8px">Kritik adım yok — yapı sağlıklı görünüyor. Mevcut düzeni korumak en iyi strateji.</div>';
+    return;
+  }
+  el.innerHTML = cards.map((c, i) => `
+    <div class="plan-step-row" style="animation:planBlockIn .28s ease ${i * 45}ms both" data-adv="${c.id}">
+      <div class="plan-step-num ${c.cls}">${i + 1}</div>
+      <div class="plan-step-body">
+        <div class="plan-step-top">
+          <div class="plan-step-title">${c.title}</div>
+          ${c.val ? `<div class="plan-step-val ${c.cls}">${c.val}</div>` : ''}
+        </div>
+        <div class="plan-step-sub">${c.sub}</div>
+        ${c.action ? `<button class="plan-step-btn ${c.cls}" onclick="${c.action.js}">${c.action.label}</button>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+// =================== AYLIK KARNE (analiz sayfası bloğu) ===================
+let _reportMonth = null;
+
+function _reportMonthsList() {
+  const cur = monthKey();
+  const set = new Set();
+  data.transactions.forEach(t => { const mk = monthKey(t.date); if (mk < cur) set.add(mk); });
+  return [...set].sort();
+}
+
+function reportChangeMonth(dir) {
+  const ms = _reportMonthsList();
+  if (!ms.length) return;
+  let i = ms.indexOf(_reportMonth);
+  if (i < 0) i = ms.length - 1;
+  const ni = i + dir;
+  if (ni < 0 || ni >= ms.length) return;
+  _reportMonth = ms[ni];
+  renderMonthlyReportCard();
+}
+
+function renderMonthlyReportCard() {
+  const el = document.getElementById('monthlyReportBox');
+  if (!el) return;
+  const ms = _reportMonthsList();
+  const block = document.getElementById('planReportBlock');
+  if (!ms.length) { el.innerHTML = ''; if (block) block.style.display = 'none'; return; }
+  if (block) block.style.display = '';
+  if (!_reportMonth || !ms.includes(_reportMonth)) _reportMonth = ms[ms.length - 1];
+  const pm = _reportMonth;
+  const idx = ms.indexOf(pm);
+
+  const { income, expense } = calcMonthData(pm);
+  const savRate = income > 0 ? Math.round(((income - expense) / income) * 100) : null;
+  const fbP = calcFreeBudget(pm);
+
+  const dim = daysInMonth(pm);
+  let gDays = 0, rDays = 0;
+  for (let d2 = 1; d2 <= dim; d2++) {
+    const st = getDayInfo(pm + '-' + String(d2).padStart(2, '0')).status;
+    if (st === 'green' || st === 'frozen') gDays++;
+    else if (st === 'red') rDays++;
+  }
+  const uyum = (gDays + rDays) > 0 ? Math.round((gDays / (gDays + rDays)) * 100) : null;
+
+  const by = {};
+  data.transactions
+    .filter(t => monthKey(t.date) === pm && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+    .forEach(t => { by[t.category] = (by[t.category] || 0) + t.amount; });
+  const top = Object.entries(by).sort((a, b) => b[1] - a[1])[0];
+
+  const beforePm = addMonthsToMk(pm, -1);
+  let rising = null;
+  Object.entries(by).forEach(([id, amt]) => {
+    const prev = _catMonthTotal(beforePm, id);
+    if (prev >= 200 && amt > prev * 1.25) {
+      const inc2 = amt - prev;
+      if (!rising || inc2 > rising.inc) rising = { id, inc: inc2, p: Math.round(((amt - prev) / prev) * 100) };
+    }
+  });
+
+  const debtPaid = data.transactions.filter(t => monthKey(t.date) === pm && t.isDebt).reduce((s, t) => s + t.amount, 0);
+  const savDep = data.transactions.filter(t => monthKey(t.date) === pm && t.isGoalDeposit).reduce((s, t) => s + t.amount, 0);
+
+  const comp = Math.round((uyum ?? 50) * 0.5 + (Math.max(0, Math.min(30, savRate ?? 0)) / 30) * 50);
+  const grade = comp >= 80 ? 'A' : comp >= 60 ? 'B' : comp >= 40 ? 'C' : 'D';
+  const gColor = grade === 'A' ? 'var(--accent)' : grade === 'B' ? '#0A84FF' : grade === 'C' ? 'var(--warning)' : 'var(--danger)';
+  const gBg = grade === 'A' ? 'rgba(45,184,102,.12)' : grade === 'B' ? 'rgba(10,132,255,.12)' : grade === 'C' ? 'rgba(255,214,10,.1)' : 'rgba(255,69,58,.1)';
+
+  let odak;
+  if (income <= 0) odak = 'Bu ay gelir kaydı yoktu — karne sınırlı veriyle hesaplandı.';
+  else if ((savRate ?? 0) < 5) odak = 'Odak: küçük de olsa artıyla kapatmak. Gelecek ay tek hedef bu.';
+  else if ((uyum ?? 100) < 60) odak = 'Günlük limit uyumu düşüktü — gün içi küçük harcamalar toplamı büyütüyor.';
+  else if (rising) odak = `${getCat(rising.id).name} ${pct(rising.p)} arttı — gelecek ay bu kalemi izle.`;
+  else if (top) odak = `Dengeli bir ay. En büyük kalem ${getCat(top[0]).name} — düzeni koru.`;
+  else odak = 'Dengeli bir ay — aynı düzeni koru.';
+
+  const row = (label, val, color) => `
+    <div class="report-row">
+      <span class="report-row-label">${label}</span>
+      <span class="report-row-val" style="color:${color || 'var(--text)'}">${val}</span>
+    </div>`;
+
+  el.innerHTML = `
+  <div class="report-card">
+    <div class="report-head">
+      <div style="font-size:17px;font-weight:900;letter-spacing:-.3px;color:var(--text)">${_mkLabel(pm)}</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="report-nav-btn" onclick="reportChangeMonth(-1)" style="opacity:${idx > 0 ? 1 : .25};pointer-events:${idx > 0 ? 'auto' : 'none'}">‹</button>
+        <button class="report-nav-btn" onclick="reportChangeMonth(1)" style="opacity:${idx < ms.length - 1 ? 1 : .25};pointer-events:${idx < ms.length - 1 ? 'auto' : 'none'}">›</button>
+        <div class="report-grade" style="background:${gBg};color:${gColor};border:1px solid ${gColor}">${grade}</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div style="background:var(--surface3);border-radius:12px;padding:11px 13px">
+        <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Tasarruf Oranı</div>
+        <div style="font-size:19px;font-weight:900;letter-spacing:-.5px;color:${(savRate ?? 0) >= 15 ? 'var(--accent)' : (savRate ?? 0) >= 5 ? 'var(--warning)' : 'var(--danger)'}">${savRate === null ? '—' : '%' + savRate}</div>
+      </div>
+      <div style="background:var(--surface3);border-radius:12px;padding:11px 13px">
+        <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Limit Uyumu</div>
+        <div style="font-size:19px;font-weight:900;letter-spacing:-.5px;color:${(uyum ?? 0) >= 70 ? 'var(--accent)' : (uyum ?? 0) >= 40 ? 'var(--warning)' : 'var(--danger)'}">${uyum === null ? '—' : '%' + uyum}</div>
+      </div>
+    </div>
+
+    ${row('Gelir', '+' + fmtTL(income), 'var(--accent)')}
+    ${row('Gider', '−' + fmtTL(expense), 'var(--danger)')}
+    ${debtPaid > 0 ? row('Ödenen taksit', '−' + fmtTL(debtPaid), '#FF453A') : ''}
+    ${savDep > 0 ? row('Birikime giden', fmtTL(savDep), '#0A84FF') : ''}
+    ${top ? row('En büyük kalem', esc(getCat(top[0]).name) + ' · ' + fmtTL(Math.round(top[1])), 'var(--text)') : ''}
+    ${rising ? row('En çok artan', esc(getCat(rising.id).name) + ' +' + fmtTL(Math.round(rising.inc)), 'var(--warning)') : ''}
+    ${row('Ay sonu kalan', (fbP.remaining >= 0 ? '+' : '−') + fmtTL(Math.abs(Math.round(fbP.remaining))), fbP.remaining >= 0 ? 'var(--accent)' : 'var(--danger)')}
+
+    <div class="report-focus">${odak}</div>
+  </div>`;
+}
+
+
 // ── Ana render ────────────────────────────────────────────────────────────────
 function renderPlan() {
   const mk = currentMonth;
@@ -6787,7 +7255,9 @@ function renderPlan() {
   _renderPlanHero(fb, core);
   _renderPlanChar(core);
   _renderPlanRiskDetail(core);
+  _renderPlanSteps();
   _renderPlanGoalDetail(fb, core);
+  renderMonthlyReportCard();
   _updatePlanImpact(fb, core);
   _syncPlanCollapseSummaries(core);
 }
