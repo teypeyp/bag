@@ -1827,6 +1827,74 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .report-row-label{color:var(--muted);font-weight:600}
 .report-row-val{font-weight:800}
 .report-focus{margin-top:10px;padding:10px 12px;background:rgba(45,184,102,.06);border:1px solid rgba(45,184,102,.15);border-radius:10px;font-size:12px;font-weight:600;color:var(--text);line-height:1.55}
+
+/* ── V69: KREDİ KARTLARI ── */
+.cc-card{background:linear-gradient(135deg,#16211a 0%,#141417 55%,#101a2a 100%);border:1px solid rgba(45,184,102,.22);border-radius:16px;padding:16px;cursor:pointer;transition:transform .15s;position:relative;overflow:hidden;margin-bottom:10px}
+.cc-card:active{transform:scale(.985)}
+.cc-card::after{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(45,184,102,.10),transparent 70%);pointer-events:none}
+.cc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cc-name{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:800;letter-spacing:-.2px}
+.cc-name .cc-icon{width:30px;height:30px;border-radius:9px;background:rgba(45,184,102,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cc-name small{display:block;font-size:10px;font-weight:600;color:var(--muted);letter-spacing:0}
+.cc-cutpill{font-size:10px;font-weight:800;color:var(--muted);background:var(--surface3);padding:4px 9px;border-radius:20px;white-space:nowrap}
+.cc-cutpill.due-warn{background:rgba(255,214,10,.12);color:var(--warning)}
+.cc-cutpill.due-late{background:rgba(255,69,58,.14);color:var(--danger)}
+.cc-debt-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px}
+.cc-debt{font-size:26px;font-weight:900;letter-spacing:-1px;line-height:1;margin-bottom:11px}
+.cc-limitbar{height:5px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;margin-bottom:6px}
+.cc-limitfill{height:100%;border-radius:99px;transition:width .5s cubic-bezier(.32,0,.15,1)}
+.cc-limitrow{display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--muted)}
+.cc-statement{display:flex;align-items:center;justify-content:space-between;background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.16);border-radius:var(--radius-sm);padding:10px 12px;margin-top:11px}
+.cc-statement.paid{background:rgba(45,184,102,.06);border-color:rgba(45,184,102,.2)}
+.cc-st-left{font-size:11px;font-weight:700;color:var(--text)}
+.cc-st-left small{display:block;font-size:10px;font-weight:600;color:var(--muted);margin-top:2px}
+.cc-st-amt{font-size:14px;font-weight:900;color:var(--warning)}
+.cc-statement.paid .cc-st-amt{color:var(--accent)}
+.cc-carried{margin-top:8px;display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;color:var(--danger);background:rgba(255,69,58,.07);border:1px solid rgba(255,69,58,.18);border-radius:var(--radius-sm);padding:9px 12px}
+.cc-actions{display:flex;gap:6px;margin-top:10px}
+.cc-mini-btn{flex:1;padding:8px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;cursor:pointer}
+.cc-mini-btn.danger{border-color:rgba(255,69,58,.25);background:rgba(255,69,58,.08);color:var(--danger)}
+.cc-empty{font-size:12px;color:var(--muted);padding:6px 2px 10px;line-height:1.6}
+.cc-ext-tx{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.cc-ext-tx:last-child{border-bottom:none}
+.cc-ext-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cc-ext-name{flex:1;min-width:0}
+.cc-ext-title{font-size:13px;font-weight:700;letter-spacing:-.1px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.cc-ext-date{font-size:10px;font-weight:600;color:var(--muted);margin-top:2px}
+.cc-ext-amt{font-size:13px;font-weight:800;white-space:nowrap}
+.cc-inst-badge{font-size:9px;font-weight:900;background:rgba(10,132,255,.14);color:var(--blue);padding:2px 6px;border-radius:6px;letter-spacing:.3px;white-space:nowrap}
+.cc-start-pill{font-size:9px;font-weight:900;background:rgba(255,255,255,.07);color:var(--muted);padding:2px 6px;border-radius:6px;letter-spacing:.3px;white-space:nowrap}
+.cc-ext-total{display:flex;justify-content:space-between;align-items:center;padding:13px 0 4px;border-top:1px solid var(--border);margin-top:4px}
+.cc-ext-total span{font-size:12px;font-weight:700;color:var(--muted)}
+.cc-ext-total b{font-size:17px;font-weight:900;letter-spacing:-.5px}
+.cc-future-note{background:rgba(10,132,255,.05);border:1px solid rgba(10,132,255,.14);border-radius:var(--radius-sm);padding:10px 13px;margin-top:10px;font-size:11px;font-weight:600;color:var(--muted);line-height:1.6}
+.cc-future-note b{color:var(--blue);font-weight:800}
+.cc-effect{margin-top:12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 13px}
+.cc-eff-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;font-weight:600;gap:10px}
+.cc-eff-row span:first-child{color:var(--muted)}
+.cc-eff-row b{font-weight:800;text-align:right}
+.cc-divider{display:flex;align-items:center;gap:10px;margin:18px 0 4px}
+.cc-divider span{font-size:10px;font-weight:900;color:var(--accent);text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
+.cc-divider::before,.cc-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.cc-divider-note{font-size:11px;color:var(--muted);line-height:1.6;margin:4px 0 8px;font-weight:500}
+.cc-inst-head{display:grid;grid-template-columns:1.6fr 1fr .8fr 30px;gap:6px;margin-bottom:5px}
+.cc-inst-head span{font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.cc-inst-row{display:grid;grid-template-columns:1.6fr 1fr .8fr 30px;gap:6px;margin-bottom:6px;align-items:center}
+.cc-inst-row .form-input{padding:10px 10px;font-size:12px}
+.cc-inst-x{width:30px;height:30px;border-radius:9px;background:var(--surface3);border:none;color:var(--muted);font-size:15px;cursor:pointer;font-family:'Montserrat',sans-serif}
+.cc-add-inst{margin-top:2px;background:none;border:1.5px dashed var(--border);width:100%;padding:10px;border-radius:10px;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;cursor:pointer}
+.cc-seg-row{display:flex;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:4px;gap:4px}
+.cc-seg-btn{flex:1;padding:9px 4px;border:none;border-radius:10px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:none;color:var(--muted);transition:all .2s}
+.cc-seg-btn.active{background:var(--surface3);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+/* tx sheet ödeme yöntemi */
+.tx-pay-chips{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px 0}
+.tx-pay-chip{padding:8px 13px;border:1.5px solid var(--border);border-radius:20px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;cursor:pointer;background:var(--surface2);color:var(--muted);transition:all .15s;display:flex;align-items:center;gap:6px}
+.tx-pay-chip.active{background:var(--accent-dim);border-color:rgba(45,184,102,.4);color:var(--accent)}
+.tx-pay-chip svg{flex-shrink:0}
+.tx-inst-chips{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px 0}
+.tx-inst-chip{flex:1;min-width:42px;padding:8px 0;border:1.5px solid var(--border);border-radius:10px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;cursor:pointer;background:var(--surface2);color:var(--muted);text-align:center;transition:all .15s}
+.tx-inst-chip.active{background:rgba(10,132,255,.1);border-color:rgba(10,132,255,.4);color:var(--blue)}
+.tx-card-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:900;background:rgba(10,132,255,.12);color:var(--blue);padding:2px 6px;border-radius:6px;letter-spacing:.3px;vertical-align:middle}
 </style>
 </head>
 <body>
@@ -2118,6 +2186,25 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     </div>
     <div class="collapsible-body collapsed" id="recBody"><div class="collapsible-inner">
       <div id="recList"></div>
+    </div></div>
+  </div>
+
+  <!-- V69: Kredi Kartları -->
+  <div class="card collapsible-card" style="background:var(--surface);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.15)">
+    <div class="card-collapse-header" onclick="toggleSection('cards')">
+      <div class="collapse-left">
+        <div class="collapse-icon-wrap" style="background:rgba(10,132,255,.12);border:1px solid rgba(10,132,255,.22);display:flex;align-items:center;justify-content:center"><svg width="20" height="20" style="flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg></div>
+        <div>
+          <div class="collapse-title">Kredi Kartları</div>
+          <div class="collapse-summary" id="cardsSummary"></div>
+        </div>
+      </div>
+      <div class="collapse-right">
+        <button class="btn btn-ghost btn-sm collapse-add-btn" onclick="event.stopPropagation();openCardAddSheet()">+ Ekle</button><span class="collapse-chevron" id="cardsChevron">›</span>
+      </div>
+    </div>
+    <div class="collapsible-body collapsed" id="cardsBody"><div class="collapsible-inner">
+      <div id="cardList"></div>
     </div></div>
   </div>
 
@@ -2585,11 +2672,113 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         <span class="tx-opt-value" id="txSheetDateLabel">Bugün</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6"/></svg>
       </div>
+      <!-- V69: ödeme yöntemi (kart tanımlıysa ve gider ise görünür) -->
+      <div id="txPayWrap" style="display:none">
+        <div class="tx-pay-chips" id="txPayChips"></div>
+        <div class="tx-inst-chips" id="txInstChips" style="display:none"></div>
+      </div>
     </div>
     <div class="tx-save-wrap">
       <button class="tx-save-btn" id="txSaveBtn" onclick="txSheetSave()" disabled>Kaydet</button>
     </div>
     <div style="height:8px"></div>
+  </div>
+</div>
+
+<!-- ═══ V69: KART EKLE / DÜZENLE SHEET ═══ -->
+<div class="add-sheet-overlay" id="cardAddOverlay" onclick="if(event.target===this)closeCardAddSheet()"></div>
+<div class="add-sheet" id="cardAddSheet">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header">
+    <span class="add-sheet-title" id="cardAddTitle">Kart Ekle</span>
+    <button class="add-sheet-close" onclick="closeCardAddSheet()">&times;</button>
+  </div>
+  <div class="add-sheet-body">
+    <div class="form-group">
+      <label class="form-label">Kart İsmi</label>
+      <input type="text" id="ccName" class="form-input" placeholder="Bonus, Maximum, Axess…">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Limit</label>
+      <input type="text" id="ccLimit" class="form-input" placeholder="40.000" inputmode="numeric" oninput="fmtInput(this)">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="form-group">
+        <label class="form-label">Kesim Günü</label>
+        <input type="number" id="ccCutDay" class="form-input" placeholder="8" min="1" max="28" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Son Ödeme Günü</label>
+        <input type="number" id="ccDueDay" class="form-input" placeholder="18" min="1" max="28" inputmode="numeric">
+      </div>
+    </div>
+
+    <div id="ccStartWrap">
+      <div class="cc-divider"><span>Mevcut Durum · Opsiyonel</span></div>
+      <div class="cc-divider-note">Hali hazırdaki kartını olduğu gibi gir. Bu tutarlar geçmişte harcandığı için günlük limite ve istatistiklere <b style="color:var(--text)">girmez</b> — sadece kart borcunu oluşturur.</div>
+      <div class="form-group">
+        <label class="form-label">Güncel Dönem Borcu (kesilmemiş)</label>
+        <input type="text" id="ccStartDebt" class="form-input" placeholder="0" inputmode="numeric" oninput="fmtInput(this)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ödenmemiş Ekstre</label>
+        <input type="text" id="ccStartStmt" class="form-input" placeholder="0" inputmode="numeric" oninput="fmtInput(this)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Devam Eden Taksitler</label>
+        <div class="cc-inst-head"><span>Ne</span><span>Aylık</span><span>Kalan Ay</span><span></span></div>
+        <div id="ccInstList"></div>
+        <button class="cc-add-inst" onclick="addCardInstRow()">+ Taksit Ekle</button>
+      </div>
+    </div>
+
+    <div class="cc-effect" id="ccAddEffect" style="margin-bottom:14px"></div>
+    <button class="btn btn-primary btn-full" id="ccSaveBtn" onclick="saveCard()">Kartı Ekle</button>
+  </div>
+</div>
+
+<!-- ═══ V69: EKSTRE SHEET ═══ -->
+<div class="add-sheet-overlay" id="cardExtOverlay" onclick="if(event.target===this)closeCardExt()"></div>
+<div class="add-sheet" id="cardExtSheet">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header">
+    <span class="add-sheet-title" id="cardExtTitle">Ekstre</span>
+    <button class="add-sheet-close" onclick="closeCardExt()">&times;</button>
+  </div>
+  <div class="add-sheet-body" id="cardExtBody"></div>
+</div>
+
+<!-- ═══ V69: EKSTRE ÖDEME SHEET ═══ -->
+<div class="add-sheet-overlay" id="cardPayOverlay" onclick="if(event.target===this)closeCardPay()"></div>
+<div class="add-sheet" id="cardPaySheet">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header">
+    <span class="add-sheet-title" id="cardPayTitle">Ekstreyi Öde</span>
+    <button class="add-sheet-close" onclick="closeCardPay()">&times;</button>
+  </div>
+  <div class="add-sheet-body">
+    <div class="cc-effect" style="margin-top:0;margin-bottom:12px">
+      <div class="cc-eff-row"><span>Ödenecek toplam</span><b id="cardPayTotal">—</b></div>
+      <div class="cc-eff-row"><span>Son ödeme</span><b id="cardPayDue">—</b></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Ne kadar ödeyeceksin?</label>
+      <div class="cc-seg-row">
+        <button class="cc-seg-btn active" id="cardPayFullBtn" onclick="setCardPayMode('full')">Tamamı</button>
+        <button class="cc-seg-btn" id="cardPayPartBtn" onclick="setCardPayMode('part')">Kısmi</button>
+      </div>
+    </div>
+    <div class="form-group" id="cardPayPartWrap" style="display:none">
+      <label class="form-label">Tutar</label>
+      <input type="text" id="cardPayAmount" class="form-input" placeholder="0" inputmode="numeric" oninput="fmtInput(this);renderCardPayEffect()">
+    </div>
+    <div class="cc-effect" style="margin-bottom:14px">
+      <div class="cc-eff-row"><span>Varlık (bakiye)</span><b style="color:var(--danger)" id="cardPayEffBal">—</b></div>
+      <div class="cc-eff-row"><span>Kart borcu</span><b style="color:var(--accent)" id="cardPayEffCard">—</b></div>
+      <div class="cc-eff-row"><span>Günlük limit</span><b style="color:var(--muted)">Etkilenmez</b></div>
+      <div class="cc-eff-row"><span>Gider istatistikleri</span><b style="color:var(--muted)">Etkilenmez (transfer)</b></div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="submitCardPay()">Ödemeyi Onayla</button>
   </div>
 </div>
 
@@ -2872,6 +3061,7 @@ let viewYear = new Date().getFullYear();
 const KEY = 'butcem_v3';
 let data = {
   transactions: [],
+  cards: [],
   recurring: [],
   recurringIncome: [],
   debts: [],
@@ -3051,6 +3241,8 @@ function load() {
       const parsed = JSON.parse(raw);
       data = {...data, ...parsed};
       if (!Array.isArray(data.transactions)) data.transactions = [];
+      if (!Array.isArray(data.cards)) data.cards = [];
+      _cardGuards(); // V69
       if (!Array.isArray(data.recurring)) data.recurring = [];
       if (!Array.isArray(data.recurringIncome)) data.recurringIncome = [];
       if (!Array.isArray(data.debts)) data.debts = [];
@@ -3353,7 +3545,7 @@ function finishOnboarding() {
 
 // =================== TABS ===================
 let currentTab = 'aylik';
-const sectionState = { income: false, rec: false, debt: false, goal: false, wish: false };
+const sectionState = { income: false, rec: false, cards: false, debt: false, goal: false, wish: false };
 
 function switchTab(id) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -3970,7 +4162,12 @@ function _hardStopConfetti() {
 // =================== CALCULATE ===================
 function calcBalance() {
   if (!Array.isArray(data.transactions)) data.transactions = [];
-  return data.transactions.reduce((s, t) => t.type === 'income' ? s + t.amount : s - t.amount, 0);
+  return data.transactions.reduce((s, t) => {
+    if (t.type === 'income') return s + t.amount;
+    // V69: kart harcaması bakiyeyi düşürmez — para ekstre ödemesinde (cardpay) çıkar
+    if (t.type === 'expense' && t.payMethod === 'card') return s;
+    return s - t.amount; // expense (nakit) + cardpay (transfer)
+  }, 0);
 }
 
 function calcMonthData(mk) {
@@ -4472,25 +4669,31 @@ function renderTxList(container, txs, limitTo5, prefix) {
       if (limitTo5 && shownCount >= MAX_ITEMS) break;
       const cat = getCat(t.category);
       const isIncome = t.type === 'income';
+      const isCardPay = t.type === 'cardpay'; // V69: ekstre ödemesi (transfer)
       const cardClass = isIncome ? 'tx-income-card' : 'tx-expense-card';
-      const iconBg  = isIncome ? 'rgba(45,184,102,.18)' : 'rgba(231,76,60,.15)';
-      const iconStroke = isIncome ? '#2DB866' : '#e74c3c';
+      const iconBg  = isCardPay ? 'rgba(255,255,255,.07)' : isIncome ? 'rgba(45,184,102,.18)' : 'rgba(231,76,60,.15)';
+      const iconStroke = isCardPay ? '#6E6D78' : isIncome ? '#2DB866' : '#e74c3c';
       const domId = pfx + t.id;
-      const catName = cat.name;
-      const hasDesc = t.desc && t.desc !== catName;
-      const rawIcon = _iconSvgById(cat.id) || _iconSvgById(cat.emoji) || CAT_ICONS.diger;
+      const catName = isCardPay ? (t.desc || 'Ekstre Ödemesi') : cat.name;
+      const hasDesc = !isCardPay && t.desc && t.desc !== catName;
+      const rawIcon = isCardPay ? CC_ICON : (_iconSvgById(cat.id) || _iconSvgById(cat.emoji) || CAT_ICONS.diger);
       const iconHtml = rawIcon
         .replace('<svg ', `<svg width="20" height="20" style="flex-shrink:0" `)
         .replace(/stroke-width="1\.5"/g, `stroke-width="1.5" stroke="${iconStroke}"`);
+      // V69: kart harcaması rozeti
+      const payCardObj = t.payMethod === 'card' ? cardById(t.cardId) : null;
+      const cardBadge = t.payMethod === 'card'
+        ? ` <span class="tx-card-badge">${payCardObj ? esc(payCardObj.name.length > 12 ? payCardObj.name.slice(0,12) + '…' : payCardObj.name).toUpperCase() : 'KART'}</span>`
+        : '';
       itemsHtml += `<div class="tx-item ${cardClass} stagger-item" id="tx_${domId}" onclick="toggleTxDelete('${t.id}','${pfx}')">
         <div class="tx-icon ${t.type}" style="background:${iconBg}">${iconHtml}</div>
         <div class="tx-info">
-          <div class="tx-desc">${esc(catName)}</div>
+          <div class="tx-desc">${esc(catName)}${cardBadge}${isCardPay ? ' <span class="tx-card-badge" style="background:rgba(255,255,255,.07);color:var(--muted)">TRANSFER</span>' : ''}</div>
         </div>
         <div class="tx-right">
-          <div class="tx-amount ${t.type}">${t.type==='income' ? '+' : '−'}${fmtTL(t.amount)}</div>
+          <div class="tx-amount ${t.type}"${isCardPay ? ' style="color:var(--muted)"' : ''}>${t.type==='income' ? '+' : '−'}${fmtTL(t.amount)}</div>
           ${hasDesc ? `<div class="tx-sub-desc" id="txsub_${domId}">${esc(t.desc.length > 14 ? t.desc.slice(0,14) + '…' : t.desc)}</div>` : ''}
-          <button class="tx-action-btn edit-btn" id="txedit_${domId}" onclick="event.stopPropagation();openEditTx('${t.id}')" title="Düzenle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          ${isCardPay ? '' : `<button class="tx-action-btn edit-btn" id="txedit_${domId}" onclick="event.stopPropagation();openEditTx('${t.id}')" title="Düzenle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>`}
           <button class="tx-action-btn del-btn" id="txdel_${domId}" onclick="event.stopPropagation();deleteTx('${t.id}','${pfx}')" title="Sil"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
         </div>
       </div>`;
@@ -4633,6 +4836,12 @@ let _editTxCat = null; // seçili kategori id
 function openEditTx(id) {
   const tx = data.transactions.find(t => t.id === id);
   if (!tx) return;
+  // V69: transfer ve kesilmiş ekstre işlemleri düzenlenemez — kart senkronu bozulmasın
+  if (tx.type === 'cardpay') { showToast(TOAST_WARN + ' Ekstre ödemesi düzenlenemez — silip yeniden ödeyebilirsin'); return; }
+  if (tx.payMethod === 'card' && tx.cardId) {
+    const c = cardById(tx.cardId);
+    if (c && tx.date <= c.lastCut) { showToast(TOAST_WARN + ' Kesilmiş ekstredeki işlem düzenlenemez — silebilirsin'); return; }
+  }
   _editTxId = id;
   _editTxCat = tx.category;
   const isFixed = tx.isRecurring || tx.isDebt || tx.isGoalDeposit;
@@ -4713,6 +4922,11 @@ function saveTxEdit() {
   const date = document.getElementById('editTxDate').value;
   const category = _editTxCat || tx.category;
   if (!desc || !amount) { showToast(TOAST_WARN + ' Açıklama ve tutar gerekli'); return; }
+  // V69: kart işlemi kesilmiş ekstre dönemine taşınamaz — senkron bozulur
+  if (tx.payMethod === 'card' && tx.cardId && date) {
+    const _c = cardById(tx.cardId);
+    if (_c && date <= _c.lastCut) { showToast(TOAST_WARN + ' Tarih kesilmiş ekstre dönemine alınamaz'); return; }
+  }
   tx.desc = desc; tx.amount = amount;
   if (date) tx.date = date;
   tx.category = category;
@@ -4730,6 +4944,16 @@ function saveTxEdit() {
 function deleteTx(id, pfx) {
   const tx = data.transactions.find(t => t.id === id);
   if (!tx) return;
+  // V69: kart senkronizasyonu
+  if (tx.type === 'cardpay' && tx.cardId) {
+    const c = cardById(tx.cardId);
+    if (c) c.statement = (c.statement || 0) + tx.amount; // ödeme geri alındı → borç geri gelir
+  }
+  if (tx.payMethod === 'card' && tx.cardId) {
+    const c = cardById(tx.cardId);
+    if (c && tx.date <= c.lastCut) c.statement = Math.max(0, (c.statement || 0) - tx.amount); // kesilmiş dönemden silme → ekstre azalır
+    // güncel dönemdeyse ekstra işlem gerekmez; dönem borcu tx'lerden hesaplanıyor
+  }
   if (tx.isRecurring && tx.recurringId) {
     const mk = monthKey(tx.date), r = data.recurring.find(r=>r.id===tx.recurringId);
     if (r) r.paidMonths = r.paidMonths.filter(m=>m!==mk);
@@ -4848,6 +5072,10 @@ function openTxSheet(type) {
   _sheetDateStr = today();
   _dpSelected  = today(); // datepicker state'ini sıfırla — kirli seçim kalmasın
 
+  // V69: ödeme yöntemi sıfırla
+  _sheetPayMethod = 'cash'; _sheetCardId = null; _sheetInst = 1;
+  _renderTxPayChips();
+
   _sheetSetTheme(_sheetType);
 
   const title = document.getElementById('txSheetTitle');
@@ -4955,6 +5183,25 @@ function txSheetSave() {
 
   closeTxSheet();
 
+  // V69: kart harcaması — bakiye düşmez, ekstreye yazılır
+  const _payCard = (type === 'expense' && _sheetPayMethod === 'card') ? cardById(_sheetCardId) : null;
+  if (_payCard) {
+    if (_sheetInst > 1) {
+      const per = Math.round((amount / _sheetInst) * 100) / 100;
+      data.transactions.push({ id: uid(), type, desc: desc + ' (1/' + _sheetInst + ')', amount: per, date, category, payMethod: 'card', cardId: _payCard.id, isCardInstallment: true, ts: Date.now() });
+      _payCard.installments.push({ id: uid(), name: desc, per, left: _sheetInst - 1, total: _sheetInst, isStart: false, category });
+      save();
+      showToast(TOAST_OK + ' ' + esc(_payCard.name) + ' ekstresine yazıldı — bugün ' + fmtTL(per) + ', kalan ' + (_sheetInst - 1) + ' taksit gelecek aylara');
+    } else {
+      data.transactions.push({ id: uid(), type, desc, amount, date, category, payMethod: 'card', cardId: _payCard.id, ts: Date.now() });
+      save();
+      const fb = calcFreeBudget(monthKey());
+      showToast(TOAST_OK + ' ' + esc(_payCard.name) + ' ekstresine yazıldı — bakiye değişmedi, günlük limitten düştü' + (fb.daily > 0 ? ' (' + fmtTL(Math.round(fb.daily)) + ')' : ''));
+    }
+    renderAll();
+    return;
+  }
+
   data.transactions.push({ id: uid(), type, desc, amount, date, category, ts: Date.now() });
   save();
 
@@ -4987,11 +5234,406 @@ function txSheetSave() {
 }
 
 
+// =================== V69: KREDİ KARTLARI ===================
+
+function _cardGuards() {
+  if (!Array.isArray(data.cards)) data.cards = [];
+  data.cards.forEach(c => {
+    if (!Array.isArray(c.installments)) c.installments = [];
+    if (typeof c.startDebt !== 'number' || isNaN(c.startDebt)) c.startDebt = 0;
+    if (typeof c.statement !== 'number' || isNaN(c.statement)) c.statement = 0;
+    if (typeof c.carried !== 'number' || isNaN(c.carried)) c.carried = 0;
+    if (typeof c.limit !== 'number' || isNaN(c.limit) || c.limit <= 0) c.limit = 10000;
+    c.cutDay = Math.min(28, Math.max(1, parseInt(c.cutDay) || 1));
+    c.dueDay = Math.min(28, Math.max(1, parseInt(c.dueDay) || 10));
+    if (!c.lastCut) c.lastCut = _lastCutDateStr(c.cutDay);
+    c.installments.forEach(it => {
+      it.per = Math.max(0, parseFloat(it.per) || 0);
+      it.left = Math.max(0, parseInt(it.left) || 0);
+      it.total = Math.max(it.left, parseInt(it.total) || it.left);
+    });
+  });
+}
+
+function cardById(id) { return (data.cards || []).find(c => c.id === id); }
+
+// En son geçen kesim tarihi (bugün dahil geriye doğru)
+function _lastCutDateStr(cutDay, refStr) {
+  const ref = refStr ? new Date(refStr + 'T00:00:00') : new Date();
+  const cut = ref.getDate() >= cutDay
+    ? new Date(ref.getFullYear(), ref.getMonth(), cutDay)
+    : new Date(ref.getFullYear(), ref.getMonth() - 1, cutDay);
+  return localDateStr(cut);
+}
+// Verilen kesim tarihinden bir sonraki kesim (cutDay 1-28 aralığında güvenli)
+function _nextCutDateStr(lastCutStr, cutDay) {
+  const d = new Date(lastCutStr + 'T00:00:00');
+  return localDateStr(new Date(d.getFullYear(), d.getMonth() + 1, cutDay));
+}
+// Kesilmiş ekstrenin son ödeme tarihi (lastCut'a göre)
+function _dueDateStr(c) {
+  const d = new Date(c.lastCut + 'T00:00:00');
+  const m = c.dueDay > c.cutDay ? d.getMonth() : d.getMonth() + 1;
+  return localDateStr(new Date(d.getFullYear(), m, c.dueDay));
+}
+
+function calcCardTotals(c) {
+  const current = (c.startDebt || 0) + data.transactions
+    .filter(t => t.cardId === c.id && t.payMethod === 'card' && t.date > c.lastCut)
+    .reduce((s, t) => s + t.amount, 0);
+  const toPay = (c.statement || 0) + (c.carried || 0);
+  const future = (c.installments || []).reduce((s, it) => s + it.per * it.left, 0);
+  return { current, toPay, future, used: current + toPay + future, debt: current + toPay };
+}
+function totalCardsDebt() {
+  return (data.cards || []).reduce((s, c) => s + calcCardTotals(c).debt, 0);
+}
+
+// Uygulama açılışında geçen kesim günlerini işle
+function processCardCycles() {
+  if (!Array.isArray(data.cards) || !data.cards.length) return;
+  const todayStr = today();
+  let changed = false;
+  data.cards.forEach(c => {
+    let guard = 0;
+    while (guard++ < 48) {
+      const nextCut = _nextCutDateStr(c.lastCut, c.cutDay);
+      if (nextCut > todayStr) break;
+      // Vadesi gelen taksitler: start olanlar sayısal (istatistik dışı), diğerleri tx üretir
+      let startInstSum = 0;
+      (c.installments || []).forEach(it => {
+        if (it.left <= 0) return;
+        if (it.isStart) {
+          startInstSum += it.per;
+        } else {
+          const no = it.total - it.left + 1;
+          data.transactions.push({ id: uid(), type: 'expense', desc: it.name + ' (' + no + '/' + it.total + ')', amount: it.per, date: nextCut, category: it.category || 'diger', payMethod: 'card', cardId: c.id, isCardInstallment: true, ts: Date.now() });
+        }
+        it.left--;
+      });
+      // Dönem harcaması → yeni ekstre; ödenmemiş eski ekstre devredene taşınır
+      const periodTx = data.transactions
+        .filter(t => t.cardId === c.id && t.payMethod === 'card' && t.date > c.lastCut && t.date <= nextCut)
+        .reduce((s, t) => s + t.amount, 0);
+      c.carried = (c.carried || 0) + (c.statement || 0);
+      c.statement = (c.startDebt || 0) + periodTx + startInstSum;
+      c.startDebt = 0;
+      c.lastCut = nextCut;
+      changed = true;
+    }
+    c.installments = (c.installments || []).filter(it => it.left > 0);
+  });
+  if (changed) save();
+}
+
+// ── Kart listesi (Sabit tab) ──
+const CC_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg>';
+
+function renderCardList() {
+  const el = document.getElementById('cardList');
+  if (!el) return;
+  if (!(data.cards || []).length) {
+    el.innerHTML = '<div class="cc-empty">Henüz kart yok. Kartını mevcut borcu ve taksitleriyle ekleyebilirsin — harcama eklerken "Kart" seçeneği açılır.</div>';
+    return;
+  }
+  const todayStr = today();
+  el.innerHTML = data.cards.map(c => {
+    const t = calcCardTotals(c);
+    const pct = Math.min(100, c.limit > 0 ? t.used / c.limit * 100 : 0);
+    const grad = pct > 80 ? 'linear-gradient(90deg,#FF453A,#ff7a6e)' : pct > 55 ? 'linear-gradient(90deg,#FFD60A,#ffe45c)' : 'linear-gradient(90deg,#2DB866,#5fd68f)';
+    const nextCut = _nextCutDateStr(c.lastCut, c.cutDay);
+    const cutDays = Math.max(0, Math.round((new Date(nextCut + 'T00:00:00') - new Date(todayStr + 'T00:00:00')) / 86400000));
+    let pill = 'Kesime ' + cutDays + ' gün', pillCls = '';
+    let stBox = '';
+    if (t.toPay > 0) {
+      const dueStr = _dueDateStr(c);
+      const dueDays = Math.round((new Date(dueStr + 'T00:00:00') - new Date(todayStr + 'T00:00:00')) / 86400000);
+      const dueTxt = dueDays < 0 ? 'Son ödeme geçti!' : dueDays === 0 ? 'Son gün bugün!' : fmtDate(dueStr) + ' · ' + dueDays + ' gün kaldı';
+      if (dueDays < 0) { pill = 'Ödeme gecikti'; pillCls = ' due-late'; }
+      else if (dueDays <= 3) { pill = 'Son ödeme: ' + (dueDays === 0 ? 'bugün' : dueDays + ' gün'); pillCls = ' due-warn'; }
+      stBox = '<div class="cc-statement" onclick="event.stopPropagation();openCardPay(\'' + c.id + '\')">' +
+        '<div class="cc-st-left">Ödenecek ekstre<small>' + dueTxt + '</small></div>' +
+        '<div class="cc-st-amt">' + fmtTL(Math.round(t.toPay)) + '</div></div>';
+      if ((c.carried || 0) > 0) stBox += '<div class="cc-carried"><span>Devreden borç (önceki ekstreden)</span><b>' + fmtTL(Math.round(c.carried)) + '</b></div>';
+    } else {
+      stBox = '<div class="cc-statement paid"><div class="cc-st-left">Ödenecek ekstre yok<small>Sonraki kesim: ' + fmtDate(nextCut) + '</small></div><div class="cc-st-amt">✓</div></div>';
+    }
+    return '<div class="cc-card" onclick="openCardExt(\'' + c.id + '\')">' +
+      '<div class="cc-top"><div class="cc-name"><span class="cc-icon">' + CC_ICON.replace('stroke-width', 'stroke="#2DB866" stroke-width') + '</span><div>' + esc(c.name) + '<small>Kesim: her ayın ' + c.cutDay + '’i</small></div></div>' +
+      '<span class="cc-cutpill' + pillCls + '">' + pill + '</span></div>' +
+      '<div class="cc-debt-label">Güncel Dönem Harcaması</div>' +
+      '<div class="cc-debt">' + fmtTL(Math.round(t.current)) + '</div>' +
+      '<div class="cc-limitbar"><div class="cc-limitfill" style="width:' + pct + '%;background:' + grad + '"></div></div>' +
+      '<div class="cc-limitrow"><span>Limit ' + fmtTL(c.limit) + ' · Kullanılabilir ' + fmtTL(Math.max(0, Math.round(c.limit - t.used))) + '</span><span>%' + Math.round(pct) + '</span></div>' +
+      stBox +
+      '<div class="cc-actions">' +
+      '<button class="cc-mini-btn" onclick="event.stopPropagation();openCardEdit(\'' + c.id + '\')">Düzenle</button>' +
+      '<button class="cc-mini-btn danger" onclick="event.stopPropagation();deleteCard(\'' + c.id + '\')">Sil</button>' +
+      '</div></div>';
+  }).join('');
+}
+
+// ── Kart ekle / düzenle ──
+let _editCardId = null;
+function openCardAddSheet() {
+  _editCardId = null;
+  document.getElementById('cardAddTitle').textContent = 'Kart Ekle';
+  document.getElementById('ccSaveBtn').textContent = 'Kartı Ekle';
+  document.getElementById('ccName').value = '';
+  document.getElementById('ccLimit').value = '';
+  document.getElementById('ccCutDay').value = '';
+  document.getElementById('ccDueDay').value = '';
+  document.getElementById('ccStartDebt').value = '';
+  document.getElementById('ccStartStmt').value = '';
+  document.getElementById('ccInstList').innerHTML = '';
+  document.getElementById('ccStartWrap').style.display = 'block';
+  _ccAddEffect();
+  document.getElementById('cardAddOverlay').classList.add('show');
+  document.getElementById('cardAddSheet').classList.add('show');
+}
+function openCardEdit(id) {
+  const c = cardById(id);
+  if (!c) return;
+  _editCardId = id;
+  document.getElementById('cardAddTitle').textContent = 'Kartı Düzenle';
+  document.getElementById('ccSaveBtn').textContent = 'Kaydet';
+  document.getElementById('ccName').value = c.name;
+  document.getElementById('ccLimit').value = fmtTL(c.limit).replace('₺', '');
+  document.getElementById('ccCutDay').value = c.cutDay;
+  document.getElementById('ccDueDay').value = c.dueDay;
+  document.getElementById('ccStartWrap').style.display = 'none'; // mevcut durum sadece eklerken
+  document.getElementById('ccAddEffect').innerHTML = '';
+  document.getElementById('cardAddOverlay').classList.add('show');
+  document.getElementById('cardAddSheet').classList.add('show');
+}
+function closeCardAddSheet() {
+  document.getElementById('cardAddOverlay').classList.remove('show');
+  document.getElementById('cardAddSheet').classList.remove('show');
+}
+function addCardInstRow(name, per, left) {
+  const row = document.createElement('div');
+  row.className = 'cc-inst-row';
+  row.innerHTML =
+    '<input type="text" class="form-input cc-in" placeholder="Beyaz eşya" value="' + (name || '') + '">' +
+    '<input type="text" class="form-input cc-ip" placeholder="2.100" inputmode="numeric" value="' + (per || '') + '">' +
+    '<input type="number" class="form-input cc-il" placeholder="4" min="1" max="24" inputmode="numeric" value="' + (left || '') + '">' +
+    '<button class="cc-inst-x" onclick="this.parentNode.remove();_ccAddEffect()">&times;</button>';
+  row.querySelectorAll('input').forEach(inp => inp.addEventListener('input', _ccAddEffect));
+  document.getElementById('ccInstList').appendChild(row);
+  _ccAddEffect();
+}
+function _readCardInstRows() {
+  return Array.from(document.querySelectorAll('#ccInstList .cc-inst-row')).map(r => ({
+    name: r.querySelector('.cc-in').value.trim() || 'Taksit',
+    per: parseNum(r.querySelector('.cc-ip').value) || 0,
+    left: Math.min(24, Math.max(1, parseInt(r.querySelector('.cc-il').value) || 1))
+  })).filter(t => t.per > 0);
+}
+function _ccAddEffect() {
+  const el = document.getElementById('ccAddEffect');
+  if (!el || _editCardId) return;
+  const start = parseNum(document.getElementById('ccStartDebt').value) || 0;
+  const stmt = parseNum(document.getElementById('ccStartStmt').value) || 0;
+  const insts = _readCardInstRows();
+  const instFuture = insts.reduce((s, t) => s + t.per * t.left, 0);
+  const debt = start + stmt;
+  if (debt <= 0 && instFuture <= 0) { el.innerHTML = ''; return; }
+  let rows = '';
+  if (debt > 0) rows += '<div class="cc-eff-row"><span>Kart borcu</span><b style="color:var(--warning)">+' + fmtTL(Math.round(debt)) + '</b></div>';
+  if (instFuture > 0) rows += '<div class="cc-eff-row"><span>Gelecek ekstreler (taksit)</span><b style="color:var(--blue)">+' + fmtTL(Math.round(instFuture)) + '</b></div>';
+  rows += '<div class="cc-eff-row"><span>Günlük limit & istatistikler</span><b style="color:var(--muted)">Etkilenmez — geçmiş harcama</b></div>';
+  el.innerHTML = rows;
+}
+function saveCard() {
+  const name = document.getElementById('ccName').value.trim();
+  const limit = parseNum(document.getElementById('ccLimit').value) || 0;
+  const cutDay = Math.min(28, Math.max(1, parseInt(document.getElementById('ccCutDay').value) || 0));
+  const dueDay = Math.min(28, Math.max(1, parseInt(document.getElementById('ccDueDay').value) || 0));
+  if (!name) { showToast(TOAST_WARN + ' Kart ismi gerekli'); return; }
+  if (!limit) { showToast(TOAST_WARN + ' Limit gerekli'); return; }
+  if (!parseInt(document.getElementById('ccCutDay').value)) { showToast(TOAST_WARN + ' Kesim günü gerekli (1-28)'); return; }
+  if (!parseInt(document.getElementById('ccDueDay').value)) { showToast(TOAST_WARN + ' Son ödeme günü gerekli (1-28)'); return; }
+  if (_editCardId) {
+    const c = cardById(_editCardId);
+    if (!c) return;
+    c.name = name; c.limit = limit; c.dueDay = dueDay;
+    if (c.cutDay !== cutDay) { c.cutDay = cutDay; c.lastCut = _lastCutDateStr(cutDay); }
+    closeCardAddSheet(); save(); renderAll();
+    showToast(TOAST_OK + ' Kart güncellendi');
+    return;
+  }
+  const startDebt = parseNum(document.getElementById('ccStartDebt').value) || 0;
+  const startStmt = parseNum(document.getElementById('ccStartStmt').value) || 0;
+  const insts = _readCardInstRows().map(t => ({ id: uid(), name: t.name, per: t.per, left: t.left, total: t.left, isStart: true, category: 'diger' }));
+  data.cards.push({
+    id: uid(), name, limit, cutDay, dueDay,
+    startDebt, statement: startStmt, carried: 0,
+    installments: insts,
+    lastCut: _lastCutDateStr(cutDay),
+    createdAt: today()
+  });
+  closeCardAddSheet(); save(); renderAll();
+  if (!sectionState.cards) toggleSection('cards');
+  showToast(TOAST_OK + ' ' + esc(name) + ' eklendi' + (startDebt + startStmt > 0 ? ' — mevcut borç işlendi, limitine dokunulmadı' : ''));
+}
+function deleteCard(id) {
+  const c = cardById(id);
+  if (!c) return;
+  const t = calcCardTotals(c);
+  const msg = t.debt > 0
+    ? esc(c.name) + ' silinecek. Üzerindeki ' + fmtTL(Math.round(t.debt)) + ' borç takibi de silinir; geçmiş işlemler silinmez.'
+    : esc(c.name) + ' silinecek. Geçmiş işlemler silinmez.';
+  showConfirm(msg, () => {
+    data.cards = data.cards.filter(x => x.id !== id);
+    save(); renderAll();
+    showToast(TOAST_OK + ' Kart silindi');
+  }, 'Sil', 'Kartı Sil');
+}
+
+// ── Ekstre detayı ──
+function openCardExt(id) {
+  const c = cardById(id);
+  if (!c) return;
+  const t = calcCardTotals(c);
+  document.getElementById('cardExtTitle').textContent = c.name + ' · Ekstre';
+  const periodTxs = data.transactions
+    .filter(x => x.cardId === c.id && x.payMethod === 'card' && x.date > c.lastCut)
+    .sort((a, b) => b.date === a.date ? (b.ts || 0) - (a.ts || 0) : (b.date > a.date ? 1 : -1));
+  let list = '';
+  if ((c.startDebt || 0) > 0) {
+    list += '<div class="cc-ext-tx"><div class="cc-ext-icon" style="background:rgba(255,255,255,.06)">' + CC_ICON.replace('stroke-width', 'stroke="#6E6D78" stroke-width') + '</div>' +
+      '<div class="cc-ext-name"><div class="cc-ext-title">Başlangıç borcu <span class="cc-start-pill">İSTATİSTİK DIŞI</span></div><div class="cc-ext-date">Kart eklenmeden önceki harcamalar</div></div>' +
+      '<div class="cc-ext-amt">' + fmtTL(Math.round(c.startDebt)) + '</div></div>';
+  }
+  list += periodTxs.map(x => {
+    const cat = getCat(x.category);
+    const rawIcon = _iconSvgById(cat.id) || _iconSvgById(cat.emoji) || CAT_ICONS.diger;
+    const iconHtml = rawIcon.replace('<svg ', '<svg width="16" height="16" style="flex-shrink:0" ').replace(/stroke-width="1\.5"/g, 'stroke-width="1.5" stroke="' + (cat.color || '#6E6D78') + '"');
+    const badge = x.isCardInstallment ? ' <span class="cc-inst-badge">TAKSİT</span>' : '';
+    return '<div class="cc-ext-tx"><div class="cc-ext-icon" style="background:' + (cat.color || '#6E6D78') + '1f">' + iconHtml + '</div>' +
+      '<div class="cc-ext-name"><div class="cc-ext-title">' + esc(x.desc || cat.name) + badge + '</div><div class="cc-ext-date">' + fmtDate(x.date) + '</div></div>' +
+      '<div class="cc-ext-amt">' + fmtTL(x.amount) + '</div></div>';
+  }).join('');
+  if (!list) list = '<div class="cc-empty">Bu dönemde henüz harcama yok.</div>';
+
+  const startInsts = (c.installments || []).filter(it => it.left > 0);
+  let futureNote = '';
+  if (t.future > 0) {
+    futureNote = '<div class="cc-future-note">Gelecek ekstrelere yazılı taksitler: <b>' + fmtTL(Math.round(t.future)) + '</b>' +
+      (startInsts.length ? '<br>' + startInsts.map(it => esc(it.name) + ' · aylık ' + fmtTL(it.per) + ' · ' + it.left + ' ay' + (it.isStart ? ' (başlangıç)' : '')).join('<br>') : '') + '</div>';
+  }
+  let payBox = '';
+  if (t.toPay > 0) {
+    payBox = '<div class="cc-effect" style="margin-top:12px">' +
+      '<div class="cc-eff-row"><span>Ödenecek ekstre</span><b style="color:var(--warning)">' + fmtTL(Math.round(t.toPay)) + '</b></div>' +
+      '<div class="cc-eff-row"><span>Son ödeme</span><b>' + fmtDate(_dueDateStr(c)) + '</b></div></div>' +
+      '<button class="btn btn-primary btn-full" style="margin-top:12px" onclick="closeCardExt();openCardPay(\'' + c.id + '\')">Ekstreyi Öde</button>';
+  }
+  document.getElementById('cardExtBody').innerHTML =
+    '<div class="cc-effect" style="margin-top:0;margin-bottom:8px"><div class="cc-eff-row"><span>Güncel dönem</span><b>' + fmtDate(c.lastCut) + ' sonrası</b></div><div class="cc-eff-row"><span>Sonraki kesim</span><b>' + fmtDate(_nextCutDateStr(c.lastCut, c.cutDay)) + '</b></div></div>' +
+    list +
+    '<div class="cc-ext-total"><span>Dönem toplamı</span><b>' + fmtTL(Math.round(t.current)) + '</b></div>' +
+    futureNote + payBox + '<div style="height:8px"></div>';
+  document.getElementById('cardExtOverlay').classList.add('show');
+  document.getElementById('cardExtSheet').classList.add('show');
+}
+function closeCardExt() {
+  document.getElementById('cardExtOverlay').classList.remove('show');
+  document.getElementById('cardExtSheet').classList.remove('show');
+}
+
+// ── Ekstre ödeme ──
+let _payCardId = null, _cardPayMode = 'full';
+function openCardPay(id) {
+  const c = cardById(id);
+  if (!c) return;
+  const t = calcCardTotals(c);
+  if (t.toPay <= 0) { showToast(TOAST_OK + ' Ödenecek ekstre yok'); return; }
+  _payCardId = id; _cardPayMode = 'full';
+  document.getElementById('cardPayTitle').textContent = c.name + ' · Ekstreyi Öde';
+  document.getElementById('cardPayTotal').textContent = fmtTL(Math.round(t.toPay));
+  document.getElementById('cardPayDue').textContent = fmtDate(_dueDateStr(c));
+  document.getElementById('cardPayAmount').value = '';
+  setCardPayMode('full');
+  document.getElementById('cardPayOverlay').classList.add('show');
+  document.getElementById('cardPaySheet').classList.add('show');
+}
+function closeCardPay() {
+  document.getElementById('cardPayOverlay').classList.remove('show');
+  document.getElementById('cardPaySheet').classList.remove('show');
+}
+function setCardPayMode(m) {
+  _cardPayMode = m;
+  document.getElementById('cardPayFullBtn').classList.toggle('active', m === 'full');
+  document.getElementById('cardPayPartBtn').classList.toggle('active', m === 'part');
+  document.getElementById('cardPayPartWrap').style.display = m === 'part' ? 'block' : 'none';
+  renderCardPayEffect();
+}
+function _cardPayAmount() {
+  const c = cardById(_payCardId);
+  if (!c) return 0;
+  const toPay = calcCardTotals(c).toPay;
+  if (_cardPayMode === 'full') return toPay;
+  return Math.min(toPay, parseNum(document.getElementById('cardPayAmount').value) || 0);
+}
+function renderCardPayEffect() {
+  const c = cardById(_payCardId);
+  if (!c) return;
+  const toPay = calcCardTotals(c).toPay;
+  const a = _cardPayAmount();
+  document.getElementById('cardPayEffBal').textContent = '-' + fmtTL(Math.round(a));
+  const rest = toPay - a;
+  document.getElementById('cardPayEffCard').textContent = '-' + fmtTL(Math.round(a)) + (rest > 0.01 ? ' · ' + fmtTL(Math.round(rest)) + ' devreder' : '');
+}
+function submitCardPay() {
+  const c = cardById(_payCardId);
+  if (!c) return;
+  const a = _cardPayAmount();
+  if (a <= 0) { showToast(TOAST_WARN + ' Tutar gir'); return; }
+  data.transactions.push({ id: uid(), type: 'cardpay', desc: c.name + ' ekstre ödemesi', amount: a, date: today(), category: 'diger', cardId: c.id, isCardPayment: true, ts: Date.now() });
+  // Önce devreden, sonra ekstre kapanır
+  let rest = a;
+  const fromCarried = Math.min(c.carried || 0, rest);
+  c.carried = (c.carried || 0) - fromCarried; rest -= fromCarried;
+  c.statement = Math.max(0, (c.statement || 0) - rest);
+  closeCardPay(); save(); renderAll();
+  const left = calcCardTotals(c).toPay;
+  showToast(TOAST_OK + ' ' + fmtTL(Math.round(a)) + ' ödendi — bakiyeden düştü, limit etkilenmedi' + (left > 0.01 ? ' · ' + fmtTL(Math.round(left)) + ' devretti' : ''));
+}
+
+// ── Harcama sheet'i: ödeme yöntemi ──
+let _sheetPayMethod = 'cash', _sheetCardId = null, _sheetInst = 1;
+function _renderTxPayChips() {
+  const wrap = document.getElementById('txPayWrap');
+  if (!wrap) return;
+  const show = _sheetType === 'expense' && (data.cards || []).length > 0;
+  wrap.style.display = show ? 'block' : 'none';
+  if (!show) return;
+  const chips = document.getElementById('txPayChips');
+  let html = '<button class="tx-pay-chip' + (_sheetPayMethod === 'cash' ? ' active' : '') + '" onclick="_setSheetPay(\'cash\',null)">Nakit / Banka</button>';
+  html += data.cards.map(c =>
+    '<button class="tx-pay-chip' + (_sheetPayMethod === 'card' && _sheetCardId === c.id ? ' active' : '') + '" onclick="_setSheetPay(\'card\',\'' + c.id + '\')">' + CC_ICON.replace('width="16" height="16"', 'width="13" height="13"').replace('stroke-width', 'stroke="currentColor" stroke-width') + esc(c.name) + '</button>'
+  ).join('');
+  chips.innerHTML = html;
+  const instWrap = document.getElementById('txInstChips');
+  if (_sheetPayMethod === 'card') {
+    instWrap.style.display = 'flex';
+    instWrap.innerHTML = [1, 2, 3, 6, 9, 12].map(n =>
+      '<button class="tx-inst-chip' + (_sheetInst === n ? ' active' : '') + '" onclick="_setSheetInst(' + n + ')">' + (n === 1 ? 'Tek' : n) + '</button>'
+    ).join('');
+  } else {
+    instWrap.style.display = 'none';
+  }
+}
+function _setSheetPay(m, cardId) { _sheetPayMethod = m; _sheetCardId = cardId; if (m !== 'card') _sheetInst = 1; _renderTxPayChips(); }
+function _setSheetInst(n) { _sheetInst = n; _renderTxPayChips(); }
+
 // =================== SABIT ===================
 function renderSabit() {
   renderDailyLimit();
   renderIncomeList();
   renderRecList();
+  renderCardList(); // V69
   renderDebtList();
   renderGoalsList();
   renderWishList();
@@ -7899,6 +8541,13 @@ function updateCollapseSummaries() {
     const paid = active.filter(r => isPaidThisMonth(r, mk)).length;
     recEl.textContent = active.length ? `${paid}/${active.length} ödendi · ${fmtTL(total)}/ay` : 'Henüz gider yok';
   }
+  // V69: kart özeti
+  const cardsEl = document.getElementById('cardsSummary');
+  if (cardsEl) {
+    const n = (data.cards || []).length;
+    const debt = totalCardsDebt();
+    cardsEl.textContent = n ? `${n} kart · borç ${fmtTL(Math.round(debt))}` : 'Kart yok';
+  }
   const debtEl = document.getElementById('debtSummaryLabel');
   if (debtEl) {
     const active = data.debts.filter(d => d.active);
@@ -9090,6 +9739,8 @@ function importData(input) {
       if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('invalid');
       data = { ...data, ...parsed };
       if (!Array.isArray(data.transactions)) data.transactions = [];
+      if (!Array.isArray(data.cards)) data.cards = [];
+      _cardGuards(); // V69
       if (!Array.isArray(data.recurring)) data.recurring = [];
       if (!Array.isArray(data.recurringIncome)) data.recurringIncome = [];
       if (!Array.isArray(data.debts)) data.debts = [];
@@ -9119,7 +9770,7 @@ function importData(input) {
         const dc = DEFAULT_CATS.find(c => c.id === id);
         if (dc) dc.keywords = words;
       });
-      save(); renderAll();
+      save(); processCardCycles(); renderAll();
       showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg> Veri içe aktarıldı');
     } catch(err) { showToast(TOAST_WARN + ' Dosya okunamadı'); }
     input.value = '';
@@ -9201,6 +9852,7 @@ function updateAppLogo() {
 function renderAll() {
   // Guard: array'lerin kesinlikle var olduğundan emin ol
   if (!Array.isArray(data.transactions)) data.transactions = [];
+  if (!Array.isArray(data.cards)) data.cards = [];
   if (!Array.isArray(data.recurring)) data.recurring = [];
   if (!Array.isArray(data.recurringIncome)) data.recurringIncome = [];
   if (!Array.isArray(data.debts)) data.debts = [];
@@ -9495,6 +10147,7 @@ function renderDpMonthGrid() {
 
 function init() {
   load();
+  processCardCycles(); // V69: geçen kesim günlerini işle
   _dpSelected = today();
   populateCatSelects();
   updateAppLogo();
