@@ -2591,7 +2591,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       <div class="form-group" style="flex:1">
         <label class="form-label">Tarih</label>
         <input type="hidden" id="editTxDate">
-        <div class="form-input" id="editTxDateDisplay" onclick="openDayPicker('editTxDate','editTxDateDisplay')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--text)">
+        <div class="form-input" id="editTxDateDisplay" onclick="openDayPicker('editTxDate','editTxDateLabel')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--text)">
           <span id="editTxDateLabel" style="font-weight:600">Tarih seç</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6"/></svg>
         </div>
@@ -2752,6 +2752,15 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 </div><!-- /appWrap -->
 
 <script>
+// ─── V66 BAKIM NOTU ──────────────────────────────────────────────
+// • deleteTx: tekrarlayan gelir işlemi silinince "Alındı" durumu geri alınır
+// • Ay hesapları: setMonth taşması giderildi (prevMonthKey), "Dün" yerel saatle (localDateStr)
+// • acceptWishChallenge: isim onclick'ten kaldırıldı (tek tırnak kırılması)
+// • saveWishEdit doğrulama, %Infinity guard'ları, import/load veri guard'ları
+// • Chart.js yüklenmezse grafikler sessizce atlanır (offline dayanıklılık)
+// • esc() tek tırnak kaçırır; toast/kart içi kullanıcı metinleri kaçışlı
+// • Özel kategori silme onaylı; _catTab tanımı eklendi; editTx tarih etiketi düzeltildi
+// ─────────────────────────────────────────────────────────────────
 // =================== TOAST ICONS ===================
 // showToast() içinde tekrar eden SVG ikonları
 const TOAST_OK = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg>';
@@ -3003,9 +3012,12 @@ function load() {
       if (!Array.isArray(data.categories)) data.categories = [];
       // Streak migration
       if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
-      if (!data.streak.frozenDays) data.streak.frozenDays = [];
-      if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
-      if (typeof data.streak.freezeTotal !== 'number' || data.streak.freezeTotal > 5) data.streak.freezeTotal = 5; // max 5
+      if (!Array.isArray(data.streak.frozenDays)) data.streak.frozenDays = [];
+      if (typeof data.streak.freezeTotal !== 'number' || isNaN(data.streak.freezeTotal)) data.streak.freezeTotal = 2;
+      if (data.streak.freezeTotal > 5) data.streak.freezeTotal = 5; // max 5
+      if (data.streak.freezeTotal < 0) data.streak.freezeTotal = 0;
+      if (typeof data.streak.freezesUsed !== 'number' || isNaN(data.streak.freezesUsed) || data.streak.freezesUsed < 0) data.streak.freezesUsed = 0;
+      if (!data.monthlyTargets || typeof data.monthlyTargets !== 'object' || Array.isArray(data.monthlyTargets)) data.monthlyTargets = {};
       if (data.streak.lastWeeklyFreezeGift === undefined) data.streak.lastWeeklyFreezeGift = '';
       if (data.streak.lastFreezeResetMonth === undefined) data.streak.lastFreezeResetMonth = '';
       data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; if (!r.payHistory) r.payHistory = {}; if (r.variable === undefined) r.variable = false; });
@@ -3055,7 +3067,18 @@ function save() {
 function uid() { return Math.random().toString(36).slice(2, 10); }
 
 function esc(str) {
-  return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Yerel saat dilimine gore YYYY-MM-DD (toISOString UTC kaymasini onler)
+function localDateStr(d) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+// Simdiki aydan n ay onceki ay anahtari (ay sonu tasmasi olmadan)
+function prevMonthKey(n) {
+  const now = new Date();
+  const d = new Date(now.getFullYear(), now.getMonth() - n, 1);
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
 }
 
 // Türkçe sesli uyumu: sayının son rakamına göre doğru ek
@@ -4110,7 +4133,7 @@ function buildCarouselItems(fb) {
     const isWarn = !isRed && (spentRatio > 0.75 || fb.daily < 150);
 
     const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-    const ydStr = yesterday.toISOString().slice(0,10);
+    const ydStr = localDateStr(yesterday);
     const ydSpent = data.transactions
       .filter(t => t.date === ydStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
       .reduce((s,t) => s + t.amount, 0);
@@ -4668,6 +4691,10 @@ function deleteTx(id, pfx) {
     const mk = monthKey(tx.date), d = data.debts.find(d=>d.id===tx.debtId);
     if (d) { d.paidMonths=d.paidMonths.filter(m=>m!==mk); d.paidCount=Math.max(0,d.paidCount-1); d.active=true; }
   }
+  if (tx.isRecurringIncome && tx.recurringIncomeId) {
+    const mk = monthKey(tx.date), ri = (data.recurringIncome || []).find(r => r.id === tx.recurringIncomeId);
+    if (ri && Array.isArray(ri.paidMonths)) ri.paidMonths = ri.paidMonths.filter(m => m !== mk);
+  }
   if (tx.isGoalDeposit && tx.goalId) {
     const mk = monthKey(tx.date), g = data.savingsGoals.find(g=>g.id===tx.goalId);
     if (g) {
@@ -4704,7 +4731,7 @@ function fmtDate(dateStr) {
   // Dün: bugünden bir gün önce
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toISOString().slice(0, 10);
+  const yesterdayStr = localDateStr(yesterday);
   if (dateStr === yesterdayStr) return 'Dün';
   const d = new Date(dateStr + 'T00:00:00');
   return d.getDate() + ' ' + MONTH_NAMES[d.getMonth()];
@@ -4750,7 +4777,7 @@ function _buildSheetCatGrid() {
       ontouchend="event.preventDefault();txSheetSelectCat('${cat.id}')"
       onclick="txSheetSelectCat('${cat.id}')">
       <div class="cat-cell-icon">${icon}</div>
-      <div class="cat-cell-name">${cat.name}</div>
+      <div class="cat-cell-name">${esc(cat.name)}</div>
     </div>`;
   }).join('');
 }
@@ -4763,7 +4790,7 @@ function _updateCatChip() {
   const icon = catIconSvg(cat, 16);
   wrap.innerHTML = `<div class="tx-cat-chip" onclick="txSheetBackToStep1()">
     ${icon}
-    <span class="tx-cat-chip-name">${cat.name}</span>
+    <span class="tx-cat-chip-name">${esc(cat.name)}</span>
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 6l-6 6l6 6"/></svg>
   </div>`;
 }
@@ -5248,7 +5275,7 @@ function renderIncomeList() {
         <div class="rec-icon" style="background:${received?'rgba(45,184,102,.12)':'var(--surface3)'}; transition:background .2s" onclick="event.stopPropagation();toggleRecIncome('${r.id}')">${catIconSvg(cat,20)}</div>
         <div class="rec-info" style="flex:1;min-width:0;pointer-events:none">
           <div class="rec-name" style="opacity:${received?'0.5':'1'};text-decoration:${received?'line-through':'none'}">${esc(r.desc)}</div>
-          <div class="rec-meta">${cat.name} · ${fmtTL(r.amount)}/ay</div>
+          <div class="rec-meta">${esc(cat.name)} · ${fmtTL(r.amount)}/ay</div>
         </div>
         <div class="rec-status" onclick="event.stopPropagation();toggleRecIncome('${r.id}')">
           <div class="rec-status-badge ${received?'paid':'unpaid'}" style="${received?'':'background:rgba(45,184,102,.1);color:var(--accent);border:1px solid rgba(45,184,102,.3)'}">${received?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> Alındı':'Al'}</div>
@@ -5271,12 +5298,12 @@ function toggleRecIncome(id) {
   if (r.paidMonths.includes(mk)) {
     r.paidMonths = r.paidMonths.filter(m => m !== mk);
     data.transactions = data.transactions.filter(t => !(t.recurringIncomeId === id && monthKey(t.date) === mk));
-    showToast('↩ ' + r.desc + ' geliri geri alındı');
+    showToast('↩ ' + esc(r.desc) + ' geliri geri alındı');
   } else {
     r.paidMonths.push(mk);
     data.transactions = data.transactions.filter(t => !(t.recurringIncomeId === id && monthKey(t.date) === mk));
     data.transactions.push({ id: uid(), type: 'income', desc: r.desc, amount: r.amount, date: today(), category: r.category, recurringIncomeId: id, isRecurringIncome: true, ts: Date.now() });
-    showToast(TOAST_OK + ' ' + r.desc + ' alındı olarak kaydedildi');
+    showToast(TOAST_OK + ' ' + esc(r.desc) + ' alındı olarak kaydedildi');
   }
   save(); renderAll();
 }
@@ -5447,7 +5474,7 @@ function renderRecList() {
         <div class="rec-icon" style="background:${paid?'rgba(45,184,102,.12)':'var(--surface3)'}; transition:background .2s" onclick="event.stopPropagation();togglePaidRecurring('${r.id}')">${catIconSvg(cat,20)}</div>
         <div class="rec-info" style="flex:1;min-width:0;pointer-events:none">
           <div class="rec-name" style="opacity:${paid?'0.5':'1'};text-decoration:${paid?'line-through':'none'}">${esc(r.desc)}</div>
-          <div class="rec-meta">${cat.name} · ${fmtTL(r.amount)}/ay</div>
+          <div class="rec-meta">${esc(cat.name)} · ${fmtTL(r.amount)}/ay</div>
         </div>
         <div class="rec-status" onclick="event.stopPropagation();togglePaidRecurring('${r.id}')">
           <div class="rec-status-badge ${paid?'paid':'unpaid'}">${paid?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> Ödendi':'Öde'}</div>
@@ -5471,7 +5498,7 @@ function togglePaidRecurring(id) {
   if (r.paidMonths.includes(mk)) {
     r.paidMonths = r.paidMonths.filter(m => m !== mk);
     data.transactions = data.transactions.filter(t => !(t.recurringId === id && monthKey(t.date) === mk));
-    showToast('↩ ' + r.desc + ' ödemesi geri alındı');
+    showToast('↩ ' + esc(r.desc) + ' ödemesi geri alındı');
   } else {
     if (r.variable) { openVarAmtSheet(id); return; }
     if (!r.payHistory) r.payHistory = {};
@@ -5479,7 +5506,7 @@ function togglePaidRecurring(id) {
     r.payHistory[mk] = r.amount;
     data.transactions = data.transactions.filter(t => !(t.recurringId === id && monthKey(t.date) === mk));
     data.transactions.push({ id: uid(), type: 'expense', desc: r.desc, amount: r.amount, date: today(), category: r.category, recurringId: id, isRecurring: true, ts: Date.now() });
-    showToast(TOAST_OK + ' ' + r.desc + ' ödendi');
+    showToast(TOAST_OK + ' ' + esc(r.desc) + ' ödendi');
   }
   save(); renderAll();
 }
@@ -5612,7 +5639,7 @@ function togglePaidDebt(id) {
       }), 150);
       return;
     } else {
-      showToast(TOAST_OK + ' ' + d.name + ' — ' + d.paidCount + '/' + d.installments + '. taksit ödendi');
+      showToast(TOAST_OK + ' ' + esc(d.name) + ' — ' + d.paidCount + '/' + d.installments + '. taksit ödendi');
     }
   }
   save(); renderAll();
@@ -5697,7 +5724,7 @@ function deleteDebt(id) {
 // =================== GOALS ===================
 
 
-function acceptWishChallenge(wishId, monthlyAmount, wishName) {
+function acceptWishChallenge(wishId, monthlyAmount) {
   // Aynı isimde zaten var mı?
   const existing = data.savingsGoals.find(g => g.wishId === wishId);
   if (existing) {
@@ -5705,7 +5732,9 @@ function acceptWishChallenge(wishId, monthlyAmount, wishName) {
     return;
   }
   const wish = data.wishlist ? data.wishlist.find(w => w.id === wishId) : null;
-  const target = wish ? wish.price : 0;
+  if (!wish) return;
+  const wishName = wish.name;
+  const target = wish.price;
   data.savingsGoals.push({
     id: uid(),
     wishId,
@@ -5800,7 +5829,7 @@ function toggleGoalMonthly(goalId) {
     const depId = uid();
     g.deposits.push({ id: depId, amount: g.monthly, date: today(), note: 'Aylık otomatik', goalMonthlyId: goalId });
     data.transactions.push({ id: uid(), type: 'expense', desc: g.name + ' (aylık)', amount: g.monthly, date: today(), category: 'diger', goalMonthlyId: goalId, isGoalDeposit: true, goalId: goalId, ts: Date.now() });
-    showToast(TOAST_OK + ' ' + g.name + ' — ' + fmtTL(g.monthly) + ' eklendi');
+    showToast(TOAST_OK + ' ' + esc(g.name) + ' — ' + fmtTL(g.monthly) + ' eklendi');
   }
   save(); renderAll();
 }
@@ -5857,7 +5886,7 @@ function deleteGoal(id) {
   const hasTx = data.transactions.some(t => t.isGoalDeposit && (t.goalId === id || t.goalMonthlyId === id));
   if (hasTx) {
     showConfirm(
-      `"${esc(g.name)}" hedefi kaldırılacak. Geçmiş yatırım kayıtları korunsun mu?`,
+      `"${g.name}" hedefi kaldırılacak. Geçmiş yatırım kayıtları korunsun mu?`,
       () => {
         data.savingsGoals = data.savingsGoals.filter(g => g.id !== id);
         save(); renderAll();
@@ -5947,7 +5976,7 @@ function deleteWish(id) {
   const linkedGoal = data.savingsGoals.find(g => g.wishId === id);
   if (linkedGoal) {
     showConfirm(
-      `"${esc(w.name)}" silinecek. Bağlı birikim planı da kaldırılsın mı?`,
+      `"${w.name}" silinecek. Bağlı birikim planı da kaldırılsın mı?`,
       () => {
         data.wishlist = data.wishlist.filter(w => w.id !== id);
         data.savingsGoals = data.savingsGoals.filter(g => g.wishId !== id);
@@ -6040,6 +6069,7 @@ function saveWishEdit() {
   const priority = document.getElementById('editWishPriority').value;
   const note = document.getElementById('editWishNote').value;
   const emoji = document.getElementById('editWishEmoji').value || w.emoji || 'target';
+  if (!name || !price) { showToast(TOAST_WARN + ' Ad ve fiyat gerekli'); return; }
   w.name = name; w.price = price; w.priority = priority; w.note = note; w.emoji = emoji;
   save(); closeWishEdit(); renderAll();
   showToast(TOAST_OK + ' Hedef güncellendi');
@@ -6123,7 +6153,7 @@ function renderWishSummaryCard() {
             ${reachable.length > 0 ? 'Bu Ay Alınabilir' : 'En Yakın Hedef'}
           </div>
           ${reachable.length > 0 ? `
-            <div style="font-size:14px;font-weight:800;color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${reachable[0].name}</div>
+            <div style="font-size:14px;font-weight:800;color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(reachable[0].name)}</div>
             <div style="font-size:10px;font-weight:700;color:var(--accent);margin-top:3px">Bütçen yeterli! <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h2"/><path d="M5 4v2"/><path d="M11.5 4l-.5 2"/><path d="M18 5h2"/><path d="M19 4v2"/><path d="M15 9l-1 1"/><path d="M18 13l2 -.5"/><path d="M18 19h2"/><path d="M19 18v2"/><path d="M14 16.518l-6.518 -6.518l-4.39 9.58a1 1 0 0 0 1.329 1.329l9.579 -4.39z"/></svg></div>
           ` : soonest ? `
             <div style="font-size:13px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(soonest.w.name)}</div>
@@ -6163,9 +6193,7 @@ function calcWishProjection(wish, fb) {
   // ── Geçmiş aylarda istatistiksel analiz (max 6 ay) ──
   const prevMonths = [];
   for (let i = 1; i <= 6; i++) {
-    const d = new Date();
-    d.setMonth(d.getMonth() - i);
-    const pmk = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    const pmk = prevMonthKey(i);
     const { income: pi, expense: pe } = calcMonthData(pmk);
     if (pi > 0) prevMonths.push({ free: pi - pe, income: pi, expense: pe });
   }
@@ -6409,7 +6437,7 @@ function renderWishList() {
 
     const alreadyGoal = data.savingsGoals && data.savingsGoals.some(g => g.wishId === w.id);
     const challengeBtn = (!isDone && proj.monthlyNeeded && !proj.canAfford && !alreadyGoal)
-      ? `<button class="wish-challenge-btn" onclick="event.stopPropagation();acceptWishChallenge('${w.id}',${proj.monthlyNeeded},'${esc(w.name)}')">Kabul et</button>`
+      ? `<button class="wish-challenge-btn" onclick="event.stopPropagation();acceptWishChallenge('${w.id}',${proj.monthlyNeeded})">Kabul et</button>`
       : (alreadyGoal && !isDone ? `<span style="font-size:10px;font-weight:700;color:var(--accent);flex-shrink:0">Eklendi <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg></span>` : '');
 
     const projectionHtml = isDone ? `
@@ -6680,7 +6708,7 @@ function _planCalcCore(fb, sc) {
   if (fixedRatio > 0.35) drivers.push({
     label: 'Sabit gider yükü',
     pct: Math.round(fixedRatio*100),
-    detail: 'Gelirinizin ' + Math.round(fixedRatio*100) + '\'i sabit taahhütlere gidiyor. Bu yapı değişken harcamalardan bağımsız baskı üretiyor.',
+    detail: 'Gelirinizin ' + pct(Math.round(fixedRatio*100)) + ' sabit taahhütlere gidiyor. Bu yapı değişken harcamalardan bağımsız baskı üretiyor.',
     level: fixedRatio > 0.60 ? 'high' : 'mid',
     barPct: Math.min(100, Math.round(fixedRatio*100)),
     barColor: fixedRatio > 0.60 ? 'var(--danger)' : 'var(--warning)',
@@ -6702,7 +6730,7 @@ function _planCalcCore(fb, sc) {
   if (savRatio < 0.05 && adjRemain >= 0) drivers.push({
     label: 'Dar birikim marjı',
     pct: Math.round(savRatio*100),
-    detail: 'Gelirin sadece \'%' + Math.round(savRatio*100) + '\' birikilebilir. Beklenmedik bir gider bu dengeyi kolayca bozar.',
+    detail: 'Gelirin sadece ' + pct(Math.round(savRatio*100)) + ' birikilebilir. Beklenmedik bir gider bu dengeyi kolayca bozar.',
     level: 'mid', barPct: Math.max(5, Math.round(savRatio*100*4)), barColor: 'var(--warning)',
   });
   const noEmergency = !data.savingsGoals.some(g =>
@@ -6734,7 +6762,7 @@ function _planCalcCore(fb, sc) {
     actions.push('Acil fon yok. İlk hedef: 3 aylık sabit gider (' + fmtTL(Math.round((fb.recTotal + fb.debtTotal) * 3)) + '). Bu tampon kurulmadan uzun vadeli planlama anlamsız.');
   }
   // Geçen ay karşılaştırma
-  const prevMk = (() => { const d = new Date(); d.setMonth(d.getMonth()-1); return d.toISOString().slice(0,7); })();
+  const prevMk = prevMonthKey(1);
   const prevFb = calcFreeBudget(prevMk);
   if (prevFb.income > 0 && fb.varSpent > prevFb.varSpent * 1.18) {
     const diff = fb.varSpent - prevFb.varSpent;
@@ -7632,6 +7660,7 @@ function renderDailyStats() {
 
   // Mini bar chart — Chart.js
   setTimeout(() => {
+    if (typeof Chart === 'undefined') return;
     const ctx = document.getElementById('dlMiniChart')?.getContext('2d');
     if (!ctx) return;
     if (charts.dlMini) { try { charts.dlMini.destroy(); } catch(e){} charts.dlMini = null; }
@@ -7787,7 +7816,7 @@ function renderDebtSummaryCard() {
         </div>
         <div style="background:var(--surface2);border-radius:12px;padding:12px 14px">
           <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">En Yakın Biten</div>
-          <div style="font-size:14px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${soonest.name}</div>
+          <div style="font-size:14px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(soonest.name)}</div>
           <div style="font-size:10px;font-weight:700;color:${soonest.monthsLeft<=2?'var(--accent)':'var(--muted)'};margin-top:3px">${soonest.monthsLeft > 0 ? soonest.monthsLeft + ' ay sonra bitiyor' : '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h2"/><path d="M5 4v2"/><path d="M11.5 4l-.5 2"/><path d="M18 5h2"/><path d="M19 4v2"/><path d="M15 9l-1 1"/><path d="M18 13l2 -.5"/><path d="M18 19h2"/><path d="M19 18v2"/><path d="M14 16.518l-6.518 -6.518l-4.39 9.58a1 1 0 0 0 1.329 1.329l9.579 -4.39z"/></svg> Bu ay bitiyor!'}</div>
         </div>
       </div>
@@ -7902,6 +7931,7 @@ function renderDonut() {
     return;
   }
 
+  if (typeof Chart === 'undefined') return;
   const dCtx = document.getElementById('doughnutChart')?.getContext('2d');
   if (!dCtx) return;
 
@@ -7984,6 +8014,7 @@ function setupChartObservers() {
   const animConfig = { duration: 2200, easing: 'easeOutQuart' };
 
   observe('barChart', () => {
+    if (typeof Chart === 'undefined') return;
     const bCtx = document.getElementById('barChart')?.getContext('2d');
     if (!bCtx) return;
     charts.bar = new Chart(bCtx, {
@@ -8014,6 +8045,7 @@ function setupChartObservers() {
       const allUntil = data.transactions.filter(t => t.isGoalDeposit && monthKey(t.date) <= mk);
       return allUntil.reduce((s, t) => s + t.amount, 0);
     });
+    if (typeof Chart === 'undefined') return;
     const lCtx = document.getElementById('lineChart')?.getContext('2d');
     if (!lCtx) return;
     charts.line = new Chart(lCtx, {
@@ -8381,6 +8413,8 @@ function populateCatSelects() {
   // Category selects artık cat-grid ile yönetiliyor
 }
 
+let _catTab = 'expense';
+
 function openCategories() {
   _catTab = 'expense';
   document.getElementById('catTabExpense')?.classList.add('active');
@@ -8447,7 +8481,7 @@ function renderCatList() {
   if (!target) return;
   target.innerHTML = cats.map(c => `<div class="cat-item">
     <span style="display:flex;align-items:center;cursor:pointer" onclick="openKeywordEdit('${c.id}')">${catIconSvg(c,22)}</span>
-    <span style="flex:1;font-size:13px;font-weight:700;color:${c.color}">${c.name}</span>
+    <span style="flex:1;font-size:13px;font-weight:700;color:${c.color}">${esc(c.name)}</span>
     <div style="display:flex;gap:6px">
       <button class="icon-action-btn" onclick="event.stopPropagation();openKeywordEdit('${c.id}')" title="Düzenle">${SVG_EDIT}</button>
       ${c.default ? '' : `<button class="icon-action-btn danger" onclick="event.stopPropagation();deleteCustomCat('${c.id}')" title="Sil">${SVG_TRASH}</button>`}
@@ -8535,11 +8569,16 @@ function updateNewCatIconColor(color) {
 }
 
 function deleteCustomCat(id) {
-  data.categories = data.categories.filter(c => c.id !== id);
-  data.transactions.forEach(t => { if (t.category === id) t.category = (t.type === 'income' ? 'gelir_diger' : 'diger'); });
-  data.recurring.forEach(r => { if (r.category === id) r.category = 'diger'; });
-  (data.recurringIncome || []).forEach(r => { if (r.category === id) r.category = 'gelir_diger'; });
-  save(); renderCatList(); populateCatSelects();
+  const c = data.categories.find(c => c.id === id);
+  if (!c) return;
+  showConfirm(`"${c.name}" kategorisi silinecek. Bu kategorideki kayıtlar "Diğer"e taşınır.`, () => {
+    data.categories = data.categories.filter(c => c.id !== id);
+    data.transactions.forEach(t => { if (t.category === id) t.category = (t.type === 'income' ? 'gelir_diger' : 'diger'); });
+    data.recurring.forEach(r => { if (r.category === id) r.category = 'diger'; });
+    (data.recurringIncome || []).forEach(r => { if (r.category === id) r.category = 'gelir_diger'; });
+    save(); renderCatList(); populateCatSelects();
+    showToast(TOAST_OK + ' Kategori silindi');
+  }, 'Sil', 'Kategoriyi Sil', 'del');
 }
 
 // =================== SETTINGS ===================
@@ -8578,6 +8617,7 @@ function importData(input) {
   r.onload = e => {
     try {
       const parsed = JSON.parse(e.target.result);
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('invalid');
       data = { ...data, ...parsed };
       if (!Array.isArray(data.transactions)) data.transactions = [];
       if (!Array.isArray(data.recurring)) data.recurring = [];
@@ -8587,9 +8627,13 @@ function importData(input) {
       if (!Array.isArray(data.wishlist)) data.wishlist = [];
       if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
       if (!Array.isArray(data.streak.frozenDays)) data.streak.frozenDays = [];
-      if (data.streak.freezeTotal === undefined) data.streak.freezeTotal = 2;
-      if (typeof data.streak.freezeTotal !== 'number' || data.streak.freezeTotal > 5) data.streak.freezeTotal = 5; // max 5
-      if (!data.monthlyTargets || typeof data.monthlyTargets !== 'object') data.monthlyTargets = {};
+      if (typeof data.streak.freezeTotal !== 'number' || isNaN(data.streak.freezeTotal)) data.streak.freezeTotal = 2;
+      if (data.streak.freezeTotal > 5) data.streak.freezeTotal = 5; // max 5
+      if (data.streak.freezeTotal < 0) data.streak.freezeTotal = 0;
+      if (typeof data.streak.freezesUsed !== 'number' || isNaN(data.streak.freezesUsed) || data.streak.freezesUsed < 0) data.streak.freezesUsed = 0;
+      if (!data.monthlyTargets || typeof data.monthlyTargets !== 'object' || Array.isArray(data.monthlyTargets)) data.monthlyTargets = {};
+      if (!data.dailyOverride || typeof data.dailyOverride !== 'object' || Array.isArray(data.dailyOverride)) data.dailyOverride = {};
+      if (typeof data.walletName !== 'string') data.walletName = '';
       data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; if (!r.payHistory) r.payHistory = {}; if (r.variable === undefined) r.variable = false; });
       data.debts.forEach(d => { if (!d.paidMonths) d.paidMonths = []; if (!d.startMonth) d.startMonth = monthKey(); });
       data.savingsGoals.forEach(g => { if (!g.paidMonths) g.paidMonths = []; if (!g.deposits) g.deposits = []; });
@@ -9205,7 +9249,7 @@ function confirmVarAmt() {
   data.transactions = data.transactions.filter(t => !(t.recurringId === r.id && monthKey(t.date) === mk));
   data.transactions.push({ id: uid(), type: 'expense', desc: r.desc, amount: actualAmount, date: today(), category: r.category, recurringId: r.id, isRecurring: true, ts: Date.now() });
   save(); closeVarAmtSheet();
-  showToast(TOAST_OK + ' ' + r.desc + ' — ' + fmtTL(actualAmount) + ' ödendi');
+  showToast(TOAST_OK + ' ' + esc(r.desc) + ' — ' + fmtTL(actualAmount) + ' ödendi');
   renderAll();
 }
 
@@ -9273,7 +9317,8 @@ function updateStatsView(i) {
     pill.textContent = ''; pill.className = 'stats-change-pill flat'; pill.style.display = 'none';
   } else {
     pill.style.display = '';
-    const pct = Math.round(((d.amount - _statsData[i-1].amount) / _statsData[i-1].amount) * 100);
+    const prevAmt = _statsData[i-1].amount;
+    const pct = prevAmt ? Math.round(((d.amount - prevAmt) / prevAmt) * 100) : 0;
     if (pct > 0) { pill.textContent = '▲ %'+pct; pill.className = 'stats-change-pill up'; }
     else if (pct < 0) { pill.textContent = '▼ %'+Math.abs(pct); pill.className = 'stats-change-pill down'; }
     else { pill.textContent = 'Değişmedi'; pill.className = 'stats-change-pill flat'; }
@@ -9292,7 +9337,7 @@ function renderStatsList() {
     const origIdx = arr.length-1-i;
     const isLatest = origIdx === _statsData.length - 1;
     let pctHtml = '';
-    if (origIdx > 0) {
+    if (origIdx > 0 && _statsData[origIdx-1].amount) {
       const pct = Math.round(((d.amount-_statsData[origIdx-1].amount)/_statsData[origIdx-1].amount)*100);
       if (pct>0) pctHtml=`<span class="stats-row-pct" style="color:#FF453A">▲${pct}%</span>`;
       else if (pct<0) pctHtml=`<span class="stats-row-pct" style="color:#2DB866">▼${Math.abs(pct)}%</span>`;
@@ -9308,6 +9353,7 @@ function renderStatsList() {
   }).join('');
 }
 function renderStatsChart() {
+  if (typeof Chart === 'undefined') return;
   const canvas = document.getElementById('statsChart');
   if (!canvas) return;
   canvas.width = canvas.parentElement.offsetWidth;
@@ -9483,8 +9529,7 @@ function openDailyLimitSheet() {
     }
   }
   // Geçen ay ortalaması
-  const prevDate = new Date(); prevDate.setMonth(prevDate.getMonth() - 1);
-  const prevMk = prevDate.getFullYear() + '-' + String(prevDate.getMonth()+1).padStart(2,'0');
+  const prevMk = prevMonthKey(1);
   const prevData = calcMonthData(prevMk);
   const prevDim = daysInMonth(prevMk);
   const prevAvg = prevData.expense > 0 ? Math.round(prevData.expense / prevDim) : 0;
