@@ -3040,8 +3040,15 @@ function load() {
   }
 }
 
+let _saveFailWarned = false;
 function save() {
-  try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e) {}
+  try { localStorage.setItem(KEY, JSON.stringify(data)); }
+  catch(e) {
+    if (!_saveFailWarned) {
+      _saveFailWarned = true;
+      showToast(TOAST_WARN + ' Veriler kaydedilemiyor \u2014 cihaz depolaman dolu olabilir');
+    }
+  }
 }
 
 // =================== UTILS ===================
@@ -8529,7 +8536,7 @@ function updateNewCatIconColor(color) {
 
 function deleteCustomCat(id) {
   data.categories = data.categories.filter(c => c.id !== id);
-  data.transactions.forEach(t => { if (t.category === id) t.category = 'diger'; });
+  data.transactions.forEach(t => { if (t.category === id) t.category = (t.type === 'income' ? 'gelir_diger' : 'diger'); });
   data.recurring.forEach(r => { if (r.category === id) r.category = 'diger'; });
   (data.recurringIncome || []).forEach(r => { if (r.category === id) r.category = 'gelir_diger'; });
   save(); renderCatList(); populateCatSelects();
@@ -9556,6 +9563,27 @@ function saveDailyLimitSheet() {
 
 init();
 window.addEventListener('resize', () => { updatePillIndicator(currentTab); });
+
+// ─── AY GEÇİŞİ KONTROLÜ (V65.2) ──────────────────────────────────
+// currentMonth açılışta bir kez atanıyor. iOS'ta uygulama bellekte kaldığı için
+// ay değiştiğinde bayat kalıyordu: günlük limit donuyor, ödemeler eski aya yazılıyordu.
+// Uygulama öne geldiğinde ve dakikada bir kontrol edilir; ay değişmediyse hiçbir şey yapmaz.
+function checkMonthRollover() {
+  const mk = monthKey();
+  if (mk === currentMonth) return;
+  currentMonth = mk;
+  _donutMonth  = mk;
+  viewYear     = new Date().getFullYear();
+  if (data.streak.lastFreezeResetMonth !== mk) {
+    data.streak.freezesUsed = 0;
+    data.streak.lastFreezeResetMonth = mk;
+    save();
+  }
+  renderAll();
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) checkMonthRollover(); });
+window.addEventListener('pageshow', checkMonthRollover);
+setInterval(checkMonthRollover, 60000);
 </script>
 
 <!-- ÖDEME EKLEME SHEET -->
