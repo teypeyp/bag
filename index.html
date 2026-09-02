@@ -2633,7 +2633,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     <div class="form-group">
       <label class="form-label">Başlangıç ayı</label>
       <input type="hidden" id="editDebtStartMonth">
-      <div class="form-input" id="editDebtStartMonthDisplay" onclick="openMonthPicker('editDebtStartMonth','editDebtStartMonthDisplay')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--text)">
+      <div class="form-input" id="editDebtStartMonthDisplay" onclick="openMonthPicker('editDebtStartMonth','editDebtStartMonthLabel')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--text)">
         <span id="editDebtStartMonthLabel" style="font-weight:600">Ay seç</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6"/></svg>
       </div>
@@ -9604,7 +9604,7 @@ window.addEventListener('resize', () => { updatePillIndicator(currentTab); });
     </div>
     <div class="form-group"><label class="form-label">İlk Taksit Ayı</label>
       <input type="hidden" id="debtStartMonthNew">
-      <div class="form-input" id="debtStartMonthDisplayNew" onclick="openMonthPicker('debtStartMonthNew','debtStartMonthDisplayNew')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--text)">
+      <div class="form-input" id="debtStartMonthDisplayNew" onclick="openMonthPicker('debtStartMonthNew','debtStartMonthLabelNew')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--text)">
         <span id="debtStartMonthLabelNew" style="font-weight:600">Ay seç</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6"/></svg>
       </div></div>
