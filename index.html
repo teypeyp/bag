@@ -2790,7 +2790,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v74 · Veriler bu cihazda saklanır</div>
+    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v74.2 · Veriler bu cihazda saklanır</div>
   </div>
 </div>
 
@@ -4747,29 +4747,39 @@ const BUDGET_FREE_ICON = c => `<svg width="19" height="19" viewBox="0 0 24 24" f
 function budgetIconSvg(b, size) {
   return BUDGET_FREE_ICON(budgetColor(b)).replace('width="19" height="19"', `width="${size||19}" height="${size||19}"`);
 }
+function _walletPalette(b) {
+  // V74.1: temel renk = cüzdanın rengi; aşımda kırmızıya döner (kritik uyarı)
+  const wc = b.color || '#0A84FF';
+  const over = b.amount > 0 && b.spent > b.amount;
+  const near = !over && b.amount > 0 && b.spent / b.amount >= 0.85;
+  const accent = over ? 'var(--danger)' : wc;
+  const fill = over ? 'linear-gradient(90deg,#FF453A,#ff7a6e)' : 'linear-gradient(90deg,' + wc + ',' + wc + 'cc)';
+  const badge = over ? { t:'AŞILDI', c:'var(--danger)', bg:'rgba(255,69,58,.14)' }
+              : near ? { t:'SINIRDA', c:'var(--warning)', bg:'rgba(255,214,10,.14)' }
+                     : { t:'YOLUNDA', c:'var(--accent)', bg:'rgba(45,184,102,.14)' };
+  return { wc, over, near, accent, fill, badge };
+}
 function budgetPageHtml(b) {
-  const st = budgetState(b.spent, b.amount);
+  const p = _walletPalette(b);
   const pct = Math.min(100, b.amount > 0 ? b.spent / b.amount * 100 : 0);
   const remain = b.amount - b.spent;
-  const badgeBg = st.key==='bad'?'rgba(255,69,58,.14)':st.key==='warn'?'rgba(255,214,10,.14)':'rgba(45,184,102,.14)';
-  const badgeTxt = st.key==='bad'?'AŞILDI':st.key==='warn'?'SINIRDA':'YOLUNDA';
   const periodTxt = b.period === 'monthly' ? 'Aylık Cüzdan' : 'Tek Seferlik Cüzdan';
   return `
-    <div class="bud-hero" style="--bud-accent:${st.c}">
+    <div class="bud-hero" style="--bud-accent:${p.accent}">
       <div class="bud-hero-head">
-        <div class="bud-hero-ic" style="background:${b.color}1f">${budgetIconSvg(b, 19)}</div>
+        <div class="bud-hero-ic" style="background:${p.wc}1f">${budgetIconSvg(b, 19)}</div>
         <div style="min-width:0;flex:1"><div class="bud-hero-name">${esc(b.name)}</div><div class="bud-hero-tag">${periodTxt}</div></div>
-        <span class="bud-hero-badge" style="background:${badgeBg};color:${st.c}">${badgeTxt}</span>
+        <span class="bud-hero-badge" style="background:${p.badge.bg};color:${p.badge.c}">${p.badge.t}</span>
         <button class="bud-hero-edit" onclick="openBudgetEdit('${b.id}')" aria-label="Düzenle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
       </div>
       <div class="bud-hero-mid">
-        <span class="bud-hero-spent" style="color:${st.c}">${fmtTL(Math.round(b.spent))}</span>
+        <span class="bud-hero-spent" style="color:${p.accent}">${fmtTL(Math.round(b.spent))}</span>
         <span class="bud-hero-cap">/ ${fmtTL(b.amount)}${b.period==='oneoff'?' toplam':''}</span>
       </div>
-      <div class="bud-hero-bar"><div class="bud-hero-bar-fill" style="width:${pct}%;background:${st.fill}"></div></div>
+      <div class="bud-hero-bar"><div class="bud-hero-bar-fill" style="width:${pct}%;background:${p.fill}"></div></div>
       <div class="bud-hero-foot">
         <span class="k">%${Math.round(pct)} kullanıldı</span>
-        <span style="color:${st.c}">${remain>=0?fmtTL(Math.round(remain))+' kaldı':fmtTL(Math.round(-remain))+' aşıldı'}</span>
+        <span style="color:${p.accent}">${remain>=0?fmtTL(Math.round(remain))+' kaldı':fmtTL(Math.round(-remain))+' aşıldı'}</span>
       </div>
     </div>`;
 }
@@ -4834,14 +4844,14 @@ function renderBudgetStatus() {
   }
 
   const rows = B.map(b => {
-    const st = budgetState(b.spent, b.amount);
+    const pal = _walletPalette(b);
     const p = Math.min(100, b.amount > 0 ? b.spent / b.amount * 100 : 0);
     return `<div class="bs-row">
-      <div class="bs-row-ic" style="background:${b.color}1f">${budgetIconSvg(b, 17)}</div>
+      <div class="bs-row-ic" style="background:${pal.wc}1f">${budgetIconSvg(b, 17)}</div>
       <div class="bs-row-mid">
         <div class="bs-row-top"><span class="bs-row-nm">${esc(b.name)}<small>${b.period==='monthly'?'aylık':'tek seferlik'}</small></span>
-        <span class="bs-row-fig" style="color:${st.c}">${fmtTL(Math.round(b.spent))} / ${fmtTL(b.amount)}</span></div>
-        <div class="bs-row-bar"><div class="bs-row-fill" style="width:${p}%;background:${st.fill}"></div></div>
+        <span class="bs-row-fig" style="color:${pal.accent}">${fmtTL(Math.round(b.spent))} / ${fmtTL(b.amount)}</span></div>
+        <div class="bs-row-bar"><div class="bs-row-fill" style="width:${p}%;background:${pal.fill}"></div></div>
       </div>
     </div>`;
   }).join('');
@@ -4975,8 +4985,8 @@ function renderWizStep() {
 
   body.innerHTML = head + `<div class="wz-body">${inner}</div><div class="wz-foot"><button class="bgt-cta" id="wzCta" onclick="wizNext()"${ctaDisabled?' disabled':''}>${cta}</button></div>`;
   // iOS: klavyeyi açmak için focus SENKRON (kullanıcı dokunuşunun içinde) çağrılmalı
-  if (key === 'name') { const el = document.getElementById('wzName'); if (el) { try { el.focus({preventScroll:true}); } catch(e) { el.focus(); } } }
-  if (key === 'amount') { const el = document.getElementById('wzAmt'); if (el) { try { el.focus({preventScroll:true}); } catch(e) { el.focus(); } wizAmtNote(); } }
+  // V74.2: otomatik odak/klavye kapalı — kullanıcı alana dokununca açılır
+  if (key === 'amount') { wizAmtNote(); }
 }
 function _wizOpt(val, sel, color, path, title, sub) {
   return `<div class="wz-opt${sel?' sel':''}" onclick="wizPickOpt('${val}')">
