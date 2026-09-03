@@ -1886,6 +1886,48 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .cc-seg-row{display:flex;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:4px;gap:4px}
 .cc-seg-btn{flex:1;padding:9px 4px;border:none;border-radius:10px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:none;color:var(--muted);transition:all .2s}
 .cc-seg-btn.active{background:var(--surface3);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+/* V70: abonelik denetimi */
+.subaud-hero{background:linear-gradient(150deg,#1e1526 0%,#141417 55%,#0f1420 100%);border:1px solid rgba(191,90,242,.22);border-radius:var(--radius);padding:18px;position:relative;overflow:hidden;margin-bottom:12px}
+.subaud-hero::after{content:'';position:absolute;top:-50px;right:-40px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(191,90,242,.12),transparent 70%);pointer-events:none}
+.subaud-hero-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.subaud-hero-val{font-size:36px;font-weight:900;letter-spacing:-1.8px;line-height:1;margin-bottom:6px}
+.subaud-hero-sub{font-size:12px;font-weight:600;color:var(--muted);line-height:1.6}
+.subaud-hero-sub b{color:var(--text);font-weight:800}
+.subaud-chips{display:flex;gap:8px;margin-top:14px}
+.subaud-chip{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-sm);padding:9px;text-align:center}
+.subaud-chip-val{font-size:15px;font-weight:900;letter-spacing:-.4px}
+.subaud-chip-label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:3px}
+.subaud-insight{display:flex;gap:11px;align-items:flex-start;background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.18);border-radius:var(--radius-sm);padding:12px 13px;margin-bottom:12px}
+.subaud-insight-icon{width:28px;height:28px;border-radius:9px;background:rgba(255,214,10,.14);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.subaud-insight-text{font-size:12px;font-weight:600;color:var(--text);line-height:1.6}
+.subaud-insight-text b{font-weight:900;color:var(--warning)}
+.subaud-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px 14px}
+.subaud-item{display:flex;align-items:center;gap:11px;padding:11px 0;border-top:1px solid rgba(255,255,255,.05);transition:opacity .2s}
+.subaud-item:first-child{border-top:none}
+.subaud-item.paused{opacity:.45}
+.subaud-item.paused .subaud-name{text-decoration:line-through}
+.subaud-ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:900;color:#fff}
+.subaud-info{flex:1;min-width:0}
+.subaud-name{font-size:13px;font-weight:700;letter-spacing:-.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.subaud-meta{font-size:10px;font-weight:600;color:var(--muted);margin-top:2px}
+.subaud-right{text-align:right;flex-shrink:0}
+.subaud-year{font-size:13px;font-weight:900;letter-spacing:-.3px}
+.subaud-month{font-size:9px;font-weight:600;color:var(--muted);margin-top:1px}
+.subaud-btn{width:30px;height:30px;border-radius:9px;border:1px solid var(--border);background:var(--surface3);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.subaud-btn.resume{background:rgba(45,184,102,.1);border-color:rgba(45,184,102,.3);color:var(--accent)}
+.subaud-note{background:rgba(191,90,242,.05);border:1px solid rgba(191,90,242,.14);border-radius:var(--radius-sm);padding:11px 13px;font-size:11px;font-weight:600;color:var(--muted);line-height:1.6;margin-top:10px}
+.subaud-note b{color:var(--purple);font-weight:800}
+/* V69.2: yedek hatırlatıcı bandı */
+.backup-banner{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(255,214,10,.09),rgba(255,214,10,.03));border:1px solid rgba(255,214,10,.22);border-radius:var(--radius-sm);padding:13px 14px;margin-bottom:16px;animation:tabEnter .35s cubic-bezier(.34,1.1,.64,1)}
+.backup-banner.late{background:linear-gradient(135deg,rgba(255,69,58,.09),rgba(255,69,58,.03));border-color:rgba(255,69,58,.22)}
+.backup-banner-icon{width:34px;height:34px;border-radius:10px;background:rgba(255,214,10,.14);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.backup-banner.late .backup-banner-icon{background:rgba(255,69,58,.14)}
+.backup-banner-body{flex:1;min-width:0}
+.backup-banner-title{font-size:12px;font-weight:800;letter-spacing:-.1px;margin-bottom:2px}
+.backup-banner-sub{font-size:11px;font-weight:500;color:var(--muted);line-height:1.5}
+.backup-banner-btn{padding:8px 14px;border:none;border-radius:10px;background:var(--warning);color:#1a1a1a;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;cursor:pointer;flex-shrink:0}
+.backup-banner.late .backup-banner-btn{background:var(--danger);color:#fff}
+.backup-banner-x{width:26px;height:26px;border:none;background:none;color:var(--muted);font-size:17px;cursor:pointer;flex-shrink:0;font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:center}
 /* tx sheet ödeme yöntemi */
 .tx-pay-chips{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px 0}
 .tx-pay-chip{padding:8px 13px;border:1.5px solid var(--border);border-radius:20px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;cursor:pointer;background:var(--surface2);color:var(--muted);transition:all .15s;display:flex;align-items:center;gap:6px}
@@ -2299,6 +2341,8 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 
 <!-- TAB: ÖZET -->
 <div class="tab-content" id="tab-ozet">
+  <!-- V69.2: Yedek hatırlatıcı bandı -->
+  <div id="backupBanner"></div>
   <div class="ozet-hero">
     <div class="ozet-hero-label">Toplam Varlığın</div>
     <div class="ozet-hero-balance" id="ozetBalance">—</div>
@@ -2442,6 +2486,12 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     <div id="monthlyReportBox"></div>
   </div>
 
+  <!-- V70: ABONELİK DENETİMİ -->
+  <div class="plan-section-block" id="planSubBlock" style="display:none">
+    <div class="plan-section-label">Abonelik Denetimi</div>
+    <div id="planSubAudit"></div>
+  </div>
+
   <!-- 5. SİMÜLASYON -->
   <div class="plan-section-block">
     <div class="plan-section-label">Simülasyon</div>
@@ -2504,7 +2554,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       <div class="settings-row tappable" onclick="exportData()">
         <div class="settings-row-left">
           <div class="settings-row-title">Dışa Aktar</div>
-          <div class="settings-row-sub">JSON dosyası olarak indir</div>
+          <div class="settings-row-sub" id="exportSubLabel">JSON dosyası olarak indir</div>
         </div>
         <span class="settings-chevron">›</span>
       </div>
@@ -7963,8 +8013,127 @@ function renderPlan() {
   _renderPlanSteps();
   _renderPlanGoalDetail(fb, core);
   renderMonthlyReportCard();
+  renderSubAudit(fb); // V70
   _updatePlanImpact(fb, core);
   _syncPlanCollapseSummaries(core);
+}
+
+// ── V70: ABONELİK DENETİMİ ─────────────────────────────────
+// İptal edilebilir dijital abonelikler (fatura/elektrik/su gibi zorunlu giderler HARİÇ)
+const SUBSCRIPTION_KEYWORDS = [
+  'netflix','spotify','youtube premium','youtube music','disney','blutv','exxen','tabii','gain tv','mubi','hbo','amazon prime','prime video',
+  'apple music','apple tv','apple one','apple arcade','icloud','google one','youtube','deezer','fizy','tidal','storytel','audible','kindle',
+  'dropbox','onedrive','adobe','canva','chatgpt','openai','claude','gemini advanced','midjourney','notion','microsoft 365','office 365','office365',
+  'medium','substack','xbox game pass','game pass','playstation plus','ps plus','nintendo switch online','twitch','patreon',
+  'linkedin premium','duolingo','headspace','calm','strava','1password','nordvpn','expressvpn','surfshark','proton','grammarly',
+  'coursera','udemy','skillshare','masterclass','bein connect','beinconnect','s sport','tod tv','puhutv','abonelik'
+];
+function isSubscriptionRec(r) {
+  const d = (r.desc || '').toLocaleLowerCase('tr');
+  return SUBSCRIPTION_KEYWORDS.some(k => d.includes(k));
+}
+function getSubscriptions() {
+  return (data.recurring || []).filter(isSubscriptionRec);
+}
+// Bir aboneliği pasife alınca günlük limitteki değişim (yaklaşık, mevcut ay)
+function _subPauseDailyDelta(r) {
+  if (!r.active) return 0;
+  const mk = currentMonth;
+  const before = calcFreeBudget(mk).daily;
+  r.active = false;
+  const after = calcFreeBudget(mk).daily;
+  r.active = true;
+  return after - before;
+}
+function renderSubAudit(fb) {
+  const block = document.getElementById('planSubBlock');
+  const el = document.getElementById('planSubAudit');
+  if (!block || !el) return;
+  const subs = getSubscriptions();
+  if (!subs.length) { block.style.display = 'none'; el.innerHTML = ''; return; }
+  block.style.display = 'block';
+
+  const activeSubs = subs.filter(s => s.active);
+  const pausedSubs = subs.filter(s => !s.active);
+  const monthly = activeSubs.reduce((t, s) => t + s.amount, 0);
+  const yearly = monthly * 12;
+  const dailyBudget = (fb && fb.daily > 0) ? fb.daily : 0;
+  const budgetDays = dailyBudget > 0 ? Math.round(yearly / dailyBudget) : 0;
+
+  // hero
+  let heroSub;
+  if (!activeSubs.length) {
+    heroSub = pausedSubs.length ? 'Tüm abonelikler pasif. Aktif yük yok.' : 'Aktif abonelik yok.';
+  } else {
+    const pausedSaved = pausedSubs.reduce((t, s) => t + s.amount, 0) * 12;
+    heroSub = 'Aylık <b>' + fmtTL(Math.round(monthly)) + '</b> · ' + activeSubs.length + ' aktif abonelik' +
+      (pausedSubs.length ? ' · ' + pausedSubs.length + ' pasif, yılda <b>' + fmtTL(Math.round(pausedSaved)) + '</b> tasarruf' : '');
+  }
+
+  // içgörü
+  let insight = '';
+  if (activeSubs.length) {
+    const top = activeSubs.slice().sort((a, b) => b.amount - a.amount)[0];
+    insight = 'Bu ' + activeSubs.length + ' abonelik yılda <b>' + fmtTL(Math.round(yearly)) + '</b> demek' +
+      (budgetDays > 0 ? ' — yaklaşık <b>' + budgetDays + ' günlük</b> harcama bütçen' : '') +
+      '. En pahalısı <b>' + esc(top.desc) + '</b> (yılda ' + fmtTL(Math.round(top.amount * 12)) + ').';
+  } else {
+    insight = 'Aktif abonelik kalmadı — yıllık yük sıfır. İstersen aşağıdan geri açabilirsin.';
+  }
+
+  // liste (aktifler önce, tutar azalan)
+  const ordered = subs.slice().sort((a, b) => {
+    if (!!a.active !== !!b.active) return a.active ? -1 : 1;
+    return b.amount - a.amount;
+  });
+  const rows = ordered.map(s => {
+    const cat = getCat(s.category);
+    const letter = (s.desc || '?').trim().charAt(0).toLocaleUpperCase('tr');
+    return '<div class="subaud-item' + (s.active ? '' : ' paused') + '">' +
+      '<div class="subaud-ic" style="background:' + (cat.color || '#BF5AF2') + '">' + esc(letter) + '</div>' +
+      '<div class="subaud-info"><div class="subaud-name">' + esc(s.desc) + '</div>' +
+      '<div class="subaud-meta">' + (s.active ? 'Aylık ' + fmtTL(s.amount) : 'Pasif') + '</div></div>' +
+      '<div class="subaud-right"><div class="subaud-year">' + fmtTL(Math.round(s.amount * 12)) + '</div><div class="subaud-month">/yıl</div></div>' +
+      (s.active
+        ? '<button class="subaud-btn" onclick="pauseSubscription(\'' + s.id + '\')" title="Pasife al"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>'
+        : '<button class="subaud-btn resume" onclick="resumeSubscription(\'' + s.id + '\')" title="Geri aç"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg></button>') +
+      '</div>';
+  }).join('');
+
+  el.innerHTML =
+    '<div class="subaud-hero"><div class="subaud-hero-label">Bu abonelikler sana yılda</div>' +
+    '<div class="subaud-hero-val">' + fmtTL(Math.round(yearly)) + '</div>' +
+    '<div class="subaud-hero-sub">' + heroSub + '</div>' +
+    '<div class="subaud-chips">' +
+    '<div class="subaud-chip"><div class="subaud-chip-val">' + fmtTL(Math.round(monthly)) + '</div><div class="subaud-chip-label">Aylık</div></div>' +
+    '<div class="subaud-chip"><div class="subaud-chip-val">' + activeSubs.length + '</div><div class="subaud-chip-label">Aktif</div></div>' +
+    (budgetDays > 0 ? '<div class="subaud-chip"><div class="subaud-chip-val">' + budgetDays + ' gün</div><div class="subaud-chip-label">Günlük bütçe</div></div>' : '') +
+    '</div></div>' +
+    '<div class="subaud-insight"><div class="subaud-insight-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFD60A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a7 7 0 0 1 7 7c0 3 -2 5 -3 6h-8c-1 -1 -3 -3 -3 -6a7 7 0 0 1 7 -7z"/><path d="M9.7 17l4.6 0"/><path d="M10 21l4 0"/></svg></div><div class="subaud-insight-text">' + insight + '</div></div>' +
+    '<div class="subaud-card">' + rows + '</div>' +
+    '<div class="subaud-note">Bir aboneliği <b>×</b> ile pasife alırsan Ödemeler listesinden çıkar, sonraki aydan bütçene katılmaz ve günlük limitin artar. Geçmiş kayıtların korunur; buradan <b>+</b> ile geri açabilirsin.</div>';
+}
+function pauseSubscription(id) {
+  const r = (data.recurring || []).find(x => x.id === id);
+  if (!r || !r.active) return;
+  const delta = _subPauseDailyDelta(r);
+  const deltaTxt = delta >= 1 ? ' Günlük limitin ~' + fmtTL(Math.round(delta)) + ' artar.' : '';
+  showConfirm(
+    esc(r.desc) + ' pasife alınacak. Ödemeler listesinden çıkar, sonraki aydan bütçene katılmaz; geçmiş kayıtların korunur.' + deltaTxt,
+    () => {
+      r.active = false;
+      save(); renderAll();
+      showToast(TOAST_OK + ' ' + esc(r.desc) + ' pasife alındı');
+    },
+    'Pasife Al', esc(r.desc), 'pause'
+  );
+}
+function resumeSubscription(id) {
+  const r = (data.recurring || []).find(x => x.id === id);
+  if (!r || r.active) return;
+  r.active = true;
+  save(); renderAll();
+  showToast(TOAST_OK + ' ' + esc(r.desc) + ' yeniden aktif');
 }
 
 // ── 1. Durum hero — bold headline + SVG ring ─────────────────────────────────
@@ -8640,6 +8809,7 @@ function updateCollapseSummaries() {
 
 // =================== ÖZET ===================
 function renderOzetStats() {
+  renderBackupBanner(); // V69.2
   const mk = currentMonth;
   const balance = calcBalance();
   const { income, expense } = calcMonthData(mk);
@@ -9789,7 +9959,68 @@ function exportData() {
   a.download = 'butcem-' + today() + '.json';
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+  // V69.2: yedek zamanını kaydet, hatırlatıcıyı sıfırla
+  data.lastBackup = today();
+  data.backupDismiss = '';
+  save();
+  renderBackupBanner();
+  const exSub = document.getElementById('exportSubLabel');
+  if (exSub) exSub.textContent = 'Son yedek: bugün';
   showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 9l5 -5l5 5"/><path d="M12 4l0 12"/></svg> Yedeklendi!');
+}
+
+// V69.2: yedek hatırlatıcı
+const BACKUP_WARN_DAYS = 14;   // eşik
+const BACKUP_SNOOZE_DAYS = 3;  // "sonra" ertelemesi
+function _daysBetween(aStr, bStr) {
+  if (!aStr) return Infinity;
+  const a = new Date(aStr + 'T00:00:00'), b = new Date((bStr || today()) + 'T00:00:00');
+  return Math.floor((b - a) / 86400000);
+}
+function _backupRefDate() {
+  // yedek hiç alınmadıysa referans: en eski işlem / kart / kayıt tarihi
+  if (data.lastBackup) return data.lastBackup;
+  const dates = [];
+  (data.transactions || []).forEach(t => { if (t.date) dates.push(t.date); });
+  (data.cards || []).forEach(c => { if (c.createdAt) dates.push(c.createdAt); });
+  dates.sort();
+  return dates[0] || today();
+}
+function backupDaysAgo() { return _daysBetween(_backupRefDate()); }
+function shouldShowBackupBanner() {
+  const hasData = (data.transactions || []).length > 0 || (data.cards || []).length > 0;
+  if (!hasData) return false;
+  if (data.backupDismiss && _daysBetween(data.backupDismiss) < BACKUP_SNOOZE_DAYS) return false;
+  return backupDaysAgo() >= BACKUP_WARN_DAYS;
+}
+function dismissBackupBanner() {
+  data.backupDismiss = today();
+  save();
+  renderBackupBanner();
+}
+function renderBackupBanner() {
+  const el = document.getElementById('backupBanner');
+  if (!el) return;
+  if (!shouldShowBackupBanner()) { el.innerHTML = ''; return; }
+  const days = backupDaysAgo();
+  const late = days >= BACKUP_WARN_DAYS * 2;
+  const never = !data.lastBackup;
+  const title = never ? 'Verilerini hiç yedeklemedin' : 'Verilerini ' + days + ' gündür yedeklemedin';
+  const sub = 'Veriler yalnız bu cihazda saklanır. Tarayıcı verisi silinirse geri alınamaz — yedek al.';
+  el.innerHTML =
+    '<div class="backup-banner' + (late ? ' late' : '') + '">' +
+    '<div class="backup-banner-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="' + (late ? '#FF453A' : '#FFD60A') + '" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1"/><path d="M12 13l0 9"/><path d="M9 19l3 3l3 -3"/></svg></div>' +
+    '<div class="backup-banner-body"><div class="backup-banner-title">' + title + '</div><div class="backup-banner-sub">' + sub + '</div></div>' +
+    '<button class="backup-banner-btn" onclick="exportData()">Yedekle</button>' +
+    '<button class="backup-banner-x" onclick="dismissBackupBanner()" aria-label="Kapat">&times;</button>' +
+    '</div>';
+}
+function updateExportSubLabel() {
+  const exSub = document.getElementById('exportSubLabel');
+  if (!exSub) return;
+  if (!data.lastBackup) { exSub.textContent = 'JSON dosyası olarak indir'; return; }
+  const d = _daysBetween(data.lastBackup);
+  exSub.textContent = 'Son yedek: ' + (d <= 0 ? 'bugün' : d === 1 ? 'dün' : d + ' gün önce');
 }
 
 function importData(input) {
@@ -9854,6 +10085,7 @@ let confirmCallback = null;
 const _CONFIRM_ICONS = {
   del:   '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3h6v3"/></svg>',
   reset: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16v.01"/></svg>',
+  pause: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 5m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z"/><path d="M14 5m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z"/></svg>',
 };
 
 function showConfirm(msg, cb, btnText, title, iconType) {
@@ -9873,6 +10105,17 @@ function showConfirm(msg, cb, btnText, title, iconType) {
     okBtn.style.background = 'var(--warning)';
     okBtn.style.color = '#000';
     okBtn.style.boxShadow = '0 4px 20px rgba(255,214,10,.25)';
+  } else if (iconType === 'pause') {
+    // V70: pasife alma — geri alınabilir, yıkıcı değil → mor
+    if (iconEl) {
+      iconEl.style.background = 'rgba(191,90,242,.1)';
+      iconEl.style.borderColor = 'rgba(191,90,242,.25)';
+      const s = iconEl.querySelector('svg');
+      if (s) s.style.stroke = 'var(--purple)';
+    }
+    okBtn.style.background = 'var(--purple)';
+    okBtn.style.color = '#fff';
+    okBtn.style.boxShadow = '0 4px 20px rgba(191,90,242,.25)';
   } else {
     if (iconEl) {
       iconEl.style.background = '';
@@ -9954,6 +10197,7 @@ function renderAll() {
   }
   updateCollapseSummaries();
   if (currentTab === 'plan') renderPlan();
+  updateExportSubLabel(); // V69.2
 }
 
 // =================== INIT ===================
