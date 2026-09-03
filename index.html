@@ -1944,6 +1944,28 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .bgt-hint{text-align:center;font-size:12px;color:var(--muted);font-weight:600;margin:10px 0 4px;line-height:1.5}
 .bgt-back{background:none;border:none;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;padding:0}
 
+/* ── V75: Alışkanlıkların (davranış içgörüleri) ── */
+.habits-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:24px 0 12px}
+.wk-card{background:var(--surface2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+.wk-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px}
+.wk-title{font-size:14px;font-weight:800}
+.wk-sub{font-size:11px;font-weight:700;color:var(--muted)}
+.wk-bars{display:flex;align-items:flex-end;gap:7px;height:110px}
+.wk-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.wk-bar{width:100%;border-radius:6px 6px 3px 3px;background:var(--surface3);transition:height .5s cubic-bezier(.32,0,.15,1);min-height:4px}
+.wk-bar.hi{background:linear-gradient(180deg,#FF453A,#ff7a6e)}
+.wk-bar.lo{background:linear-gradient(180deg,#2DB866,#5fd68f)}
+.wk-lbl{font-size:10px;font-weight:800;color:var(--muted)}
+.wk-lbl.hi{color:var(--danger)}
+.wk-lbl.lo{color:var(--accent)}
+.ins{display:flex;gap:13px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:15px;margin-bottom:10px}
+.ins-ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ins-b{flex:1;min-width:0}
+.ins-t{font-size:14px;font-weight:700;letter-spacing:-.1px;line-height:1.45;margin-bottom:4px}
+.ins-t b{font-weight:900}
+.ins-s{font-size:12px;font-weight:500;color:var(--muted);line-height:1.55}
+.ins-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:900;padding:3px 8px;border-radius:20px;margin-bottom:6px;letter-spacing:.3px}
+
 /* ── V73: Plan/Analiz bütçe durumu kartı ── */
 .bs-card{background:var(--surface2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:18px}
 .bs-head{display:flex;align-items:center;gap:13px;margin-bottom:16px}
@@ -2581,6 +2603,16 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     <div id="doughnutLegend" style="margin-top:14px"></div>
   </div>
 
+  <!-- V75: ALIŞKANLIKLARIN (davranış içgörüleri) -->
+  <div id="habitsSection" style="display:none">
+    <div class="habits-label">Alışkanlıkların</div>
+    <div class="wk-card">
+      <div class="wk-head"><span class="wk-title">Haftanın günlerine göre</span><span class="wk-sub" id="wkSub"></span></div>
+      <div class="wk-bars" id="wkBars"></div>
+    </div>
+    <div id="habitsList"></div>
+  </div>
+
   <!-- Aylık Kalan Geçmişi -->
   <div class="chart-card" id="monthlyRemainingCard">
     <div class="chart-card-header">
@@ -2790,7 +2822,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v74.2 · Veriler bu cihazda saklanır</div>
+    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v75 · Veriler bu cihazda saklanır</div>
   </div>
 </div>
 
@@ -9535,7 +9567,74 @@ function updateCollapseSummaries() {
 }
 
 // =================== ÖZET ===================
+// ── V75: ALIŞKANLIKLARIN (davranış içgörüleri) ──
+const _TR_MON = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+const _DOW = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+function _hIcon(paths, c, sw) { return '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="' + c + '" stroke-width="' + (sw||1.7) + '" stroke-linecap="round" stroke-linejoin="round">' + paths + '</svg>'; }
+function renderHabits() {
+  const sec = document.getElementById('habitsSection');
+  if (!sec) return;
+  const vex = data.transactions.filter(t => t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit);
+  const dates = vex.map(t => t.date).sort();
+  const span = dates.length ? Math.round((new Date(dates[dates.length-1]+'T00:00:00') - new Date(dates[0]+'T00:00:00')) / 86400000) : 0;
+  if (vex.length < 12 || span < 14) { sec.style.display = 'none'; return; }  // yeterli veri yoksa gizli
+  sec.style.display = 'block';
+
+  const daySum = [0,0,0,0,0,0,0], byDate = {};
+  vex.forEach(t => { const d = new Date(t.date+'T00:00:00'); const dow = (d.getDay()+6)%7; daySum[dow] += t.amount; byDate[t.date] = (byDate[t.date]||0) + t.amount; });
+  const max = Math.max(...daySum);
+  const posVals = daySum.filter(x => x > 0);
+  const posMin = posVals.length ? Math.min(...posVals) : 0;
+  const hiDay = daySum.indexOf(max), loDay = daySum.indexOf(posMin);
+  document.getElementById('wkBars').innerHTML = daySum.map((v, i) => {
+    const h = max > 0 ? Math.max(4, v/max*100) : 4;
+    const cls = i === hiDay ? 'hi' : (i === loDay && posMin < max) ? 'lo' : '';
+    return '<div class="wk-col"><div class="wk-bar ' + cls + '" style="height:' + h + '%"></div><div class="wk-lbl ' + cls + '">' + _DOW[i] + '</div></div>';
+  }).join('');
+  document.getElementById('wkSub').textContent = 'toplam harcama';
+
+  // hafta içi vs hafta sonu (harcama yapılan günlerin ort.)
+  let wdSum=0, wdDays=0, weSum=0, weDays=0;
+  Object.entries(byDate).forEach(([dt, amt]) => { const dow = (new Date(dt+'T00:00:00').getDay()+6)%7; if (dow >= 5) { weSum += amt; weDays++; } else { wdSum += amt; wdDays++; } });
+  const wdAvg = wdDays ? wdSum/wdDays : 0, weAvg = weDays ? weSum/weDays : 0;
+  const wePct = wdAvg > 0 ? Math.round((weAvg/wdAvg - 1) * 100) : 0;
+
+  // büyüyen kategori (bu ay vs geçen ay)
+  const mk = monthKey(), pmk = prevMonthKey(1);
+  const catNow = {}, catPrev = {};
+  vex.forEach(t => { const m = monthKey(t.date); if (m === mk) catNow[t.category] = (catNow[t.category]||0) + t.amount; else if (m === pmk) catPrev[t.category] = (catPrev[t.category]||0) + t.amount; });
+  let grow = null;
+  Object.keys(Object.assign({}, catNow, catPrev)).forEach(cid => { const n = catNow[cid]||0, p = catPrev[cid]||0; if (p > 0 && n > p) { const g = n/p - 1; if (!grow || g > grow.g) grow = { cid, g, n, p }; } });
+
+  // en yüklü gün
+  const topDate = Object.entries(byDate).sort((a,b) => b[1]-a[1])[0];
+  const td = new Date(topDate[0]+'T00:00:00'), tdLbl = td.getDate() + ' ' + _TR_MON[td.getMonth()];
+  const avgDay = Object.values(byDate).reduce((a,b)=>a+b,0) / Object.keys(byDate).length;
+
+  // aya göre toplam
+  const totNow = Object.values(catNow).reduce((a,b)=>a+b,0), totPrev = Object.values(catPrev).reduce((a,b)=>a+b,0);
+  const monPct = totPrev > 0 ? Math.round((totNow/totPrev - 1) * 100) : null;
+
+  const cards = [];
+  // en yüklü gün (haftanın günü)
+  if (posMin < max) cards.push({ ic:_hIcon('<path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4M8 3v4M4 11h16"/>','#FF453A'), bg:'rgba(255,69,58,.12)', tag:{t:'EN YÜKLÜ GÜN',c:'var(--danger)',bg:'rgba(255,69,58,.14)'}, t:`En çok <b style="color:var(--danger)">${_DOW[hiDay]}</b> günleri harcıyorsun.`, s:`Bu güne toplam ${fmtTL(Math.round(max))} gitti; en tutumlu günün ${_DOW[loDay]} (${fmtTL(Math.round(posMin))}). Yüksek günü fark etmek o güne küçük bir sınır koymayı kolaylaştırır.` });
+  // hafta içi/sonu
+  if (weDays >= 2 && wdDays >= 2 && Math.abs(wePct) >= 10) cards.push({ ic:_hIcon('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>','#FFD60A'), bg:'rgba(255,214,10,.12)', tag:{t:'HAFTA SONU',c:'var(--warning)',bg:'rgba(255,214,10,.14)'}, t:`Hafta sonları hafta içinden <b style="color:var(--warning)">%${Math.abs(wePct)} ${wePct>=0?'fazla':'az'}</b> harcıyorsun.`, s:`Hafta içi günlük ort. ${fmtTL(Math.round(wdAvg))}, hafta sonu ${fmtTL(Math.round(weAvg))}. ${wePct>15?'Cumartesi-Pazar planını gözden geçirmek dengeyi değiştirir.':'Dengeli bir dağılım.'}` });
+  // büyüyen kategori
+  if (grow && grow.g >= 0.15) { const gc = getCat(grow.cid); cards.push({ ic:_hIcon('<path d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7l7 0l0 7"/>', gc.color||'#6E6D78', 2), bg:(gc.color||'#6E6D78')+'22', tag:{t:'BÜYÜYEN',c:gc.color||'#6E6D78',bg:(gc.color||'#6E6D78')+'22'}, t:`<b style="color:${gc.color}">${esc(gc.name)}</b> harcaman geçen aya göre <b style="color:${gc.color}">%${Math.round(grow.g*100)}</b> arttı.`, s:`Geçen ay ${fmtTL(Math.round(grow.p))} → bu ay ${fmtTL(Math.round(grow.n))}. Tek kategorideki sessiz artış, toplam harcamadaki bozulmanın en yaygın nedenidir.` }); }
+  // en yüklü tek gün
+  if (topDate[1] > avgDay * 2.2) cards.push({ ic:_hIcon('<path d="M4 5a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4M8 3v4M4 11h16"/>','#0A84FF'), bg:'rgba(10,132,255,.12)', tag:{t:'ZİRVE',c:'var(--blue)',bg:'rgba(10,132,255,.14)'}, t:`En yüklü günün <b style="color:var(--blue)">${tdLbl}</b> — <b style="color:var(--blue)">${fmtTL(Math.round(topDate[1]))}</b>.`, s:`Günlük ortalamanın (${fmtTL(Math.round(avgDay))}) çok üstü. Böyle sıçramalar genelde plansız büyük alımlardan gelir.` });
+  // aya göre değişim
+  if (monPct !== null && Math.abs(monPct) >= 8) { const good = monPct <= 0; cards.push({ ic:_hIcon(good?'<path d="M5 12l5 5l10 -10"/>':'<path d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7l7 0l0 7"/>', good?'#2DB866':'#FF453A', 2), bg:good?'rgba(45,184,102,.12)':'rgba(255,69,58,.12)', tag:{t:good?'İYİ GİDİŞ':'DİKKAT',c:good?'var(--accent)':'var(--danger)',bg:good?'rgba(45,184,102,.14)':'rgba(255,69,58,.14)'}, t:good?`Bu ay geçen aya göre <b style="color:var(--accent)">%${Math.abs(monPct)} az</b> harcadın.`:`Bu ay geçen aya göre <b style="color:var(--danger)">%${monPct} fazla</b> harcadın.`, s:`Geçen ay ${fmtTL(Math.round(totPrev))} → bu ay ${fmtTL(Math.round(totNow))}. ${good?'Böyle devam.':'Ay bitmeden tempoyu düşürmek fark yaratır.'}` }); }
+
+  document.getElementById('habitsList').innerHTML = cards.map(c => `
+    <div class="ins"><div class="ins-ic" style="background:${c.bg}">${c.ic}</div>
+      <div class="ins-b"><span class="ins-tag" style="background:${c.tag.bg};color:${c.tag.c}">${c.tag.t}</span>
+        <div class="ins-t">${c.t}</div><div class="ins-s">${c.s}</div></div></div>`).join('');
+}
+
 function renderOzetStats() {
+  renderHabits(); // V75
   renderBackupBanner(); // V69.2
   const mk = currentMonth;
   const balance = calcBalance();
