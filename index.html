@@ -3656,71 +3656,74 @@ const GOAL_ICONS = [
 const MONTH_NAMES=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
 
 // =================== STORAGE ===================
+// V78 — load() + importData() ortak veri normalizasyonu (tek kaynak, sapmayi onler)
+// Donus: kategori type migration'ı bir sey degistirdiyse true (load bunu localStorage'a yazar)
+function _normalizeData() {
+  if (!Array.isArray(data.transactions)) data.transactions = [];
+  data.transactions.forEach(t => { if (typeof t.amount !== 'number' || isNaN(t.amount)) t.amount = 0; }); // V78: bozuk tutar bakiyeyi NaN yapmasin
+  if (!Array.isArray(data.cards)) data.cards = [];
+  _cardGuards(); // V69
+  if (!data.categoryBudgets || typeof data.categoryBudgets !== 'object' || Array.isArray(data.categoryBudgets)) data.categoryBudgets = {}; // V71
+  if (typeof data.budgetTutorialSeen !== 'boolean') data.budgetTutorialSeen = false; // V71
+  if (!Array.isArray(data.budgets)) data.budgets = []; // V72
+  if (!Array.isArray(data.achievements)) data.achievements = []; // V76
+  if (typeof data.achInit !== 'boolean') data.achInit = false; // V76
+  if (!data.budgets.length && data.categoryBudgets && Object.keys(data.categoryBudgets).length) {
+    Object.entries(data.categoryBudgets).forEach(([cid, amt]) => {
+      if (amt > 0) { const c = getCat(cid); data.budgets.push({ id:'bgt_'+uid(), name:(c&&c.name)||cid, amount:amt, period:'monthly', source:'category', catId:cid, color:(c&&c.color)||'#6E6D78', created:today() }); }
+    });
+    data.categoryBudgets = {};
+  }
+  const _wcol = ['#2DB866','#0A84FF','#BF5AF2','#F97316','#FBBF24','#EC4899','#34D399','#8B5CF6','#FF453A','#5AC8FA'];
+  data.budgets.forEach((b, i) => {
+    if (typeof b.amount !== 'number' || isNaN(b.amount)) b.amount = 0;
+    if (b.period !== 'oneoff') b.period = 'monthly';
+    b.source = 'free'; b.catId = null;                 // V74: kategori modu kaldirildi
+    if (!b.color) b.color = _wcol[i % _wcol.length];
+    if (typeof b.order !== 'number') b.order = i;
+    if (!b.created) b.created = today();
+  });
+  if (!Array.isArray(data.recurring)) data.recurring = [];
+  if (!Array.isArray(data.recurringIncome)) data.recurringIncome = [];
+  if (!Array.isArray(data.debts)) data.debts = [];
+  if (!Array.isArray(data.savingsGoals)) data.savingsGoals = [];
+  if (!Array.isArray(data.wishlist)) data.wishlist = [];
+  if (!Array.isArray(data.categories)) data.categories = [];
+  // Streak migration
+  if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
+  if (!Array.isArray(data.streak.frozenDays)) data.streak.frozenDays = [];
+  if (typeof data.streak.freezeTotal !== 'number' || isNaN(data.streak.freezeTotal)) data.streak.freezeTotal = 2;
+  if (data.streak.freezeTotal > 5) data.streak.freezeTotal = 5; // max 5
+  if (data.streak.freezeTotal < 0) data.streak.freezeTotal = 0;
+  if (typeof data.streak.freezesUsed !== 'number' || isNaN(data.streak.freezesUsed) || data.streak.freezesUsed < 0) data.streak.freezesUsed = 0;
+  if (!data.monthlyTargets || typeof data.monthlyTargets !== 'object' || Array.isArray(data.monthlyTargets)) data.monthlyTargets = {};
+  if (data.streak.lastWeeklyFreezeGift === undefined) data.streak.lastWeeklyFreezeGift = '';
+  if (data.streak.lastFreezeResetMonth === undefined) data.streak.lastFreezeResetMonth = '';
+  if (!data.dailyOverride || typeof data.dailyOverride !== 'object' || Array.isArray(data.dailyOverride)) data.dailyOverride = {};
+  if (typeof data.walletName !== 'string') data.walletName = '';
+  data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; if (!r.payHistory) r.payHistory = {}; if (r.variable === undefined) r.variable = false; });
+  data.debts.forEach(d => { if (!d.paidMonths) d.paidMonths = []; if (!d.startMonth) d.startMonth = monthKey(); });
+  data.savingsGoals.forEach(g => { if (!g.paidMonths) g.paidMonths = []; if (!g.deposits) g.deposits = []; });
+  if (!data.categoryKeywordOverrides || typeof data.categoryKeywordOverrides !== 'object') data.categoryKeywordOverrides = {};
+  Object.entries(data.categoryKeywordOverrides).forEach(([id, words]) => {
+    const dc = DEFAULT_CATS.find(c => c.id === id);
+    if (dc) dc.keywords = words;
+  });
+  // Custom kategori type migration — income default bug'ini duzelt
+  const _defIds = new Set(DEFAULT_CATS.map(c => c.id));
+  data.categories = (data.categories || []).filter(c => !_defIds.has(c.id));
+  let _migChanged = false;
+  data.categories.forEach(c => { if (!c.type) { c.type = 'expense'; _migChanged = true; } });
+  return _migChanged;
+}
+
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
       data = {...data, ...parsed};
-      if (!Array.isArray(data.transactions)) data.transactions = [];
-      if (!Array.isArray(data.cards)) data.cards = [];
-      _cardGuards(); // V69
-      if (!data.categoryBudgets || typeof data.categoryBudgets !== 'object' || Array.isArray(data.categoryBudgets)) data.categoryBudgets = {}; // V71
-      if (typeof data.budgetTutorialSeen !== 'boolean') data.budgetTutorialSeen = false; // V71
-      if (!Array.isArray(data.budgets)) data.budgets = []; // V72
-      if (!Array.isArray(data.achievements)) data.achievements = []; // V76
-      if (typeof data.achInit !== 'boolean') data.achInit = false; // V76
-      if (!data.budgets.length && data.categoryBudgets && Object.keys(data.categoryBudgets).length) {
-        Object.entries(data.categoryBudgets).forEach(([cid, amt]) => {
-          if (amt > 0) { const c = getCat(cid); data.budgets.push({ id:'bgt_'+uid(), name:(c&&c.name)||cid, amount:amt, period:'monthly', source:'category', catId:cid, color:(c&&c.color)||'#6E6D78', created:today() }); }
-        });
-        data.categoryBudgets = {};
-      }
-      const _wcol = ['#2DB866','#0A84FF','#BF5AF2','#F97316','#FBBF24','#EC4899','#34D399','#8B5CF6','#FF453A','#5AC8FA'];
-      data.budgets.forEach((b, i) => {
-        if (typeof b.amount !== 'number' || isNaN(b.amount)) b.amount = 0;
-        if (b.period !== 'oneoff') b.period = 'monthly';
-        b.source = 'free'; b.catId = null;                 // V74: kategori modu kaldırıldı
-        if (!b.color) b.color = _wcol[i % _wcol.length];
-        if (typeof b.order !== 'number') b.order = i;
-        if (!b.created) b.created = today();
-      });
-      if (!Array.isArray(data.recurring)) data.recurring = [];
-      if (!Array.isArray(data.recurringIncome)) data.recurringIncome = [];
-      if (!Array.isArray(data.debts)) data.debts = [];
-      if (!Array.isArray(data.savingsGoals)) data.savingsGoals = [];
-      if (!Array.isArray(data.wishlist)) data.wishlist = [];
-      if (!Array.isArray(data.categories)) data.categories = [];
-      // Streak migration
-      if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
-      if (!Array.isArray(data.streak.frozenDays)) data.streak.frozenDays = [];
-      if (typeof data.streak.freezeTotal !== 'number' || isNaN(data.streak.freezeTotal)) data.streak.freezeTotal = 2;
-      if (data.streak.freezeTotal > 5) data.streak.freezeTotal = 5; // max 5
-      if (data.streak.freezeTotal < 0) data.streak.freezeTotal = 0;
-      if (typeof data.streak.freezesUsed !== 'number' || isNaN(data.streak.freezesUsed) || data.streak.freezesUsed < 0) data.streak.freezesUsed = 0;
-      if (!data.monthlyTargets || typeof data.monthlyTargets !== 'object' || Array.isArray(data.monthlyTargets)) data.monthlyTargets = {};
-      if (data.streak.lastWeeklyFreezeGift === undefined) data.streak.lastWeeklyFreezeGift = '';
-      if (data.streak.lastFreezeResetMonth === undefined) data.streak.lastFreezeResetMonth = '';
-      data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; if (!r.payHistory) r.payHistory = {}; if (r.variable === undefined) r.variable = false; });
-      data.debts.forEach(d => {
-        if (!d.paidMonths) d.paidMonths = [];
-        if (!d.startMonth) d.startMonth = monthKey();
-      });
-      data.savingsGoals.forEach(g => {
-        if (!g.paidMonths) g.paidMonths = [];
-        if (!g.deposits) g.deposits = [];
-      });
-      if (!data.categoryKeywordOverrides || typeof data.categoryKeywordOverrides !== 'object') data.categoryKeywordOverrides = {};
-      if (!data.dailyOverride || typeof data.dailyOverride !== 'object') data.dailyOverride = {};
-      Object.entries(data.categoryKeywordOverrides).forEach(([id, words]) => {
-        const dc = DEFAULT_CATS.find(c => c.id === id);
-        if (dc) dc.keywords = words;
-      });
-      // Custom kategori type migration — income default bug'ını düzelt, localStorage'a yaz
-      const _defIds = new Set(DEFAULT_CATS.map(c => c.id));
-      data.categories = (data.categories || []).filter(c => !_defIds.has(c.id));
-      let _migChanged = false;
-      data.categories.forEach(c => { if (!c.type) { c.type = 'expense'; _migChanged = true; } });
+      const _migChanged = _normalizeData();
       if (_migChanged) { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e) {} }
     }
   } catch(e) { console.warn('localStorage unavailable'); }
@@ -5098,19 +5101,6 @@ function renderBudgetStatus() {
   _armBarFills(); // V77 — Plan cüzdan barları görününce dolsun
 }
 
-// ── kategori aylık harcama (preset önerisi için, bütçe atamasından bağımsız) ──
-function catMonthSpentRaw(catId, mk) {
-  return data.transactions
-    .filter(t => t.type === 'expense' && t.category === catId && monthKey(t.date) === mk && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
-    .reduce((s, t) => s + t.amount, 0);
-}
-function catAvg3(catId) {
-  let tot = 0, n = 0;
-  for (let i = 1; i <= 3; i++) { tot += catMonthSpentRaw(catId, prevMonthKey(i)); n++; }
-  const avg = n ? tot / n : 0;
-  return avg > 0 ? avg : catMonthSpentRaw(catId, currentMonth);
-}
-
 // ═══════════ EKLEME AKIŞI: GİRİŞ + WIZARD + DÜZENLE ═══════════
 let _wiz = { step:0, name:'', period:'', source:'', catId:'', amount:0, editId:null };
 function _openBgtSheet() {
@@ -5334,7 +5324,6 @@ function removeBudget(id) {
 // ── harcama sheet'i: serbest bütçe etiketi ──
 let _sheetBudgetId = null;
 // Cüzdan çipleri artık _renderTxPayChips içinde (kartın yanında) render ediliyor
-function _renderTxBudgetChips() { _renderTxPayChips(); }
 function _setSheetBudget(id) { _sheetBudgetId = _sheetBudgetId === id ? null : id; _renderTxPayChips(); }
 
 function buildCarouselItems(fb) {
@@ -11272,58 +11261,7 @@ function importData(input) {
       const parsed = JSON.parse(e.target.result);
       if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('invalid');
       data = { ...data, ...parsed };
-      if (!Array.isArray(data.transactions)) data.transactions = [];
-      if (!Array.isArray(data.cards)) data.cards = [];
-      _cardGuards(); // V69
-      if (!data.categoryBudgets || typeof data.categoryBudgets !== 'object' || Array.isArray(data.categoryBudgets)) data.categoryBudgets = {}; // V71
-      if (typeof data.budgetTutorialSeen !== 'boolean') data.budgetTutorialSeen = false; // V71
-      if (!Array.isArray(data.budgets)) data.budgets = []; // V72
-      if (!Array.isArray(data.achievements)) data.achievements = []; // V76
-      if (typeof data.achInit !== 'boolean') data.achInit = false; // V76
-      if (!data.budgets.length && data.categoryBudgets && Object.keys(data.categoryBudgets).length) {
-        Object.entries(data.categoryBudgets).forEach(([cid, amt]) => {
-          if (amt > 0) { const c = getCat(cid); data.budgets.push({ id:'bgt_'+uid(), name:(c&&c.name)||cid, amount:amt, period:'monthly', source:'category', catId:cid, color:(c&&c.color)||'#6E6D78', created:today() }); }
-        });
-        data.categoryBudgets = {};
-      }
-      const _wcol = ['#2DB866','#0A84FF','#BF5AF2','#F97316','#FBBF24','#EC4899','#34D399','#8B5CF6','#FF453A','#5AC8FA'];
-      data.budgets.forEach((b, i) => {
-        if (typeof b.amount !== 'number' || isNaN(b.amount)) b.amount = 0;
-        if (b.period !== 'oneoff') b.period = 'monthly';
-        b.source = 'free'; b.catId = null;                 // V74: kategori modu kaldırıldı
-        if (!b.color) b.color = _wcol[i % _wcol.length];
-        if (typeof b.order !== 'number') b.order = i;
-        if (!b.created) b.created = today();
-      });
-      if (!Array.isArray(data.recurring)) data.recurring = [];
-      if (!Array.isArray(data.recurringIncome)) data.recurringIncome = [];
-      if (!Array.isArray(data.debts)) data.debts = [];
-      if (!Array.isArray(data.savingsGoals)) data.savingsGoals = [];
-      if (!Array.isArray(data.wishlist)) data.wishlist = [];
-      if (!data.streak) data.streak = { current:0, best:0, freezesUsed:0, freezeTotal:2, frozenDays:[], lastWeeklyFreezeGift:'', lastFreezeResetMonth:'' };
-      if (!Array.isArray(data.streak.frozenDays)) data.streak.frozenDays = [];
-      if (typeof data.streak.freezeTotal !== 'number' || isNaN(data.streak.freezeTotal)) data.streak.freezeTotal = 2;
-      if (data.streak.freezeTotal > 5) data.streak.freezeTotal = 5; // max 5
-      if (data.streak.freezeTotal < 0) data.streak.freezeTotal = 0;
-      if (typeof data.streak.freezesUsed !== 'number' || isNaN(data.streak.freezesUsed) || data.streak.freezesUsed < 0) data.streak.freezesUsed = 0;
-      if (!data.monthlyTargets || typeof data.monthlyTargets !== 'object' || Array.isArray(data.monthlyTargets)) data.monthlyTargets = {};
-      if (!data.dailyOverride || typeof data.dailyOverride !== 'object' || Array.isArray(data.dailyOverride)) data.dailyOverride = {};
-      if (typeof data.walletName !== 'string') data.walletName = '';
-      data.recurring.forEach(r => { if (!r.paidMonths) r.paidMonths = []; if (!r.payHistory) r.payHistory = {}; if (r.variable === undefined) r.variable = false; });
-      data.debts.forEach(d => { if (!d.paidMonths) d.paidMonths = []; if (!d.startMonth) d.startMonth = monthKey(); });
-      data.savingsGoals.forEach(g => { if (!g.paidMonths) g.paidMonths = []; if (!g.deposits) g.deposits = []; });
-      const defaultIds = new Set(DEFAULT_CATS.map(c => c.id));
-      data.categories = (data.categories || []).filter(c => !defaultIds.has(c.id));
-      // Migration: income default bug'ından kaynaklanmış yanlış type'ları düzelt
-      // Custom kategori income olarak kaydedildiyse ve DEFAULT_CATS'ta income değilse expense yap
-      data.categories.forEach(c => {
-        if (!c.type) c.type = 'expense';
-      });
-      if (!data.categoryKeywordOverrides || typeof data.categoryKeywordOverrides !== 'object') data.categoryKeywordOverrides = {};
-      Object.entries(data.categoryKeywordOverrides).forEach(([id, words]) => {
-        const dc = DEFAULT_CATS.find(c => c.id === id);
-        if (dc) dc.keywords = words;
-      });
+      _normalizeData();
       save(); processCardCycles(); renderAll();
       showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg> Veri içe aktarıldı');
     } catch(err) { showToast(TOAST_WARN + ' Dosya okunamadı'); }
