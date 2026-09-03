@@ -43,7 +43,10 @@
   --danger:#FF453A;--danger-dim:#3d0f0d;--warning:#FFD60A;
   --blue:#0A84FF;--purple:#BF5AF2;
   --radius:20px;--radius-sm:12px;--radius-xs:8px;
+  --spring:cubic-bezier(.34,1.3,.64,1);--smooth:cubic-bezier(.4,0,.2,1);--emph:cubic-bezier(.2,.85,.25,1);
 }
+/* rakamlar zıplamasın */
+.hero-balance,.hbo-main,.hbo-sub,.bud-hero-spent,.bud-hero-cap,.bud-hero-daily,.ozet-hero-balance,.ozet-stat-val,.stat-value,.cc-amt,.streak-num,.ach-strip-count,.sub-total-amt,.count-anim{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1,"lnum" 1}
 html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased;overflow:hidden}#appWrap{max-width:520px;margin:0 auto;height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:calc(52px + env(safe-area-inset-top, 0px));padding-bottom:116px}
 ::-webkit-scrollbar{width:0;height:0;display:none}
 
@@ -51,6 +54,18 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
 @keyframes tabEnter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+/* V77 — yön-farkında tab geçişi */
+@keyframes tabSlideR{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes tabSlideL{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+/* V77 — yeni işlem satırı girişi */
+@keyframes txRowIn{0%{opacity:0;transform:translateY(-14px) scale(.97)}60%{transform:translateY(2px) scale(1.006)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes txRowGlow{0%{box-shadow:0 0 0 0 var(--accent-glow),inset 0 0 0 1px transparent}30%{box-shadow:0 6px 22px -6px var(--accent-glow),inset 0 0 0 1px var(--accent)}100%{box-shadow:0 0 0 0 transparent,inset 0 0 0 1px transparent}}
+.tx-row.tx-enter,.tx-item.tx-enter{animation:txRowIn .5s var(--spring) both,txRowGlow 1.15s var(--smooth) .04s both}
+/* V77 — streak alevi artış pop */
+@keyframes streakPop{0%{transform:scale(1)}30%{transform:scale(1.42) rotate(-6deg)}55%{transform:scale(.9) rotate(3deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes streakSpark{0%{opacity:0;transform:translate(0,0) scale(.2)}25%{opacity:1}100%{opacity:0;transform:translate(var(--sx),var(--sy)) scale(1)}}
+.streak-flame.pop{animation:streakPop .72s var(--spring)}
+.streak-spark{position:absolute;top:50%;left:50%;width:5px;height:5px;border-radius:50%;background:var(--warning);pointer-events:none;animation:streakSpark .62s var(--smooth) forwards}
 @keyframes popIn{0%{opacity:0;transform:scale(.82)}55%{transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
 @keyframes tikPop{0%{transform:scale(1)}35%{transform:scale(1.55)}65%{transform:scale(.88)}100%{transform:scale(1)}}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
@@ -186,7 +201,9 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 
 /* TAB CONTENT */
 .tab-content{display:none;flex:1;padding:16px 16px 24px}
-.tab-content.active{display:block;animation:tabEnter .6s cubic-bezier(.4,0,.2,1) both}
+.tab-content.active{display:block;animation:tabEnter .42s var(--smooth) both}
+.tab-content.active.tab-r{animation:tabSlideR .4s var(--emph) both}
+.tab-content.active.tab-l{animation:tabSlideL .4s var(--emph) both}
 
 /* CARDS */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
@@ -2061,7 +2078,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .bs-row-nm small{font-size:10px;font-weight:600;color:var(--muted);margin-left:5px}
 .bs-row-fig{font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0}
 .bs-row-bar{height:5px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden}
-.bs-row-fill{height:100%;border-radius:99px}
+.bs-row-fill{height:100%;border-radius:99px;transition:width .7s cubic-bezier(.2,.85,.25,1)}
 .bs-foot{margin-top:12px;font-size:11px;color:var(--muted);font-weight:600;text-align:center;line-height:1.5}
 
 /* ── V72: bütçe ekleme — giriş + wizard + düzenle ── */
@@ -2890,7 +2907,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v76.2 · Veriler bu cihazda saklanır</div>
+    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v77 · Veriler bu cihazda saklanır</div>
   </div>
 </div>
 
@@ -3973,9 +3990,17 @@ let currentTab = 'aylik';
 const sectionState = { income: false, rec: false, cards: false, debt: false, goal: false, wish: false };
 
 function switchTab(id) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  // V77 — yön-farkında geçiş: yeni tab sağdaysa sağdan, soldaysa soldan gelsin
+  var _oi = TAB_ORDER.indexOf(currentTab), _ni = TAB_ORDER.indexOf(id);
+  var _dir = (_oi < 0 || _ni < 0 || _oi === _ni) ? 0 : (_ni > _oi ? 1 : -1);
+  _animBars = true; // bu geçişte barlar 0'dan dolsun
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active','tab-r','tab-l'));
   const next = document.getElementById('tab-' + id);
-  if (next) next.classList.add('active');
+  if (next) {
+    if (_dir > 0) next.classList.add('tab-r');
+    else if (_dir < 0) next.classList.add('tab-l');
+    next.classList.add('active');
+  }
 
   updatePillIndicator(id);
 
@@ -4019,6 +4044,7 @@ function switchTab(id) {
       mti.value = val > 0 ? fmtNum(val) : '';
     }
   }
+  _sweepBarFills(); // V77 — tab girişinde 0'dan işaretli barları doldur
 }
 
 function updatePillIndicator(id) {
@@ -4185,6 +4211,35 @@ function useFreeze() {
   showToast(TOAST_SHIELD + ' Bugün donduruldu — streak korundu!');
   renderOzetStats();
   _streakRenderGrid();
+}
+
+// V77 — streak artınca alev pop + kıvılcım
+function _streakPopIfGrew(sd, scWrap) {
+  try {
+    const cur = sd.streak || 0;
+    if (_prevStreakVal !== null && cur > _prevStreakVal && cur > 0) {
+      const flame = scWrap.querySelector('.streak-flame');
+      const wrap  = scWrap.querySelector('.streak-flame-wrap');
+      if (flame) {
+        flame.classList.remove('pop'); void flame.offsetWidth; flame.classList.add('pop');
+        setTimeout(() => flame.classList.remove('pop'), 760);
+      }
+      if (wrap) {
+        for (let i = 0; i < 7; i++) {
+          const sp = document.createElement('span');
+          sp.className = 'streak-spark';
+          const ang = (Math.PI * 2 * i / 7) + (Math.random() * 0.5);
+          const dist = 26 + Math.random() * 20;
+          sp.style.setProperty('--sx', (Math.cos(ang) * dist).toFixed(0) + 'px');
+          sp.style.setProperty('--sy', (Math.sin(ang) * dist - 10).toFixed(0) + 'px');
+          sp.style.animationDelay = (Math.random() * 90) + 'ms';
+          wrap.appendChild(sp);
+          setTimeout(() => sp.remove(), 720);
+        }
+      }
+    }
+    _prevStreakVal = cur;
+  } catch (e) {}
 }
 
 function renderStreakCard(sd) {
@@ -4675,6 +4730,7 @@ function calcFreeBudget(mk) {
 let currentMonth = monthKey();
 
 let _lastBalance = null;
+let _lastDaily = null, _lastRemain = null; // V77 count-up takibi
 
 // Carousel globals
 let _carouselTimer = null;
@@ -4709,6 +4765,21 @@ function animateCount(el, fromVal, toVal, duration = 2500, keepColor = false) {
   requestAnimationFrame(step);
 }
 
+// V77 — rengi ellemeden sadece sayıyı akıtan count-up (günlük limit, kalan, vb.)
+function countUpPlain(el, fromVal, toVal, duration = 900, suffix = '') {
+  if (!el) return;
+  const startTime = performance.now();
+  function step(now) {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const ease = progress === 1 ? 1 : 1 - Math.pow(2, -11 * progress);
+    const current = Math.round(fromVal + (toVal - fromVal) * ease);
+    el.textContent = fmtTL(current) + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = fmtTL(toVal) + suffix;
+  }
+  requestAnimationFrame(step);
+}
+
 function renderMonthly() {
   const mk = currentMonth;
   const balance = calcBalance();
@@ -4724,6 +4795,18 @@ function renderMonthly() {
   if (balanceChanged) {
     const el = document.querySelector('.hero-balance');
     animateCount(el, prevBalance, balance, 2500);
+  }
+
+  // V77 — günlük limit & kalan para count-up (değişince, pozitif→pozitif)
+  const _pd = _lastDaily, _pr = _lastRemain;
+  _lastDaily = Math.round(fb.daily); _lastRemain = Math.round(fb.remaining);
+  if (_pd !== null && _pd !== _lastDaily && _pd >= 0 && _lastDaily >= 0) {
+    const de = document.getElementById('heroDaily');
+    if (de) countUpPlain(de, _pd, _lastDaily, 900);
+  }
+  if (_pr !== null && _pr !== _lastRemain && _pr >= 0 && _lastRemain >= 0) {
+    const re = document.getElementById('heroRemain');
+    if (re) countUpPlain(re, _pr, _lastRemain, 900);
   }
 
   renderFeedbackPill(fb);
@@ -4777,12 +4860,12 @@ function renderWalletHero(balance, fb) {
     <div style="display:flex;justify-content:space-between;align-items:flex-start">
       <div onclick="openDailyLimitSheet()" style="cursor:pointer;-webkit-tap-highlight-color:transparent">
         <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Günlük Limit</div>
-        <div style="font-size:36px;font-weight:900;letter-spacing:-1.5px;line-height:1;color:${dailyColor}">${fb.daily < 0 ? '−' : ''}${fmtTL(Math.abs(Math.round(fb.daily)))}</div>
+        <div id="heroDaily" style="font-size:36px;font-weight:900;letter-spacing:-1.5px;line-height:1;color:${dailyColor}">${fb.daily < 0 ? '−' : ''}${fmtTL(Math.abs(Math.round(fb.daily)))}</div>
         <div style="margin-top:6px;font-size:11px;font-weight:600;color:${spentColor}">${spentLabel}</div>
       </div>
       <div style="text-align:right;flex-shrink:0">
         <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Kalan Para</div>
-        <div style="font-size:22px;font-weight:900;letter-spacing:-1px;line-height:1;color:${remColor}">${fmtTL(Math.round(fb.remaining))}</div>
+        <div id="heroRemain" style="font-size:22px;font-weight:900;letter-spacing:-1px;line-height:1;color:${remColor}">${fmtTL(Math.round(fb.remaining))}</div>
         <div style="font-size:11px;color:var(--muted);font-weight:600;margin-top:4px">${fb.daysLeft} gün kaldı</div>
       </div>
     </div>` : '';
@@ -4907,7 +4990,7 @@ function budgetPageHtml(b) {
         <span class="bud-hero-spent" style="color:${p.accent}">${fmtTL(Math.round(b.spent))}</span>
         <span class="bud-hero-cap">/ ${fmtTL(b.amount)}${b.period==='oneoff'?' toplam':''}</span>
       </div>
-      <div class="bud-hero-bar"><div class="bud-hero-bar-fill" style="width:${pct}%;background:${p.fill}"></div></div>
+      <div class="bud-hero-bar"><div class="bud-hero-bar-fill" style="width:${_animBars?0:pct}%;background:${p.fill}"${_animBars?` data-animw="${pct}"`:''}></div></div>
       <div class="bud-hero-foot">
         <span class="k">%${Math.round(pct)} kullanıldı</span>
         <span style="color:${p.accent}">${remain>=0?fmtTL(Math.round(remain))+' kaldı':fmtTL(Math.round(-remain))+' aşıldı'}</span>
@@ -4974,7 +5057,7 @@ function renderBudgetStatus() {
     insight = `<b>Hepsi yolunda.</b> ${B.length} cüzdanın tümü tavanın altında — disiplin yerinde, böyle devam.`;
   }
 
-  const rows = B.map(b => {
+  const rows = B.map((b, _i) => {
     const pal = _walletPalette(b);
     const p = Math.min(100, b.amount > 0 ? b.spent / b.amount * 100 : 0);
     return `<div class="bs-row">
@@ -4982,7 +5065,7 @@ function renderBudgetStatus() {
       <div class="bs-row-mid">
         <div class="bs-row-top"><span class="bs-row-nm">${esc(b.name)}<small>${b.period==='monthly'?'aylık':'tek seferlik'}</small></span>
         <span class="bs-row-fig" style="color:${pal.accent}">${fmtTL(Math.round(b.spent))} / ${fmtTL(b.amount)}</span></div>
-        <div class="bs-row-bar"><div class="bs-row-fill" style="width:${p}%;background:${pal.fill}"></div></div>
+        <div class="bs-row-bar"><div class="bs-row-fill" style="width:${_animBars?0:p}%;background:${pal.fill}${_animBars?`;transition-delay:${_i*70}ms`:''}"${_animBars?` data-animw="${p}"`:''}></div></div>
       </div>
     </div>`;
   }).join('');
@@ -5575,7 +5658,7 @@ function renderTxList(container, txs, limitTo5, prefix) {
       const cardBadge = t.payMethod === 'card'
         ? ` <span class="tx-card-badge">${payCardObj ? esc(payCardObj.name.length > 12 ? payCardObj.name.slice(0,12) + '…' : payCardObj.name).toUpperCase() : 'KART'}</span>`
         : '';
-      itemsHtml += `<div class="tx-item ${cardClass} stagger-item" id="tx_${domId}" onclick="toggleTxDelete('${t.id}','${pfx}')">
+      itemsHtml += `<div class="tx-item ${cardClass} stagger-item${t.id===_newTxId?' tx-enter':''}" id="tx_${domId}" onclick="toggleTxDelete('${t.id}','${pfx}')">
         <div class="tx-icon ${t.type}" style="background:${iconBg}">${iconHtml}</div>
         <div class="tx-info">
           <div class="tx-desc">${esc(catName)}${cardBadge}${isCardPay ? ' <span class="tx-card-badge" style="background:rgba(255,255,255,.07);color:var(--muted)">TRANSFER</span>' : ''}</div>
@@ -5610,6 +5693,21 @@ let _touchEndX = 0;
 let _touchOnInteractive = false;
 
 const TAB_ORDER = ['aylik', 'sabit', 'ozet', 'plan', 'ayarlar'];
+// V77 — premium animasyon durum bayrakları
+let _animBars = false;      // tab girişinde barlar 0'dan dolsun
+let _newTxId = null;        // en son eklenen işlem (satır giriş animasyonu için)
+let _prevStreakVal = null;  // streak artışını yakalamak için
+function markNewTx(){ try{ _newTxId = data.transactions[data.transactions.length-1].id; setTimeout(()=>{ _newTxId = null; }, 1400); }catch(e){} }
+// V77 — 0'dan işaretli barları hedef genişliğe doldur, bayrağı sıfırla
+function _sweepBarFills(){
+  requestAnimationFrame(() => {
+    document.querySelectorAll('[data-animw]').forEach(el => {
+      const w = el.getAttribute('data-animw');
+      if (w != null) { el.style.width = w + '%'; el.removeAttribute('data-animw'); }
+    });
+    _animBars = false;
+  });
+}
 
 document.addEventListener('touchstart', e => {
   _touchStartY = e.touches[0].clientY;
@@ -6086,11 +6184,13 @@ function txSheetSave() {
     if (_sheetInst > 1) {
       const per = Math.round((amount / _sheetInst) * 100) / 100;
       data.transactions.push({ id: uid(), type, desc: desc + ' (1/' + _sheetInst + ')', amount: per, date, category, payMethod: 'card', cardId: _payCard.id, isCardInstallment: true, budgetId: _bId, ts: Date.now() });
+      markNewTx();
       _payCard.installments.push({ id: uid(), name: desc, per, left: _sheetInst - 1, total: _sheetInst, isStart: false, category });
       save();
       showToast(TOAST_OK + ' ' + esc(_payCard.name) + ' ekstresine yazıldı — bugün ' + fmtTL(per) + ', kalan ' + (_sheetInst - 1) + ' taksit gelecek aylara');
     } else {
       data.transactions.push({ id: uid(), type, desc, amount, date, category, payMethod: 'card', cardId: _payCard.id, budgetId: _bId, ts: Date.now() });
+      markNewTx();
       save();
       const fb = calcFreeBudget(monthKey());
       showToast(TOAST_OK + ' ' + esc(_payCard.name) + ' ekstresine yazıldı' + (_bName ? ' · ' + esc(_bName) + ' cüzdanına işlendi' : ' — bakiye değişmedi, günlük limitten düştü' + (fb.daily > 0 ? ' (' + fmtTL(Math.round(fb.daily)) + ')' : '')));
@@ -6100,6 +6200,7 @@ function txSheetSave() {
   }
 
   data.transactions.push({ id: uid(), type, desc, amount, date, category, budgetId: _bId, ts: Date.now() });
+  markNewTx();
   save();
   if (_bName) {
     renderAll();
@@ -9963,7 +10064,7 @@ function renderOzetStats() {
   if (scWrap) {
     const sd = calcStreakData();
     scWrap.innerHTML = renderStreakCard(sd);
-    requestAnimationFrame(() => _streakInitView());
+    requestAnimationFrame(() => { _streakInitView(); _streakPopIfGrew(sd, scWrap); });
   }
 
   renderFinancialAdvice();
