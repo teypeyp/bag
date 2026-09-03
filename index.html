@@ -1889,7 +1889,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 /* ── V71: HERO CAROUSEL + KATEGORİ BÜTÇELERİ ── */
 :root{--heroH:216px}
 .hero-carousel{position:relative;margin-bottom:8px}
-.hero-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.hero-track{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;position:relative}
 .hero-track::-webkit-scrollbar{display:none}
 .hero-page{flex:0 0 100%;scroll-snap-align:center}
 .hero-page > .wallet-hero-combined{min-height:var(--heroH);margin-bottom:0}
@@ -1943,6 +1943,110 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .bgt-pre{padding:8px 14px;border:1.5px solid var(--border);border-radius:20px;background:var(--surface2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;cursor:pointer}
 .bgt-hint{text-align:center;font-size:12px;color:var(--muted);font-weight:600;margin:10px 0 4px;line-height:1.5}
 .bgt-back{background:none;border:none;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;padding:0}
+
+/* ── V72: bütçe ekleme — giriş + wizard + düzenle ── */
+.add-sheet.bgt-sheet-intro{padding-bottom:env(safe-area-inset-bottom,0px)}
+.bgt-sheet-intro .add-sheet-handle{position:relative;z-index:6}
+.bgt-stage{position:relative;padding:22px 24px 24px;text-align:center;overflow:hidden;margin-top:-14px}
+.bgt-stage::before{content:'';position:absolute;inset:0;background:radial-gradient(90% 60% at 50% -8%,rgba(45,184,102,.2),transparent 60%),radial-gradient(70% 50% at 85% 20%,rgba(10,132,255,.1),transparent 55%),radial-gradient(60% 50% at 12% 15%,rgba(191,90,242,.09),transparent 55%);z-index:0}
+.bgt-stage::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.09),transparent);z-index:2}
+.bgt-stage>*{position:relative;z-index:1}
+.bgt-badge{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);background:rgba(45,184,102,.1);border:1px solid rgba(45,184,102,.24);padding:7px 13px;border-radius:99px;margin-bottom:18px;opacity:0;animation:bgtFadeUp .6s .05s both}
+.bgt-badge .d{width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:bgtBl 1.6s infinite}
+@keyframes bgtBl{0%,100%{opacity:1}50%{opacity:.25}}
+.bgt-stack{position:relative;height:158px;max-width:280px;margin:0 auto;perspective:1000px}
+.bgt-pv{position:absolute;left:50%;top:50%;width:244px;border-radius:18px;padding:14px 16px;border:1px solid var(--border);background:linear-gradient(180deg,#1a1a1f,#141417);box-shadow:0 14px 34px rgba(0,0,0,.5);transform-origin:center bottom}
+.bgt-pv-row{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.bgt-pv-ic{width:27px;height:27px;border-radius:9px;display:flex;align-items:center;justify-content:center}
+.bgt-pv-nm{font-size:12px;font-weight:800}
+.bgt-pv-amt{margin-left:auto;font-size:12px;font-weight:900}
+.bgt-pv-bar{height:7px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.bgt-pv-fill{height:100%;border-radius:99px;width:0;animation:bgtFill 1s 1s cubic-bezier(.32,0,.15,1) forwards}
+@keyframes bgtFill{to{width:var(--w)}}
+.bgt-pv.c1{opacity:0;animation:bgtFan1 .8s .15s cubic-bezier(.34,1.25,.64,1) forwards;z-index:1}
+.bgt-pv.c2{opacity:0;animation:bgtFan2 .8s .28s cubic-bezier(.34,1.25,.64,1) forwards;z-index:2}
+.bgt-pv.c3{opacity:0;animation:bgtFan3 .8s .42s cubic-bezier(.34,1.25,.64,1) forwards;z-index:1}
+@keyframes bgtFan1{from{transform:translate(-50%,-40%) rotate(0) scale(.8);opacity:0}to{transform:translate(-95%,-52%) rotate(-13deg) scale(.88);opacity:.85}}
+@keyframes bgtFan2{from{transform:translate(-50%,-40%) rotate(0) scale(.8);opacity:0}to{transform:translate(-50%,-56%) rotate(0) scale(1);opacity:1}}
+@keyframes bgtFan3{from{transform:translate(-50%,-40%) rotate(0) scale(.8);opacity:0}to{transform:translate(-5%,-52%) rotate(13deg) scale(.88);opacity:.85}}
+.bgt-intro-body{padding:22px 24px 20px}
+.bgt-intro-h{font-size:24px;font-weight:900;letter-spacing:-.7px;line-height:1.13;text-align:center;margin-bottom:9px;opacity:0;animation:bgtFadeUp .6s .55s both}
+.bgt-intro-h em{font-style:normal;background:linear-gradient(90deg,#2DB866,#6ee6a0,#2DB866);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:bgtSheen 3s linear infinite}
+@keyframes bgtSheen{to{background-position:200% center}}
+.bgt-intro-sub{font-size:13px;color:var(--muted);font-weight:500;line-height:1.6;text-align:center;max-width:320px;margin:0 auto 20px;opacity:0;animation:bgtFadeUp .6s .68s both}
+.bgt-feats{display:flex;gap:8px;margin-bottom:20px}
+.bgt-feat{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:15px;padding:13px 8px;text-align:center;opacity:0;animation:bgtFadeUp .55s both}
+.bgt-feat:nth-child(1){animation-delay:.8s}.bgt-feat:nth-child(2){animation-delay:.9s}.bgt-feat:nth-child(3){animation-delay:1s}
+.bgt-feat-ic{width:33px;height:33px;border-radius:10px;margin:0 auto 7px;display:flex;align-items:center;justify-content:center}
+.bgt-feat-t{font-size:11px;font-weight:800;line-height:1.3}
+.bgt-cta{position:relative;width:100%;padding:16px;border:none;border-radius:15px;background:linear-gradient(180deg,#2DB866,#25a35a);color:#fff;font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 10px 26px rgba(45,184,102,.32);display:flex;align-items:center;justify-content:center;gap:8px;overflow:hidden}
+.bgt-intro-body .bgt-cta{opacity:0;animation:bgtFadeUp .55s 1.05s both}
+.bgt-intro-body .bgt-cta::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transform:skewX(-20deg);animation:bgtShine 3.2s 1.6s ease-in-out infinite}
+@keyframes bgtShine{0%{left:-60%}30%,100%{left:130%}}
+.bgt-cta:disabled{opacity:.35;box-shadow:none}
+.bgt-cta:active{transform:scale(.99)}
+.bgt-cta-danger{background:rgba(255,69,58,.08);border:1px solid rgba(255,69,58,.25);color:var(--danger);box-shadow:none}
+.bgt-cta-ghost{width:100%;margin-top:10px;padding:12px;border:none;background:none;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;opacity:0;animation:bgtFadeUp .5s 1.15s both}
+@keyframes bgtFadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+/* wizard */
+.wz-hd{display:flex;align-items:center;gap:12px;padding:4px 20px 10px}
+.wz-back{width:34px;height:34px;border-radius:10px;border:none;background:var(--surface3);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:opacity .2s}
+.wz-back.hidden{opacity:0;pointer-events:none}
+.wz-title{font-size:16px;font-weight:800;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wz-x{width:34px;height:34px;border-radius:50%;background:var(--surface3);border:none;color:var(--muted);font-size:18px;cursor:pointer;font-family:'Montserrat',sans-serif;flex-shrink:0}
+.wz-prog{display:flex;gap:5px;padding:0 20px 8px}
+.wz-seg{flex:1;height:4px;border-radius:99px;background:var(--surface3);overflow:hidden}
+.wz-fill{height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .4s cubic-bezier(.32,0,.15,1)}
+.wz-body{padding:12px 22px 6px;min-height:210px}
+.wz-step{animation:wzSlide .3s cubic-bezier(.32,0,.15,1)}
+@keyframes wzSlide{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+.wz-q{font-size:22px;font-weight:900;letter-spacing:-.5px;line-height:1.2;margin-bottom:6px}
+.wz-hint{font-size:13px;color:var(--muted);font-weight:500;line-height:1.55;margin-bottom:18px}
+.wz-hint b{color:var(--accent);font-weight:700}
+.wz-bigin{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:14px;padding:16px;color:var(--text);font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;outline:none;text-align:center}
+.wz-bigin:focus{border-color:var(--accent)}
+.wz-chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.wz-chip{padding:8px 14px;border:1.5px solid var(--border);border-radius:20px;background:var(--surface2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer}
+.wz-opt{display:flex;align-items:flex-start;gap:13px;background:var(--surface2);border:1.5px solid var(--border);border-radius:16px;padding:16px;cursor:pointer;margin-bottom:10px;transition:all .18s}
+.wz-opt:active{transform:scale(.98)}
+.wz-opt.sel{border-color:var(--accent);background:linear-gradient(135deg,rgba(45,184,102,.08),rgba(45,184,102,.02))}
+.wz-opt-ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.wz-opt-t{font-size:15px;font-weight:800;margin-bottom:3px}
+.wz-opt-s{font-size:12px;color:var(--muted);font-weight:500;line-height:1.5}
+.wz-opt-chk{margin-left:auto;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.wz-opt.sel .wz-opt-chk{background:var(--accent);border-color:var(--accent)}
+.wz-catgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.wz-catp{background:var(--surface2);border:1.5px solid var(--border);border-radius:14px;padding:14px 6px;text-align:center;cursor:pointer;transition:all .15s}
+.wz-catp:active{transform:scale(.96)}
+.wz-catp.sel{border-color:var(--accent);background:var(--accent-dim)}
+.wz-catp-ic{width:36px;height:36px;border-radius:11px;margin:0 auto 7px;display:flex;align-items:center;justify-content:center}
+.wz-catp-n{font-size:11px;font-weight:700}
+.wz-amt{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 0 6px}
+.wz-amtin{font-size:44px;font-weight:900;letter-spacing:-2px;color:var(--accent);background:none;border:none;text-align:center;max-width:220px;width:auto;font-family:'Montserrat',sans-serif;outline:none}
+.wz-amtcur{font-size:24px;font-weight:800;color:var(--muted)}
+.wz-prerow{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:6px 0 4px}
+.wz-pre{padding:10px 15px;border:1.5px solid var(--border);border-radius:20px;background:var(--surface2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;cursor:pointer;transition:all .15s}
+.wz-pre.smart{border-color:rgba(45,184,102,.3)}
+.wz-pre.sel{background:var(--accent);border-color:var(--accent);color:#fff}
+.wz-amtnote{text-align:center;font-size:12px;color:var(--muted);font-weight:600;margin-top:12px;line-height:1.5}
+.wz-amtnote b{color:var(--accent)}
+.wz-summary{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:14px;display:flex;align-items:center;gap:10px}
+.wz-summary-ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.wz-summary-t{font-size:13px;font-weight:800}
+.wz-summary-s{font-size:11px;color:var(--muted);font-weight:600;margin-top:1px}
+.wz-foot{padding:10px 22px 24px}
+/* düzenle form */
+.ef-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 7px}
+.ef-in{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:13px 14px;color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;outline:none}
+.ef-in:focus{border-color:var(--accent)}
+.ef-seg{display:flex;background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:4px;gap:4px}
+.ef-seg-b{flex:1;padding:10px 4px;border:none;border-radius:9px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:none;color:var(--muted)}
+.ef-seg-b.active{background:var(--surface3);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+/* tx sheet bütçe etiketi */
+.tx-budget-chips{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px 0}
+.tx-budget-chip{padding:8px 13px;border:1.5px solid var(--border);border-radius:20px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;cursor:pointer;background:var(--surface2);color:var(--muted);transition:all .15s}
+.tx-budget-chip.active{background:rgba(191,90,242,.12);border-color:rgba(191,90,242,.4);color:var(--purple)}
+.tx-budget-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:12px 16px 0}
 
 /* V70: abonelik denetimi */
 .subaud-hero{background:linear-gradient(150deg,#1e1526 0%,#141417 55%,#0f1420 100%);border:1px solid rgba(191,90,242,.22);border-radius:var(--radius);padding:18px;position:relative;overflow:hidden;margin-bottom:12px}
@@ -2785,6 +2889,11 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         <div class="tx-pay-chips" id="txPayChips"></div>
         <div class="tx-inst-chips" id="txInstChips" style="display:none"></div>
       </div>
+      <!-- V72: serbest bütçe etiketi (serbest bütçe varsa ve gider ise) -->
+      <div id="txBudgetWrap" style="display:none">
+        <div class="tx-budget-label">Bütçe (opsiyonel)</div>
+        <div class="tx-budget-chips" id="txBudgetChips"></div>
+      </div>
     </div>
     <div class="tx-save-wrap">
       <button class="tx-save-btn" id="txSaveBtn" onclick="txSheetSave()" disabled>Kaydet</button>
@@ -3186,6 +3295,7 @@ const KEY = 'butcem_v3';
 let data = {
   transactions: [],
   cards: [],
+  budgets: [],
   categoryBudgets: {},
   budgetTutorialSeen: false,
   recurring: [],
@@ -3371,6 +3481,19 @@ function load() {
       _cardGuards(); // V69
       if (!data.categoryBudgets || typeof data.categoryBudgets !== 'object' || Array.isArray(data.categoryBudgets)) data.categoryBudgets = {}; // V71
       if (typeof data.budgetTutorialSeen !== 'boolean') data.budgetTutorialSeen = false; // V71
+      if (!Array.isArray(data.budgets)) data.budgets = []; // V72
+      if (!data.budgets.length && data.categoryBudgets && Object.keys(data.categoryBudgets).length) {
+        Object.entries(data.categoryBudgets).forEach(([cid, amt]) => {
+          if (amt > 0) { const c = getCat(cid); data.budgets.push({ id:'bgt_'+uid(), name:(c&&c.name)||cid, amount:amt, period:'monthly', source:'category', catId:cid, color:(c&&c.color)||'#6E6D78', created:today() }); }
+        });
+        data.categoryBudgets = {};
+      }
+      data.budgets.forEach(b => {
+        if (typeof b.amount !== 'number' || isNaN(b.amount)) b.amount = 0;
+        if (b.period !== 'oneoff') b.period = 'monthly';
+        if (b.source !== 'free') b.source = 'category';
+        if (!b.created) b.created = today();
+      });
       if (!Array.isArray(data.recurring)) data.recurring = [];
       if (!Array.isArray(data.recurringIncome)) data.recurringIncome = [];
       if (!Array.isArray(data.debts)) data.debts = [];
@@ -4481,8 +4604,8 @@ function renderWalletHero(balance, fb) {
       </div>
     </div>`;
 
-  // V71: bütçe sayfaları
-  const budgets = budgetedCats();
+  // V72: bütçe sayfaları
+  const budgets = budgetList();
 
   el.innerHTML = `
     <div class="hero-carousel">
@@ -4516,13 +4639,29 @@ function renderWalletHero(balance, fb) {
   }
 }
 
-// ── V71: KATEGORİ BÜTÇELERİ ──
+// ── V72: BÜTÇELER — serbest/kategori · aylık/tek seferlik ──
 let _heroIdx = 0;
-function catMonthSpent(catId, mk) {
-  return data.transactions
-    .filter(t => t.type === 'expense' && t.category === catId && monthKey(t.date) === mk
-      && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
-    .reduce((s, t) => s + t.amount, 0);
+
+// Bir harcama hangi bütçeye ait? (en fazla bir bütçe — çift saymayı önler)
+function budgetForTx(t) {
+  if (!t || t.type !== 'expense' || t.isRecurring || t.isDebt || t.isGoalDeposit) return null;
+  if (t.budgetId) { const fb = (data.budgets || []).find(b => b.id === t.budgetId); if (fb) return fb; }
+  return (data.budgets || []).find(b => b.source === 'category' && b.catId === t.category) || null;
+}
+function budgetSpent(b) {
+  const mk = currentMonth;
+  let sum = 0;
+  for (const t of data.transactions) {
+    const bt = budgetForTx(t);
+    if (!bt || bt.id !== b.id) continue;
+    if (b.period === 'monthly') { if (monthKey(t.date) !== mk) continue; }
+    else { if (b.created && t.date < b.created) continue; }
+    sum += t.amount;
+  }
+  return sum;
+}
+function budgetColor(b) {
+  return b.source === 'category' ? (getCat(b.catId).color || '#6E6D78') : (b.color || '#0A84FF');
 }
 function budgetState(spent, cap) {
   const r = cap > 0 ? spent / cap : 0;
@@ -4530,36 +4669,36 @@ function budgetState(spent, cap) {
   if (r >= .85) return { key:'warn', c:'var(--warning)', fill:'linear-gradient(90deg,#FFD60A,#ffe45c)' };
   return { key:'ok', c:'var(--accent)', fill:'linear-gradient(90deg,#2DB866,#5fd68f)' };
 }
-function budgetedCats() {
-  const mk = currentMonth;
-  const out = [];
-  Object.keys(data.categoryBudgets || {}).forEach(id => {
-    const cap = data.categoryBudgets[id];
-    if (!cap || cap <= 0) return;
-    const cat = getCat(id);
-    if (!cat) return;
-    out.push({ id, name: cat.name, color: cat.color || '#6E6D78', cap, spent: catMonthSpent(id, mk) });
-  });
-  return out.sort((a, b) => (b.spent / b.cap) - (a.spent / a.cap)); // en kritik önce
+function budgetList() {
+  return (data.budgets || [])
+    .map(b => ({ ...b, spent: budgetSpent(b), color: budgetColor(b) }))
+    .sort((a, b) => (b.spent / (b.amount || 1)) - (a.spent / (a.amount || 1)));
+}
+function budgetById(id) { return (data.budgets || []).find(b => b.id === id); }
+const BUDGET_FREE_ICON = c => `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-9a2 2 0 0 0 -2 -2h-2"/><path d="M18 12a1 1 0 0 0 0 4h1v-4z"/><path d="M6 7v-1a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v1"/></svg>`;
+function budgetIconSvg(b, size) {
+  if (b.source === 'category') return catIconSvg(getCat(b.catId), size || 19);
+  return BUDGET_FREE_ICON(budgetColor(b)).replace('width="19" height="19"', `width="${size||19}" height="${size||19}"`);
 }
 function budgetPageHtml(b) {
-  const st = budgetState(b.spent, b.cap);
-  const pct = Math.min(100, b.cap > 0 ? b.spent / b.cap * 100 : 0);
-  const remain = b.cap - b.spent;
-  const cat = getCat(b.id);
+  const st = budgetState(b.spent, b.amount);
+  const pct = Math.min(100, b.amount > 0 ? b.spent / b.amount * 100 : 0);
+  const remain = b.amount - b.spent;
   const badgeBg = st.key==='bad'?'rgba(255,69,58,.14)':st.key==='warn'?'rgba(255,214,10,.14)':'rgba(45,184,102,.14)';
   const badgeTxt = st.key==='bad'?'AŞILDI':st.key==='warn'?'SINIRDA':'YOLUNDA';
+  const periodTxt = b.period === 'monthly' ? 'Aylık Bütçe' : 'Tek Seferlik';
+  const srcTxt = b.source === 'category' ? getCat(b.catId).name : 'serbest';
   return `
     <div class="bud-hero" style="--bud-accent:${st.c}">
       <div class="bud-hero-head">
-        <div class="bud-hero-ic" style="background:${b.color}1f">${catIconSvg(cat, 19)}</div>
-        <div><div class="bud-hero-name">${esc(b.name)}</div><div class="bud-hero-tag">Aylık Bütçe</div></div>
+        <div class="bud-hero-ic" style="background:${b.color}1f">${budgetIconSvg(b, 19)}</div>
+        <div style="min-width:0;flex:1"><div class="bud-hero-name">${esc(b.name)}</div><div class="bud-hero-tag">${periodTxt} · ${esc(srcTxt)}</div></div>
         <span class="bud-hero-badge" style="background:${badgeBg};color:${st.c}">${badgeTxt}</span>
         <button class="bud-hero-edit" onclick="openBudgetEdit('${b.id}')" aria-label="Düzenle"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
       </div>
       <div class="bud-hero-mid">
         <span class="bud-hero-spent" style="color:${st.c}">${fmtTL(Math.round(b.spent))}</span>
-        <span class="bud-hero-cap">/ ${fmtTL(b.cap)} bütçe</span>
+        <span class="bud-hero-cap">/ ${fmtTL(b.amount)}${b.period==='oneoff'?' toplam':''}</span>
       </div>
       <div class="bud-hero-bar"><div class="bud-hero-bar-fill" style="width:${pct}%;background:${st.fill}"></div></div>
       <div class="bud-hero-foot">
@@ -4568,156 +4707,267 @@ function budgetPageHtml(b) {
       </div>
     </div>`;
 }
+// carousel kontrol — offsetLeft ile (peek yok, gap'e dayanıklı)
+function _heroPages() { const t = document.getElementById('heroTrack'); return t ? Array.from(t.querySelectorAll('.hero-page')) : []; }
 function _renderHeroDots(budgets) {
   const el = document.getElementById('heroDots');
   if (!el) return;
-  const pages = [{wallet:true}, ...budgets];
+  const pages = [{ wallet:true }, ...budgets];
   el.innerHTML = pages.map((p, i) => {
     let cls = '';
-    if (i > 0) { const k = budgetState(budgets[i-1].spent, budgets[i-1].cap).key; if (k!=='ok') cls = ' '+k; }
+    if (i > 0) { const k = budgetState(budgets[i-1].spent, budgets[i-1].amount).key; if (k !== 'ok') cls = ' ' + k; }
     return `<div class="hero-dot${i===_heroIdx?' active':''}${i===_heroIdx?cls:''}" onclick="_heroGoTo(${i})"></div>`;
   }).join('');
 }
 function _heroGoTo(i) {
-  const track = document.getElementById('heroTrack');
-  if (track) track.scrollTo({ left: i * track.clientWidth, behavior:'smooth' });
+  const t = document.getElementById('heroTrack'); const p = _heroPages()[i];
+  if (t && p) t.scrollTo({ left: p.offsetLeft, behavior:'smooth' });
 }
 let _heroScrollT = null;
 function _onHeroScroll() {
   clearTimeout(_heroScrollT);
   _heroScrollT = setTimeout(() => {
-    const track = document.getElementById('heroTrack');
-    if (!track) return;
-    const idx = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
-    if (idx !== _heroIdx) { _heroIdx = idx; _renderHeroDots(budgetedCats()); }
+    const t = document.getElementById('heroTrack'); if (!t) return;
+    const pages = _heroPages(); if (!pages.length) return;
+    const sl = t.scrollLeft; let idx = 0, min = Infinity;
+    pages.forEach((p, i) => { const d = Math.abs(p.offsetLeft - sl); if (d < min) { min = d; idx = i; } });
+    if (idx !== _heroIdx) { _heroIdx = idx; _renderHeroDots(budgetList()); }
   }, 60);
 }
 
-// ── V71: BÜTÇE EKLE / DÜZENLE AKIŞI (dil: net + eğlenceli) ──
-let _bgtPickId = null;
+// ── kategori aylık harcama (preset önerisi için, bütçe atamasından bağımsız) ──
+function catMonthSpentRaw(catId, mk) {
+  return data.transactions
+    .filter(t => t.type === 'expense' && t.category === catId && monthKey(t.date) === mk && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+    .reduce((s, t) => s + t.amount, 0);
+}
+function catAvg3(catId) {
+  let tot = 0, n = 0;
+  for (let i = 1; i <= 3; i++) { tot += catMonthSpentRaw(catId, prevMonthKey(i)); n++; }
+  const avg = n ? tot / n : 0;
+  return avg > 0 ? avg : catMonthSpentRaw(catId, currentMonth);
+}
+
+// ═══════════ EKLEME AKIŞI: GİRİŞ + WIZARD + DÜZENLE ═══════════
+let _wiz = { step:0, name:'', period:'', source:'', catId:'', amount:0, editId:null };
 function _openBgtSheet() {
   document.getElementById('bgtOverlay').classList.add('show');
   document.getElementById('bgtSheet').classList.add('show');
+  document.getElementById('bgtSheet').scrollTop = 0;
 }
 function closeBudgetSheet() {
   document.getElementById('bgtOverlay').classList.remove('show');
   document.getElementById('bgtSheet').classList.remove('show');
 }
 function openBudgetAdd() {
-  _bgtPickId = null;
-  if (!data.budgetTutorialSeen) renderBgtTutorial(); else renderBgtPicker();
+  _wiz = { step:0, name:'', period:'', source:'', catId:'', amount:0, editId:null };
+  if (!data.budgetTutorialSeen) renderBgtIntro(); else startWizard();
   _openBgtSheet();
 }
-function renderBgtTutorial() {
-  document.getElementById('bgtTitle').textContent = 'Bütçe nasıl çalışır?';
+function _wizSteps() { const s = ['name','period','source']; if (_wiz.source === 'category') s.push('category'); s.push('amount'); return s; }
+
+// ── GİRİŞ (animasyonlu) ──
+function renderBgtIntro() {
+  document.getElementById('bgtSheet').classList.add('bgt-sheet-intro');
   document.getElementById('bgtBody').innerHTML = `
-    <div class="bgt-tut-hero">
-      <div class="bgt-tut-ic"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#2DB866" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l0 3"/><path d="M12 18l0 3"/><path d="M3 12l3 0"/><path d="M18 12l3 0"/><circle cx="12" cy="12" r="4"/></svg></div>
-      <div class="bgt-tut-h">Paran nereye kaçıyor, artık belli.</div>
-      <div class="bgt-tut-p">Bir kategoriye aylık bütçe koy, gerisini VAULT takip etsin. Ay sonunu beklemeden "markete fazla mı kaçtım?" sorusuna anında cevap.</div>
-    </div>
-    <div style="margin-top:12px">
-      <div class="bgt-row">
-        <div class="bgt-row-ic" style="background:rgba(45,184,102,.12)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2DB866" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M12 12l0 .01"/></svg></div>
-        <div><div class="bgt-row-t">Bütçeyi sen koyarsın</div><div class="bgt-row-s">"Bu ay markete 4.000" de, yeter. Yaklaşınca sarı, aşınca kırmızı — göz kararı biter.</div></div>
-      </div>
-      <div class="bgt-row">
-        <div class="bgt-row-ic" style="background:rgba(10,132,255,.12)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A84FF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8l-4 4l4 4"/><path d="M17 8l4 4l-4 4"/></svg></div>
-        <div><div class="bgt-row-t">Hepsi bir kaydırma ötede</div><div class="bgt-row-s">Cüzdanının hemen yanında. Kaydır, her bütçen tek tek karşında.</div></div>
-      </div>
-      <div class="bgt-row">
-        <div class="bgt-row-ic" style="background:rgba(191,90,242,.12)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#BF5AF2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4 -3 7 -7 8c-4 -1 -7 -4 -7 -8v-5z"/></svg></div>
-        <div><div class="bgt-row-t">Günlük limitine dokunmaz</div><div class="bgt-row-s">Bütçeler günlük limitinle kavga etmez, yan yana çalışır. İstemezsen hiç koymazsın.</div></div>
+    <div class="bgt-stage">
+      <div class="bgt-badge"><span class="d"></span>Yeni · Bütçeler</div>
+      <div class="bgt-stack">
+        <div class="bgt-pv c1"><div class="bgt-pv-row"><div class="bgt-pv-ic" style="background:rgba(139,92,246,.18)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l10 -2l10 2v3.5c0 5.5 -4.5 10 -10 10s-10 -4.5 -10 -10z"/></svg></div><span class="bgt-pv-nm">Eğlence</span><span class="bgt-pv-amt" style="color:#8B5CF6">640₺</span></div><div class="bgt-pv-bar"><div class="bgt-pv-fill" style="--w:42%;background:#8B5CF6"></div></div></div>
+        <div class="bgt-pv c3"><div class="bgt-pv-row"><div class="bgt-pv-ic" style="background:rgba(10,132,255,.18)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A84FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4 -3 7 -7 8c-4 -1 -7 -4 -7 -8v-5z"/></svg></div><span class="bgt-pv-nm">Tatil</span><span class="bgt-pv-amt" style="color:#0A84FF">3.800 / 10.000₺</span></div><div class="bgt-pv-bar"><div class="bgt-pv-fill" style="--w:38%;background:#0A84FF"></div></div></div>
+        <div class="bgt-pv c2"><div class="bgt-pv-row"><div class="bgt-pv-ic" style="background:rgba(45,184,102,.18)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2DB866" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 17h-11v-14h-2"/><path d="M6 5l14 1l-1 7h-13"/></svg></div><span class="bgt-pv-nm">Market</span><span class="bgt-pv-amt" style="color:#2DB866">3.250 / 4.000₺</span></div><div class="bgt-pv-bar"><div class="bgt-pv-fill" style="--w:81%;background:linear-gradient(90deg,#2DB866,#5fd68f)"></div></div></div>
       </div>
     </div>
-    <button class="btn btn-primary btn-full" style="margin-top:14px" onclick="renderBgtPicker()">Hadi ilk bütçemi kurayım</button>
-    <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="closeBudgetSheet()">Şimdi değil</button>
-  `;
+    <div class="bgt-intro-body">
+      <div class="bgt-intro-h">Paran nereye kaçıyor,<br><em>artık belli.</em></div>
+      <div class="bgt-intro-sub">Bütçelerini kafana göre kur — Market'ten Tatil'e. Cüzdanının hemen yanında, bir kaydırma ötede.</div>
+      <div class="bgt-feats">
+        <div class="bgt-feat"><div class="bgt-feat-ic" style="background:rgba(45,184,102,.12)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2DB866" stroke-width="1.7" stroke-linecap="round"><path d="M12 3v18M3 12h18"/></svg></div><div class="bgt-feat-t">İstediğin<br>ismi ver</div></div>
+        <div class="bgt-feat"><div class="bgt-feat-ic" style="background:rgba(255,214,10,.12)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FFD60A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></div><div class="bgt-feat-t">Aylık ya da<br>tek seferlik</div></div>
+        <div class="bgt-feat"><div class="bgt-feat-ic" style="background:rgba(191,90,242,.12)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#BF5AF2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4 -3 7 -7 8c-4 -1 -7 -4 -7 -8v-5z"/></svg></div><div class="bgt-feat-t">Günlük limite<br>dokunmaz</div></div>
+      </div>
+      <button class="bgt-cta" onclick="startWizard()">İlk bütçemi kur <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6l-6 6"/></svg></button>
+      <button class="bgt-cta-ghost" onclick="closeBudgetSheet()">Şimdi değil</button>
+    </div>`;
 }
-function renderBgtPicker() {
+function startWizard() {
   if (!data.budgetTutorialSeen) { data.budgetTutorialSeen = true; save(); }
-  const addBtn = document.getElementById('heroAdd');
-  if (addBtn) addBtn.classList.remove('pulse');
-  const budgetedIds = new Set(Object.keys(data.categoryBudgets || {}).filter(id => data.categoryBudgets[id] > 0));
-  const mk = currentMonth;
-  const cats = allCategories().filter(c => c.type !== 'income' && !budgetedIds.has(c.id));
-  document.getElementById('bgtTitle').textContent = 'Hangi kategoriye bütçe?';
-  if (!cats.length) {
-    document.getElementById('bgtBody').innerHTML = '<div class="bgt-tut-p" style="padding:20px 0;text-align:center">Tüm kategorilerine bütçe koymuşsun. Tam bir bütçe ustası.</div><button class="btn btn-ghost btn-full" onclick="closeBudgetSheet()">Kapat</button>';
-    return;
+  const addBtn = document.getElementById('heroAdd'); if (addBtn) addBtn.classList.remove('pulse');
+  document.getElementById('bgtSheet').classList.remove('bgt-sheet-intro');
+  _wiz.step = 0; renderWizStep();
+}
+
+function renderWizStep() {
+  const list = _wizSteps(); const key = list[_wiz.step];
+  const body = document.getElementById('bgtBody');
+  const prog = list.map((s, i) => `<div class="wz-seg"><div class="wz-fill" style="width:${i<_wiz.step?100:i===_wiz.step?60:0}%"></div></div>`).join('');
+  const back = `<button class="wz-back${_wiz.step===0?' hidden':''}" onclick="wizBack()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6l6 6"/></svg></button>`;
+  const head = `<div class="wz-hd">${back}<span class="wz-title">${esc(_wiz.name) || 'Bütçe Kur'}</span><button class="wz-x" onclick="closeBudgetSheet()">&times;</button></div><div class="wz-prog">${prog}</div>`;
+  let inner = '', cta = 'İleri', ctaDisabled = false;
+
+  if (key === 'name') {
+    inner = `<div class="wz-step"><div class="wz-q">Bütçene bir isim ver</div><div class="wz-hint">Kafana göre: Tatil, Market, Düğün… ne dersen.</div>
+      <input class="wz-bigin" id="wzName" placeholder="Tatil" value="${esc(_wiz.name)}" enterkeyhint="next" oninput="_wiz.name=this.value.trim();wizRefreshCta()" onkeydown="if(event.key==='Enter'){event.preventDefault();wizNext()}">
+      <div class="wz-chips">${['Market','Tatil','Yemek','Düğün'].map(n=>`<button class="wz-chip" onclick="document.getElementById('wzName').value='${n}';_wiz.name='${n}';wizRefreshCta();document.getElementById('wzName').focus()">${n}</button>`).join('')}</div></div>`;
+    ctaDisabled = !_wiz.name;
+  } else if (key === 'period') {
+    inner = `<div class="wz-step"><div class="wz-q">Ne tür bir bütçe?</div><div class="wz-hint">Her ay tekrar mı, tek seferlik bir olay mı?</div>
+      ${_wizOpt('monthly', _wiz.period==='monthly', '#2DB866', '<path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4M8 3v4M4 11h16"/>', 'Aylık', 'Her ay sıfırlanır. Market, yemek gibi düzenli harcamalar için.')}
+      ${_wizOpt('oneoff', _wiz.period==='oneoff', '#0A84FF', '<path d="M12 3l7 4v5c0 4 -3 7 -7 8c-4 -1 -7 -4 -7 -8v-5z"/>', 'Tek Seferlik', 'Bir toplam zarf. Tatil, düğün gibi olaylar için — sıfırlanmaz.')}</div>`;
+    ctaDisabled = !_wiz.period;
+  } else if (key === 'source') {
+    inner = `<div class="wz-step"><div class="wz-q">Harcama nasıl sayılsın?</div><div class="wz-hint">Otomatik mi, elle mi işaretleyeceksin?</div>
+      ${_wizOpt('category', _wiz.source==='category', '#2DB866', '<path d="M4 4h6v6h-6zM14 4h6v6h-6zM4 14h6v6h-6zM14 14h6v6h-6z"/>', 'Kategoriye bağla', 'Seçtiğin kategorinin tüm harcamaları otomatik sayılır. Market için ideal.')}
+      ${_wizOpt('free', _wiz.source==='free', '#BF5AF2', '<path d="M9 5h6l4 4v10a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1z"/>', 'Serbest', 'Harcama eklerken elle işaretlersin. Karışık harcamalar (tatil) için.')}</div>`;
+    ctaDisabled = !_wiz.source;
+  } else if (key === 'category') {
+    const cats = allCategories().filter(c => c.type !== 'income');
+    inner = `<div class="wz-step"><div class="wz-q">Hangi kategori?</div><div class="wz-hint">Bu kategorideki harcamalar otomatik bu bütçeden düşer.</div>
+      <div class="wz-catgrid">${cats.map(c=>`<div class="wz-catp${_wiz.catId===c.id?' sel':''}" onclick="wizPickCat('${c.id}')"><div class="wz-catp-ic" style="background:${(c.color||'#6E6D78')}1f">${catIconSvg(c,20)}</div><div class="wz-catp-n">${esc(c.name)}</div></div>`).join('')}</div></div>`;
+    ctaDisabled = !_wiz.catId;
+  } else if (key === 'amount') {
+    let presets;
+    if (_wiz.source === 'category') { const a = catAvg3(_wiz.catId); presets = a>0 ? [{v:Math.round(a/50)*50,smart:true,lbl:'Ort. '+fmtTL(Math.round(a))},{v:Math.round(a*1.15/50)*50},{v:Math.round(a*1.4/50)*50}] : [{v:2000},{v:3500},{v:5000}]; }
+    else presets = [{v:5000},{v:10000},{v:20000}];
+    presets = presets.filter((p,i,arr)=>arr.findIndex(x=>x.v===p.v)===i);
+    const catName = _wiz.source==='category'?getCat(_wiz.catId).name:'serbest';
+    const col = _wiz.source==='category'?(getCat(_wiz.catId).color||'#6E6D78'):'#0A84FF';
+    inner = `<div class="wz-step"><div class="wz-q">Ne kadar?</div><div class="wz-hint">${_wiz.source==='category'?`Son 3 ayın <b>${esc(catName)}</b> ortalamasından öneriler.`:'İstediğin toplamı yaz.'}</div>
+      <div class="wz-amt"><input class="wz-amtin" id="wzAmt" inputmode="numeric" placeholder="0" value="${_wiz.amount?_wiz.amount.toLocaleString('tr-TR'):''}" oninput="wizOnAmt(this)"><span class="wz-amtcur">₺</span></div>
+      <div class="wz-prerow" id="wzPre">${presets.map(p=>`<button class="wz-pre${p.smart?' smart':''}${_wiz.amount===p.v?' sel':''}" data-v="${p.v}" onclick="wizPickPre(${p.v})">${p.lbl||fmtTL(p.v)}</button>`).join('')}</div>
+      <div class="wz-amtnote" id="wzAmtNote"></div>
+      <div class="wz-summary"><div class="wz-summary-ic" style="background:${col}1f">${_wiz.source==='category'?catIconSvg(getCat(_wiz.catId),18):BUDGET_FREE_ICON(col).replace('width="19" height="19"','width="18" height="18"')}</div><div><div class="wz-summary-t">${esc(_wiz.name)}</div><div class="wz-summary-s">${_wiz.period==='monthly'?'Aylık':'Tek seferlik'} · ${esc(catName)}</div></div></div></div>`;
+    cta = 'Bütçeyi Kur'; ctaDisabled = !(_wiz.amount>0);
   }
-  document.getElementById('bgtBody').innerHTML = `
-    <div class="bgt-tut-p" style="margin:2px 0 6px">Bir kategori seç, aylık bütçesini belirle.</div>
-    <div class="bgt-cat-grid">${cats.map(c => {
-      const sp = catMonthSpent(c.id, mk);
-      return `<div class="bgt-cat" onclick="bgtPickCat('${c.id}')">
-        <div class="bgt-cat-ic" style="background:${(c.color||'#6E6D78')}1f">${catIconSvg(c, 20)}</div>
-        <div class="bgt-cat-n">${esc(c.name)}</div>
-        <div class="bgt-cat-s">${sp>0?'bu ay '+fmtTL(Math.round(sp)):'harcama yok'}</div>
-      </div>`;
-    }).join('')}</div>
-  `;
+
+  body.innerHTML = head + `<div class="wz-body">${inner}</div><div class="wz-foot"><button class="bgt-cta" id="wzCta" onclick="wizNext()"${ctaDisabled?' disabled':''}>${cta}</button></div>`;
+  if (key === 'name') { const el = document.getElementById('wzName'); if (el) setTimeout(()=>el.focus(), 60); }
+  if (key === 'amount') { const el = document.getElementById('wzAmt'); if (el) { setTimeout(()=>el.focus(), 60); wizAmtNote(); } }
 }
-function bgtPickCat(id) {
-  _bgtPickId = id;
-  _renderCapStep(id, false);
+function _wizOpt(val, sel, color, path, title, sub) {
+  return `<div class="wz-opt${sel?' sel':''}" onclick="wizPickOpt('${val}')">
+    <div class="wz-opt-ic" style="background:${color}1f"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${path}</svg></div>
+    <div style="flex:1"><div class="wz-opt-t">${title}</div><div class="wz-opt-s">${sub}</div></div>
+    <div class="wz-opt-chk">${sel?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10-10"/></svg>':''}</div></div>`;
 }
-function _renderCapStep(id, isEdit) {
-  const cat = getCat(id);
-  const mk = currentMonth;
-  const spent = catMonthSpent(id, mk);
-  const cur = isEdit ? (data.categoryBudgets[id] || 0) : 0;
-  document.getElementById('bgtTitle').textContent = cat.name + ' · Aylık Bütçe';
-  const base = Math.max(spent, 500);
-  const presets = [...new Set([Math.ceil(base/500)*500, Math.ceil(base*1.25/500)*500, Math.ceil(base*1.6/500)*500])];
-  document.getElementById('bgtBody').innerHTML = `
-    <div style="padding:2px 0 2px">${isEdit ? '' : '<button class="bgt-back" onclick="renderBgtPicker()">‹ Kategori değiştir</button>'}</div>
-    <div class="bgt-cap-wrap"><input class="bgt-cap-in" id="bgtCapIn" inputmode="numeric" placeholder="0" value="${cur>0?fmtNum(cur).replace('₺',''):''}" oninput="fmtInput(this);bgtCapHint()"><span class="bgt-cap-cur">₺</span></div>
-    <div class="bgt-pre-row">${presets.map(p => `<button class="bgt-pre" onclick="document.getElementById('bgtCapIn').value='${fmtNum(p).replace('₺','')}';bgtCapHint()">${fmtTL(p)}</button>`).join('')}</div>
-    <div class="bgt-hint" id="bgtCapHint"></div>
-    <button class="btn btn-primary btn-full" style="margin-top:12px" onclick="saveBudget('${id}',${isEdit?'true':'false'})">${isEdit ? 'Kaydet' : 'Bütçeyi Kur'}</button>
-    ${isEdit ? `<button class="btn btn-full" style="margin-top:8px;border:1px solid rgba(255,69,58,.25);background:rgba(255,69,58,.08);color:var(--danger)" onclick="removeBudget('${id}')">Bütçeyi Kaldır</button>` : ''}
-  `;
-  bgtCapHint();
+function wizPickOpt(val) {
+  const key = _wizSteps()[_wiz.step];
+  if (key === 'period') _wiz.period = val;
+  if (key === 'source') { _wiz.source = val; if (val === 'free') _wiz.catId = ''; }
+  renderWizStep();
+  setTimeout(() => wizNext(), 230);
 }
-function bgtCapHint() {
-  const id = _bgtPickId;
-  const spent = catMonthSpent(id, currentMonth);
-  const v = parseNum(document.getElementById('bgtCapIn').value) || 0;
-  const el = document.getElementById('bgtCapHint');
-  if (!el) return;
-  if (v <= 0) { el.textContent = 'Bir tutar gir ya da üstteki hazır rakamlardan seç.'; return; }
-  if (spent > v) el.innerHTML = `Dikkat: bu ay zaten <b style="color:var(--danger)">${fmtTL(Math.round(spent))}</b> harcamışsın — bu bütçenin üstünde. Yine de kurabilirsin.`;
-  else el.innerHTML = `Süper. Bu ay <b style="color:var(--accent)">${fmtTL(Math.round(v-spent))}</b> payın kalır.`;
+function wizPickCat(id) { _wiz.catId = id; renderWizStep(); setTimeout(() => wizNext(), 230); }
+function wizOnAmt(el) { let v = el.value.replace(/\D/g,''); el.value = v ? parseInt(v).toLocaleString('tr-TR') : ''; _wiz.amount = parseInt(v)||0; _wizSyncPre(); wizAmtNote(); wizRefreshCta(); }
+function wizPickPre(v) { _wiz.amount = v; const el=document.getElementById('wzAmt'); if(el) el.value = v.toLocaleString('tr-TR'); _wizSyncPre(); wizAmtNote(); wizRefreshCta(); }
+function _wizSyncPre() { document.querySelectorAll('#wzPre .wz-pre').forEach(b => b.classList.toggle('sel', parseInt(b.dataset.v) === _wiz.amount)); }
+function wizAmtNote() {
+  const el = document.getElementById('wzAmtNote'); if (!el) return;
+  if (_wiz.amount <= 0) { el.textContent = ''; return; }
+  if (_wiz.source === 'category') { const a = catAvg3(_wiz.catId); el.innerHTML = (a>0 && _wiz.amount<a) ? `Ortalamanın altında — <b>sıkı</b> bir bütçe.` : `Rahat bir bütçe.` + (a>0?` Aylık ${fmtTL(Math.round(a))} civarı harcıyorsun.`:''); }
+  else el.innerHTML = `<b>${fmtTL(_wiz.amount)}</b> bitene kadar takip edilir, ay değişince sıfırlanmaz.`;
 }
+function wizRefreshCta() {
+  const key = _wizSteps()[_wiz.step]; let ok = true;
+  if (key==='name') ok = !!_wiz.name;
+  if (key==='amount') ok = _wiz.amount > 0;
+  const c = document.getElementById('wzCta'); if (c) c.disabled = !ok;
+}
+function wizBack() { if (_wiz.step > 0) { _wiz.step--; renderWizStep(); } }
+function wizNext() {
+  const list = _wizSteps(); const key = list[_wiz.step];
+  if (key==='name' && !_wiz.name) return;
+  if (key==='period' && !_wiz.period) return;
+  if (key==='source' && !_wiz.source) return;
+  if (key==='category' && !_wiz.catId) return;
+  if (key==='amount' && _wiz.amount<=0) return;
+  if (_wiz.step < list.length - 1) { _wiz.step++; renderWizStep(); }
+  else finishWizard();
+}
+function finishWizard() {
+  const color = _wiz.source==='category' ? (getCat(_wiz.catId).color||'#6E6D78') : '#0A84FF';
+  const nb = { id:'bgt_'+uid(), name:_wiz.name, amount:_wiz.amount, period:_wiz.period, source:_wiz.source, catId:_wiz.source==='category'?_wiz.catId:null, color, created:today() };
+  data.budgets.push(nb);
+  closeBudgetSheet(); save();
+  const bl = budgetList(); _heroIdx = bl.findIndex(b => b.id === nb.id) + 1; if (_heroIdx < 1) _heroIdx = 1;
+  renderAll();
+  showToast(TOAST_OK + ' ' + esc(nb.name) + ' bütçesi kuruldu' + (nb.source==='category'?' — '+esc(getCat(nb.catId).name)+' harcamaların otomatik sayılır':' — harcama eklerken işaretle'));
+}
+
+// ── DÜZENLE (tek sayfa) ──
+let _editBgtId = null, _editSource = 'category', _editPeriod = 'monthly', _editCatId = 'market';
 function openBudgetEdit(id) {
-  _bgtPickId = id;
-  _renderCapStep(id, true);
+  const b = budgetById(id); if (!b) return;
+  _editBgtId = id; _editSource = b.source; _editPeriod = b.period; _editCatId = b.catId || 'market';
+  document.getElementById('bgtSheet').classList.remove('bgt-sheet-intro');
+  renderBudgetEdit(b);
   _openBgtSheet();
 }
-function saveBudget(id, isEdit) {
-  const v = parseNum(document.getElementById('bgtCapIn').value) || 0;
-  if (v <= 0) { showToast(TOAST_WARN + ' Önce bir bütçe gir'); return; }
-  const isNew = !(data.categoryBudgets[id] > 0);
-  data.categoryBudgets[id] = v;
-  const cat = getCat(id);
-  closeBudgetSheet();
-  save();
-  // yeni bütçe sayfasına kay
-  if (isNew) { const bl = budgetedCats(); _heroIdx = bl.findIndex(b => b.id === id) + 1; if (_heroIdx < 1) _heroIdx = 1; }
-  renderAll();
-  showToast(TOAST_OK + ' ' + esc(cat.name) + (isEdit && !isNew ? ' bütçesi güncellendi' : ' bütçesi kuruldu — gözün artık üstünde!'));
+function _editCurrent() {
+  const b = budgetById(_editBgtId) || {};
+  return Object.assign({}, b, { source:_editSource, period:_editPeriod, catId:_editCatId,
+    name: (document.getElementById('ebName') ? document.getElementById('ebName').value : b.name),
+    amount: (document.getElementById('ebAmount') ? parseNum(document.getElementById('ebAmount').value) : b.amount) });
+}
+function renderBudgetEdit(b) {
+  const cats = allCategories().filter(c => c.type !== 'income');
+  document.getElementById('bgtBody').innerHTML = `
+    <div class="wz-hd"><span class="wz-title">${esc(b.name)} · Düzenle</span><button class="wz-x" onclick="closeBudgetSheet()">&times;</button></div>
+    <div class="wz-body" style="padding-top:6px">
+      <div class="ef-label">Bütçe Adı</div>
+      <input class="ef-in" id="ebName" value="${esc(b.name)}">
+      <div class="ef-label">Süre</div>
+      <div class="ef-seg"><button class="ef-seg-b${_editPeriod==='monthly'?' active':''}" onclick="_editSetPeriod('monthly')">Aylık</button><button class="ef-seg-b${_editPeriod==='oneoff'?' active':''}" onclick="_editSetPeriod('oneoff')">Tek Seferlik</button></div>
+      <div class="ef-label">Harcama nasıl sayılsın?</div>
+      <div class="ef-seg"><button class="ef-seg-b${_editSource==='category'?' active':''}" onclick="_editSetSource('category')">Kategoriye bağla</button><button class="ef-seg-b${_editSource==='free'?' active':''}" onclick="_editSetSource('free')">Serbest</button></div>
+      <div id="ebCatWrap" style="display:${_editSource==='category'?'block':'none'}">
+        <div class="ef-label">Kategori</div>
+        <div class="wz-catgrid" id="ebCatGrid">${cats.map(c=>`<div class="wz-catp${_editCatId===c.id?' sel':''}" onclick="_editPickCat('${c.id}')"><div class="wz-catp-ic" style="background:${(c.color||'#6E6D78')}1f">${catIconSvg(c,20)}</div><div class="wz-catp-n">${esc(c.name)}</div></div>`).join('')}</div>
+      </div>
+      <div class="ef-label">Tutar</div>
+      <input class="ef-in" id="ebAmount" inputmode="numeric" value="${b.amount?fmtNum(b.amount).replace('₺',''):''}" oninput="fmtInput(this)">
+      <button class="bgt-cta" style="margin-top:18px" onclick="saveBudgetEdit()">Kaydet</button>
+      <button class="bgt-cta bgt-cta-danger" style="margin-top:10px" onclick="removeBudget('${_editBgtId}')">Bütçeyi Kaldır</button>
+    </div>`;
+}
+function _editSetPeriod(p) { _editPeriod = p; renderBudgetEdit(_editCurrent()); }
+function _editSetSource(s) { _editSource = s; renderBudgetEdit(_editCurrent()); }
+function _editPickCat(id) { _editCatId = id; document.querySelectorAll('#ebCatGrid .wz-catp').forEach(el=>el.classList.remove('sel')); if (event && event.currentTarget) event.currentTarget.classList.add('sel'); }
+function saveBudgetEdit() {
+  const b = budgetById(_editBgtId); if (!b) return;
+  const name = document.getElementById('ebName').value.trim();
+  const amount = parseNum(document.getElementById('ebAmount').value) || 0;
+  if (!name) { showToast(TOAST_WARN + ' İsim gerekli'); return; }
+  if (amount <= 0) { showToast(TOAST_WARN + ' Tutar gerekli'); return; }
+  b.name = name; b.amount = amount; b.period = _editPeriod; b.source = _editSource;
+  b.catId = _editSource === 'category' ? _editCatId : null;
+  b.color = budgetColor(b);
+  closeBudgetSheet(); save(); renderAll();
+  showToast(TOAST_OK + ' Bütçe güncellendi');
 }
 function removeBudget(id) {
-  const cat = getCat(id);
-  showConfirm(esc(cat.name) + ' bütçesi kaldırılacak. Harcamaların ve geçmişin dokunulmaz; sadece bu kategori bütçe takibinden çıkar.', () => {
-    delete data.categoryBudgets[id];
-    _heroIdx = 0;
-    closeBudgetSheet();
-    save(); renderAll();
-    showToast(TOAST_OK + ' ' + esc(cat.name) + ' bütçesi kaldırıldı');
-  }, 'Kaldır', esc(cat.name), 'pause');
+  const b = budgetById(id); if (!b) return;
+  showConfirm(esc(b.name) + ' bütçesi kaldırılacak. Harcamaların ve geçmişin dokunulmaz; sadece bu bütçe takibi silinir.', () => {
+    data.budgets = data.budgets.filter(x => x.id !== id);
+    _heroIdx = 0; closeBudgetSheet(); save(); renderAll();
+    showToast(TOAST_OK + ' ' + esc(b.name) + ' bütçesi kaldırıldı');
+  }, 'Kaldır', esc(b.name), 'pause');
 }
+
+// ── harcama sheet'i: serbest bütçe etiketi ──
+let _sheetBudgetId = null;
+function _renderTxBudgetChips() {
+  const wrap = document.getElementById('txBudgetWrap');
+  if (!wrap) return;
+  const free = (data.budgets || []).filter(b => b.source === 'free');
+  const show = _sheetType === 'expense' && free.length > 0;
+  wrap.style.display = show ? 'block' : 'none';
+  if (!show) return;
+  document.getElementById('txBudgetChips').innerHTML = free.map(b =>
+    `<button class="tx-budget-chip${_sheetBudgetId===b.id?' active':''}" onclick="_setSheetBudget('${b.id}')">${esc(b.name)}</button>`
+  ).join('');
+}
+function _setSheetBudget(id) { _sheetBudgetId = _sheetBudgetId === id ? null : id; _renderTxBudgetChips(); }
 
 function buildCarouselItems(fb) {
   const items = [];
@@ -5433,6 +5683,9 @@ function openTxSheet(type) {
   // V69: ödeme yöntemi sıfırla
   _sheetPayMethod = 'cash'; _sheetCardId = null; _sheetInst = 1;
   _renderTxPayChips();
+  // V72: bütçe etiketi sıfırla
+  _sheetBudgetId = null;
+  _renderTxBudgetChips();
 
   _sheetSetTheme(_sheetType);
 
@@ -5539,6 +5792,10 @@ function txSheetSave() {
   const date     = _dpSelected || _sheetDateStr || today();
   const type     = _sheetType;
 
+  // V72: serbest bütçe etiketi
+  const _bId = (type === 'expense' && _sheetBudgetId && (data.budgets || []).some(b => b.id === _sheetBudgetId && b.source === 'free')) ? _sheetBudgetId : null;
+  const _bName = _bId ? (budgetById(_bId) || {}).name : '';
+
   closeTxSheet();
 
   // V69: kart harcaması — bakiye düşmez, ekstreye yazılır
@@ -5546,22 +5803,27 @@ function txSheetSave() {
   if (_payCard) {
     if (_sheetInst > 1) {
       const per = Math.round((amount / _sheetInst) * 100) / 100;
-      data.transactions.push({ id: uid(), type, desc: desc + ' (1/' + _sheetInst + ')', amount: per, date, category, payMethod: 'card', cardId: _payCard.id, isCardInstallment: true, ts: Date.now() });
+      data.transactions.push({ id: uid(), type, desc: desc + ' (1/' + _sheetInst + ')', amount: per, date, category, payMethod: 'card', cardId: _payCard.id, isCardInstallment: true, budgetId: _bId, ts: Date.now() });
       _payCard.installments.push({ id: uid(), name: desc, per, left: _sheetInst - 1, total: _sheetInst, isStart: false, category });
       save();
       showToast(TOAST_OK + ' ' + esc(_payCard.name) + ' ekstresine yazıldı — bugün ' + fmtTL(per) + ', kalan ' + (_sheetInst - 1) + ' taksit gelecek aylara');
     } else {
-      data.transactions.push({ id: uid(), type, desc, amount, date, category, payMethod: 'card', cardId: _payCard.id, ts: Date.now() });
+      data.transactions.push({ id: uid(), type, desc, amount, date, category, payMethod: 'card', cardId: _payCard.id, budgetId: _bId, ts: Date.now() });
       save();
       const fb = calcFreeBudget(monthKey());
-      showToast(TOAST_OK + ' ' + esc(_payCard.name) + ' ekstresine yazıldı — bakiye değişmedi, günlük limitten düştü' + (fb.daily > 0 ? ' (' + fmtTL(Math.round(fb.daily)) + ')' : ''));
+      showToast(TOAST_OK + ' ' + esc(_payCard.name) + ' ekstresine yazıldı' + (_bName ? ' · ' + esc(_bName) + ' bütçesine işlendi' : ' — bakiye değişmedi, günlük limitten düştü' + (fb.daily > 0 ? ' (' + fmtTL(Math.round(fb.daily)) + ')' : '')));
     }
     renderAll();
     return;
   }
 
-  data.transactions.push({ id: uid(), type, desc, amount, date, category, ts: Date.now() });
+  data.transactions.push({ id: uid(), type, desc, amount, date, category, budgetId: _bId, ts: Date.now() });
   save();
+  if (_bName) {
+    renderAll();
+    showToast(TOAST_OK + ' ' + fmtTL(amount) + ' · ' + esc(_bName) + ' bütçesine işlendi');
+    return;
+  }
 
   // Friendly contextual feedback
   if (type === 'income') {
@@ -10340,6 +10602,19 @@ function importData(input) {
       _cardGuards(); // V69
       if (!data.categoryBudgets || typeof data.categoryBudgets !== 'object' || Array.isArray(data.categoryBudgets)) data.categoryBudgets = {}; // V71
       if (typeof data.budgetTutorialSeen !== 'boolean') data.budgetTutorialSeen = false; // V71
+      if (!Array.isArray(data.budgets)) data.budgets = []; // V72
+      if (!data.budgets.length && data.categoryBudgets && Object.keys(data.categoryBudgets).length) {
+        Object.entries(data.categoryBudgets).forEach(([cid, amt]) => {
+          if (amt > 0) { const c = getCat(cid); data.budgets.push({ id:'bgt_'+uid(), name:(c&&c.name)||cid, amount:amt, period:'monthly', source:'category', catId:cid, color:(c&&c.color)||'#6E6D78', created:today() }); }
+        });
+        data.categoryBudgets = {};
+      }
+      data.budgets.forEach(b => {
+        if (typeof b.amount !== 'number' || isNaN(b.amount)) b.amount = 0;
+        if (b.period !== 'oneoff') b.period = 'monthly';
+        if (b.source !== 'free') b.source = 'category';
+        if (!b.created) b.created = today();
+      });
       if (!Array.isArray(data.recurring)) data.recurring = [];
       if (!Array.isArray(data.recurringIncome)) data.recurringIncome = [];
       if (!Array.isArray(data.debts)) data.debts = [];
@@ -10464,6 +10739,7 @@ function renderAll() {
   // Guard: array'lerin kesinlikle var olduğundan emin ol
   if (!Array.isArray(data.transactions)) data.transactions = [];
   if (!Array.isArray(data.cards)) data.cards = [];
+  if (!Array.isArray(data.budgets)) data.budgets = [];
   if (!Array.isArray(data.recurring)) data.recurring = [];
   if (!Array.isArray(data.recurringIncome)) data.recurringIncome = [];
   if (!Array.isArray(data.debts)) data.debts = [];
