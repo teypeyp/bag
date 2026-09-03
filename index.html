@@ -1944,6 +1944,39 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .bgt-hint{text-align:center;font-size:12px;color:var(--muted);font-weight:600;margin:10px 0 4px;line-height:1.5}
 .bgt-back{background:none;border:none;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;padding:0}
 
+/* ── V73: Plan/Analiz bütçe durumu kartı ── */
+.bs-card{background:var(--surface2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:18px}
+.bs-head{display:flex;align-items:center;gap:13px;margin-bottom:16px}
+.bs-ring{width:52px;height:52px;flex-shrink:0;position:relative}
+.bs-ring svg{transform:rotate(-90deg)}
+.bs-ring-txt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.bs-ring-pct{font-size:15px;font-weight:900;letter-spacing:-.5px;line-height:1}
+.bs-head-r{flex:1;min-width:0}
+.bs-head-t{font-size:15px;font-weight:800;letter-spacing:-.2px;margin-bottom:2px}
+.bs-head-s{font-size:12px;font-weight:600;color:var(--muted);line-height:1.4}
+.bs-pills{display:flex;gap:6px;margin-bottom:14px}
+.bs-pill{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:9px 6px;text-align:center}
+.bs-pill-v{font-size:16px;font-weight:900;letter-spacing:-.4px}
+.bs-pill-l{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+.bs-insight{display:flex;gap:10px;align-items:flex-start;border-radius:10px;padding:11px 12px;font-size:12px;font-weight:600;line-height:1.55}
+.bs-insight.bad{background:rgba(255,69,58,.06);border:1px solid rgba(255,69,58,.15);color:var(--text)}
+.bs-insight.good{background:rgba(45,184,102,.06);border:1px solid rgba(45,184,102,.15);color:var(--text)}
+.bs-insight.warn{background:rgba(255,214,10,.06);border:1px solid rgba(255,214,10,.15);color:var(--text)}
+.bs-insight b{font-weight:900}
+.bs-insight-ic{width:20px;height:20px;flex-shrink:0;margin-top:1px}
+.bs-list{margin-top:14px;border-top:1px solid rgba(255,255,255,.06);padding-top:4px}
+.bs-row{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.bs-row:last-child{border-bottom:none}
+.bs-row-ic{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bs-row-mid{flex:1;min-width:0}
+.bs-row-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:5px}
+.bs-row-nm{font-size:13px;font-weight:800;letter-spacing:-.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.bs-row-nm small{font-size:10px;font-weight:600;color:var(--muted);margin-left:5px}
+.bs-row-fig{font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0}
+.bs-row-bar{height:5px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden}
+.bs-row-fill{height:100%;border-radius:99px}
+.bs-foot{margin-top:12px;font-size:11px;color:var(--muted);font-weight:600;text-align:center;line-height:1.5}
+
 /* ── V72: bütçe ekleme — giriş + wizard + düzenle ── */
 .add-sheet.bgt-sheet-intro{padding-bottom:env(safe-area-inset-bottom,0px)}
 .bgt-sheet-intro .add-sheet-handle{position:relative;z-index:6}
@@ -2646,6 +2679,12 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <div class="plan-section-block" id="planReportBlock">
     <div class="plan-section-label">Aylık Karne</div>
     <div id="monthlyReportBox"></div>
+  </div>
+
+  <!-- V73: BÜTÇE DURUMU -->
+  <div class="plan-section-block" id="planBudgetBlock" style="display:none">
+    <div class="plan-section-label">Bütçe Durumu</div>
+    <div id="planBudgetStatus"></div>
   </div>
 
   <!-- V70: ABONELİK DENETİMİ -->
@@ -4733,6 +4772,76 @@ function _onHeroScroll() {
     pages.forEach((p, i) => { const d = Math.abs(p.offsetLeft - sl); if (d < min) { min = d; idx = i; } });
     if (idx !== _heroIdx) { _heroIdx = idx; _renderHeroDots(budgetList()); }
   }, 60);
+}
+
+// ── V73: Plan/Analiz bütçe durumu ──
+function renderBudgetStatus() {
+  const block = document.getElementById('planBudgetBlock');
+  const el = document.getElementById('planBudgetStatus');
+  if (!block || !el) return;
+  const B = budgetList();
+  if (!B.length) { block.style.display = 'none'; el.innerHTML = ''; return; }
+  block.style.display = 'block';
+
+  const cap = B.reduce((s, b) => s + b.amount, 0);
+  const spent = B.reduce((s, b) => s + b.spent, 0);
+  const pct = cap > 0 ? Math.round(spent / cap * 100) : 0;
+  const over = B.filter(b => b.spent > b.amount);
+  const near = B.filter(b => b.spent <= b.amount && b.amount > 0 && b.spent / b.amount >= .85);
+  const okCount = B.length - over.length - near.length;
+  const ringPct = Math.min(100, pct);
+  const ringColor = over.length ? '#FF453A' : near.length ? '#FFD60A' : '#2DB866';
+  const circ = 2 * Math.PI * 22;
+
+  let insight, icls, iicon;
+  if (over.length) {
+    const worst = over.slice().sort((a, b) => (b.spent - b.amount) - (a.spent - a.amount))[0];
+    icls = 'bad'; iicon = '#FF453A';
+    insight = `<b>${over.length} bütçen aşıldı.</b> En fazlası ${esc(worst.name)}: <b style="color:var(--danger)">${fmtTL(Math.round(worst.spent - worst.amount))}</b> üstünde. Bu kalemleri kısmak dengeyi hızlı toparlar.`;
+  } else if (near.length) {
+    icls = 'warn'; iicon = '#FFD60A';
+    insight = `${near.length} bütçen sınıra yakın — <b>${near.map(b => esc(b.name)).join(', ')}</b>. Ay sonuna dikkatli git, aşmadan kapatabilirsin.`;
+  } else {
+    icls = 'good'; iicon = '#2DB866';
+    insight = `<b>Hepsi yolunda.</b> ${B.length} bütçenin tümü tavanın altında — disiplin yerinde, böyle devam.`;
+  }
+
+  const rows = B.map(b => {
+    const st = budgetState(b.spent, b.amount);
+    const p = Math.min(100, b.amount > 0 ? b.spent / b.amount * 100 : 0);
+    return `<div class="bs-row">
+      <div class="bs-row-ic" style="background:${b.color}1f">${budgetIconSvg(b, 17)}</div>
+      <div class="bs-row-mid">
+        <div class="bs-row-top"><span class="bs-row-nm">${esc(b.name)}<small>${b.period==='monthly'?'aylık':'tek seferlik'}</small></span>
+        <span class="bs-row-fig" style="color:${st.c}">${fmtTL(Math.round(b.spent))} / ${fmtTL(b.amount)}</span></div>
+        <div class="bs-row-bar"><div class="bs-row-fill" style="width:${p}%;background:${st.fill}"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const warnPath = '<path d="M12 9v4"/><path d="M12 16v.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7 -3L13.7 3.9a2 2 0 0 0 -3.4 0z"/>';
+  const goodPath = '<path d="M5 12l5 5l10 -10"/>';
+  el.innerHTML = `
+    <div class="bs-card">
+      <div class="bs-head">
+        <div class="bs-ring">
+          <svg width="52" height="52"><circle cx="26" cy="26" r="22" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"/><circle cx="26" cy="26" r="22" fill="none" stroke="${ringColor}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ*(1-ringPct/100)}"/></svg>
+          <div class="bs-ring-txt"><span class="bs-ring-pct" style="color:${ringColor}">%${pct}</span></div>
+        </div>
+        <div class="bs-head-r">
+          <div class="bs-head-t">${B.length} bütçe takipte</div>
+          <div class="bs-head-s">Toplam ${fmtTL(Math.round(spent))} / ${fmtTL(cap)} kullanıldı</div>
+        </div>
+      </div>
+      <div class="bs-pills">
+        <div class="bs-pill"><div class="bs-pill-v" style="color:var(--accent)">${okCount}</div><div class="bs-pill-l">Yolunda</div></div>
+        <div class="bs-pill"><div class="bs-pill-v" style="color:var(--warning)">${near.length}</div><div class="bs-pill-l">Sınırda</div></div>
+        <div class="bs-pill"><div class="bs-pill-v" style="color:var(--danger)">${over.length}</div><div class="bs-pill-l">Aşıldı</div></div>
+      </div>
+      <div class="bs-insight ${icls}"><span class="bs-insight-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${iicon}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${icls==='good'?goodPath:warnPath}</svg></span><div>${insight}</div></div>
+      <div class="bs-list">${rows}</div>
+      <div class="bs-foot">Bütçe harcamaların günlük limitine ve istatistiklerine zaten yansıyor — bu kart yalnız bütçe hedeflerini özetler.</div>
+    </div>`;
 }
 
 // ── kategori aylık harcama (preset önerisi için, bütçe atamasından bağımsız) ──
@@ -8578,6 +8687,7 @@ function renderPlan() {
   _renderPlanSteps();
   _renderPlanGoalDetail(fb, core);
   renderMonthlyReportCard();
+  renderBudgetStatus(); // V73
   renderSubAudit(fb); // V70
   _updatePlanImpact(fb, core);
   _syncPlanCollapseSummaries(core);
