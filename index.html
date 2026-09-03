@@ -1944,6 +1944,59 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .bgt-hint{text-align:center;font-size:12px;color:var(--muted);font-weight:600;margin:10px 0 4px;line-height:1.5}
 .bgt-back{background:none;border:none;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;padding:0}
 
+/* ── V76: Kazanımlar (başarımlar) ── */
+.ach-strip-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.ach-strip-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.ach-strip-t{font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
+.ach-strip-c{font-size:12px;font-weight:800;color:var(--muted)}
+.ach-strip-c b{color:var(--accent)}
+.ach-strip-all{font-size:11px;font-weight:700;color:var(--accent);cursor:pointer;background:none;border:none;font-family:'Montserrat',sans-serif}
+.ach-strip-row{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.ach-strip-row::-webkit-scrollbar{display:none}
+.ach-mini{flex:0 0 auto;width:56px;text-align:center;cursor:pointer}
+.ach-mini-ic{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:5px}
+.ach-mini.locked{opacity:.5}
+.ach-mini-nm{font-size:8.5px;font-weight:800;line-height:1.15;color:var(--muted);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ach-mini.unlocked .ach-mini-ic::before{content:'';position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent);transform:skewX(-18deg);animation:achSheen 5.5s ease-in-out infinite}
+@keyframes achSheen{0%{left:-70%}18%,100%{left:160%}}
+
+/* tam ızgara sheet */
+.ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ach-badge{aspect-ratio:1;border-radius:20px;background:var(--surface2);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;position:relative;overflow:hidden}
+.ach-badge:active{transform:scale(.95)}
+.ach-badge.locked{opacity:.5}
+.ach-badge-ic{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative}
+.ach-badge.unlocked .ach-badge-ic::before{content:'';position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent);transform:skewX(-18deg);animation:achSheen 5.5s ease-in-out infinite}
+.ach-badge-nm{font-size:10px;font-weight:800;text-align:center;line-height:1.25;padding:0 6px}
+.ach-badge.locked .ach-badge-nm{color:var(--muted)}
+.ach-badge .ach-lock{position:absolute;top:9px;right:9px;opacity:.55}
+
+/* kutlama */
+#achConfetti{position:fixed;inset:0;z-index:399;pointer-events:none;display:none}
+#achConfetti.show{display:block}
+#achCelebOv{position:fixed;inset:0;z-index:400;display:none;align-items:center;justify-content:center;background:rgba(5,6,8,0);backdrop-filter:blur(0px);transition:background .4s,backdrop-filter .4s}
+#achCelebOv.show{display:flex;background:rgba(5,6,8,.72);backdrop-filter:blur(6px)}
+.achc{width:88%;max-width:340px;text-align:center;transform:scale(.8) translateY(20px);opacity:0}
+#achCelebOv.show .achc{animation:achCelebIn .6s .05s cubic-bezier(.34,1.5,.5,1) forwards}
+@keyframes achCelebIn{to{transform:scale(1) translateY(0);opacity:1}}
+.achc-badge{width:132px;height:132px;margin:0 auto 22px;border-radius:38px;display:flex;align-items:center;justify-content:center;position:relative}
+.achc-badge::after{content:'';position:absolute;inset:-18px;border-radius:50px;background:radial-gradient(circle,var(--bc),transparent 68%);opacity:0;animation:achGlow 2.2s .5s ease-in-out infinite}
+@keyframes achGlow{0%,100%{opacity:.25;transform:scale(1)}50%{opacity:.55;transform:scale(1.08)}}
+.achc-inner{width:132px;height:132px;border-radius:38px;display:flex;align-items:center;justify-content:center;box-shadow:0 20px 50px rgba(0,0,0,.5);animation:achPop .7s .15s cubic-bezier(.34,1.7,.5,1) both;position:relative;overflow:hidden}
+.achc-inner::before{content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-18deg);animation:achCSheen 2.6s .7s ease-in-out infinite}
+@keyframes achCSheen{0%{left:-80%}40%,100%{left:180%}}
+@keyframes achPop{0%{transform:scale(0) rotate(-25deg)}60%{transform:scale(1.12) rotate(6deg)}100%{transform:scale(1) rotate(0)}}
+.achc-tick{position:absolute;bottom:-6px;right:-6px;width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(45,184,102,.5);animation:achTick .5s .6s cubic-bezier(.34,1.7,.5,1) both;z-index:3}
+.achc-tick path{stroke-dasharray:24;stroke-dashoffset:24;animation:achDraw .4s .85s forwards}
+@keyframes achTick{from{transform:scale(0)}to{transform:scale(1)}}
+@keyframes achDraw{to{stroke-dashoffset:0}}
+.achc-eyebrow{font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--accent);opacity:0;animation:achFu .5s .5s both}
+.achc-title{font-size:26px;font-weight:900;letter-spacing:-.8px;margin:8px 0;opacity:0;animation:achFu .5s .62s both}
+.achc-desc{font-size:13px;font-weight:500;color:var(--muted);line-height:1.55;max-width:280px;margin:0 auto 24px;opacity:0;animation:achFu .5s .74s both}
+.achc-btn{padding:15px 40px;border:none;border-radius:15px;background:linear-gradient(180deg,#2DB866,#25a35a);color:#fff;font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 10px 26px rgba(45,184,102,.34);opacity:0;animation:achFu .5s .9s both}
+.achc-btn:active{transform:scale(.97)}
+@keyframes achFu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
 /* ── V75: Alışkanlıkların (davranış içgörüleri) ── */
 .habits-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:24px 0 12px}
 .wk-card{background:var(--surface2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:18px;margin-bottom:12px}
@@ -2580,6 +2633,9 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <!-- STREAK CARD -->
   <div id="streakCardWrap"></div>
 
+  <!-- V76: KAZANIMLAR ŞERİDİ -->
+  <div id="achStrip"></div>
+
   <!-- Finansal Tavsiyeler + Analiz Preview -->
   <div id="financialAdviceBox"></div>
 
@@ -2822,7 +2878,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v75 · Veriler bu cihazda saklanır</div>
+    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v76 · Veriler bu cihazda saklanır</div>
   </div>
 </div>
 
@@ -2976,6 +3032,27 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     </div>
     <div style="height:8px"></div>
   </div>
+</div>
+
+<!-- ═══ V76: KAZANIMLAR ═══ -->
+<canvas id="achConfetti"></canvas>
+<div id="achCelebOv" onclick="if(event.target===this)closeAchCeleb()">
+  <div class="achc">
+    <div class="achc-badge" id="achcBadge">
+      <div class="achc-inner" id="achcInner"></div>
+      <div class="achc-tick"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10 -10"/></svg></div>
+    </div>
+    <div class="achc-eyebrow">Yeni Kazanım</div>
+    <div class="achc-title" id="achcTitle"></div>
+    <div class="achc-desc" id="achcDesc"></div>
+    <button class="achc-btn" id="achcBtn" onclick="closeAchCeleb()">Harika!</button>
+  </div>
+</div>
+<div class="add-sheet-overlay" id="achSheetOv" onclick="if(event.target===this)closeAchSheet()"></div>
+<div class="add-sheet" id="achSheet">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header"><span class="add-sheet-title" id="achSheetTitle">Kazanımlar</span><button class="add-sheet-close" onclick="closeAchSheet()">&times;</button></div>
+  <div class="add-sheet-body"><div class="ach-grid" id="achGrid"></div><div style="height:10px"></div></div>
 </div>
 
 <!-- ═══ V71: BÜTÇE EKLE / DÜZENLE SHEET ═══ -->
@@ -3368,6 +3445,8 @@ let data = {
   transactions: [],
   cards: [],
   budgets: [],
+  achievements: [],
+  achInit: false,
   categoryBudgets: {},
   budgetTutorialSeen: false,
   recurring: [],
@@ -3554,6 +3633,8 @@ function load() {
       if (!data.categoryBudgets || typeof data.categoryBudgets !== 'object' || Array.isArray(data.categoryBudgets)) data.categoryBudgets = {}; // V71
       if (typeof data.budgetTutorialSeen !== 'boolean') data.budgetTutorialSeen = false; // V71
       if (!Array.isArray(data.budgets)) data.budgets = []; // V72
+      if (!Array.isArray(data.achievements)) data.achievements = []; // V76
+      if (typeof data.achInit !== 'boolean') data.achInit = false; // V76
       if (!data.budgets.length && data.categoryBudgets && Object.keys(data.categoryBudgets).length) {
         Object.entries(data.categoryBudgets).forEach(([cid, amt]) => {
           if (amt > 0) { const c = getCat(cid); data.budgets.push({ id:'bgt_'+uid(), name:(c&&c.name)||cid, amount:amt, period:'monthly', source:'category', catId:cid, color:(c&&c.color)||'#6E6D78', created:today() }); }
@@ -9567,6 +9648,185 @@ function updateCollapseSummaries() {
 }
 
 // =================== ÖZET ===================
+// ══════════ V76: KAZANIMLAR (başarımlar) ══════════
+const ACH_IC = {
+  wallet:'<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-9a2 2 0 0 0 -2 -2h-2"/><path d="M18 12a1 1 0 0 0 0 4h1v-4z"/><path d="M6 7v-1a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v1"/>',
+  wallets:'<path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/>',
+  flame:'<path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/>',
+  shield:'<path d="M12 3l7 4v5c0 4 -3 7 -7 8c-4 -1 -7 -4 -7 -8v-5z"/><path d="M9 12l2 2l4 -4"/>',
+  coins:'<circle cx="9" cy="9" r="6"/><path d="M14.5 4.14a6 6 0 1 1 -.5 11.36"/><path d="M7 9h2v4h1"/>',
+  pig:'<path d="M15 11l0 .01"/><path d="M5.173 8.378a3 3 0 1 1 4.656 -1.377"/><path d="M16 4a4 4 0 0 1 4 4v1l2 1v3l-2 0c-.396 1.056 -1.11 1.958 -2 2.607v2.393a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-1h-4v1a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-2.402a5.99 5.99 0 0 1 -2 -4.598a6 6 0 0 1 6 -6h5z"/>',
+  target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+  star:'<path d="M12 3l2.5 5.5l6 .7l-4.5 4l1.2 6l-5.2 -3l-5.2 3l1.2 -6l-4.5 -4l6 -.7z"/>',
+  calendar:'<path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M16 3v4M8 3v4M4 11h16"/><path d="M9 15l2 2l3 -3"/>',
+  crown:'<path d="M5 18h14M5 18l-2 -9l5 4l4 -8l4 8l5 -4l-2 9"/>',
+  trophy:'<path d="M8 21l8 0"/><path d="M12 17l0 4"/><path d="M7 4l10 0"/><path d="M17 4v8a5 5 0 0 1 -10 0v-8"/><path d="M5 9a2 2 0 0 1 0 -4h2"/><path d="M17 5h2a2 2 0 0 1 0 4"/>',
+  medal:'<path d="M12 4l3 3l-3 3l-3 -3z"/><circle cx="12" cy="15" r="5"/>',
+  card:'<path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10l18 0"/>',
+  receipt:'<path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2z"/><path d="M9 7h6"/><path d="M9 11h6"/>',
+  trend:'<path d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7l7 0l0 7"/>',
+  checks:'<path d="M7 12l5 5l10 -10"/><path d="M2 12l5 5m5 -5l5 -5"/>',
+  moon:'<path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/>',
+  rocket:'<path d="M4 13a8 8 0 0 1 7 7a6 6 0 0 0 3 -5a9 9 0 0 0 6 -8a3 3 0 0 0 -3 -3a9 9 0 0 0 -8 6a6 6 0 0 0 -5 3"/><path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3"/><circle cx="15" cy="9" r="1"/>',
+  diamond:'<path d="M6 5h12l3 5l-8.5 9.5a.7 .7 0 0 1 -1 0l-8.5 -9.5z"/><path d="M10 12l-2 -2.2l.6 -1"/>',
+  cloud:'<path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1"/><path d="M12 13l0 6"/><path d="M9 16l3 3l3 -3"/>',
+  cash:'<path d="M3 6m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/>',
+  scale:'<path d="M7 20l10 0"/><path d="M6 6l6 -1l6 1"/><path d="M12 3l0 17"/><path d="M9 12l-3 -6l-3 6a3 3 0 0 0 6 0"/><path d="M21 12l-3 -6l-3 6a3 3 0 0 0 6 0"/>',
+};
+function achSvg(key, c, size, sw) { return '<svg width="' + (size||26) + '" height="' + (size||26) + '" viewBox="0 0 24 24" fill="none" stroke="' + c + '" stroke-width="' + (sw||1.7) + '" stroke-linecap="round" stroke-linejoin="round">' + (ACH_IC[key]||ACH_IC.star) + '</svg>'; }
+
+function _achTxCount() { return (data.transactions || []).length; }
+function _achSavedTotal() { return (data.savingsGoals || []).reduce((s, g) => s + (g.deposits || []).reduce((a, d) => a + (d.amount || 0), 0), 0); }
+function _achMaxTxPerDay() { const m = {}; (data.transactions || []).forEach(t => { m[t.date] = (m[t.date] || 0) + 1; }); const v = Object.values(m); return v.length ? Math.max(...v) : 0; }
+function _achConsecLogDays() {
+  const days = [...new Set((data.transactions || []).map(t => t.date))].sort();
+  let best = 0, cur = 0, prev = null;
+  days.forEach(d => { if (prev && (new Date(d+'T00:00:00') - new Date(prev+'T00:00:00')) === 86400000) cur++; else cur = 1; best = Math.max(best, cur); prev = d; });
+  return best;
+}
+function _achCleanMonth() {
+  for (let i = 1; i <= 12; i++) { const pm = prevMonthKey(i); const md = calcMonthData(pm); if (md.income > 0) { const fb = calcFreeBudget(pm); if (fb.remaining >= 0) return true; } }
+  return false;
+}
+function _achDataDays() {
+  const ds = (data.transactions || []).map(t => t.date).sort();
+  if (!ds.length) return 0;
+  return Math.round((new Date(today()+'T00:00:00') - new Date(ds[0]+'T00:00:00')) / 86400000);
+}
+const ACH = [
+  { id:'first_income', nm:'İlk Gelir', ic:'cash', c:'#2DB866', ds:'İlk gelirini kaydettin. Yolculuk başladı.', chk:()=>(data.transactions||[]).some(t=>t.type==='income') },
+  { id:'first_wallet', nm:'İlk Cüzdan', ic:'wallet', c:'#2DB866', ds:'İlk cüzdanını kurdun. Paranı bölmeye başladın.', chk:()=>(data.budgets||[]).length>=1 },
+  { id:'first_card', nm:'İlk Kart', ic:'card', c:'#0A84FF', ds:'İlk kredi kartını tanımladın.', chk:()=>(data.cards||[]).length>=1 },
+  { id:'fast_start', nm:'Hızlı Başlangıç', ic:'rocket', c:'#0A84FF', ds:'Bir günde 3 işlem kaydettin.', chk:()=>_achMaxTxPerDay()>=3 },
+  { id:'tx10', nm:'10 İşlem', ic:'receipt', c:'#34D399', ds:'İlk 10 işlemini girdin.', chk:()=>_achTxCount()>=10 },
+  { id:'tx100', nm:'100 İşlem', ic:'star', c:'#34D399', ds:'100 işlem kaydettin. Takip alışkanlık oldu.', chk:()=>_achTxCount()>=100 },
+  { id:'tx500', nm:'500 İşlem', ic:'medal', c:'#BF5AF2', ds:'500 işlem. Gerçek bir kayıt ustası.', chk:()=>_achTxCount()>=500 },
+  { id:'log7', nm:'Günlük Kayıt', ic:'checks', c:'#2DB866', ds:'7 gün üst üste işlem girdin.', chk:()=>_achConsecLogDays()>=7 },
+  { id:'streak3', nm:'3 Gün Seri', ic:'flame', c:'#FBBF24', ds:'3 gün üst üste limitin altında.', chk:()=>(data.streak.best||0)>=3 },
+  { id:'streak7', nm:'7 Gün Seri', ic:'flame', c:'#F97316', ds:'7 gün üst üste limitin altında kaldın.', chk:()=>(data.streak.best||0)>=7 },
+  { id:'streak30', nm:'30 Gün Seri', ic:'flame', c:'#FF453A', ds:'Koca bir ay disiplini korudun.', chk:()=>(data.streak.best||0)>=30 },
+  { id:'streak90', nm:'90 Gün Seri', ic:'flame', c:'#BF5AF2', ds:'3 ay kesintisiz disiplin. Efsane.', chk:()=>(data.streak.best||0)>=90 },
+  { id:'streak365', nm:'365 Gün Seri', ic:'trophy', c:'#FFD60A', ds:'Bir yıl. Bu bir yaşam tarzı artık.', chk:()=>(data.streak.best||0)>=365 },
+  { id:'clean_month', nm:'Temiz Ay', ic:'moon', c:'#2DB866', ds:'Bir ayı hiç limit aşmadan bitirdin.', chk:()=>_achCleanMonth() },
+  { id:'wallets3', nm:'Cüzdan Koleksiyonu', ic:'wallets', c:'#BF5AF2', ds:'3 farklı cüzdan kurdun.', chk:()=>(data.budgets||[]).length>=3 },
+  { id:'wallet_master', nm:'Bütçe Ustası', ic:'crown', c:'#FFD60A', ds:'Cüzdanların uzun süredir yolunda.', chk:()=>{ const b=budgetList(); return b.length>=1 && _achDataDays()>=90 && b.every(x=>x.spent<=x.amount); } },
+  { id:'first_save', nm:'İlk Birikim', ic:'pig', c:'#34D399', ds:'İlk birikimini yaptın.', chk:()=>_achSavedTotal()>0 },
+  { id:'save10k', nm:'10.000 Birikim', ic:'coins', c:'#FFD60A', ds:'Toplam birikimin 10.000₺’yi geçti.', chk:()=>_achSavedTotal()>=10000 },
+  { id:'save50k', nm:'50.000 Birikim', ic:'diamond', c:'#5AC8FA', ds:'Birikimin 50.000₺’ye ulaştı. Ciddi iş.', chk:()=>_achSavedTotal()>=50000 },
+  { id:'goal_done', nm:'Hedefe Ulaştın', ic:'target', c:'#BF5AF2', ds:'İlk birikim hedefini tamamladın.', chk:()=>(data.savingsGoals||[]).some(g=>g.target>0 && (g.deposits||[]).reduce((a,d)=>a+(d.amount||0),0)>=g.target) },
+  { id:'first_debt', nm:'İlk Borç Kapandı', ic:'shield', c:'#0A84FF', ds:'Bir borcunu tamamen bitirdin.', chk:()=>(data.debts||[]).some(d=>d.active===false || (d.installments && d.paidCount>=d.installments)) },
+  { id:'debt_free', nm:'Borçsuz', ic:'scale', c:'#2DB866', ds:'Tüm borçlarını kapattın. Özgürsün.', chk:()=>(data.debts||[]).length>0 && (data.debts||[]).every(d=>d.active===false || (d.installments && d.paidCount>=d.installments)) },
+  { id:'up_month', nm:'Yükselen Ay', ic:'trend', c:'#2DB866', ds:'Geçen aya göre daha az harcadın.', chk:()=>{ const n=calcMonthData(monthKey()).expense, p=calcMonthData(prevMonthKey(1)).expense; return p>0 && n>0 && n<p; } },
+  { id:'backup', nm:'Tedbirli', ic:'cloud', c:'#0A84FF', ds:'İlk yedeğini aldın. Veri güvende.', chk:()=>!!data.lastBackup },
+];
+function achById(id) { return ACH.find(a => a.id === id); }
+function _achUnlockedSet() { if (!Array.isArray(data.achievements)) data.achievements = []; return new Set(data.achievements); }
+
+// ilk açılışta mevcut kilometre taşlarını SESSİZCE aç (mevcut kullanıcıyı kutlama seline boğma)
+function initAchievements() {
+  if (!Array.isArray(data.achievements)) data.achievements = [];
+  if (!data.achInit) {
+    ACH.forEach(a => { try { if (a.chk() && !data.achievements.includes(a.id)) data.achievements.push(a.id); } catch(e){} });
+    data.achInit = true; save();
+  }
+}
+let _achCelebQueue = [], _achCelebActive = false;
+function checkAchievements() {
+  if (!data.achInit) return;             // init tamamlanmadan kutlama yok
+  if (!Array.isArray(data.achievements)) data.achievements = [];
+  const newly = [];
+  ACH.forEach(a => { try { if (!data.achievements.includes(a.id) && a.chk()) { data.achievements.push(a.id); newly.push(a); } } catch(e){} });
+  if (newly.length) { save(); newly.forEach(a => _achCelebQueue.push(a)); _drainAchCeleb(); }
+}
+function _drainAchCeleb() {
+  if (_achCelebActive || !_achCelebQueue.length) return;
+  _achCelebActive = true;
+  achCelebrate(_achCelebQueue.shift());
+}
+function achCelebrate(a) {
+  document.getElementById('achcBadge').style.setProperty('--bc', a.c + '88');
+  const inner = document.getElementById('achcInner');
+  inner.style.background = 'linear-gradient(150deg,' + a.c + ',' + a.c + 'bb)';
+  inner.innerHTML = achSvg(a.ic, '#fff', 60, 1.9);
+  document.getElementById('achcTitle').textContent = a.nm;
+  document.getElementById('achcDesc').textContent = a.ds;
+  document.getElementById('achcBtn').textContent = _achCelebQueue.length ? 'Sıradaki' : 'Harika!';
+  const ov = document.getElementById('achCelebOv');
+  ov.classList.remove('show'); void ov.offsetWidth; ov.classList.add('show');
+  achBurstConfetti(a.c);
+  try { renderAchStrip(); if (document.getElementById('achSheet').classList.contains('show')) renderAchGrid(); } catch(e){}
+}
+function closeAchCeleb() {
+  document.getElementById('achCelebOv').classList.remove('show');
+  _achCelebActive = false;
+  if (_achCelebQueue.length) setTimeout(_drainAchCeleb, 350);
+}
+
+// ── konfeti ──
+let _achParts = [], _achRaf = null, _achCtx = null;
+function _achSizeCanvas() { const cv = document.getElementById('achConfetti'); if (!cv) return; let ctx; try { ctx = cv.getContext('2d'); } catch(e) { ctx = null; } if (!ctx) { _achCtx = null; return; } _achCtx = ctx; cv.width = innerWidth * (window.devicePixelRatio||1); cv.height = innerHeight * (window.devicePixelRatio||1); _achCtx.setTransform((window.devicePixelRatio||1),0,0,(window.devicePixelRatio||1),0,0); }
+function achBurstConfetti(main) {
+  const cv = document.getElementById('achConfetti'); if (!cv) return; _achSizeCanvas(); if (!_achCtx) return;
+  const cols = [main,'#2DB866','#0A84FF','#FFD60A','#BF5AF2','#F97316','#ffffff'];
+  const cx = innerWidth/2, cy = innerHeight*0.38;
+  for (let i=0;i<130;i++){ const ang=Math.random()*Math.PI*2, sp=4+Math.random()*9;
+    _achParts.push({x:cx,y:cy,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp-4,g:0.18+Math.random()*.12,s:5+Math.random()*7,rot:Math.random()*6.28,vr:(Math.random()-.5)*.4,col:cols[Math.floor(Math.random()*cols.length)],life:0,max:70+Math.random()*40,shape:Math.random()<.5?'r':'c'}); }
+  cv.classList.add('show'); if (!_achRaf) _achRaf = requestAnimationFrame(_achStep);
+}
+function _achStep() {
+  const cv = document.getElementById('achConfetti'); if (!cv || !_achCtx) { _achRaf=null; return; }
+  _achCtx.clearRect(0,0,cv.width,cv.height);
+  _achParts.forEach(p=>{ p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.life++; });
+  _achParts = _achParts.filter(p=>p.life<p.max && p.y<innerHeight+40);
+  _achParts.forEach(p=>{ const a=1-p.life/p.max; _achCtx.globalAlpha=Math.max(0,a); _achCtx.fillStyle=p.col; _achCtx.save(); _achCtx.translate(p.x,p.y); _achCtx.rotate(p.rot); if(p.shape==='r') _achCtx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6); else { _achCtx.beginPath(); _achCtx.arc(0,0,p.s/2,0,6.28); _achCtx.fill(); } _achCtx.restore(); });
+  _achCtx.globalAlpha=1;
+  if (_achParts.length) _achRaf = requestAnimationFrame(_achStep); else { _achRaf=null; cv.classList.remove('show'); }
+}
+
+// ── Özet şeridi ──
+function renderAchStrip() {
+  const el = document.getElementById('achStrip'); if (!el) return;
+  if (!Array.isArray(data.achievements)) data.achievements = [];
+  const unlocked = _achUnlockedSet();
+  // sıralama: açık olanlar önce, sonra kilitli — şeritte ilk ~8
+  const ordered = ACH.slice().sort((a,b)=>{ const ua=unlocked.has(a.id)?0:1, ub=unlocked.has(b.id)?0:1; return ua-ub; });
+  const show = ordered.slice(0, 8);
+  el.innerHTML = `
+    <div class="ach-strip-card">
+      <div class="ach-strip-head">
+        <span class="ach-strip-t">${achSvg('trophy','#FFD60A',18,1.7)} Kazanımlar</span>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="ach-strip-c"><b>${unlocked.size}</b> / ${ACH.length}</span>
+          <button class="ach-strip-all" onclick="openAchSheet()">Tümü</button>
+        </div>
+      </div>
+      <div class="ach-strip-row">
+        ${show.map(a=>{ const on=unlocked.has(a.id); return `<div class="ach-mini ${on?'unlocked':'locked'}" onclick="openAchSheet()">
+          <div class="ach-mini-ic" style="background:${on?a.c+'22':'var(--surface3)'}">${achSvg(a.ic,on?a.c:'#3a3a42',24)}</div>
+          <div class="ach-mini-nm">${esc(a.nm)}</div></div>`; }).join('')}
+      </div>
+    </div>`;
+}
+function renderAchGrid() {
+  const g = document.getElementById('achGrid'); if (!g) return;
+  const unlocked = _achUnlockedSet();
+  const ordered = ACH.slice().sort((a,b)=>{ const ua=unlocked.has(a.id)?0:1, ub=unlocked.has(b.id)?0:1; return ua-ub; });
+  g.innerHTML = ordered.map(a=>{ const on=unlocked.has(a.id);
+    return `<div class="ach-badge ${on?'unlocked':'locked'}" onclick="achDetail('${a.id}')">
+      ${on?'':`<span class="ach-lock">${achSvg('shield','#6E6D78',13,1.6).replace(ACH_IC.shield,'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11v-4a4 4 0 0 1 8 0v4"/>')}</span>`}
+      <div class="ach-badge-ic" style="background:${on?a.c+'22':'var(--surface3)'}">${achSvg(a.ic,on?a.c:'#3a3a42',24)}</div>
+      <div class="ach-badge-nm">${esc(a.nm)}</div></div>`;
+  }).join('');
+  document.getElementById('achSheetTitle').textContent = 'Kazanımlar · ' + unlocked.size + '/' + ACH.length;
+}
+function openAchSheet() { renderAchGrid(); document.getElementById('achSheetOv').classList.add('show'); document.getElementById('achSheet').classList.add('show'); }
+function closeAchSheet() { document.getElementById('achSheetOv').classList.remove('show'); document.getElementById('achSheet').classList.remove('show'); }
+function achDetail(id) {
+  const a = achById(id); if (!a) return;
+  const on = _achUnlockedSet().has(id);
+  showToast((on ? TOAST_OK : TOAST_WARN) + ' ' + esc(a.nm) + (on ? ' · Kazanıldı' : ' · Kilitli') + ' — ' + esc(a.ds));
+}
+
 // ── V75: ALIŞKANLIKLARIN (davranış içgörüleri) ──
 const _TR_MON = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
 const _DOW = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
@@ -9634,6 +9894,7 @@ function renderHabits() {
 }
 
 function renderOzetStats() {
+  renderAchStrip(); // V76
   renderHabits(); // V75
   renderBackupBanner(); // V69.2
   const mk = currentMonth;
@@ -10864,6 +11125,8 @@ function importData(input) {
       if (!data.categoryBudgets || typeof data.categoryBudgets !== 'object' || Array.isArray(data.categoryBudgets)) data.categoryBudgets = {}; // V71
       if (typeof data.budgetTutorialSeen !== 'boolean') data.budgetTutorialSeen = false; // V71
       if (!Array.isArray(data.budgets)) data.budgets = []; // V72
+      if (!Array.isArray(data.achievements)) data.achievements = []; // V76
+      if (typeof data.achInit !== 'boolean') data.achInit = false; // V76
       if (!data.budgets.length && data.categoryBudgets && Object.keys(data.categoryBudgets).length) {
         Object.entries(data.categoryBudgets).forEach(([cid, amt]) => {
           if (amt > 0) { const c = getCat(cid); data.budgets.push({ id:'bgt_'+uid(), name:(c&&c.name)||cid, amount:amt, period:'monthly', source:'category', catId:cid, color:(c&&c.color)||'#6E6D78', created:today() }); }
@@ -11043,6 +11306,7 @@ function renderAll() {
   updateCollapseSummaries();
   if (currentTab === 'plan') renderPlan();
   updateExportSubLabel(); // V69.2
+  checkAchievements(); // V76: yeni kazanım açıldı mı
 }
 
 // =================== INIT ===================
@@ -11300,6 +11564,8 @@ function renderDpMonthGrid() {
 function init() {
   load();
   processCardCycles(); // V69: geçen kesim günlerini işle
+  initAchievements(); // V76: mevcut kazanımları sessizce işaretle
+  _achSizeCanvas();
   _dpSelected = today();
   populateCatSelects();
   updateAppLogo();
