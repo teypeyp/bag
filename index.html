@@ -1968,6 +1968,21 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .ach-badge.locked .ach-badge-nm{color:var(--muted)}
 .ach-badge .ach-lock{position:absolute;top:9px;right:9px;opacity:.55}
 
+/* rozet detay sheet */
+.ach-det-ov{position:fixed;inset:0;z-index:270;background:rgba(0,0,0,0);pointer-events:none;transition:background .3s;backdrop-filter:blur(0px)}
+.ach-det-ov.show{background:rgba(0,0,0,.6);pointer-events:all;backdrop-filter:blur(3px)}
+.ach-det{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:520px;background:var(--surface);border-radius:26px 26px 0 0;z-index:271;transition:transform .42s cubic-bezier(.32,0,.15,1),visibility 0s linear .42s;visibility:hidden;padding-bottom:34px;overflow:hidden}
+.ach-det.show{transform:translateX(-50%) translateY(0);visibility:visible;transition:transform .42s cubic-bezier(.32,0,.15,1),visibility 0s linear 0s}
+.ach-det-body{padding:6px 24px 0;text-align:center;position:relative}
+.ach-det-glow{position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:220px;height:220px;border-radius:50%;pointer-events:none;filter:blur(20px);opacity:.5}
+.ach-det-ic{width:104px;height:104px;border-radius:30px;margin:14px auto 16px;display:flex;align-items:center;justify-content:center;position:relative;z-index:1}
+.ach-det.show .ach-det-ic{animation:achDetPop .55s .06s cubic-bezier(.34,1.6,.5,1) both}
+@keyframes achDetPop{0%{transform:scale(0) rotate(-16deg);opacity:0}70%{transform:scale(1.1) rotate(4deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+.ach-det-badgetick{position:absolute;bottom:-4px;right:-4px;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.ach-det-nm{font-size:22px;font-weight:900;letter-spacing:-.5px;margin-bottom:8px;position:relative;z-index:1}
+.ach-det-ds{font-size:13.5px;font-weight:500;color:var(--muted);line-height:1.6;max-width:300px;margin:0 auto 18px;position:relative;z-index:1}
+.ach-det-status{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:900;padding:9px 16px;border-radius:99px;letter-spacing:.3px;position:relative;z-index:1}
+
 /* kutlama */
 #achConfetti{position:fixed;inset:0;z-index:399;pointer-events:none;display:none}
 #achConfetti.show{display:block}
@@ -2875,7 +2890,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v76.1 · Veriler bu cihazda saklanır</div>
+    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v76.2 · Veriler bu cihazda saklanır</div>
   </div>
 </div>
 
@@ -3050,6 +3065,12 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <div class="add-sheet-handle"></div>
   <div class="add-sheet-header"><span class="add-sheet-title" id="achSheetTitle">Kazanımlar</span><button class="add-sheet-close" onclick="closeAchSheet()">&times;</button></div>
   <div class="add-sheet-body"><div class="ach-grid" id="achGrid"></div><div style="height:10px"></div></div>
+</div>
+<!-- rozet detay -->
+<div class="ach-det-ov" id="achDetOv" onclick="if(event.target===this)closeAchDet()"></div>
+<div class="ach-det" id="achDetSheet">
+  <div class="add-sheet-handle"></div>
+  <div class="ach-det-body" id="achDetBody"></div>
 </div>
 
 <!-- ═══ V71: BÜTÇE EKLE / DÜZENLE SHEET ═══ -->
@@ -9821,7 +9842,26 @@ function closeAchSheet() { document.getElementById('achSheetOv').classList.remov
 function achDetail(id) {
   const a = achById(id); if (!a) return;
   const on = _achUnlockedSet().has(id);
-  showToast((on ? TOAST_OK : TOAST_WARN) + ' ' + esc(a.nm) + (on ? ' · Kazanıldı' : ' · Kilitli') + ' — ' + esc(a.ds));
+  const col = on ? a.c : '#3a3a42';
+  const tick = on
+    ? `<div class="ach-det-badgetick" style="background:${a.c}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10 -10"/></svg></div>`
+    : `<div class="ach-det-badgetick" style="background:var(--surface3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6E6D78" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11v-4a4 4 0 0 1 8 0v4"/></svg></div>`;
+  const status = on
+    ? `<span class="ach-det-status" style="background:rgba(45,184,102,.14);color:var(--accent)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10 -10"/></svg>Kazanıldı</span>`
+    : `<span class="ach-det-status" style="background:rgba(255,255,255,.06);color:var(--muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11v-4a4 4 0 0 1 8 0v4"/></svg>Henüz kilitli</span>`;
+  document.getElementById('achDetBody').innerHTML = `
+    ${on ? `<div class="ach-det-glow" style="background:radial-gradient(circle,${a.c},transparent 65%)"></div>` : ''}
+    <div class="ach-det-ic" style="background:${on ? a.c+'22' : 'var(--surface3)'}">${achSvg(a.ic, col, 50, 1.8)}${tick}</div>
+    <div class="ach-det-nm">${esc(a.nm)}</div>
+    <div class="ach-det-ds">${esc(a.ds)}</div>
+    ${status}
+    <div style="height:10px"></div>`;
+  document.getElementById('achDetOv').classList.add('show');
+  document.getElementById('achDetSheet').classList.add('show');
+}
+function closeAchDet() {
+  document.getElementById('achDetOv').classList.remove('show');
+  document.getElementById('achDetSheet').classList.remove('show');
 }
 
 // ── V75: ALIŞKANLIKLARIN (davranış içgörüleri) ──
