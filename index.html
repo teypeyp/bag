@@ -54,13 +54,13 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
 @keyframes tabEnter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-/* V77 — yön-farkında tab geçişi */
-@keyframes tabSlideR{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
-@keyframes tabSlideL{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
-/* V77 — yeni işlem satırı girişi */
-@keyframes txRowIn{0%{opacity:0;transform:translateY(-14px) scale(.97)}60%{transform:translateY(2px) scale(1.006)}100%{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes txRowGlow{0%{box-shadow:0 0 0 0 var(--accent-glow),inset 0 0 0 1px transparent}30%{box-shadow:0 6px 22px -6px var(--accent-glow),inset 0 0 0 1px var(--accent)}100%{box-shadow:0 0 0 0 transparent,inset 0 0 0 1px transparent}}
-.tx-row.tx-enter,.tx-item.tx-enter{animation:txRowIn .5s var(--spring) both,txRowGlow 1.15s var(--smooth) .04s both}
+/* V77 — yön-farkında tab geçişi (belirgin kayma) */
+@keyframes tabSlideR{0%{opacity:0;transform:translateX(64px)}60%{opacity:1}100%{opacity:1;transform:translateX(0)}}
+@keyframes tabSlideL{0%{opacity:0;transform:translateX(-64px)}60%{opacity:1}100%{opacity:1;transform:translateX(0)}}
+/* V77 — yeni işlem satırı girişi (tepeden düşer + yeşil parıltı) */
+@keyframes txRowIn{0%{opacity:0;transform:translateY(-26px) scale(.96)}55%{transform:translateY(3px) scale(1.012)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes txRowGlow{0%{background:var(--accent-dim);box-shadow:0 8px 26px -8px var(--accent-glow),inset 0 0 0 1.5px var(--accent)}70%{background:var(--accent-dim)}100%{background:transparent;box-shadow:0 0 0 0 transparent,inset 0 0 0 1.5px transparent}}
+.tx-row.tx-enter,.tx-item.tx-enter{animation:txRowIn .55s var(--spring) both,txRowGlow 1.4s var(--smooth) .05s both;border-radius:12px}
 /* V77 — streak alevi artış pop */
 @keyframes streakPop{0%{transform:scale(1)}30%{transform:scale(1.42) rotate(-6deg)}55%{transform:scale(.9) rotate(3deg)}100%{transform:scale(1) rotate(0)}}
 @keyframes streakSpark{0%{opacity:0;transform:translate(0,0) scale(.2)}25%{opacity:1}100%{opacity:0;transform:translate(var(--sx),var(--sy)) scale(1)}}
@@ -3993,7 +3993,7 @@ function switchTab(id) {
   // V77 — yön-farkında geçiş: yeni tab sağdaysa sağdan, soldaysa soldan gelsin
   var _oi = TAB_ORDER.indexOf(currentTab), _ni = TAB_ORDER.indexOf(id);
   var _dir = (_oi < 0 || _ni < 0 || _oi === _ni) ? 0 : (_ni > _oi ? 1 : -1);
-  _animBars = true; // bu geçişte barlar 0'dan dolsun
+  _freshTxView = true; // bu geçişte tüm liste stagger ile gelsin (in-tab eklemede değil)
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active','tab-r','tab-l'));
   const next = document.getElementById('tab-' + id);
   if (next) {
@@ -4044,7 +4044,8 @@ function switchTab(id) {
       mti.value = val > 0 ? fmtNum(val) : '';
     }
   }
-  _sweepBarFills(); // V77 — tab girişinde 0'dan işaretli barları doldur
+  _armBarFills();      // V77 — görünen barları doldur
+  _freshTxView = false; // stagger yalnız tab girişinde
 }
 
 function updatePillIndicator(id) {
@@ -4917,6 +4918,7 @@ function renderWalletHero(balance, fb) {
     if (target > 0) requestAnimationFrame(() => { track.scrollLeft = target * track.clientWidth; });
     else _heroIdx = 0;
   }
+  _armBarFills(); // V77 — cüzdan barları görününce dolsun
 }
 
 // ── V72: BÜTÇELER — serbest/kategori · aylık/tek seferlik ──
@@ -4990,7 +4992,7 @@ function budgetPageHtml(b) {
         <span class="bud-hero-spent" style="color:${p.accent}">${fmtTL(Math.round(b.spent))}</span>
         <span class="bud-hero-cap">/ ${fmtTL(b.amount)}${b.period==='oneoff'?' toplam':''}</span>
       </div>
-      <div class="bud-hero-bar"><div class="bud-hero-bar-fill" style="width:${_animBars?0:pct}%;background:${p.fill}"${_animBars?` data-animw="${pct}"`:''}></div></div>
+      <div class="bud-hero-bar"><div class="bud-hero-bar-fill" style="width:0%;background:${p.fill}" data-fillw="${pct}"></div></div>
       <div class="bud-hero-foot">
         <span class="k">%${Math.round(pct)} kullanıldı</span>
         <span style="color:${p.accent}">${remain>=0?fmtTL(Math.round(remain))+' kaldı':fmtTL(Math.round(-remain))+' aşıldı'}</span>
@@ -5065,7 +5067,7 @@ function renderBudgetStatus() {
       <div class="bs-row-mid">
         <div class="bs-row-top"><span class="bs-row-nm">${esc(b.name)}<small>${b.period==='monthly'?'aylık':'tek seferlik'}</small></span>
         <span class="bs-row-fig" style="color:${pal.accent}">${fmtTL(Math.round(b.spent))} / ${fmtTL(b.amount)}</span></div>
-        <div class="bs-row-bar"><div class="bs-row-fill" style="width:${_animBars?0:p}%;background:${pal.fill}${_animBars?`;transition-delay:${_i*70}ms`:''}"${_animBars?` data-animw="${p}"`:''}></div></div>
+        <div class="bs-row-bar"><div class="bs-row-fill" style="width:0%;background:${pal.fill};transition-delay:${_i*70}ms" data-fillw="${p}"></div></div>
       </div>
     </div>`;
   }).join('');
@@ -5093,6 +5095,7 @@ function renderBudgetStatus() {
       <div class="bs-list">${rows}</div>
       <div class="bs-foot">Cüzdan harcamaların günlük limitine ve istatistiklerine zaten yansıyor — bu kart yalnız cüzdan hedeflerini özetler.</div>
     </div>`;
+  _armBarFills(); // V77 — Plan cüzdan barları görününce dolsun
 }
 
 // ── kategori aylık harcama (preset önerisi için, bütçe atamasından bağımsız) ──
@@ -5658,7 +5661,7 @@ function renderTxList(container, txs, limitTo5, prefix) {
       const cardBadge = t.payMethod === 'card'
         ? ` <span class="tx-card-badge">${payCardObj ? esc(payCardObj.name.length > 12 ? payCardObj.name.slice(0,12) + '…' : payCardObj.name).toUpperCase() : 'KART'}</span>`
         : '';
-      itemsHtml += `<div class="tx-item ${cardClass} stagger-item${t.id===_newTxId?' tx-enter':''}" id="tx_${domId}" onclick="toggleTxDelete('${t.id}','${pfx}')">
+      itemsHtml += `<div class="tx-item ${cardClass}${_freshTxView?' stagger-item':''}${t.id===_newTxId?' tx-enter':''}" id="tx_${domId}" onclick="toggleTxDelete('${t.id}','${pfx}')">
         <div class="tx-icon ${t.type}" style="background:${iconBg}">${iconHtml}</div>
         <div class="tx-info">
           <div class="tx-desc">${esc(catName)}${cardBadge}${isCardPay ? ' <span class="tx-card-badge" style="background:rgba(255,255,255,.07);color:var(--muted)">TRANSFER</span>' : ''}</div>
@@ -5694,19 +5697,31 @@ let _touchOnInteractive = false;
 
 const TAB_ORDER = ['aylik', 'sabit', 'ozet', 'plan', 'ayarlar'];
 // V77 — premium animasyon durum bayrakları
-let _animBars = false;      // tab girişinde barlar 0'dan dolsun
+let _freshTxView = false;   // tab girişinde liste stagger ile gelsin, in-tab eklemede değil
 let _newTxId = null;        // en son eklenen işlem (satır giriş animasyonu için)
 let _prevStreakVal = null;  // streak artışını yakalamak için
 function markNewTx(){ try{ _newTxId = data.transactions[data.transactions.length-1].id; setTimeout(()=>{ _newTxId = null; }, 1400); }catch(e){} }
-// V77 — 0'dan işaretli barları hedef genişliğe doldur, bayrağı sıfırla
-function _sweepBarFills(){
-  requestAnimationFrame(() => {
-    document.querySelectorAll('[data-animw]').forEach(el => {
-      const w = el.getAttribute('data-animw');
-      if (w != null) { el.style.width = w + '%'; el.removeAttribute('data-animw'); }
-    });
-    _animBars = false;
-  });
+// V77 — barlar EKRANA GİRİNCE 0'dan hedefe dolsun (carousel/scroll içinde de doğru çalışır)
+let _barIO = null;
+function _armBarFills(){
+  const bars = document.querySelectorAll('.bud-hero-bar-fill[data-fillw],.bs-row-fill[data-fillw]');
+  if (!bars.length) return;
+  if (!('IntersectionObserver' in window)) {
+    bars.forEach(el => { const w = el.getAttribute('data-fillw'); if (w != null) el.style.width = w + '%'; });
+    return;
+  }
+  if (!_barIO) {
+    _barIO = new IntersectionObserver((entries, obs) => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          const el = en.target, w = el.getAttribute('data-fillw');
+          if (w != null) requestAnimationFrame(() => { el.style.width = w + '%'; });
+          obs.unobserve(el);
+        }
+      });
+    }, { threshold: 0.3 });
+  }
+  bars.forEach(el => _barIO.observe(el));
 }
 
 document.addEventListener('touchstart', e => {
