@@ -2714,15 +2714,20 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     </div>
 
     <div id="ccStartWrap">
-      <div class="cc-divider"><span>Mevcut Durum · Opsiyonel</span></div>
-      <div class="cc-divider-note">Hali hazırdaki kartını olduğu gibi gir. Bu tutarlar geçmişte harcandığı için günlük limite ve istatistiklere <b style="color:var(--text)">girmez</b> — sadece kart borcunu oluşturur.</div>
+      <div class="cc-divider"><span id="ccStartDivider">Mevcut Durum · Opsiyonel</span></div>
+      <div class="cc-divider-note" id="ccStartNote">Hali hazırdaki kartını olduğu gibi gir. Bu tutarlar geçmişte harcandığı için günlük limite ve istatistiklere <b style="color:var(--text)">girmez</b> — sadece kart borcunu oluşturur.</div>
       <div class="form-group">
-        <label class="form-label">Güncel Dönem Borcu (kesilmemiş)</label>
+        <label class="form-label" id="ccStartDebtLabel">Güncel Dönem Borcu (kesilmemiş)</label>
         <input type="text" id="ccStartDebt" class="form-input" placeholder="0" inputmode="numeric" oninput="fmtInput(this)">
+        <div id="ccStartDebtHint" style="display:none;font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5"></div>
       </div>
       <div class="form-group">
         <label class="form-label">Ödenmemiş Ekstre</label>
         <input type="text" id="ccStartStmt" class="form-input" placeholder="0" inputmode="numeric" oninput="fmtInput(this)">
+      </div>
+      <div class="form-group" id="ccCarriedWrap" style="display:none">
+        <label class="form-label">Devreden Borç</label>
+        <input type="text" id="ccStartCarried" class="form-input" placeholder="0" inputmode="numeric" oninput="fmtInput(this)">
       </div>
       <div class="form-group">
         <label class="form-label">Devam Eden Taksitler</label>
@@ -5385,8 +5390,14 @@ function openCardAddSheet() {
   document.getElementById('ccDueDay').value = '';
   document.getElementById('ccStartDebt').value = '';
   document.getElementById('ccStartStmt').value = '';
+  document.getElementById('ccStartCarried').value = '';
   document.getElementById('ccInstList').innerHTML = '';
   document.getElementById('ccStartWrap').style.display = 'block';
+  document.getElementById('ccCarriedWrap').style.display = 'none';
+  document.getElementById('ccStartDebtHint').style.display = 'none';
+  document.getElementById('ccStartDivider').textContent = 'Mevcut Durum · Opsiyonel';
+  document.getElementById('ccStartNote').innerHTML = 'Hali hazırdaki kartını olduğu gibi gir. Bu tutarlar geçmişte harcandığı için günlük limite ve istatistiklere <b style="color:var(--text)">girmez</b> — sadece kart borcunu oluşturur.';
+  document.getElementById('ccStartDebtLabel').textContent = 'Güncel Dönem Borcu (kesilmemiş)';
   _ccAddEffect();
   document.getElementById('cardAddOverlay').classList.add('show');
   document.getElementById('cardAddSheet').classList.add('show');
@@ -5401,8 +5412,28 @@ function openCardEdit(id) {
   document.getElementById('ccLimit').value = fmtTL(c.limit).replace('₺', '');
   document.getElementById('ccCutDay').value = c.cutDay;
   document.getElementById('ccDueDay').value = c.dueDay;
-  document.getElementById('ccStartWrap').style.display = 'none'; // mevcut durum sadece eklerken
-  document.getElementById('ccAddEffect').innerHTML = '';
+  // V69.1: mevcut durum alanlarını düzenlemede de göster ve doldur
+  document.getElementById('ccStartWrap').style.display = 'block';
+  document.getElementById('ccStartDivider').textContent = 'Mevcut Durum · Düzelt';
+  document.getElementById('ccStartNote').innerHTML = 'Bu tutarlar kart borcunu oluşturur; günlük limite ve istatistiklere <b style="color:var(--text)">girmez</b>. Gerçek kart harcamalarından gelen tutar buradan değil, işlemin kendisinden düzenlenir.';
+  document.getElementById('ccStartDebtLabel').textContent = 'Manuel Başlangıç Borcu';
+  document.getElementById('ccStartDebt').value = c.startDebt ? fmtNum(c.startDebt).replace('₺', '') : '';
+  document.getElementById('ccStartStmt').value = c.statement ? fmtNum(c.statement).replace('₺', '') : '';
+  document.getElementById('ccCarriedWrap').style.display = 'block';
+  document.getElementById('ccStartCarried').value = c.carried ? fmtNum(c.carried).replace('₺', '') : '';
+  // dönem harcaması bilgisi (gerçek işlemlerden gelen kısım — burada düzenlenemez)
+  const txSum = calcCardTotals(c).current - (c.startDebt || 0);
+  const hint = document.getElementById('ccStartDebtHint');
+  if (txSum > 0) {
+    hint.style.display = 'block';
+    hint.innerHTML = 'Bu döneme ait kart harcamaların: <b style="color:var(--text)">' + fmtTL(Math.round(txSum)) + '</b> — bunlar işlem listesinden düzenlenir. Yukarıdaki alan yalnız manuel girdiğin başlangıç borcunu değiştirir.';
+  } else {
+    hint.style.display = 'none';
+  }
+  // taksitler
+  document.getElementById('ccInstList').innerHTML = '';
+  (c.installments || []).forEach(it => { if (it.left > 0) addCardInstRow(it.name, it.per, it.left, it.id); });
+  _ccAddEffect();
   document.getElementById('cardAddOverlay').classList.add('show');
   document.getElementById('cardAddSheet').classList.add('show');
 }
@@ -5410,12 +5441,14 @@ function closeCardAddSheet() {
   document.getElementById('cardAddOverlay').classList.remove('show');
   document.getElementById('cardAddSheet').classList.remove('show');
 }
-function addCardInstRow(name, per, left) {
+function addCardInstRow(name, per, left, iid) {
   const row = document.createElement('div');
   row.className = 'cc-inst-row';
+  if (iid) row.dataset.iid = iid;
+  const perStr = per ? fmtNum(per).replace('₺', '') : '';
   row.innerHTML =
-    '<input type="text" class="form-input cc-in" placeholder="Beyaz eşya" value="' + (name || '') + '">' +
-    '<input type="text" class="form-input cc-ip" placeholder="2.100" inputmode="numeric" value="' + (per || '') + '">' +
+    '<input type="text" class="form-input cc-in" placeholder="Beyaz eşya" value="' + esc(name || '') + '">' +
+    '<input type="text" class="form-input cc-ip" placeholder="2.100" inputmode="numeric" value="' + perStr + '" oninput="fmtInput(this)">' +
     '<input type="number" class="form-input cc-il" placeholder="4" min="1" max="24" inputmode="numeric" value="' + (left || '') + '">' +
     '<button class="cc-inst-x" onclick="this.parentNode.remove();_ccAddEffect()">&times;</button>';
   row.querySelectorAll('input').forEach(inp => inp.addEventListener('input', _ccAddEffect));
@@ -5424,6 +5457,7 @@ function addCardInstRow(name, per, left) {
 }
 function _readCardInstRows() {
   return Array.from(document.querySelectorAll('#ccInstList .cc-inst-row')).map(r => ({
+    iid: r.dataset.iid || null,
     name: r.querySelector('.cc-in').value.trim() || 'Taksit',
     per: parseNum(r.querySelector('.cc-ip').value) || 0,
     left: Math.min(24, Math.max(1, parseInt(r.querySelector('.cc-il').value) || 1))
@@ -5431,11 +5465,22 @@ function _readCardInstRows() {
 }
 function _ccAddEffect() {
   const el = document.getElementById('ccAddEffect');
-  if (!el || _editCardId) return;
+  if (!el) return;
   const start = parseNum(document.getElementById('ccStartDebt').value) || 0;
   const stmt = parseNum(document.getElementById('ccStartStmt').value) || 0;
+  const carried = _editCardId ? (parseNum(document.getElementById('ccStartCarried').value) || 0) : 0;
   const insts = _readCardInstRows();
   const instFuture = insts.reduce((s, t) => s + t.per * t.left, 0);
+  if (_editCardId) {
+    const c = cardById(_editCardId);
+    const txSum = c ? calcCardTotals(c).current - (c.startDebt || 0) : 0;
+    const debt = start + txSum + stmt + carried;
+    let rows = '<div class="cc-eff-row"><span>Toplam kart borcu (yeni)</span><b style="color:var(--warning)">' + fmtTL(Math.round(debt)) + '</b></div>';
+    if (instFuture > 0) rows += '<div class="cc-eff-row"><span>Gelecek ekstreler (taksit)</span><b style="color:var(--blue)">' + fmtTL(Math.round(instFuture)) + '</b></div>';
+    rows += '<div class="cc-eff-row"><span>Günlük limit & istatistikler</span><b style="color:var(--muted)">Etkilenmez</b></div>';
+    el.innerHTML = rows;
+    return;
+  }
   const debt = start + stmt;
   if (debt <= 0 && instFuture <= 0) { el.innerHTML = ''; return; }
   let rows = '';
@@ -5458,6 +5503,24 @@ function saveCard() {
     if (!c) return;
     c.name = name; c.limit = limit; c.dueDay = dueDay;
     if (c.cutDay !== cutDay) { c.cutDay = cutDay; c.lastCut = _lastCutDateStr(cutDay); }
+    // V69.1: mevcut durum alanları
+    c.startDebt = parseNum(document.getElementById('ccStartDebt').value) || 0;
+    c.statement = parseNum(document.getElementById('ccStartStmt').value) || 0;
+    c.carried = parseNum(document.getElementById('ccStartCarried').value) || 0;
+    // taksitleri kimliğe göre koru; yeni satırlar isStart:true, silinenler düşer
+    const rows = _readCardInstRows();
+    const kept = [];
+    rows.forEach(r => {
+      const existing = r.iid ? (c.installments || []).find(it => it.id === r.iid) : null;
+      if (existing) {
+        existing.name = r.name; existing.per = r.per;
+        existing.left = r.left; existing.total = Math.max(existing.total || r.left, r.left);
+        kept.push(existing);
+      } else {
+        kept.push({ id: uid(), name: r.name, per: r.per, left: r.left, total: r.left, isStart: true, category: 'diger' });
+      }
+    });
+    c.installments = kept;
     closeCardAddSheet(); save(); renderAll();
     showToast(TOAST_OK + ' Kart güncellendi');
     return;
