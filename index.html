@@ -1980,7 +1980,8 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 /* ── V72: bütçe ekleme — giriş + wizard + düzenle ── */
 .add-sheet.bgt-sheet-intro{padding-bottom:env(safe-area-inset-bottom,0px)}
 .bgt-sheet-intro .add-sheet-handle{position:relative;z-index:6}
-.bgt-stage{position:relative;padding:22px 24px 24px;text-align:center;overflow:hidden;margin-top:-14px}
+.bgt-close-float{position:absolute;top:14px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:#fff;font-size:18px;cursor:pointer;z-index:8;backdrop-filter:blur(8px);font-family:'Montserrat',sans-serif;display:flex;align-items:center;justify-content:center}
+.bgt-stage{position:relative;padding:14px 24px 22px;text-align:center;overflow:hidden}
 .bgt-stage::before{content:'';position:absolute;inset:0;background:radial-gradient(90% 60% at 50% -8%,rgba(45,184,102,.2),transparent 60%),radial-gradient(70% 50% at 85% 20%,rgba(10,132,255,.1),transparent 55%),radial-gradient(60% 50% at 12% 15%,rgba(191,90,242,.09),transparent 55%);z-index:0}
 .bgt-stage::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.09),transparent);z-index:2}
 .bgt-stage>*{position:relative;z-index:1}
@@ -2012,6 +2013,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .bgt-feat:nth-child(1){animation-delay:.8s}.bgt-feat:nth-child(2){animation-delay:.9s}.bgt-feat:nth-child(3){animation-delay:1s}
 .bgt-feat-ic{width:33px;height:33px;border-radius:10px;margin:0 auto 7px;display:flex;align-items:center;justify-content:center}
 .bgt-feat-t{font-size:11px;font-weight:800;line-height:1.3}
+.bgt-intro-info{display:flex;gap:8px;align-items:flex-start;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:11px 13px;margin-bottom:16px;font-size:11.5px;font-weight:500;color:var(--muted);line-height:1.5;text-align:left}
 .bgt-cta{position:relative;width:100%;padding:16px;border:none;border-radius:15px;background:linear-gradient(180deg,#2DB866,#25a35a);color:#fff;font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 10px 26px rgba(45,184,102,.32);display:flex;align-items:center;justify-content:center;gap:8px;overflow:hidden}
 .bgt-intro-body .bgt-cta{opacity:0;animation:bgtFadeUp .55s 1.05s both}
 .bgt-intro-body .bgt-cta::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);transform:skewX(-20deg);animation:bgtShine 3.2s 1.6s ease-in-out infinite}
@@ -2780,7 +2782,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault · Veriler bu cihazda saklanır</div>
+    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v73.2 · Veriler bu cihazda saklanır</div>
   </div>
 </div>
 
@@ -2945,11 +2947,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 <div class="add-sheet-overlay" id="bgtOverlay" onclick="if(event.target===this)closeBudgetSheet()"></div>
 <div class="add-sheet" id="bgtSheet">
   <div class="add-sheet-handle"></div>
-  <div class="add-sheet-header">
-    <span class="add-sheet-title" id="bgtTitle">Bütçe Ekle</span>
-    <button class="add-sheet-close" onclick="closeBudgetSheet()">&times;</button>
-  </div>
-  <div class="add-sheet-body" id="bgtBody"></div>
+  <div class="add-sheet-body" id="bgtBody" style="padding:0"></div>
 </div>
 
 <!-- ═══ V69: KART EKLE / DÜZENLE SHEET ═══ -->
@@ -4485,22 +4483,45 @@ function calcFreeBudget(mk) {
 
   const paidFixed = txs.filter(t => t.isRecurring || t.isDebt || t.isGoalDeposit)
     .reduce((s, t) => s + t.amount, 0);
-  const varSpent = Math.max(0, expense - paidFixed);
 
-  const available = income - recTotal - debtTotal - goalTotal - savTarget;
+  const isCurrentMonth = mk === monthKey();
+  const todayStr = today();
+
+  // V73.2: ZARF (envelope) bütçeleri — ayrılan para available'dan düşer (sabit gider gibi),
+  // bütçeye atanan harcama serbest harcamadan çıkar. Sadece cari ayda uygulanır.
+  let budgetCharge = 0;
+  let varSpent, todayVarSpent;
+  if (isCurrentMonth && (data.budgets || []).length) {
+    const attrTM = {};
+    let freeVar = 0, freeToday = 0;
+    txs.forEach(t => {
+      if (t.type !== 'expense' || t.isRecurring || t.isDebt || t.isGoalDeposit) return;
+      const b = budgetForTx(t);
+      if (b) { attrTM[b.id] = (attrTM[b.id] || 0) + t.amount; }
+      else { freeVar += t.amount; if (t.date === todayStr) freeToday += t.amount; }
+    });
+    data.budgets.forEach(b => {
+      const sTM = attrTM[b.id] || 0;         // bu ay bu bütçeye atanan harcama
+      const sScoped = budgetSpent(b);        // aylık: bu ay · tek seferlik: toplam
+      budgetCharge += sTM + Math.max(0, (b.amount || 0) - sScoped);  // harcanan + ayrılan (kalan)
+    });
+    varSpent = freeVar;
+    todayVarSpent = freeToday;
+  } else {
+    varSpent = Math.max(0, expense - paidFixed);
+    todayVarSpent = isCurrentMonth
+      ? txs.filter(t => t.date === todayStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+          .reduce((s, t) => s + t.amount, 0)
+      : 0;
+  }
+
+  const available = (income - recTotal - debtTotal - goalTotal - savTarget) - budgetCharge;
   const remaining = available - varSpent;
   const unpaidFixed = Math.max(0, (recTotal + debtTotal + goalTotal) - paidFixed);
 
-  const isCurrentMonth = mk === monthKey();
   const todayD = new Date().getDate();
   const dim = daysInMonth(mk);
   const daysLeft = isCurrentMonth ? Math.max(1, dim - todayD + 1) : 0;
-
-  const todayStr = today();
-  const todayVarSpent = isCurrentMonth
-    ? txs.filter(t => t.date === todayStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
-        .reduce((s, t) => s + t.amount, 0)
-    : 0;
 
   const pastVarSpent = varSpent - todayVarSpent;
   const remainingBudget = available - pastVarSpent;
@@ -4510,7 +4531,7 @@ function calcFreeBudget(mk) {
   const todayRemaining = daily - todayVarSpent;
   const baseDaily = available > 0 ? available / dim : 0;
 
-  return { income, expense, savTarget, recTotal, debtTotal, goalTotal, paidFixed, varSpent, available, remaining, unpaidFixed, daysLeft, daily, baseDaily, todayVarSpent, todayRemaining };
+  return { income, expense, savTarget, recTotal, debtTotal, goalTotal, paidFixed, varSpent, available, remaining, unpaidFixed, daysLeft, daily, baseDaily, todayVarSpent, todayRemaining, budgetCharge };
 }
 
 // =================== RENDER MONTHLY ===================
@@ -4870,7 +4891,7 @@ function closeBudgetSheet() {
 }
 function openBudgetAdd() {
   _wiz = { step:0, name:'', period:'', source:'', catId:'', amount:0, editId:null };
-  if (!data.budgetTutorialSeen) renderBgtIntro(); else startWizard();
+  renderBgtIntro(); // V73.2: giriş her bütçe kuruluşunda gelir
   _openBgtSheet();
 }
 function _wizSteps() { const s = ['name','period','source']; if (_wiz.source === 'category') s.push('category'); s.push('amount'); return s; }
@@ -4879,6 +4900,7 @@ function _wizSteps() { const s = ['name','period','source']; if (_wiz.source ===
 function renderBgtIntro() {
   document.getElementById('bgtSheet').classList.add('bgt-sheet-intro');
   document.getElementById('bgtBody').innerHTML = `
+    <button class="bgt-close-float" onclick="closeBudgetSheet()" aria-label="Kapat">&times;</button>
     <div class="bgt-stage">
       <div class="bgt-badge"><span class="d"></span>Yeni · Bütçeler</div>
       <div class="bgt-stack">
@@ -4893,8 +4915,9 @@ function renderBgtIntro() {
       <div class="bgt-feats">
         <div class="bgt-feat"><div class="bgt-feat-ic" style="background:rgba(45,184,102,.12)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2DB866" stroke-width="1.7" stroke-linecap="round"><path d="M12 3v18M3 12h18"/></svg></div><div class="bgt-feat-t">İstediğin<br>ismi ver</div></div>
         <div class="bgt-feat"><div class="bgt-feat-ic" style="background:rgba(255,214,10,.12)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FFD60A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></div><div class="bgt-feat-t">Aylık ya da<br>tek seferlik</div></div>
-        <div class="bgt-feat"><div class="bgt-feat-ic" style="background:rgba(191,90,242,.12)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#BF5AF2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4 -3 7 -7 8c-4 -1 -7 -4 -7 -8v-5z"/></svg></div><div class="bgt-feat-t">Günlük limite<br>dokunmaz</div></div>
+        <div class="bgt-feat"><div class="bgt-feat-ic" style="background:rgba(191,90,242,.12)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#BF5AF2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-9a2 2 0 0 0 -2 -2h-2"/><path d="M18 12a1 1 0 0 0 0 4h1v-4z"/><path d="M6 7v-1a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v1"/></svg></div><div class="bgt-feat-t">Ayırınca<br>limitten düşer</div></div>
       </div>
+      <div class="bgt-intro-info"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6E6D78" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M11 12h1v4h1"/></svg><span>Cüzdana ayırdığın para günlük limitinden düşülür — o parayı harcamış sayılırsın. Cüzdandan harcayınca limit tekrar düşmez.</span></div>
       <button class="bgt-cta" onclick="startWizard()">İlk bütçemi kur <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6l-6 6"/></svg></button>
       <button class="bgt-cta-ghost" onclick="closeBudgetSheet()">Şimdi değil</button>
     </div>`;
@@ -4916,8 +4939,7 @@ function renderWizStep() {
 
   if (key === 'name') {
     inner = `<div class="wz-step"><div class="wz-q">Bütçene bir isim ver</div><div class="wz-hint">Kafana göre: Tatil, Market, Düğün… ne dersen.</div>
-      <input class="wz-bigin" id="wzName" placeholder="Tatil" value="${esc(_wiz.name)}" enterkeyhint="next" oninput="_wiz.name=this.value.trim();wizRefreshCta()" onkeydown="if(event.key==='Enter'){event.preventDefault();wizNext()}">
-      <div class="wz-chips">${['Market','Tatil','Yemek','Düğün'].map(n=>`<button class="wz-chip" onclick="document.getElementById('wzName').value='${n}';_wiz.name='${n}';wizRefreshCta();document.getElementById('wzName').focus()">${n}</button>`).join('')}</div></div>`;
+      <input class="wz-bigin" id="wzName" placeholder="" value="${esc(_wiz.name)}" enterkeyhint="next" autocomplete="off" oninput="_wiz.name=this.value.trim();wizRefreshCta()" onkeydown="if(event.key==='Enter'){event.preventDefault();wizNext()}"></div>`;
     ctaDisabled = !_wiz.name;
   } else if (key === 'period') {
     inner = `<div class="wz-step"><div class="wz-q">Ne tür bir bütçe?</div><div class="wz-hint">Her ay tekrar mı, tek seferlik bir olay mı?</div>
@@ -4950,8 +4972,9 @@ function renderWizStep() {
   }
 
   body.innerHTML = head + `<div class="wz-body">${inner}</div><div class="wz-foot"><button class="bgt-cta" id="wzCta" onclick="wizNext()"${ctaDisabled?' disabled':''}>${cta}</button></div>`;
-  if (key === 'name') { const el = document.getElementById('wzName'); if (el) setTimeout(()=>el.focus(), 60); }
-  if (key === 'amount') { const el = document.getElementById('wzAmt'); if (el) { setTimeout(()=>el.focus(), 60); wizAmtNote(); } }
+  // iOS: klavyeyi açmak için focus SENKRON (kullanıcı dokunuşunun içinde) çağrılmalı
+  if (key === 'name') { const el = document.getElementById('wzName'); if (el) { try { el.focus({preventScroll:true}); } catch(e) { el.focus(); } } }
+  if (key === 'amount') { const el = document.getElementById('wzAmt'); if (el) { try { el.focus({preventScroll:true}); } catch(e) { el.focus(); } wizAmtNote(); } }
 }
 function _wizOpt(val, sel, color, path, title, sub) {
   return `<div class="wz-opt${sel?' sel':''}" onclick="wizPickOpt('${val}')">
