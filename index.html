@@ -2925,15 +2925,10 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         <span class="tx-opt-value" id="txSheetDateLabel">Bugün</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6"/></svg>
       </div>
-      <!-- V69: ödeme yöntemi (kart tanımlıysa ve gider ise görünür) -->
+      <!-- Kaynak: nakit/kart + cüzdanlar tek satırda (kart tanımlı ya da serbest cüzdan varsa) -->
       <div id="txPayWrap" style="display:none">
         <div class="tx-pay-chips" id="txPayChips"></div>
         <div class="tx-inst-chips" id="txInstChips" style="display:none"></div>
-      </div>
-      <!-- V72: serbest bütçe etiketi (serbest bütçe varsa ve gider ise) -->
-      <div id="txBudgetWrap" style="display:none">
-        <div class="tx-budget-label">Bütçe (opsiyonel)</div>
-        <div class="tx-budget-chips" id="txBudgetChips"></div>
       </div>
     </div>
     <div class="tx-save-wrap">
@@ -5088,18 +5083,9 @@ function removeBudget(id) {
 
 // ── harcama sheet'i: serbest bütçe etiketi ──
 let _sheetBudgetId = null;
-function _renderTxBudgetChips() {
-  const wrap = document.getElementById('txBudgetWrap');
-  if (!wrap) return;
-  const free = (data.budgets || []).filter(b => b.source === 'free');
-  const show = _sheetType === 'expense' && free.length > 0;
-  wrap.style.display = show ? 'block' : 'none';
-  if (!show) return;
-  document.getElementById('txBudgetChips').innerHTML = free.map(b =>
-    `<button class="tx-budget-chip${_sheetBudgetId===b.id?' active':''}" onclick="_setSheetBudget('${b.id}')">${esc(b.name)}</button>`
-  ).join('');
-}
-function _setSheetBudget(id) { _sheetBudgetId = _sheetBudgetId === id ? null : id; _renderTxBudgetChips(); }
+// Cüzdan çipleri artık _renderTxPayChips içinde (kartın yanında) render ediliyor
+function _renderTxBudgetChips() { _renderTxPayChips(); }
+function _setSheetBudget(id) { _sheetBudgetId = _sheetBudgetId === id ? null : id; _renderTxPayChips(); }
 
 function buildCarouselItems(fb) {
   const items = [];
@@ -5815,9 +5801,9 @@ function openTxSheet(type) {
   // V69: ödeme yöntemi sıfırla
   _sheetPayMethod = 'cash'; _sheetCardId = null; _sheetInst = 1;
   _renderTxPayChips();
-  // V72: bütçe etiketi sıfırla
+  // V72: bütçe/cüzdan etiketi sıfırla (chip'ler _renderTxPayChips içinde çizilir)
   _sheetBudgetId = null;
-  _renderTxBudgetChips();
+  _renderTxPayChips();
 
   _sheetSetTheme(_sheetType);
 
@@ -6413,20 +6399,30 @@ function submitCardPay() {
 
 // ── Harcama sheet'i: ödeme yöntemi ──
 let _sheetPayMethod = 'cash', _sheetCardId = null, _sheetInst = 1;
+const WALLET_CHIP_ICON = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-9a2 2 0 0 0 -2 -2h-2"/><path d="M18 12a1 1 0 0 0 0 4h1v-4z"/><path d="M6 7v-1a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v1"/></svg>';
 function _renderTxPayChips() {
   const wrap = document.getElementById('txPayWrap');
   if (!wrap) return;
-  const show = _sheetType === 'expense' && (data.cards || []).length > 0;
+  const cards = data.cards || [];
+  const freeW = (data.budgets || []).filter(b => b.source === 'free');
+  const show = _sheetType === 'expense' && (cards.length > 0 || freeW.length > 0);
   wrap.style.display = show ? 'block' : 'none';
   if (!show) return;
   const chips = document.getElementById('txPayChips');
-  let html = '<button class="tx-pay-chip' + (_sheetPayMethod === 'cash' ? ' active' : '') + '" onclick="_setSheetPay(\'cash\',null)">Nakit / Banka</button>';
-  html += data.cards.map(c =>
-    '<button class="tx-pay-chip' + (_sheetPayMethod === 'card' && _sheetCardId === c.id ? ' active' : '') + '" onclick="_setSheetPay(\'card\',\'' + c.id + '\')">' + CC_ICON.replace('width="16" height="16"', 'width="13" height="13"').replace('stroke-width', 'stroke="currentColor" stroke-width') + esc(c.name) + '</button>'
+  let html = '';
+  if (cards.length) {
+    html += '<button class="tx-pay-chip' + (_sheetPayMethod === 'cash' ? ' active' : '') + '" onclick="_setSheetPay(\'cash\',null)">Nakit / Banka</button>';
+    html += cards.map(c =>
+      '<button class="tx-pay-chip' + (_sheetPayMethod === 'card' && _sheetCardId === c.id ? ' active' : '') + '" onclick="_setSheetPay(\'card\',\'' + c.id + '\')">' + CC_ICON.replace('width="16" height="16"', 'width="13" height="13"').replace('stroke-width', 'stroke="currentColor" stroke-width') + esc(c.name) + '</button>'
+    ).join('');
+  }
+  // Cüzdanlar (serbest) — kartın hemen yanında
+  html += freeW.map(b =>
+    '<button class="tx-budget-chip' + (_sheetBudgetId === b.id ? ' active' : '') + '" onclick="_setSheetBudget(\'' + b.id + '\')">' + WALLET_CHIP_ICON + esc(b.name) + '</button>'
   ).join('');
   chips.innerHTML = html;
   const instWrap = document.getElementById('txInstChips');
-  if (_sheetPayMethod === 'card') {
+  if (cards.length && _sheetPayMethod === 'card') {
     instWrap.style.display = 'flex';
     instWrap.innerHTML = [1, 2, 3, 6, 9, 12].map(n =>
       '<button class="tx-inst-chip' + (_sheetInst === n ? ' active' : '') + '" onclick="_setSheetInst(' + n + ')">' + (n === 1 ? 'Tek' : n) + '</button>'
