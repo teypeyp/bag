@@ -1542,7 +1542,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .goal-feas.good .gf-title { color:var(--accent); }
 .goal-feas.warn .gf-title { color:var(--warning); }
 .goal-feas.bad  .gf-title { color:var(--danger); }
-.gf-msg { font-size:12.5px; font-weight:500; color:rgba(233,232,240,.85); line-height:1.6; letter-spacing:-.01em; }
+.gf-msg { font-size:13px; font-weight:500; color:rgba(233,232,240,.88); line-height:1.65; letter-spacing:-.01em; }
 .gf-msg b { color:var(--text); font-weight:800; }
 .gf-sim-btn { margin-top:10px; padding:9px 14px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14); border-radius:10px; color:var(--text); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; -webkit-tap-highlight-color:transparent; }
 .gf-sim-btn:active { transform:scale(.97); }
@@ -8769,7 +8769,7 @@ function _planCalcCore(fb, sc) {
     level: 'high', barPct: 100, barColor: 'var(--danger)',
   });
   if (savRatio < 0.05 && adjRemain >= 0) drivers.push({
-    label: 'Dar birikim marjı', short: 'Birikim',
+    label: 'Ay sonunda az kalıyor', short: 'Birikim',
     pct: Math.round(savRatio*100),
     detail: 'Ay sonunda gelirin sadece ' + pct(Math.round(savRatio*100)) + ' (' + fmtTL(Math.round(savPot)) + ') kalıyor; hedef %12. '
       + 'Beklenmedik tek gider dengeyi bozmasın diye önce küçük bir tampon kur.',
@@ -8784,7 +8784,7 @@ function _planCalcCore(fb, sc) {
       label: 'Acil fon eksikliği',
       pct: 0,
       detail: 'Acil fon görünmüyor. Hedef: 3 aylık sabit gider = ' + fmtTL(_efT)
-        + (savPot > 0 ? ' — ayda ' + fmtTL(Math.round(savPot)) + ' ile yaklaşık ' + Math.max(1, Math.ceil(_efT/savPot)) + ' ayda kurulur.' : '.'),
+        + (savPot > 0 ? ' — ay sonunda kalanla (' + fmtTL(Math.round(savPot)) + '/ay) yaklaşık ' + Math.max(1, Math.ceil(_efT/savPot)) + ' ayda dolar.' : '.'),
       level: 'mid', barPct: 0, barColor: 'var(--muted)',
     });
   }
@@ -9430,7 +9430,7 @@ function _renderPlanHero(fb, core) {
   else if (core.fixedRatio > 0.65)  headline = `Sabit yapı <em>çok ağır.</em>`;
   else if (core.fixedRatio > 0.50)  headline = `Sabit yük <em>baskı yaratıyor.</em>`;
   else if (core.debtRatio > 0.28)   headline = `Borç <em>hareket alanını kısıtlıyor.</em>`;
-  else if (core.savRatio > 0.22)    headline = `Birikim marjı <em>güçlü.</em>`;
+  else if (core.savRatio > 0.22)    headline = `Ay sonu <em>artıda kapanıyor.</em>`;
   else if (core.savRatio > 0.10)    headline = `Yapı <em>dengeli.</em>`;
   else                              headline = `Esneklik <em>hâlâ dar.</em>`;
 
@@ -9451,9 +9451,9 @@ function _renderPlanHero(fb, core) {
       ? `Taksitler gelirin %${Math.round(core.debtRatio*100)}'ini bağlıyor. En küçük borç "${esc(_sm.name)}" — kapat, ayda ${fmtTL(_sm.monthlyAmount)} kalıcı olarak serbest kalsın.`
       : `Taksitler gelirin %${Math.round(core.debtRatio*100)}'ini bağlıyor. Her kapanan taksit bu denklemi kalıcı değiştirir.`;
   else if (core.savRatio > 0.15 && !data.savingsGoals.filter(g=>g.monthly>0).length)
-    sub = `Ayda ${fmtTL(Math.round(core.savPot))} artıyor ama bir hedefe bağlı değil. İsimsiz para erir — küçük bir hedef aç.`;
+    sub = `Normal harcamalarından sonra ay sonunda ${fmtTL(Math.round(core.savPot))} kalıyor ama bir hedefe bağlı değil. İsimsiz para erir — küçük bir hedef aç.`;
   else if (core.savRatio > 0.15)
-    sub = `Ayda ${fmtTL(Math.round(core.savPot))} birikiyor ve yapı bunu taşıyor. Sıradaki mesele hızı artırmak.`;
+    sub = `Harcamaların düşüldükten sonra bile ay sonunda ${fmtTL(Math.round(core.savPot))} kalıyor. Sıradaki mesele hızı artırmak.`;
   else
     sub = `Ay sonunda gelirin sadece %${Math.round(core.savRatio*100)}'i kalıyor. Önce küçük bir tampon — sonrası kolaylaşır.`;
 
@@ -9463,7 +9463,7 @@ function _renderPlanHero(fb, core) {
   const metrics = [
     { label:'Sabit yük', val:'%'+Math.round(core.fixedRatio*100), color: core.fixedRatio>.55?'var(--danger)':core.fixedRatio>.40?'var(--warning)':'var(--accent)' },
     { label:'Birikim', val:'%'+Math.round(core.savRatio*100), color: core.savRatio<.05?'var(--danger)':core.savRatio<.12?'var(--warning)':'var(--accent)' },
-    { label:'Kalan', val:fmtTL(Math.round(core.adjRemain)), color: core.adjRemain<0?'var(--danger)':'var(--accent)' },
+    { label:'Ay sonu', val:fmtTL(Math.round(core.adjRemain)), color: core.adjRemain<0?'var(--danger)':'var(--accent)' },
   ];
 
   // Skor dökümü — V81: halkaya dokununca açılır
@@ -9646,22 +9646,23 @@ function _renderPlanGoalDetail(fb, core) {
       <div style="background:var(--surface2);border-radius:var(--radius);overflow:hidden">
         <div style="padding:18px 20px 14px">
           <div style="font-size:13.5px;font-weight:400;color:rgba(233,232,240,.8);line-height:1.75;letter-spacing:-.01em">
-            Her ay eline geçenden tüm taahhütler ve tipik harcaman düşünce
-            <strong style="color:var(--text);font-weight:700">${fmtTL(Math.round(core.savPot))}</strong> serbest kalıyor —
-            ama henüz bir hedefe bağlı değil. Hedefsiz birikim korunmaz.
+            Faturalar, taksitler ve normal harcamaların düşüldükten sonra ay sonunda elinde yaklaşık
+            <strong style="color:var(--text);font-weight:700">${fmtTL(Math.round(core.savPot))}</strong> kalıyor —
+            yani bu, hiç harcamazsan değil; normal yaşarken artan para. Ama bir hedefe bağlı değil,
+            hedefsiz para sessizce erir.
           </div>
         </div>
         <div style="border-top:1px solid rgba(255,255,255,.06)">
-          <div style="padding:10px 20px 2px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(233,232,240,.55)">Bu marj nereden çıkıyor?</div>
+          <div style="padding:10px 20px 2px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(233,232,240,.55)">Bu para nasıl hesaplanıyor?</div>
           ${fişRow('Gelir', Math.round(fb.income||0), false)}
           ${fb.recTotal > 0 ? fişRow('Sabit giderler', Math.round(fb.recTotal), true) : ''}
           ${fb.debtTotal > 0 ? fişRow('Taksitler', Math.round(fb.debtTotal), true) : ''}
           ${_gt > 0 ? fişRow('Hedef katkıları', _gt, true) : ''}
           ${_tv > 0 ? fişRow('Tipik harcama (3 ay ort.)', _tv, true) : ''}
-          ${fişRow('Aylık marj', Math.round(core.savPot), false, true)}
+          ${fişRow('Ay sonunda kalan (tahmini)', Math.round(core.savPot), false, true)}
         </div>
         <div style="border-top:1px solid rgba(255,255,255,.06)">
-          <div style="padding:10px 20px 4px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(233,232,240,.55)">Bu marjla ne olurdu?</div>
+          <div style="padding:10px 20px 4px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(233,232,240,.55)">Bu parayla ne birikir?</div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 20px;border-top:1px solid rgba(255,255,255,.04)">
             <div style="font-size:13px;font-weight:500;color:rgba(233,232,240,.7)">3 ay</div>
             <div style="font-size:20px;font-weight:800;letter-spacing:-.05em;color:var(--accent)">${fmtTL(m3)}</div>
@@ -9674,7 +9675,7 @@ function _renderPlanGoalDetail(fb, core) {
             <div style="font-size:13px;font-weight:500;color:rgba(233,232,240,.7)">1 yıl</div>
             <div style="font-size:20px;font-weight:800;letter-spacing:-.05em;color:var(--accent)">${fmtTL(m12)}</div>
           </div>
-          <div style="padding:8px 20px 12px;font-size:10.5px;font-weight:500;color:rgba(233,232,240,.45);line-height:1.5">Borç bitişleri hesaba dahil — simülasyondaki eğriyle aynı hesap.</div>
+          <div style="padding:8px 20px 12px;font-size:10.5px;font-weight:500;color:rgba(233,232,240,.45);line-height:1.5">Tahmini: harcamaların şimdiki ritminde sürdüğü varsayılır, borç bitişleri dahil — simülasyondaki eğriyle aynı hesap.</div>
         </div>
       </div>`;
     return;
@@ -9690,7 +9691,7 @@ function _renderPlanGoalDetail(fb, core) {
     const optNum  = g.optMonths !== null ? g.optMonths : null;
 
     const improveRow = imp > 0 ? `
-      <div class="plan-goal-improve-row">${imp} ay erken — mevcut marjın tamamını kullanırsan.</div>` : '';
+      <div class="plan-goal-improve-row">${imp} ay erken — ay sonunda kalanının tamamını bu hedefe verirsen (tahmini).</div>` : '';
     const longNote = g.curMonths && g.curMonths > 48 ? `
       <div class="plan-goal-long-note">${g.curMonths} ay uzun bir süre. Aylık miktarı artırmak süreci gerçekten kısaltır.</div>` : '';
 
@@ -9720,7 +9721,7 @@ function _renderPlanGoalDetail(fb, core) {
             </div>
           </div>
           <div class="plan-goal-time-block" style="${imp>0?'border:1px solid rgba(45,184,102,.25);background:rgba(45,184,102,.06)':''}">
-            <div class="plan-goal-time-label">Tam kapasiteyle</div>
+            <div class="plan-goal-time-label">Tüm kalanla</div>
             <div>
               ${optNum !== null
                 ? `<span class="plan-goal-time-bignum" style="color:var(--accent)">${optNum}</span><span class="plan-goal-time-unit" style="color:var(--accent)">ay</span>`
@@ -10141,19 +10142,20 @@ function _goalFeasUpdate() {
   const bitis = _scMonthYear(sure);
   let cls, title, msg, btn = '';
   if (marj <= 0) {
-    cls = 'bad'; title = 'Marj yok';
-    msg = `Bu ay serbest marjın kalmıyor — önce dengeyi kurmak gerek. Simülasyonda hangi değişikliğin yeteceğini görebilirsin.`;
+    cls = 'bad'; title = 'Şu an para artmıyor';
+    msg = `Bu ay giderlerin gelirini aşıyor — hedefe ayıracak para kalmıyor. Önce dengeyi kurmak gerek; neyin yeteceğini simülasyonda görebilirsin:`;
     btn = `<button class="gf-sim-btn" onclick="_goalTrySim(${monthly})">Simülasyonda dene →</button>`;
   } else if (monthly <= marj * 0.8) {
-    cls = 'good'; title = 'Uygulanabilir';
-    msg = `Aylık ${fmtTL(monthly)}, serbest marjının (${fmtTL(marj)}) %${Math.round(monthly/marj*100)}'i — rahat taşınır. Tahmini bitiş: <b>${bitis}</b>.`;
+    cls = 'good'; title = 'Yetişir';
+    msg = `Normal harcamalarını yapsan bile ay sonunda elinde yaklaşık <b>${fmtTL(marj)}</b> kalıyor (son 3 ayına göre). Bunun ${fmtTL(monthly)}'sini bu hedefe ayırırsan <b>${bitis}</b>'te biter — ayda ${fmtTL(marj - monthly)} de yedeğin olur.`;
   } else if (monthly <= marj) {
-    cls = 'warn'; title = 'Sınırda';
-    msg = `Marjının %${Math.round(monthly/marj*100)}'i bu hedefe gidiyor; beklenmedik gider payı kalmıyor. Bitiş: <b>${bitis}</b>. Süreyi biraz uzatmak nefes aldırır.`;
+    cls = 'warn'; title = 'Zor ama olur';
+    msg = `Ay sonunda kalan paranın neredeyse tamamı (${fmtTL(marj)}'nin ${fmtTL(monthly)}'si) bu hedefe gidecek — beklenmedik bir masrafta zorlanırsın. Bitiş: <b>${bitis}</b>. Süreyi birkaç ay uzatmak rahatlatır.`;
   } else {
     const eksik = monthly - marj;
-    cls = 'bad'; title = 'Marj yetmiyor';
-    msg = `Aylık <b>${fmtTL(eksik)}</b> eksik (marj: ${fmtTL(marj)}). Süreyi uzat ya da bu farkı senaryoda dene:`;
+    const uygunAy = Math.ceil(target / marj);
+    cls = 'bad'; title = 'Bu hızda yetişmez';
+    msg = `Bu hedef için ayda <b>${fmtTL(monthly)}</b> gerekiyor; oysa normal harcamalarından sonra ay sonunda elinde yaklaşık <b>${fmtTL(marj)}</b> kalıyor. İki yol var: "Kaç Ayda" kutusuna <b>${uygunAy}</b> yaz (mevcut kalanla yetişir) ya da ayda ${fmtTL(eksik)} ekstrayı simülasyonda dene:`;
     btn = `<button class="gf-sim-btn" onclick="_goalTrySim(${eksik})">Simülasyonda dene →</button>`;
   }
   box.style.display = '';
@@ -10288,7 +10290,7 @@ function _scEnsureCockpit() {
      </div>
      <div class="sc-chart">${_scChartSvg()}</div>
      <div class="sc-cp-metrics">
-       <div class="sc-cp-m"><div class="sc-cp-m-l">Aylık kalan</div><div class="sc-cp-m-v" id="scMRem">—</div><div class="sc-cp-m-d neu" id="scMRemD"></div></div>
+       <div class="sc-cp-m"><div class="sc-cp-m-l">Ay sonu</div><div class="sc-cp-m-v" id="scMRem">—</div><div class="sc-cp-m-d neu" id="scMRemD"></div></div>
        <div class="sc-cp-m"><div class="sc-cp-m-l">12 ay sonra</div><div class="sc-cp-m-v" id="scMYear">—</div><div class="sc-cp-m-d neu" id="scMYearD"></div></div>
        <div class="sc-cp-m" id="scMGoalBox"><div class="sc-cp-m-l" id="scMGoalL">Hedef</div><div class="sc-cp-m-v" id="scMGoal">—</div><div class="sc-cp-m-d neu" id="scMGoalD"></div></div>
      </div>
@@ -10358,7 +10360,7 @@ function _scDrawChart(fb, core, hasDelta) {
   dot.setAttribute('cx', ex.toFixed(1)); dot.setAttribute('cy', ey.toFixed(1)); dot.setAttribute('fill', rc);
   const ev = document.getElementById('scEndVal');
   ev.setAttribute('x', (ex-2).toFixed(1)); ev.setAttribute('y', Math.max(pt-6, ey-10).toFixed(1));
-  ev.setAttribute('fill', rc); ev.textContent = fmtTL(Math.round(S.cum[12]));
+  ev.setAttribute('fill', rc); ev.textContent = (data && data.hideAmounts ? '' : '≈') + fmtTL(Math.round(S.cum[12]));
 
   document.getElementById('scXlab').innerHTML =
     `<text x="${X(0).toFixed(1)}" y="${H-6}" font-size="9.5" fill="rgba(255,255,255,.4)" text-anchor="start" font-weight="600">Bugün</text>
@@ -10449,7 +10451,7 @@ function _scScrubRender() {
   const t3 = document.getElementById('scScrubT3');
   const ayAdi = m === 0 ? 'BUGÜN' : (_scMonthName(m).toLocaleUpperCase('tr') + ' · +' + m + ' AY');
   t1.textContent = ayAdi;
-  t2.textContent = fmtTL(Math.round(sv));
+  t2.textContent = (data && data.hideAmounts ? '' : '≈') + fmtTL(Math.round(sv));
   let l3 = '';
   if (P.hasDelta) {
     const d = Math.round(sv - bv);
@@ -10565,7 +10567,7 @@ function _updatePlanImpact(fb, core) {
   _scDelta('scMRemD', core.adjRemain - base.adjRemain, hasDelta);
   let yr = 0, yrD = 0;
   if (P) { yr = Math.round(P.S.cum[12]); yrD = P.S.cum[12] - P.B.cum[12]; }
-  _scSet('scMYear', fmtTL(yr), yr<0 ? 'var(--danger)' : '#fff');
+  _scSet('scMYear', (data && data.hideAmounts ? '' : '≈') + fmtTL(yr), yr<0 ? 'var(--danger)' : '#fff');
   _scDelta('scMYearD', yrD, hasDelta);
 
   const g = (core.goals||[]).filter(x=>x.optMonths).sort((a,b)=>a.optMonths-b.optMonths)[0];
@@ -10597,8 +10599,8 @@ function _updatePlanImpact(fb, core) {
   } else {
     const dr = P ? P.S.drops.filter(d=>d.m>=1 && d.m<=12)[0] : null;
     if (dr) notes.push('"'+esc(dr.name)+'" '+_scMonthName(dr.m)+' ayında bitiyor → aylık <b>+'+fmtTL(dr.amt)+'</b> açılıyor.');
-    if (yr > 0)      notes.push('Bu gidişle 12 ayda <b>'+fmtTL(yr)+'</b> serbest birikim.');
-    else if (yr < 0) notes.push('Bu gidişle yapı 12 ayda <b>'+fmtTL(yr)+'</b> açığa gidiyor.');
+    if (yr > 0)      notes.push('Harcamaların bu ritimde sürerse 12 ayda <b>'+fmtTL(yr)+'</b> birikir.');
+    else if (yr < 0) notes.push('Bu ritim sürerse 12 ayda <b>'+fmtTL(yr)+'</b> açık birikir.');
     notes.push('Kaydır ya da üstten bir senaryo seç.');
   }
   const nt = document.getElementById('scNote');
