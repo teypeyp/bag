@@ -1445,6 +1445,65 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   font-weight:800; letter-spacing:-.03em; text-align:right; padding:5px 9px; outline:none;
 }
 .sc-val-input:focus { border-color:var(--sc-vc,var(--accent)); box-shadow:0 0 0 3px rgba(255,255,255,.05); }
+
+/* ═══ V81 — ANALİZ RAPORU ═══ */
+.plan-ring-wrap { cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.plan-score-break { margin-top:14px; padding:12px 14px; background:rgba(0,0,0,.28); border:1px solid rgba(255,255,255,.07); border-radius:12px; animation:planBlockIn .25s ease both; }
+.plan-break-head { font-size:11px; font-weight:600; color:var(--muted); letter-spacing:-.01em; margin-bottom:10px; line-height:1.5; }
+.plan-break-row { display:flex; align-items:center; gap:9px; padding:4px 0; }
+.plan-break-label { flex:0 0 66px; font-size:11.5px; font-weight:600; color:var(--text); }
+.plan-break-track { flex:1; height:4px; border-radius:99px; background:rgba(255,255,255,.08); overflow:hidden; }
+.plan-break-fill { height:100%; border-radius:99px; }
+.plan-break-val { flex:0 0 40px; text-align:right; font-size:11.5px; font-weight:700; color:var(--muted); font-variant-numeric:tabular-nums; }
+.plan-break-pts { flex:0 0 30px; text-align:right; font-size:11.5px; font-weight:800; font-variant-numeric:tabular-nums; }
+.plan-break-foot { margin-top:8px; font-size:10px; font-weight:500; color:var(--muted); opacity:.75; line-height:1.5; }
+.plan-trend-strip { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:14px; position:relative; z-index:1; }
+.plan-trend-cap { font-size:10.5px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); margin-right:2px; }
+.plan-trend-chip { font-size:11.5px; font-weight:700; letter-spacing:-.01em; padding:4px 10px; border-radius:99px; border:1px solid transparent; font-variant-numeric:tabular-nums; }
+.plan-trend-chip.pos { color:var(--accent); background:rgba(45,184,102,.1); border-color:rgba(45,184,102,.25); }
+.plan-trend-chip.neg { color:var(--danger); background:rgba(255,69,58,.09); border-color:rgba(255,69,58,.22); }
+.plan-trend-chip.neu { color:var(--muted); background:rgba(255,255,255,.05); }
+.plan-bar-track { position:relative; }
+.plan-bar-tick { position:absolute; top:-3px; bottom:-3px; width:2px; border-radius:2px; background:rgba(255,255,255,.45); }
+.plan-bar-legend { font-size:10px; font-weight:500; color:var(--muted); opacity:.8; margin-bottom:16px; letter-spacing:-.01em; }
+.plan-char-map-btn { display:block; width:100%; margin-top:12px; padding:11px 14px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:12px; color:var(--text); font-family:inherit; font-size:13px; font-weight:700; letter-spacing:-.01em; cursor:pointer; text-align:center; transition:transform .15s var(--spring), background .2s; -webkit-tap-highlight-color:transparent; }
+.plan-char-map-btn:active { transform:scale(.97); background:rgba(255,255,255,.1); }
+
+/* ═══ V82 — RAPOR GÖRSEL YENİLEME ═══ */
+.ph-gauge-wrap { position:relative; text-align:center; margin:10px 0 2px; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.ph-gauge-wrap .sc-cp-gauge { width:200px; max-width:72%; }
+.ph-scorewrap { margin-top:-10px; position:relative; z-index:1; }
+.ph-score { font-size:40px; font-weight:800; letter-spacing:-.06em; color:#fff; line-height:1; font-variant-numeric:tabular-nums; }
+.ph-score small { font-size:15px; font-weight:700; color:var(--muted); letter-spacing:0; }
+.ph-score-hint { font-size:9.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin-top:5px; }
+.ph-headline { margin-top:20px; }
+.ph-metrics { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:16px; position:relative; z-index:1; }
+/* Baskı sürücü kartları */
+.drv-grid { display:flex; flex-direction:column; gap:10px; margin-top:4px; }
+.drv-card { background:var(--surface2); border:1px solid var(--border); border-radius:16px; padding:14px 15px 13px; position:relative; overflow:hidden; }
+.drv-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:7px; gap:8px; }
+.drv-label { font-size:12.5px; font-weight:700; color:var(--text); letter-spacing:-.01em; }
+.drv-badge { font-size:9.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; padding:3px 8px; border-radius:6px; flex-shrink:0; }
+.drv-num { font-size:30px; font-weight:800; letter-spacing:-.05em; line-height:1; margin-bottom:9px; font-variant-numeric:tabular-nums; }
+.drv-track { position:relative; height:5px; border-radius:99px; background:rgba(255,255,255,.08); margin-bottom:11px; }
+.drv-fill { height:100%; border-radius:99px; }
+.drv-track .plan-bar-tick { top:-3px; bottom:-3px; }
+.drv-detail { font-size:12.5px; font-weight:400; color:var(--muted); line-height:1.65; letter-spacing:-.01em; }
+/* Yol haritası: satır → görev kartı */
+#planStepsList .plan-step-row { background:var(--surface2); border:1px solid var(--border); border-top:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:10px; position:relative; overflow:hidden; }
+#planStepsList .plan-step-row::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:rgba(255,255,255,.15); }
+#planStepsList .plan-step-row:has(.plan-step-num.bad)::before { background:var(--danger); }
+#planStepsList .plan-step-row:has(.plan-step-num.warn)::before { background:var(--warning); }
+#planStepsList .plan-step-row:has(.plan-step-num.good)::before { background:var(--accent); }
+#planStepsList .plan-step-num { width:30px; height:30px; border-radius:10px; font-size:13px; }
+/* Hedef kartı başlığı */
+.pg-head { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.pg-ring { flex-shrink:0; }
+/* Karne notu: yuvarlak, parlayan rozet */
+.report-grade { width:54px; height:54px; border-radius:50%; font-size:24px; box-shadow:0 6px 22px -6px currentColor; }
+/* Bölüm etiketleri: renkli nokta */
+.plan-section-label { display:flex; align-items:center; gap:8px; }
+.plan-section-label::before { content:''; width:6px; height:6px; border-radius:2px; background:var(--accent); opacity:.85; flex-shrink:0; }
 .sc-q-hint {
   font-size:12px; font-weight:400; color:var(--muted);
   margin-bottom:12px; letter-spacing:-.01em;
@@ -1577,7 +1636,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .sc-cp-charname{margin-top:3px;font-size:11.5px;font-weight:800;letter-spacing:-.01em;transition:color .3s}
 .sc-cp-gaugewrap{position:relative;flex:1;text-align:center;min-width:0}
 .sc-cp-gauge{width:150px;max-width:100%;margin:0 auto;display:block}
-#scNeedle{transform-box:view-box;transform-origin:75px 64px;transition:transform .8s var(--spring)}
+#scNeedle,#phNeedle{transform-box:view-box;transform-origin:75px 64px;transition:transform .8s var(--spring)}
 .sc-cp-scorewrap{margin-top:-7px;position:relative;z-index:1}
 .sc-cp-score{font-size:29px;font-weight:800;letter-spacing:-.06em;color:#fff;line-height:1;font-variant-numeric:tabular-nums}
 .sc-cp-score small{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:0}
@@ -2958,19 +3017,19 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 
   <!-- 3.5 ÖNCELİKLİ ADIMLAR -->
   <div class="plan-section-block" id="planStepsBlock">
-    <div class="plan-section-label">Öncelikli Adımlar</div>
+    <div class="plan-section-label">04 · Yol Haritası</div>
     <div id="planStepsList"></div>
   </div>
 
   <!-- 4. HEDEF & ZAMAN -->
   <div class="plan-section-block" id="planGoalBlock">
-    <div class="plan-section-label">Hedef & Zaman</div>
+    <div class="plan-section-label">05 · Hedefler</div>
     <div id="planGoalDetail"></div>
   </div>
 
   <!-- 4.5 AYLIK KARNE -->
   <div class="plan-section-block" id="planReportBlock">
-    <div class="plan-section-label">Aylık Karne</div>
+    <div class="plan-section-label">06 · Karne</div>
     <div id="monthlyReportBox"></div>
   </div>
 
@@ -2988,7 +3047,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 
   <!-- 5. SİMÜLASYON — V79: oyun alanı (presetler + kokpit + projeksiyon eğrisi) -->
   <div class="plan-section-block">
-    <div class="plan-section-label">Simülasyon</div>
+    <div class="plan-section-label">07 · Simülasyon</div>
     <div class="sc-presets" id="planScenPresets"></div>
     <div id="planScenResult"></div>
     <div style="background:var(--surface2);border-radius:var(--radius);overflow:hidden;margin-top:10px">
@@ -8599,11 +8658,12 @@ function _planCalcCore(fb, sc) {
   const debtRatio = adjIncome > 0 ? fb.debtTotal / adjIncome : 0;
   const savRatio  = adjIncome > 0 ? savPot / adjIncome : 0;
 
-  // Risk skoru 0–9
-  let rs = 0;
-  if (fixedRatio > 0.65) rs += 3; else if (fixedRatio > 0.45) rs += 2; else if (fixedRatio > 0.30) rs += 1;
-  if (debtRatio  > 0.35) rs += 3; else if (debtRatio  > 0.20) rs += 2; else if (debtRatio  > 0.08) rs += 1;
-  if (adjRemain  < 0)    rs += 3; else if (savRatio < 0.05) rs += 2; else if (savRatio < 0.12) rs += 1;
+  // Risk skoru 0–9 — V81: bileşenler ayrı tutulur (skor dökümü için)
+  const rsF = fixedRatio > 0.65 ? 3 : fixedRatio > 0.45 ? 2 : fixedRatio > 0.30 ? 1 : 0;
+  const rsD = debtRatio  > 0.35 ? 3 : debtRatio  > 0.20 ? 2 : debtRatio  > 0.08 ? 1 : 0;
+  const rsS = adjRemain  < 0    ? 3 : savRatio  < 0.05 ? 2 : savRatio  < 0.12 ? 1 : 0;
+  const rs = rsF + rsD + rsS;
+  const rsParts = { fixed: rsF, debt: rsD, sav: rsS };
 
   const riskLevel = rs >= 6 ? 'high' : rs >= 3 ? 'mid' : 'low';
 
@@ -8626,44 +8686,62 @@ function _planCalcCore(fb, sc) {
     return { ...g, dep, left, pct, curMonths: cur, optMonths: opt };
   });
 
-  // Baskı sürücüleri (somut + sıralı)
+  // Baskı sürücüleri — V81: her cümle sayı + neden + tek eylem; eşik çentikleri
   const drivers = [];
+  const _actD = data.debts.filter(d => d.active);
+  const _smD = _actD.length ? [..._actD].sort((a,b) =>
+    ((a.installments-a.paidCount)*a.monthlyAmount)-((b.installments-b.paidCount)*b.monthlyAmount))[0] : null;
   if (fixedRatio > 0.35) drivers.push({
-    label: 'Sabit gider yükü',
+    label: 'Sabit gider yükü', short: 'Sabit yük',
     pct: Math.round(fixedRatio*100),
-    detail: 'Gelirinizin ' + pct(Math.round(fixedRatio*100)) + ' sabit taahhütlere gidiyor. Bu yapı değişken harcamalardan bağımsız baskı üretiyor.',
+    detail: 'Kira, abonelik ve taksitler ayda ' + fmtTL(Math.round(adjRec + fb.debtTotal)) + ' — gelirinin ' + pct(Math.round(fixedRatio*100)) + '. '
+      + (fixedRatio > 0.45
+        ? 'Sınır %45\u0027in üstündesin: en hızlı kazanım, tek büyük kalemi küçültmek.'
+        : 'Sınır %45\u0027in altındasın — bu dengeyi koru.'),
     level: fixedRatio > 0.60 ? 'high' : 'mid',
     barPct: Math.min(100, Math.round(fixedRatio*100)),
     barColor: fixedRatio > 0.60 ? 'var(--danger)' : 'var(--warning)',
+    th: 45, thLabel: 'sınır %45',
   });
   if (debtRatio > 0.08) drivers.push({
-    label: 'Borç & taksit yükü',
+    label: 'Borç & taksit yükü', short: 'Borç',
     pct: Math.round(debtRatio*100),
-    detail: 'Aktif taksitler aylık ' + fmtTL(Math.round(fb.debtTotal)) + ' bağlıyor. Her kapanan taksit bu oranı kalıcı olarak düşürüyor.',
+    detail: 'Taksitler ayda ' + fmtTL(Math.round(fb.debtTotal)) + ' bağlıyor (gelirin ' + pct(Math.round(debtRatio*100)) + '). '
+      + (_smD
+        ? 'En küçüğü "' + esc(_smD.name) + '" — ' + fmtTL(Math.round((_smD.installments-_smD.paidCount)*_smD.monthlyAmount)) + ' kaldı; kapanınca ayda ' + fmtTL(_smD.monthlyAmount) + ' serbest.'
+        : 'Her kapanan taksit bu oranı kalıcı düşürür.'),
     level: debtRatio > 0.30 ? 'high' : 'mid',
     barPct: Math.min(100, Math.round(debtRatio*100*2)),
     barColor: debtRatio > 0.30 ? 'var(--danger)' : 'var(--warning)',
+    th: 40, thLabel: 'sınır %20',
   });
   if (adjRemain < 0) drivers.push({
     label: 'Ay sonu açığı',
     pct: 0,
-    detail: 'Bu ay giderler geliri ' + fmtTL(Math.abs(Math.round(adjRemain))) + ' geçiyor. Öncelik: değişken harcamaları kısmak.',
+    detail: 'Giderler geliri ayda ' + fmtTL(Math.abs(Math.round(adjRemain))) + ' aşıyor. İlk hamle değişken harcamalar: günde '
+      + fmtTL(Math.ceil(Math.abs(adjRemain)/30)) + ' kısmak ayı sıfıra getirir.',
     level: 'high', barPct: 100, barColor: 'var(--danger)',
   });
   if (savRatio < 0.05 && adjRemain >= 0) drivers.push({
-    label: 'Dar birikim marjı',
+    label: 'Dar birikim marjı', short: 'Birikim',
     pct: Math.round(savRatio*100),
-    detail: 'Gelirin sadece ' + pct(Math.round(savRatio*100)) + ' birikilebilir. Beklenmedik bir gider bu dengeyi kolayca bozar.',
+    detail: 'Ay sonunda gelirin sadece ' + pct(Math.round(savRatio*100)) + ' (' + fmtTL(Math.round(savPot)) + ') kalıyor; hedef %12. '
+      + 'Beklenmedik tek gider dengeyi bozmasın diye önce küçük bir tampon kur.',
     level: 'mid', barPct: Math.max(5, Math.round(savRatio*100*4)), barColor: 'var(--warning)',
+    th: 48, thLabel: 'hedef %12',
   });
   const noEmergency = !data.savingsGoals.some(g =>
     ['acil','fon','yedek'].some(k => g.name.toLowerCase().includes(k)));
-  if (noEmergency) drivers.push({
-    label: 'Acil fon eksikliği',
-    pct: 0,
-    detail: '3 aylık gider kadar bir tampon, yapıyı beklenmedik giderlere karşı kalıcı olarak korur.',
-    level: 'mid', barPct: 0, barColor: 'var(--muted)',
-  });
+  if (noEmergency) {
+    const _efT = Math.round((adjRec + fb.debtTotal) * 3);
+    drivers.push({
+      label: 'Acil fon eksikliği',
+      pct: 0,
+      detail: 'Acil fon görünmüyor. Hedef: 3 aylık sabit gider = ' + fmtTL(_efT)
+        + (savPot > 0 ? ' — ayda ' + fmtTL(Math.round(savPot)) + ' ile yaklaşık ' + Math.max(1, Math.ceil(_efT/savPot)) + ' ayda kurulur.' : '.'),
+      level: 'mid', barPct: 0, barColor: 'var(--muted)',
+    });
+  }
 
   // Aksiyon önerileri (sıralı, somut)
   const actions = [];
@@ -8694,7 +8772,7 @@ function _planCalcCore(fb, sc) {
 
   return {
     adjIncome, adjRec, adjAvail, adjVar, adjRemain, savPot,
-    fixedRatio, debtRatio, savRatio, rs, riskLevel,
+    fixedRatio, debtRatio, savRatio, rs, rsParts, riskLevel,
     character, drivers, actions, goals, sc,
   };
 }
@@ -8983,7 +9061,7 @@ function _renderPlanSteps() {
     el.innerHTML = '<div style="font-size:13px;font-weight:400;color:var(--muted);line-height:1.75;padding:4px 0 8px">Gelir kaydı eklenince kişisel yol haritan burada oluşur.</div>';
     return;
   }
-  const cards = _buildAdviceCards(ctx).sort((a, b) => b.score - a.score).slice(0, 6);
+  const cards = _buildAdviceCards(ctx).sort((a, b) => b.score - a.score).slice(0, 4);
   if (!cards.length) {
     el.innerHTML = '<div style="font-size:13px;font-weight:400;color:var(--muted);line-height:1.75;padding:4px 0 8px">Kritik adım yok — yapı sağlıklı görünüyor. Mevcut düzeni korumak en iyi strateji.</div>';
     return;
@@ -9079,6 +9157,26 @@ function renderMonthlyReportCard() {
   else if (top) odak = `Dengeli bir ay. En büyük kalem ${getCat(top[0]).name} — düzeni koru.`;
   else odak = 'Dengeli bir ay — aynı düzeni koru.';
 
+  // V81: son 6 ayın tasarruf oranı sparkline'ı
+  const _spMonths = ms.slice(Math.max(0, idx - 5), idx + 1);
+  const _spRates = _spMonths.map(m => {
+    const md = calcMonthData(m);
+    return md.income > 0 ? Math.max(-20, Math.min(60, Math.round(((md.income - md.expense) / md.income) * 100))) : null;
+  });
+  let sparkHtml = '';
+  if (_spRates.filter(v => v !== null).length >= 2) {
+    const bw = 7, gap = 4, w = _spRates.length * (bw + gap) - gap, h = 26, base = 20;
+    const bars = _spRates.map((v, i2) => {
+      if (v === null) return '';
+      const bh = Math.max(2, Math.round(Math.abs(v) / 60 * base));
+      const y = v >= 0 ? base - bh : base;
+      const c = v >= 15 ? 'var(--accent)' : v >= 5 ? 'var(--warning)' : 'var(--danger)';
+      const op = i2 === _spRates.length - 1 ? 1 : .5;
+      return `<rect x="${i2 * (bw + gap)}" y="${y}" width="${bw}" height="${bh}" rx="2" fill="${c}" opacity="${op}"/>`;
+    }).join('');
+    sparkHtml = `<svg class="rep-spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="margin-top:6px;display:block"><line x1="0" x2="${w}" y1="${base}" y2="${base}" stroke="rgba(255,255,255,.15)" stroke-width="1"/>${bars}</svg>`;
+  }
+
   const row = (label, val, color) => `
     <div class="report-row">
       <span class="report-row-label">${label}</span>
@@ -9100,6 +9198,7 @@ function renderMonthlyReportCard() {
       <div style="background:var(--surface3);border-radius:12px;padding:11px 13px">
         <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Tasarruf Oranı</div>
         <div style="font-size:19px;font-weight:900;letter-spacing:-.5px;color:${(savRate ?? 0) >= 15 ? 'var(--accent)' : (savRate ?? 0) >= 5 ? 'var(--warning)' : 'var(--danger)'}">${savRate === null ? '—' : '%' + savRate}</div>
+        ${sparkHtml}
       </div>
       <div style="background:var(--surface3);border-radius:12px;padding:11px 13px">
         <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Limit Uyumu</div>
@@ -9266,7 +9365,7 @@ function _renderPlanHero(fb, core) {
     el.innerHTML = `<div class="plan-hero">
       <div class="plan-hero-inner">
         <div class="plan-hero-glow"></div>
-        <div class="plan-hero-overline"><span class="plan-hero-overline-dot"></span>Finansal Durum</div>
+        <div class="plan-hero-overline"><span class="plan-hero-overline-dot"></span>01 · Durum</div>
         <div class="plan-hero-headline">Veri <em>bekleniyor.</em></div>
         <div class="plan-hero-sub">Gelir eklenince yapının tam analizi başlar.</div>
       </div>
@@ -9279,91 +9378,118 @@ function _renderPlanHero(fb, core) {
   const glowColor   = rl==='low' ? 'rgba(45,184,102,.1)' : rl==='mid' ? 'rgba(255,214,10,.1)' : 'rgba(255,69,58,.1)';
   const rlLabel     = { low:'Dengeli', mid:'Dikkat', high:'Baskılı' }[rl];
 
-  // Headline — referans: bold, tek güçlü cümle
+  // Headline — tek güçlü cümle
   let headline = '';
-  if (core.adjRemain < 0)
-    headline = `Giderler geliri <em>aşıyor.</em>`;
-  else if (core.fixedRatio > 0.65)
-    headline = `Sabit yapı <em>çok ağır.</em>`;
-  else if (core.fixedRatio > 0.50)
-    headline = `Sabit yük <em>baskı yaratıyor.</em>`;
-  else if (core.debtRatio > 0.28)
-    headline = `Borç <em>hareket alanını kısıtlıyor.</em>`;
-  else if (core.savRatio > 0.22)
-    headline = `Birikim marjı <em>güçlü.</em>`;
-  else if (core.savRatio > 0.10)
-    headline = `Yapı <em>dengeli.</em>`;
-  else
-    headline = `Esneklik <em>hâlâ dar.</em>`;
+  if (core.adjRemain < 0)           headline = `Giderler geliri <em>aşıyor.</em>`;
+  else if (core.fixedRatio > 0.65)  headline = `Sabit yapı <em>çok ağır.</em>`;
+  else if (core.fixedRatio > 0.50)  headline = `Sabit yük <em>baskı yaratıyor.</em>`;
+  else if (core.debtRatio > 0.28)   headline = `Borç <em>hareket alanını kısıtlıyor.</em>`;
+  else if (core.savRatio > 0.22)    headline = `Birikim marjı <em>güçlü.</em>`;
+  else if (core.savRatio > 0.10)    headline = `Yapı <em>dengeli.</em>`;
+  else                              headline = `Esneklik <em>hâlâ dar.</em>`;
 
+  // Sub — V81: sayı + neden + tek eylem, en fazla 2 satır
+  const _srt = [...data.recurring].filter(r=>r.active).sort((a,b)=>b.amount-a.amount);
+  const _act = data.debts.filter(d=>d.active);
+  const _sm  = _act.length ? [..._act].sort((a,b) =>
+    ((a.installments-a.paidCount)*a.monthlyAmount)-((b.installments-b.paidCount)*b.monthlyAmount))[0] : null;
   let sub = '';
   if (core.adjRemain < 0)
-    sub = 'Sorun yapısal olmak zorunda değil. Değişken harcamaları kısmak dengeyi hızlı toparlar.';
+    sub = `Aylık ${fmtTL(Math.abs(Math.round(core.adjRemain)))} açık var. Günde ${fmtTL(Math.ceil(Math.abs(core.adjRemain)/30))} kısmak ayı sıfıra getirir — değişken harcamadan başla.`;
   else if (core.fixedRatio > 0.55)
-    sub = 'Sorun günlük harcamalar değil; yapının sabit yükü fazla ağır. Bir veya iki kalemin azaltılması tüm dengeyi değiştirir.';
+    sub = _srt.length
+      ? `Gelirinin %${Math.round(core.fixedRatio*100)}'i sabit. En büyük kalem "${esc(_srt[0].desc)}" (${fmtTL(_srt[0].amount)}/ay) — onu küçültmek tüm dengeyi değiştirir.`
+      : `Gelirinin %${Math.round(core.fixedRatio*100)}'i sabit taahhütlere gidiyor. Tek büyük kalemi küçültmek tüm dengeyi değiştirir.`;
   else if (core.debtRatio > 0.28)
-    sub = 'Gelir zayıf değil — baskıyı yaratan şey yapısal taahhütler. Her kapanan taksit bu denklemi kalıcı değiştiriyor.';
+    sub = _sm
+      ? `Taksitler gelirin %${Math.round(core.debtRatio*100)}'ini bağlıyor. En küçük borç "${esc(_sm.name)}" — kapat, ayda ${fmtTL(_sm.monthlyAmount)} kalıcı olarak serbest kalsın.`
+      : `Taksitler gelirin %${Math.round(core.debtRatio*100)}'ini bağlıyor. Her kapanan taksit bu denklemi kalıcı değiştirir.`;
   else if (core.savRatio > 0.15 && !data.savingsGoals.filter(g=>g.monthly>0).length)
-    sub = 'Bir hedef olmadığında, birikim potansiyeli sessizce erir. Bu marjı tanımlamak değeri korur.';
+    sub = `Ayda ${fmtTL(Math.round(core.savPot))} artıyor ama bir hedefe bağlı değil. İsimsiz para erir — küçük bir hedef aç.`;
   else if (core.savRatio > 0.15)
-    sub = 'Disiplin var ve yapı bunu destekliyor. Şimdi mesele hızı artırmak.';
+    sub = `Ayda ${fmtTL(Math.round(core.savPot))} birikiyor ve yapı bunu taşıyor. Sıradaki mesele hızı artırmak.`;
   else
-    sub = 'Esneklik alanı dar olduğunda küçük bir gider bile tüm düzeni bozar. Önce tampon oluşturmak gerekiyor.';
+    sub = `Ay sonunda gelirin sadece %${Math.round(core.savRatio*100)}'i kalıyor. Önce küçük bir tampon — sonrası kolaylaşır.`;
 
-  // SVG ring — 80px, referans circular metric
-  const score = core.rs !== undefined ? Math.max(0, Math.min(100, 100 - core.rs * 11)) : 60;
-  const R = 32, circ = 2 * Math.PI * R;
-  const filled = (score / 100) * circ;
-  const offset = circ - filled;
+  // Skor — tek kaynak (_planScore); V82: hero da simülasyonla aynı gauge dilini kullanır
+  const score = _planScore(core);
 
-  // Metrikler
   const metrics = [
     { label:'Sabit yük', val:'%'+Math.round(core.fixedRatio*100), color: core.fixedRatio>.55?'var(--danger)':core.fixedRatio>.40?'var(--warning)':'var(--accent)' },
-    { label:'Birikim marjı', val:'%'+Math.round(core.savRatio*100), color: core.savRatio<.05?'var(--danger)':core.savRatio<.12?'var(--warning)':'var(--accent)' },
-    { label:'Aylık kalan', val:fmtTL(Math.round(core.adjRemain)), color: core.adjRemain<0?'var(--danger)':'var(--accent)' },
+    { label:'Birikim', val:'%'+Math.round(core.savRatio*100), color: core.savRatio<.05?'var(--danger)':core.savRatio<.12?'var(--warning)':'var(--accent)' },
+    { label:'Kalan', val:fmtTL(Math.round(core.adjRemain)), color: core.adjRemain<0?'var(--danger)':'var(--accent)' },
   ];
+
+  // Skor dökümü — V81: halkaya dokununca açılır
+  const parts = core.rsParts || { fixed:0, debt:0, sav:0 };
+  const pRow = (label, val, pts, max) => `
+    <div class="plan-break-row">
+      <div class="plan-break-label">${label}</div>
+      <div class="plan-break-track"><div class="plan-break-fill" style="width:${Math.round(pts/3*100)}%;background:${pts>=2?'var(--danger)':pts>=1?'var(--warning)':'var(--accent)'}"></div></div>
+      <div class="plan-break-val">${val}</div>
+      <div class="plan-break-pts" style="color:${pts>=2?'var(--danger)':pts>=1?'var(--warning)':'var(--accent)'}">${pts>0?'−'+pts*11:'0'}</div>
+    </div>`;
+  const breakHtml = `
+    <div class="plan-score-break" id="planScoreBreak" hidden>
+      <div class="plan-break-head">Skor nasıl hesaplandı? 100'den baskı puanları düşülür:</div>
+      ${pRow('Sabit yük', '%'+Math.round(core.fixedRatio*100), parts.fixed)}
+      ${pRow('Borç', '%'+Math.round(core.debtRatio*100), parts.debt)}
+      ${pRow('Birikim', '%'+Math.round(core.savRatio*100), parts.sav)}
+      <div class="plan-break-foot">Eşikler: sabit yük %30/45/65 · borç %8/20/35 · birikim %12/5/açık</div>
+    </div>`;
+
+  // Trend şeridi — V81: geçen aya göre değişim
+  let trendHtml = '';
+  try {
+    const pMk = prevMonthKey(1), pFb = calcFreeBudget(pMk);
+    if (pFb.income > 0) {
+      const pCore = _planCalcCore(pFb, { extraIncome:0, recDelta:0, lifeDelta:0, plannedExp:0 });
+      const dS = score - _planScore(pCore);
+      const dR = fb.remaining - pFb.remaining;
+      const dF = Math.round(core.fixedRatio*100) - Math.round(pCore.fixedRatio*100);
+      const chip = (txt, good, neutral) => `<span class="plan-trend-chip ${neutral?'neu':good?'pos':'neg'}">${txt}</span>`;
+      const chips = [];
+      if (Math.abs(dS) >= 1)   chips.push(chip(`Skor ${dS>0?'+':''}${dS}`, dS>0, false));
+      if (Math.abs(dR) >= 100) chips.push(chip(`Kalan ${dR>0?'+':'−'}${fmtTL(Math.abs(Math.round(dR)))}`, dR>0, false));
+      if (Math.abs(dF) >= 1)   chips.push(chip(`Sabit yük ${dF>0?'+':'−'}%${Math.abs(dF)}`, dF<0, false));
+      if (chips.length)
+        trendHtml = `<div class="plan-trend-strip" id="planTrendStrip"><span class="plan-trend-cap">Geçen aya göre</span>${chips.join('')}</div>`;
+    }
+  } catch(e) {}
 
   el.innerHTML = `<div class="plan-hero">
     <div class="plan-hero-inner" style="--plan-accent:${accentColor}">
       <div class="plan-hero-glow" style="background:radial-gradient(circle,${glowColor} 0%,transparent 65%)"></div>
       <div class="plan-hero-overline">
         <span class="plan-hero-overline-dot" style="background:${accentColor}"></span>
-        Finansal Durum · ${rlLabel}
+        01 · Durum · ${rlLabel}
       </div>
-      <div class="plan-hero-headline" style="--plan-accent:${accentColor}">${headline}</div>
+      <div class="ph-gauge-wrap" onclick="_planToggleScoreBreak()" role="button" aria-label="Skor dökümünü aç">
+        ${_scGaugeSvg('ph')}
+        <div class="ph-scorewrap">
+          <div class="ph-score"><span id="phScoreNum">${score}</span><small>/100</small></div>
+          <div class="ph-score-hint">skor · dokun</div>
+        </div>
+      </div>
+      <div class="plan-hero-headline ph-headline" style="--plan-accent:${accentColor}">${headline}</div>
       <div class="plan-hero-sub">${sub}</div>
-      <div class="plan-hero-ring-row">
-        <div class="plan-ring-wrap">
-          <svg class="plan-ring-svg" width="80" height="80" viewBox="0 0 80 80">
-            <circle class="plan-ring-bg" cx="40" cy="40" r="${R}"/>
-            <circle class="plan-ring-fill" cx="40" cy="40" r="${R}"
-              style="--ring-circ:${circ.toFixed(1)};--ring-offset:${offset.toFixed(1)};stroke:${accentColor};stroke-dashoffset:${circ.toFixed(1)}"
-              stroke-dasharray="${circ.toFixed(1)}"
-              stroke-dashoffset="${offset.toFixed(1)}"/>
-          </svg>
-          <div class="plan-ring-center">
-            <div class="plan-ring-score" style="color:${accentColor}">${score}</div>
-            <div class="plan-ring-label">skor</div>
-          </div>
-        </div>
-        <div class="plan-hero-metrics">
-          ${metrics.map(m => `<div class="plan-hero-metric-row">
-            <div class="plan-hero-metric-label">${m.label}</div>
-            <div class="plan-hero-metric-val" style="color:${m.color}">${m.val}</div>
-          </div>`).join('')}
-        </div>
+      <div class="ph-metrics">
+        ${metrics.map(m => `<div class="sc-cp-m"><div class="sc-cp-m-l">${m.label}</div><div class="sc-cp-m-v" style="color:${m.color};font-size:14.5px">${m.val}</div></div>`).join('')}
       </div>
+      ${breakHtml}
+      ${trendHtml}
     </div>
   </div>`;
 
-  // Ring animasyonu — render sonrası
-  requestAnimationFrame(() => {
-    const ring = el.querySelector('.plan-ring-fill');
-    if (ring) {
-      ring.style.transition = 'stroke-dashoffset .9s cubic-bezier(.4,0,.2,1)';
-      ring.style.strokeDashoffset = offset.toFixed(1);
-    }
+  const phN = el.querySelector('#phNeedle');
+  if (phN) requestAnimationFrame(() => {
+    phN.style.transform = 'rotate(' + (score*1.8-90).toFixed(1) + 'deg)';
   });
+}
+
+function _planToggleScoreBreak() {
+  const b = document.getElementById('planScoreBreak');
+  if (b) b.hidden = !b.hidden;
 }
 
 
@@ -9372,22 +9498,18 @@ function _renderPlanChar(core) {
   const el = document.getElementById('planCharCard');
   if (!el) return;
   const ch = core.character;
-  const firstAction = core.actions[0] || '';
 
   el.innerHTML = `
     <div class="plan-char-card">
       <div class="plan-char-gradient" style="--char-gradient:${ch.gradient}">
-        <div class="plan-char-overline">Finansal Karakter</div>
+        <div class="plan-char-overline">02 · Karakter</div>
         <div class="plan-char-bigname" style="color:${ch.accentColor||'#fff'}">${ch.name}</div>
         <div class="plan-char-tagline">${ch.tagline}</div>
       </div>
       <div class="plan-char-glass">
         <div class="plan-char-section-label">Bu yapıda neden bu karakter?</div>
         <div class="plan-char-section-text">${ch.why}</div>
-        ${firstAction ? `<div class="plan-char-action-box">
-          <div class="plan-char-action-label">İlk adım</div>
-          <div class="plan-char-action-text">${firstAction}</div>
-        </div>` : ''}
+        <button class="plan-char-map-btn" onclick="var b=document.getElementById('planStepsBlock');if(b)b.scrollIntoView({behavior:'smooth',block:'start'})">Ne yapmalıyım? Yol haritasına git →</button>
       </div>
       <div class="plan-char-next">
         <div class="plan-char-next-arrow">→</div>
@@ -9407,7 +9529,7 @@ function _renderPlanRiskDetail(core) {
 
   // Label güncelle
   const ov = document.getElementById('planRiskOverline');
-  if (ov) { ov.textContent = 'Baskı Analizi · ' + rlLabel; ov.style.color = rlColor; }
+  if (ov) { ov.textContent = '03 · Baskı Analizi · ' + rlLabel; ov.style.color = rlColor; }
   const rb = document.getElementById('planRiskBlock');
   if (rb) rb.style.display = '';
 
@@ -9426,34 +9548,30 @@ function _renderPlanRiskDetail(core) {
 
   // Bar'lar — kutu yok, düz liste
   const visDrivers = core.drivers.filter(d => d.barPct > 0);
-  const barsHtml = visDrivers.length ? `
-    <div style="margin-bottom:20px">
-      ${visDrivers.map(d => `
-      <div class="plan-bar-row">
-        <div class="plan-bar-label">${d.label.split(' ').slice(0,2).join(' ')}</div>
-        <div class="plan-bar-track"><div class="plan-bar-fill" style="width:${d.barPct}%;background:${d.barColor}"></div></div>
-        <div class="plan-bar-pct" style="color:${d.barColor}">${d.pct>0?'%'+d.pct:'—'}</div>
-      </div>`).join('')}
-    </div>` : '';
+  // V82: her sürücü kendi görsel kartında — büyük sayı + bar + eşik çentiği
 
-  // Driver açıklamaları — daha küçük, ikincil
-  const driverHtml = core.drivers.map((d, i) => `
-    <div style="padding:12px 0;border-top:1px solid rgba(255,255,255,.05);animation:planBlockIn .28s ease ${i*40}ms both">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px">
-        <div style="font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.01em">${d.label}</div>
-        ${d.level !== 'low' ? `<span style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;flex-shrink:0;background:${lvlBg[d.level]};color:${lvlColor[d.level]}">${lvlLabel[d.level]}</span>` : ''}
+  const driverHtml = core.drivers.map((d, i) => {
+    const num = d.pct > 0 ? '%' + d.pct : (d.level === 'high' ? '!' : '·');
+    const numColor = d.barColor && d.barColor !== 'var(--muted)' ? d.barColor : 'rgba(255,255,255,.35)';
+    return `
+    <div class="drv-card" style="animation:planBlockIn .3s ease ${i*50}ms both">
+      <div class="drv-head">
+        <div class="drv-label">${d.label}</div>
+        ${d.level !== 'low' ? `<span class="drv-badge" style="background:${lvlBg[d.level]};color:${lvlColor[d.level]}">${lvlLabel[d.level]}</span>` : ''}
       </div>
-      <div style="font-size:13px;font-weight:400;color:var(--muted);line-height:1.75;letter-spacing:-.01em">${d.detail}</div>
-    </div>`).join('');
+      <div class="drv-num" style="color:${numColor}">${num}</div>
+      ${d.barPct > 0 ? `<div class="drv-track">
+        <div class="drv-fill" style="width:${d.barPct}%;background:${d.barColor}"></div>
+        ${d.th ? `<div class="plan-bar-tick" style="left:${d.th}%"></div>` : ''}
+      </div>` : ''}
+      <div class="drv-detail">${d.detail}</div>
+    </div>`;
+  }).join('');
+  const legend = core.drivers.some(d => d.th)
+    ? `<div class="plan-bar-legend" style="margin-top:8px">| çentik = sağlıklı sınır ${core.drivers.filter(d=>d.thLabel).map(d=>`· ${(d.short||d.label).toLocaleLowerCase('tr')} ${d.thLabel.replace('sınır ','').replace('hedef ','')}`).join(' ')}</div>` : '';
 
-  // Aksiyon — en altta, vurgulu
-  const actHtml = core.actions.slice(1).map(a => `
-    <div style="margin-top:16px;padding:14px 16px;background:rgba(45,184,102,.07);border:1px solid rgba(45,184,102,.18);border-radius:14px">
-      <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px">İlk adım</div>
-      <div style="font-size:14px;font-weight:500;color:var(--text);line-height:1.7;letter-spacing:-.01em">${a}</div>
-    </div>`).join('');
-
-  el.innerHTML = barsHtml + driverHtml + actHtml;
+  // Aksiyonlar tek yerde yaşar — "04 · Yol Haritası". Burada tekrar edilmez.
+  el.innerHTML = `<div class="drv-grid">${driverHtml}</div>` + legend;
 }
 
 
@@ -9512,10 +9630,18 @@ function _renderPlanGoalDetail(fb, core) {
     return `
     <div class="plan-goal-card" style="animation-delay:${i*60}ms">
       <div class="plan-goal-card-top">
-        <div class="plan-goal-card-name">${esc(g.name)}</div>
-        <div class="plan-goal-card-frac">${fmtTL(Math.round(g.dep))} birikti / ${fmtTL(g.target)} hedef</div>
-        <div class="plan-goal-prog-track">
-          <div class="plan-goal-prog-fill" style="width:${g.pct}%"></div>
+        <div class="pg-head">
+          <svg class="pg-ring" width="46" height="46" viewBox="0 0 46 46">
+            <circle cx="23" cy="23" r="19" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="4.5"/>
+            <circle cx="23" cy="23" r="19" fill="none" stroke="var(--accent)" stroke-width="4.5" stroke-linecap="round"
+              stroke-dasharray="${(2*Math.PI*19).toFixed(1)}" stroke-dashoffset="${(2*Math.PI*19*(1-g.pct/100)).toFixed(1)}"
+              transform="rotate(-90 23 23)"/>
+            <text x="23" y="27" text-anchor="middle" font-size="10.5" font-weight="800" fill="var(--text)">%${g.pct}</text>
+          </svg>
+          <div style="flex:1;min-width:0">
+            <div class="plan-goal-card-name">${esc(g.name)}</div>
+            <div class="plan-goal-card-frac">${fmtTL(Math.round(g.dep))} / ${fmtTL(g.target)}</div>
+          </div>
         </div>
         <div class="plan-goal-time-grid">
           <div class="plan-goal-time-block">
@@ -9829,6 +9955,11 @@ function _scMove(id, input) {
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
+// V81: TEK skor kaynağı — hero halkası ve simülasyon göstergesi aynı sayıyı gösterir
+function _planScore(core) {
+  return Math.max(0, Math.min(100, Math.round(100 - (core.rs||0)/9*100)));
+}
+
 function _planGetScenario() {
   return { extraIncome:_sc.extraIncome||0, recDelta:_sc.recDelta||0,
            lifeDelta:_sc.lifeDelta||0, plannedExp:_sc.plannedExp||0 };
@@ -9885,7 +10016,8 @@ function _scSpark(host, color, n) {
 }
 
 // ─── Kokpit iskeleti ─────────────────────────────────────────────────────────
-function _scGaugeSvg() {
+function _scGaugeSvg(pfx) {
+  pfx = pfx || 'sc';
   function arc(a1, a2, color) {
     const r=52, cx=75, cy=64, RAD=Math.PI/180;
     const x1=cx+r*Math.cos(a1*RAD), y1=cy-r*Math.sin(a1*RAD);
@@ -9894,7 +10026,7 @@ function _scGaugeSvg() {
   }
   return `<svg class="sc-cp-gauge" viewBox="0 0 150 78">
     ${arc(180,124,'#FF453A')}${arc(116,64,'#FFD60A')}${arc(56,0,'#2DB866')}
-    <g id="scNeedle"><line x1="75" y1="64" x2="75" y2="30" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/><circle cx="75" cy="30" r="4" fill="#fff"/></g>
+    <g id="${pfx}Needle"><line x1="75" y1="64" x2="75" y2="30" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/><circle cx="75" cy="30" r="4" fill="#fff"/></g>
     <circle cx="75" cy="64" r="5.5" fill="#fff"/>
   </svg>`;
 }
@@ -10053,7 +10185,7 @@ function _updatePlanImpact(fb, core) {
   const R = _SC_RISK[core.riskLevel];
 
   // Skor + gauge + risk etiketi
-  const score = Math.max(0, Math.min(100, Math.round(100 - core.rs/9*100)));
+  const score = _planScore(core);
   _scScoreTween(score);
   const nd = document.getElementById('scNeedle');
   if (nd) nd.style.transform = 'rotate(' + (score*1.8-90).toFixed(1) + 'deg)';
