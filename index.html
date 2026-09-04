@@ -1517,6 +1517,35 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .sc-q-hint { color:rgba(233,232,240,.6); }
 .plan-goal-card-frac { color:rgba(233,232,240,.65); }
 .report-row-label { color:rgba(233,232,240,.65); }
+
+/* ═══ V85 — GİZLİLİK + KARTOPU + HEDEF FİZİBİLİTE ═══ */
+#appHeader .priv-eye { position:absolute; right:58px; top:50%; transform:translateY(-50%); margin-top:calc(env(safe-area-inset-top,0px)/2); width:30px; height:30px; display:flex; align-items:center; justify-content:center; background:var(--surface2); border:1px solid var(--border); border-radius:50%; color:var(--muted); cursor:pointer; padding:0; transition:color .2s, border-color .2s; -webkit-tap-highlight-color:transparent; }
+#appHeader .priv-eye.on { color:var(--warning); border-color:rgba(255,214,10,.4); }
+.snow-card { border-color:rgba(45,184,102,.25); }
+.snow-free { font-size:13px; font-weight:600; color:rgba(233,232,240,.8); margin-bottom:12px; }
+.snow-free b { font-size:15px; font-weight:800; color:var(--accent); }
+.snow-saved { font-size:11.5px; font-weight:800; color:var(--accent); background:rgba(45,184,102,.12); padding:3px 8px; border-radius:99px; margin-left:4px; }
+.snow-saved:empty { display:none; }
+.snow-q { display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600; color:rgba(233,232,240,.65); margin-bottom:8px; }
+.snow-val { font-size:14px; font-weight:800; letter-spacing:-.02em; }
+.snow-rows { margin-top:12px; }
+.snow-row { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:7px 0; border-top:1px solid rgba(255,255,255,.05); }
+.snow-nm { font-size:12.5px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.snow-fig { font-size:11.5px; font-weight:700; color:rgba(233,232,240,.7); white-space:nowrap; font-variant-numeric:tabular-nums; }
+.snow-early { font-style:normal; color:var(--accent); font-weight:800; }
+.snow-note { margin-top:10px; font-size:10.5px; font-weight:500; color:rgba(233,232,240,.45); line-height:1.5; }
+.goal-feas { margin:2px 0 14px; padding:12px 14px; border-radius:12px; border:1px solid; animation:planBlockIn .25s ease both; }
+.goal-feas.good { background:rgba(45,184,102,.08); border-color:rgba(45,184,102,.3); }
+.goal-feas.warn { background:rgba(255,214,10,.07); border-color:rgba(255,214,10,.28); }
+.goal-feas.bad  { background:rgba(255,69,58,.08);  border-color:rgba(255,69,58,.3); }
+.gf-title { font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; margin-bottom:5px; }
+.goal-feas.good .gf-title { color:var(--accent); }
+.goal-feas.warn .gf-title { color:var(--warning); }
+.goal-feas.bad  .gf-title { color:var(--danger); }
+.gf-msg { font-size:12.5px; font-weight:500; color:rgba(233,232,240,.85); line-height:1.6; letter-spacing:-.01em; }
+.gf-msg b { color:var(--text); font-weight:800; }
+.gf-sim-btn { margin-top:10px; padding:9px 14px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14); border-radius:10px; color:var(--text); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.gf-sim-btn:active { transform:scale(.97); }
 .sc-q-hint {
   font-size:12px; font-weight:400; color:var(--muted);
   margin-bottom:12px; letter-spacing:-.01em;
@@ -2667,6 +2696,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 <!-- HEADER -->
 <div class="app-header" id="appHeader">
   <div class="app-logo" onclick="switchTab('aylik')" style="cursor:pointer" id="appLogo">Vault</div>
+  <button class="priv-eye" id="privEye" onclick="togglePrivacy()" aria-label="Tutarları gizle/göster"></button>
 </div>
 
 <!-- NAV FADE MASK -->
@@ -4041,7 +4071,10 @@ function fmtNum(n) {
   return sign + String(Math.abs(rounded)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
-function fmtTL(n) { return fmtNum(n) + '₺'; }
+function fmtTL(n) {
+  if (typeof data !== 'undefined' && data && data.hideAmounts) return '••••';
+  return fmtNum(n) + '₺';
+}
 
 function monthKey(dateStr) {
   const d = dateStr ? new Date(dateStr + 'T00:00:00') : new Date();
@@ -9584,7 +9617,8 @@ function _renderPlanRiskDetail(core) {
     ? `<div class="plan-bar-legend" style="margin-top:8px">| çentik = sağlıklı sınır ${core.drivers.filter(d=>d.thLabel).map(d=>`· ${(d.short||d.label).toLocaleLowerCase('tr')} ${d.thLabel.replace('sınır ','').replace('hedef ','')}`).join(' ')}</div>` : '';
 
   // Aksiyonlar tek yerde yaşar — "04 · Yol Haritası". Burada tekrar edilmez.
-  el.innerHTML = `<div class="drv-grid">${driverHtml}</div>` + legend;
+  el.innerHTML = `<div class="drv-grid">${driverHtml}</div>` + legend + _snowballCardHtml();
+  _snowRender();
 }
 
 
@@ -10015,6 +10049,146 @@ function planScenCalc() {
 function _scMonthName(m) {
   const d = new Date(); d.setDate(1); d.setMonth(d.getMonth()+m);
   return _SC_AYLAR[d.getMonth()];
+}
+function _scMonthYear(m) {
+  const d = new Date(); d.setDate(1); d.setMonth(d.getMonth()+m);
+  return _SC_AYLAR[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+// ═══ V85 — KARTOPU PLANI: borçtan çıkış simülatörü ═══════════════════════════
+let _snowExtra = 0;
+
+function _planSnowball(extra) {
+  const mk = monthKey();
+  const debts = (data.debts||[]).filter(d=>d.active).map(d=>{
+    let rem = Math.max(0, (d.installments||0) - (d.paidCount||0));
+    if (!(d.paidMonths||[]).includes(mk)) rem = Math.max(0, rem - 1);
+    return { name: d.name||'Borç', pay: d.monthlyAmount||0, bal: rem*(d.monthlyAmount||0), done:false };
+  }).filter(d => d.bal > 0 && d.pay > 0);
+  if (!debts.length) return null;
+  const fin = [];
+  let pool = 0, m = 0;
+  while (debts.some(d=>d.bal>0) && m < 240) {
+    m++;
+    let ekstra = (extra||0) + pool;
+    debts.forEach(d => { if (d.bal > 0) d.bal = Math.max(0, d.bal - d.pay); });
+    while (ekstra > 0) {
+      const alive = debts.filter(d=>d.bal>0).sort((a,b)=>a.bal-b.bal)[0];
+      if (!alive) break;
+      const c = Math.min(ekstra, alive.bal);
+      alive.bal -= c; ekstra -= c;
+    }
+    debts.forEach(d => { if (d.bal === 0 && !d.done) { d.done = true; fin.push({ name:d.name, m:m, freed:d.pay }); pool += d.pay; } });
+  }
+  return { months: m, fin: fin };
+}
+
+function _snowballCardHtml() {
+  const base = _planSnowball(0);
+  if (!base) return '';
+  const inc = (calcFreeBudget(currentMonth).income||0);
+  const maxE = Math.max(2000, Math.round(inc*0.2/500)*500);
+  return `
+  <div class="drv-card snow-card" style="margin-top:10px">
+    <div class="drv-head">
+      <div class="drv-label">Kartopu Planı — borçtan çıkış</div>
+      <span class="drv-badge" style="background:rgba(45,184,102,.12);color:var(--accent)">İNTERAKTİF</span>
+    </div>
+    <div class="snow-free">Borçsuz tarih: <b id="snowFree">—</b> <span id="snowSaved" class="snow-saved"></span></div>
+    <div class="snow-q">Ayda fazladan ödersen? <span id="snowVal" class="snow-val">—</span></div>
+    <input type="range" class="sc-range" id="snowRange" min="0" max="${maxE}" step="250" value="${_snowExtra}"
+      style="--sc-fill:var(--accent);--sc-glow:rgba(45,184,102,.18);--sc-a:0%;--sc-b:0%" oninput="_snowMove(this)">
+    <div id="snowRows" class="snow-rows"></div>
+    <div class="snow-note">Sıra: en küçük borç önce; biten taksit bir sonrakine eklenir. Faiz hesaba katılmaz.</div>
+  </div>`;
+}
+
+function _snowRender() {
+  const inp = document.getElementById('snowRange');
+  if (!inp) return;
+  const base = _planSnowball(0), cur = _planSnowball(_snowExtra);
+  if (!base || !cur) return;
+  const f = document.getElementById('snowFree');
+  if (f) f.textContent = _scMonthYear(cur.months);
+  const s = document.getElementById('snowSaved');
+  if (s) { const dd = base.months - cur.months; s.textContent = dd > 0 ? dd + ' ay erken' : ''; }
+  const v = document.getElementById('snowVal');
+  if (v) { v.textContent = _snowExtra > 0 ? '+' + fmtTL(_snowExtra) + '/ay' : '—'; v.style.color = _snowExtra > 0 ? 'var(--accent)' : 'var(--muted)'; }
+  const rows = document.getElementById('snowRows');
+  if (rows) rows.innerHTML = cur.fin.map(x => {
+    const b = base.fin.find(y => y.name === x.name);
+    const erken = (b && b.m > x.m) ? ` <i class="snow-early">${b.m - x.m} ay erken</i>` : '';
+    return `<div class="snow-row"><span class="snow-nm">${esc(x.name)}</span><span class="snow-fig">${_scMonthYear(x.m)} · +${fmtTL(x.freed)}/ay${erken}</span></div>`;
+  }).join('');
+  const p = Math.round(_snowExtra / (parseFloat(inp.max)||1) * 100);
+  inp.style.setProperty('--sc-a', '0%'); inp.style.setProperty('--sc-b', p + '%');
+}
+
+function _snowMove(inp) { _snowExtra = parseFloat(inp.value) || 0; _snowRender(); }
+
+// ═══ V85 — HEDEF SİHİRBAZI: canlı fizibilite ═════════════════════════════════
+function _goalFeasUpdate() {
+  const box = document.getElementById('goalFeasBox'); if (!box) return;
+  const target = parseNum(document.getElementById('goalTargetNew')?.value || '0');
+  let monthly = parseNum(document.getElementById('goalMonthlyNew')?.value || '0');
+  const months = parseInt(document.getElementById('goalMonthsNew')?.value) || 0;
+  if (!monthly && target && months) monthly = Math.ceil(target / months);
+  if (!target || !monthly) { box.style.display = 'none'; box.innerHTML = ''; return; }
+  const fbb = calcFreeBudget(currentMonth);
+  const core = _planCalcCore(fbb, { extraIncome:0, recDelta:0, lifeDelta:0, plannedExp:0 });
+  const marj = Math.round(core.savPot);
+  const sure = Math.max(1, Math.ceil(target / monthly));
+  const bitis = _scMonthYear(sure);
+  let cls, title, msg, btn = '';
+  if (marj <= 0) {
+    cls = 'bad'; title = 'Marj yok';
+    msg = `Bu ay serbest marjın kalmıyor — önce dengeyi kurmak gerek. Simülasyonda hangi değişikliğin yeteceğini görebilirsin.`;
+    btn = `<button class="gf-sim-btn" onclick="_goalTrySim(${monthly})">Simülasyonda dene →</button>`;
+  } else if (monthly <= marj * 0.8) {
+    cls = 'good'; title = 'Uygulanabilir';
+    msg = `Aylık ${fmtTL(monthly)}, serbest marjının (${fmtTL(marj)}) %${Math.round(monthly/marj*100)}'i — rahat taşınır. Tahmini bitiş: <b>${bitis}</b>.`;
+  } else if (monthly <= marj) {
+    cls = 'warn'; title = 'Sınırda';
+    msg = `Marjının %${Math.round(monthly/marj*100)}'i bu hedefe gidiyor; beklenmedik gider payı kalmıyor. Bitiş: <b>${bitis}</b>. Süreyi biraz uzatmak nefes aldırır.`;
+  } else {
+    const eksik = monthly - marj;
+    cls = 'bad'; title = 'Marj yetmiyor';
+    msg = `Aylık <b>${fmtTL(eksik)}</b> eksik (marj: ${fmtTL(marj)}). Süreyi uzat ya da bu farkı senaryoda dene:`;
+    btn = `<button class="gf-sim-btn" onclick="_goalTrySim(${eksik})">Simülasyonda dene →</button>`;
+  }
+  box.style.display = '';
+  box.className = 'goal-feas ' + cls;
+  box.innerHTML = `<div class="gf-title">${title}</div><div class="gf-msg">${msg}</div>${btn}`;
+}
+
+function _goalTrySim(eksik) {
+  closeGoalAddSheet();
+  switchTab('plan');
+  setTimeout(() => {
+    _scTweenTo({ extraIncome: Math.max(500, Math.ceil((eksik||0)/500)*500), recDelta:0, lifeDelta:0, plannedExp:0 });
+    const el = document.getElementById('planScenPresets');
+    const wrap = document.getElementById('appWrap');
+    if (el && wrap) wrap.scrollTop = el.offsetTop - 64;
+  }, 380);
+}
+
+// ═══ V85 — GİZLİLİK: tutarları maskele ═══════════════════════════════════════
+function _privSync() {
+  const b = document.getElementById('privEye'); if (!b) return;
+  const on = !!(data && data.hideAmounts);
+  b.innerHTML = on
+    ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"/><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87"/><path d="M3 3l18 18"/></svg>'
+    : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg>';
+  b.classList.toggle('on', on);
+}
+
+function togglePrivacy() {
+  data.hideAmounts = !data.hideAmounts;
+  try { save(); } catch(e) {}
+  _privSync();
+  renderAll();
+  if (currentTab === 'plan') renderPlan();
+  try { showToast((data.hideAmounts ? TOAST_OK + ' Tutarlar gizlendi' : TOAST_OK + ' Tutarlar görünür')); } catch(e) {}
 }
 
 function _scSet(id, txt, color) {
@@ -12216,6 +12390,7 @@ function renderAll() {
   if (!Array.isArray(data.categories)) data.categories = [];
   updateAppLogo();
   populateCatSelects();
+  _privSync();
   renderMonthly();
   if (currentTab === 'sabit') renderSabit();
   if (currentTab === 'ozet') {
@@ -12648,6 +12823,8 @@ function openGoalAddSheet() {
   const gn = document.getElementById('goalNoteNew'); if(gn) gn.value = '';
   const gh = document.getElementById('goalMonthlyHintNew'); if(gh) gh.textContent = '';
   document.getElementById('goalEmojiNew').value = 'target';
+  const _gfb = document.getElementById('goalFeasBox');
+  if (_gfb) { _gfb.style.display = 'none'; _gfb.innerHTML = ''; }
   const eg = document.getElementById('emojiGridSheet');
   if (eg) {
     eg.innerHTML = GOAL_ICONS.map(ic => {
@@ -13453,15 +13630,16 @@ setInterval(checkMonthRollover, 60000);
       <input type="text" id="goalNameNew" class="form-input" placeholder="Tatil, araba, acil fon..."></div>
     <div style="display:flex;gap:8px">
       <div class="form-group" style="flex:1"><label class="form-label">Hedef Tutar</label>
-        <input type="text" id="goalTargetNew" class="form-input" placeholder="100.000" oninput="fmtInput(this)" inputmode="numeric"></div>
+        <input type="text" id="goalTargetNew" class="form-input" placeholder="100.000" oninput="fmtInput(this);calcGoalMonthlyNew();_goalFeasUpdate()" inputmode="numeric"></div>
       <div class="form-group" style="flex:1"><label class="form-label">Kaç Ayda?</label>
-        <input type="text" id="goalMonthsNew" class="form-input" placeholder="12" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');calcGoalMonthlyNew()"></div>
+        <input type="text" id="goalMonthsNew" class="form-input" placeholder="12" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');calcGoalMonthlyNew();_goalFeasUpdate()"></div>
     </div>
     <div class="form-group">
       <label class="form-label" style="display:flex;justify-content:space-between"><span>Aylık Birikim</span><span id="goalMonthlyHintNew" style="color:var(--accent);font-weight:800"></span></label>
-      <input type="text" id="goalMonthlyNew" class="form-input" placeholder="Otomatik hesaplanır" oninput="fmtInput(this)" inputmode="numeric"></div>
+      <input type="text" id="goalMonthlyNew" class="form-input" placeholder="Otomatik hesaplanır" oninput="fmtInput(this);_goalFeasUpdate()" inputmode="numeric"></div>
     <div class="form-group"><label class="form-label">Not <span style="color:var(--muted);font-weight:500">(isteğe bağlı)</span></label>
       <input type="text" id="goalNoteNew" class="form-input" placeholder="Bu hedef hakkında bir not..."></div>
+    <div id="goalFeasBox" style="display:none"></div>
     <button class="btn btn-primary btn-full" onclick="addGoalNew()">Kaydet</button>
   </div>
 </div>
