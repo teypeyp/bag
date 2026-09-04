@@ -4154,6 +4154,15 @@ function getCat(id) {
   return allCategories().find(c => c.id === id) || DEFAULT_CATS.find(c => c.id === 'diger');
 }
 
+// V90 Fix#4: "Telefon" gibi isimler 'fon' alt-dizesine takılıp acil fon sanılıyordu.
+// Önce isEmergency bayrağı; sonra sadece anlamlı/çok-kelimeli anahtarlar (bare 'fon'/'yedek' kaldırıldı).
+function isEmergencyGoal(g) {
+  if (!g) return false;
+  if (g.isEmergency) return true;
+  const n = (g.name || '').toLowerCase();
+  return n.includes('acil') || n.includes('yedek fon') || n.includes('acil fon');
+}
+
 function autoDetectCategory(desc) {
   if (!desc) return null;
   const lower = desc.toLowerCase().trim();
@@ -4976,14 +4985,22 @@ function calcFreeBudget(mk) {
   const { income, expense, txs } = calcMonthData(mk);
   const savTarget = data.monthlyTargets[mk] || 0;
 
-  const recTotal = data.recurring.filter(r => r.active)
-    .reduce((s, r) => s + r.amount, 0);
+  // V90 Fix#1/#2: pasife alınmış ama bu ay ödenmiş kalem de sayılır (borç guard'ı ile simetri);
+  // ödenmişse gerçek ödenen tutar (payHistory[mk]) kullanılır — değişken giderde tahmin/gerçek farkı sızmaz
+  const recTotal = data.recurring
+    .filter(r => r.active || (r.paidMonths || []).includes(mk))
+    .reduce((s, r) => s + ((r.paidMonths || []).includes(mk) && r.payHistory && r.payHistory[mk] != null ? r.payHistory[mk] : r.amount), 0);
   const debtTotal = data.debts.filter(d =>
     (d.active || (d.paidMonths || []).includes(mk)) &&
     (!d.startMonth || d.startMonth <= mk))
     .reduce((s, d) => s + d.monthlyAmount, 0);
-  const goalTotal = data.savingsGoals.filter(g => g.monthly)
-    .reduce((s, g) => s + g.monthly, 0);
+  // V90 Fix#5: dolmuş (deposits>=target) ve bu ay katkısı olmayan hedefi rezerve etme
+  const goalTotal = data.savingsGoals.filter(g => {
+    if (!g.monthly) return false;
+    const dep = (g.deposits || []).reduce((a, d) => a + (d.amount || 0), 0);
+    if (g.target > 0 && dep >= g.target && !(g.paidMonths || []).includes(mk)) return false;
+    return true;
+  }).reduce((s, g) => s + g.monthly, 0);
 
   const paidFixed = txs.filter(t => t.isRecurring || t.isDebt || t.isGoalDeposit)
     .reduce((s, t) => s + t.amount, 0);
@@ -7768,10 +7785,12 @@ function saveDebtEdit() {
   if (!name || !totalAmount) { showToast(TOAST_WARN + ' Ad ve tutar gerekli'); return; }
   d.name = name; d.totalAmount = totalAmount; d.installments = installments;
   d.monthlyAmount = Math.round(totalAmount / installments); d.startMonth = startMonth;
-  // Taksit sayısı azaltılınca paidCount'un aşmaması için kırp
-  if (d.paidCount > d.installments) {
+  // V90 Fix#3: taksit sayısı ödenen taksite <= çekilince borç kapanmalı ( > değil >= )
+  if (d.paidCount >= d.installments) {
     d.paidCount = d.installments;
     d.active = false;
+  } else {
+    d.active = true; // taksit artırıldıysa yeniden aktifleşsin
   }
   save(); closeDebtEdit(); renderAll();
   showToast(TOAST_OK + ' Ödeme güncellendi');
@@ -8205,7 +8224,7 @@ function renderWishSummaryCard() {
   const soonest = active
     .map(w => ({ w, proj: calcWishProjection(w, fb) }))
     .filter(x => x.proj.monthsAway !== null)
-    .sort((a,b) => (a.proj.monthsAway||99) - (b.proj.monthsAway||99))[0];
+    .sort((a,b) => (a.proj.monthsAway ?? 99) - (b.proj.monthsAway ?? 99))[0]; // V90 Fix#11: monthsAway=0 (bu ay) en sona atılmasın
 
   // Öncelik dağılımı
   const priorityOrder = { critical: 0, high: 1, mid: 2, low: 3, someday: 4 };
@@ -8708,8 +8727,7 @@ function _planClassifyChar(fb) {
   const fixedRatio  = (fb.recTotal + fb.debtTotal) / fb.income;
   const savRatio    = Math.max(0, fb.remaining) / fb.income;
   const hasGoals    = data.savingsGoals.filter(g => g.monthly > 0).length > 0;
-  const hasEmergency= data.savingsGoals.some(g =>
-    ['acil','fon','yedek'].some(k => g.name.toLowerCase().includes(k)));
+  const hasEmergency= data.savingsGoals.some(g => isEmergencyGoal(g)); // V90 Fix#4
 
   // Borçlu: borç baskısı dominant
   if (debtRatio > 0.28 || (debtRatio > 0.18 && fixedRatio > 0.6)) {
@@ -8827,8 +8845,7 @@ function _planCalcCore(fb, sc) {
     level: 'mid', barPct: Math.max(5, Math.round(savRatio*100*4)), barColor: 'var(--warning)',
     th: 48, thLabel: 'hedef %12',
   });
-  const noEmergency = !data.savingsGoals.some(g =>
-    ['acil','fon','yedek'].some(k => g.name.toLowerCase().includes(k)));
+  const noEmergency = !data.savingsGoals.some(g => isEmergencyGoal(g)); // V90 Fix#4
   if (noEmergency) {
     const _efT = Math.round((adjRec + fb.debtTotal) * 3);
     drivers.push({
@@ -11204,7 +11221,12 @@ function renderOzetStats() {
   // Hero
   const balEl = document.getElementById('ozetBalance');
   if (balEl) { balEl.textContent = fmtTL(balance); balEl.style.color = balance >= 0 ? 'var(--accent)' : 'var(--danger)'; }
-  const net = income - expense;
+  // V90 Fix#10: "net değişim" bakiye ile tutarlı (kart harcaması bakiyeyi düşürmez, ekstre ödemesi düşürür)
+  const net = data.transactions.filter(t => monthKey(t.date) === mk).reduce((s, t) => {
+    if (t.type === 'income') return s + t.amount;
+    if (t.type === 'expense' && t.payMethod === 'card') return s;
+    return s - t.amount;
+  }, 0);
   const subEl = document.getElementById('ozetBalanceSub');
   if (subEl) subEl.innerHTML = `Bu ay <strong style="color:${net>=0?'var(--accent)':'var(--danger)'}">${net>=0?'+':''}${fmtTL(net)}</strong> net değişim`;
 
@@ -11296,7 +11318,8 @@ function renderDailyStats() {
     if (daySpent > 0 && daySpent < minSpent) { minSpent = daySpent; minSpentDate = dateStr; }
   }
 
-  const avgDaily = todayD > 1 ? Math.round(totalVarSpent / (todayD - 1)) : Math.round(totalVarSpent);
+  const _avgDays = Math.min(todayD, dim); // V90 Fix#7: pay bugünü de içerdiği için payda = sayılan gün sayısı (off-by-one giderildi)
+  const avgDaily = _avgDays > 0 ? Math.round(totalVarSpent / _avgDays) : 0;
   const scorePct = (todayD - emptyDays) > 0 ? Math.round((greenDays / (todayD - emptyDays)) * 100) : 0;
   const scoreColor = scorePct >= 70 ? 'var(--accent)' : scorePct >= 40 ? 'var(--warning)' : 'var(--danger)';
 
@@ -11657,13 +11680,17 @@ function renderDonut() {
   const txs = data.transactions.filter(t => monthKey(t.date) === mk && t.type === mode);
   const bycat = {};
   txs.forEach(t => { bycat[t.category] = (bycat[t.category] || 0) + t.amount; });
-  const catEntries = Object.entries(bycat).sort((a,b) => b[1]-a[1]).slice(0, 6);
-  const total = catEntries.reduce((s,[,v]) => s+v, 0);
+  // V90 Fix#6: "toplam" ve yüzdeler tüm kategoriler üzerinden; ilk 6 dilim + kalanlar "Diğer" olarak toplanır
+  const _allCats = Object.entries(bycat).sort((a,b) => b[1]-a[1]);
+  const total = _allCats.reduce((s,[,v]) => s+v, 0);
+  const _restSum = _allCats.slice(6).reduce((s,[,v]) => s+v, 0);
+  const slices = _allCats.slice(0, 6).map(([id, v]) => ({ name: getCat(id).name, color: getCat(id).color, v }));
+  if (_restSum > 0) slices.push({ name: 'Diğer', color: '#6E6D78', v: _restSum });
 
   const doughnutSub = document.getElementById('doughnutTotal');
   const dLegend     = document.getElementById('doughnutLegend');
 
-  if (!catEntries.length) {
+  if (!slices.length) {
     if (doughnutSub) doughnutSub.textContent = 'Veri yok';
     if (dLegend) dLegend.innerHTML = '';
     return;
@@ -11677,10 +11704,10 @@ function renderDonut() {
   charts.doughnut = new Chart(dCtx, {
     type: 'doughnut',
     data: {
-      labels: catEntries.map(([id]) => getCat(id).name),
+      labels: slices.map(s => s.name),
       datasets: [{
-        data: catEntries.map(([,v]) => v),
-        backgroundColor: catEntries.map(([id]) => getCat(id).color),
+        data: slices.map(s => s.v),
+        backgroundColor: slices.map(s => s.color),
         borderWidth: 3, borderColor: '#18181C', hoverOffset: 8
       }]
     },
@@ -11693,7 +11720,7 @@ function renderDonut() {
         tooltip: {
           backgroundColor: 'rgba(24,24,28,0.95)', borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1,
           titleFont: { family: 'Montserrat', weight: '800' }, bodyFont: { family: 'Montserrat' },
-          callbacks: { label: ctx => { const pct = Math.round((ctx.raw / total) * 100); return ' ' + fmtNum(ctx.raw) + '₺  %' + pct; } }
+          callbacks: { label: ctx => { const pct = total > 0 ? Math.round((ctx.raw / total) * 100) : 0; return ' ' + fmtNum(ctx.raw) + '₺  %' + pct; } }
         }
       }
     }
@@ -11702,10 +11729,9 @@ function renderDonut() {
   if (doughnutSub) doughnutSub.textContent = fmtNum(Math.round(total)) + '₺ toplam';
   if (dLegend) {
     dLegend.innerHTML = '<div class="donut-legend">' +
-      catEntries.map(([id, amt]) => {
-        const cat = getCat(id);
-        const pct = Math.round((amt / total) * 100);
-        return `<div class="donut-legend-item"><div class="donut-legend-dot" style="background:${cat.color}"></div><span class="donut-legend-name">${esc(cat.name)}</span><span class="donut-legend-amt">%${pct}</span></div>`;
+      slices.map(s => {
+        const pct = total > 0 ? Math.round((s.v / total) * 100) : 0;
+        return `<div class="donut-legend-item"><div class="donut-legend-dot" style="background:${s.color}"></div><span class="donut-legend-name">${esc(s.name)}</span><span class="donut-legend-amt">%${pct}</span></div>`;
       }).join('') + '</div>';
   }
 }
@@ -11834,8 +11860,10 @@ function renderYillik() {
     const debtPaid = txs.filter(t => t.isDebt).reduce((s,t) => s + t.amount, 0);
     // Birikim yatırımları bu ayda
     const savDeposit = txs.filter(t => t.isGoalDeposit).reduce((s,t) => s + t.amount, 0);
-    // Gerçek değişken gider (borç + birikim hariç)
-    const varExp = Math.max(0, expense - debtPaid - savDeposit);
+    // V90 Fix#9: sabit (recurring) giderler de "değişken"e sızmasın
+    const recurPaid = txs.filter(t => t.isRecurring).reduce((s,t) => s + t.amount, 0);
+    // Gerçek değişken gider (sabit + borç + birikim hariç)
+    const varExp = Math.max(0, expense - debtPaid - savDeposit - recurPaid);
     // Kasada kalan: o ayın serbest bütçesinden artakalan (geçmiş ay için fixed)
     const fb = calcFreeBudget(mk);
     const kasadaKalan = fb.remaining;
@@ -13387,9 +13415,12 @@ function openDailyLimitSheet() {
   }
   // Geçen ay ortalaması
   const prevMk = prevMonthKey(1);
-  const prevData = calcMonthData(prevMk);
   const prevDim = daysInMonth(prevMk);
-  const prevAvg = prevData.expense > 0 ? Math.round(prevData.expense / prevDim) : 0;
+  // V90 Fix#8: "günde ort." sadece DEĞİŞKEN giderden (renderDailyStats ile aynı filtre) — kira/borç/birikim hariç
+  const prevVarExp = data.transactions
+    .filter(t => monthKey(t.date) === prevMk && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+    .reduce((s, t) => s + t.amount, 0);
+  const prevAvg = prevVarExp > 0 ? Math.round(prevVarExp / prevDim) : 0;
 
   // Otomatik blok — geçen ay avg
   const autoAvg = document.getElementById('dlAutoAvg');
@@ -13681,7 +13712,7 @@ _planClassifyChar = function(fb){
     if (!fb.income) return base;
     const inc = fb.income, savRatio = Math.max(0, fb.remaining) / inc, fixedRatio = (fb.recTotal + fb.debtTotal) / inc, varRatio = (fb.varSpent || 0) / inc;
     const goals = data.savingsGoals || [], hasGoals = goals.some(g => g.monthly > 0);
-    const emg = goals.filter(g => ['acil','fon','yedek'].some(k => (g.name||'').toLowerCase().includes(k)));
+    const emg = goals.filter(g => isEmergencyGoal(g)); // V90 Fix#4
     const emgTotal = emg.reduce((s,g) => s + (g.deposits||[]).reduce((a,d) => a + (d.amount||0), 0), 0);
     const monthlyOut = (fb.recTotal + fb.debtTotal + (fb.varSpent||0)) || inc * 0.7;
     const emgMonths = emgTotal / Math.max(1, monthlyOut);
