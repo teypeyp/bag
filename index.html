@@ -2249,35 +2249,110 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 
 /* ═══════════ V78 — MASKOT (bagimsiz modul, vm- namespace) ═══════════ */
 #vmClip{position:absolute;inset:0;overflow:hidden;pointer-events:none}          /* hero'nun altina dalis icin kirpma */
-#vmWrap{position:absolute;top:calc(2px + env(safe-area-inset-top,0px));left:calc(100% - 66px);width:52px;height:52px;cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent;will-change:transform}
+#vmWrap{position:absolute;left:50%;margin-left:-24px;top:calc(10px + env(safe-area-inset-top,0px));width:48px;height:48px;z-index:3;cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent;will-change:transform;
+  transform:translateY(110px)}                                                     /* varsayilan: gizli (hero'nun altinda) */
 #vmWrap svg{width:100%;height:100%;overflow:visible;display:block}
+#appHeader .vm-hdr-add{position:absolute;right:16px;top:50%;margin-top:calc(env(safe-area-inset-top,0px)/2);width:30px;height:30px;font-size:18px;font-weight:600;line-height:1;font-family:'Montserrat',sans-serif}  /* alttaki .hero-add ile ayni tip */
+#heroAdd{display:none!important}                                                                /* alttaki "+" artik gereksiz */
+.vm-plan-avatar{pointer-events:auto;cursor:pointer}
 .vm-alive{transform-box:fill-box;transform-origin:50% 88%;animation:vmAlive 4.2s ease-in-out infinite}
 @keyframes vmAlive{0%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(2deg) translateY(-3px)}100%{transform:rotate(-2deg) translateY(0)}}
-#vmSay{position:absolute;top:100%;margin-top:6px;right:14px;background:#fff;color:#111;font-size:12px;font-weight:800;padding:6px 11px;border-radius:12px;white-space:nowrap;
-  opacity:0;transform:translateY(-6px) scale(.7);transform-origin:80% 0;transition:all .3s cubic-bezier(.34,1.45,.6,1);pointer-events:none;font-family:'Montserrat',sans-serif;z-index:3}
-#vmSay::after{content:"";position:absolute;top:-6px;right:18px;border:6px solid transparent;border-bottom-color:#fff;border-top:0}
-#vmSay.show{opacity:1;transform:translateY(0) scale(1)}
-/* karakter atlama — full-screen, duz zemin, golge/konfeti yok */
-#vmCeleb{position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;overflow:hidden;font-family:'Montserrat',sans-serif}
-#vmCeleb.show{display:flex;animation:vmFade .4s ease}
+/* Plan karakter karti avatari */
+.vm-plan-avatar{position:absolute;right:16px;top:14px;width:78px;height:78px;overflow:visible;pointer-events:none}
+#planCharCard .plan-char-gradient{padding-right:112px}
+.plan-char-gradient{position:relative}
+#vmSay{position:absolute;top:100%;margin-top:6px;left:50%;background:#fff;color:#111;font-size:12px;font-weight:800;padding:6px 11px;border-radius:12px;white-space:nowrap;
+  opacity:0;transform:translateX(-50%) translateY(-6px) scale(.7);transform-origin:50% 0;transition:all .3s cubic-bezier(.34,1.45,.6,1);pointer-events:none;font-family:'Montserrat',sans-serif;z-index:3}
+#vmSay::after{content:"";position:absolute;top:-6px;left:50%;transform:translateX(-50%);border:6px solid transparent;border-bottom-color:#fff;border-top:0}
+#vmSay.show{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
+/* karakter atlama — SYNTHWAVE (kara bosluk, yukselen gradient gunes, neon halkalar, isik) */
+#vmCeleb{position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;overflow:hidden;font-family:'Montserrat',sans-serif;background:#000;--vmc:#FF7BA0}
+#vmCeleb.show{display:flex;animation:vmFade .5s ease}
 @keyframes vmFade{from{opacity:0}to{opacity:1}}
-#vmCelebBg{position:absolute;inset:0;z-index:0}
-.vm-bgshape{position:absolute;z-index:0;opacity:.13;pointer-events:none}
-.vm-bgshape svg{width:100%;height:100%;overflow:visible}
-.vm-shock{position:absolute;left:50%;top:38%;border-radius:50%;border:3px solid #fff;z-index:1;pointer-events:none;transform:translate(-50%,-50%)}
+.vm-sun{position:absolute;left:50%;bottom:-40%;width:150vw;max-width:760px;aspect-ratio:1;border-radius:50%;z-index:0;opacity:0;transform:translate(-50%,60%);
+  background:radial-gradient(circle at 50% 38%,#fff3cf 0%,var(--vmc) 16%,#ff3d8f 42%,#6d1cab 66%,transparent 71%);filter:blur(1.5px)}
+#vmCeleb.show .vm-sun{animation:vmSunRise 1.7s cubic-bezier(.2,.8,.2,1) .15s forwards,vmSunBreath 7s ease-in-out 2s infinite}
+@keyframes vmSunRise{from{opacity:0;transform:translate(-50%,62%)}to{opacity:1;transform:translate(-50%,42%)}}
+@keyframes vmSunBreath{0%,100%{transform:translate(-50%,42%) scale(1)}50%{transform:translate(-50%,40.5%) scale(1.035)}}
+.vm-sunlines{position:absolute;left:0;right:0;bottom:0;height:44%;z-index:0;pointer-events:none;opacity:0;
+  background:repeating-linear-gradient(180deg,transparent 0 13px,rgba(0,0,0,.88) 13px 19px)}
+#vmCeleb.show .vm-sunlines{animation:vmFade .8s ease .9s forwards,vmLines 3.2s linear 1s infinite}
+@keyframes vmLines{from{background-position:0 0}to{background-position:0 19px}}
+.vm-horizon{position:absolute;left:0;right:0;bottom:44%;height:2px;z-index:1;opacity:0;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 12px #fff}
+#vmCeleb.show .vm-horizon{animation:vmFade .6s ease 1.1s forwards}
+.vm-orbit{position:absolute;left:50%;top:38%;width:300px;height:300px;border-radius:50%;border:2px solid rgba(255,255,255,.85);z-index:1;pointer-events:none;opacity:0;
+  box-shadow:0 0 12px rgba(255,255,255,.7),0 0 30px var(--vmc);transform:translate(-50%,-50%) rotateX(72deg)}
+#vmCeleb.show .vm-orbit{animation:vmFade .6s ease 1.3s forwards,vmOrbit 7s linear 1.3s infinite}
+@keyframes vmOrbit{from{transform:translate(-50%,-50%) rotateX(72deg) rotateZ(0)}to{transform:translate(-50%,-50%) rotateX(72deg) rotateZ(360deg)}}
+.vm-ring{position:absolute;left:50%;top:38%;border-radius:50%;border:2px solid rgba(255,255,255,.95);z-index:1;pointer-events:none;transform:translate(-50%,-50%);
+  box-shadow:0 0 14px rgba(255,255,255,.8),0 0 36px var(--vmc),inset 0 0 14px rgba(255,255,255,.35)}
+.vm-geo{position:absolute;z-index:1;opacity:0;pointer-events:none}
+.vm-geo svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 6px rgba(255,255,255,.6))}
+#vmCeleb.show .vm-geo{animation:vmGeoIn 1s ease 1.2s forwards,vmDrift 7s ease-in-out 1.2s infinite}
+@keyframes vmGeoIn{to{opacity:.6}}
+@keyframes vmDrift{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-16px) rotate(14deg)}}
+.vm-beam{position:absolute;left:50%;top:-12%;width:200px;height:72%;transform:translateX(-50%);z-index:1;pointer-events:none;opacity:0;
+  background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.3) 45%,rgba(255,255,255,0));filter:blur(20px)}
+.vm-flash{position:absolute;left:50%;top:38%;width:12px;height:12px;border-radius:50%;background:#fff;transform:translate(-50%,-50%);z-index:3;opacity:0;pointer-events:none;box-shadow:0 0 70px 50px #fff}
 .vm-in{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;color:#fff}
-.vm-kick{font-size:12px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .35s both}
+.vm-kick{font-size:12px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .35s both;text-shadow:0 0 14px rgba(255,255,255,.55)}
 .vm-badge{width:240px;height:236px;position:relative;display:flex;align-items:center;justify-content:center;margin:6px 0 0;opacity:0;animation:vmBadge .7s cubic-bezier(.34,1.45,.6,1) .15s both}
-.vm-badge svg{width:218px;height:218px;overflow:visible}
-.vm-title{font-size:36px;font-weight:900;letter-spacing:-1.2px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .6s both}
+.vm-badge svg{width:218px;height:218px;overflow:visible;filter:drop-shadow(0 0 16px var(--vmc)) drop-shadow(0 0 44px rgba(255,255,255,.28))}
+.vm-title{font-size:36px;font-weight:900;letter-spacing:-1.2px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .6s both;text-shadow:0 0 26px rgba(255,255,255,.5)}
 .vm-path{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:800;margin-top:8px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .8s both}
 .vm-path .old{opacity:.6;text-decoration:line-through}
-.vm-path .new{font-size:20px;font-weight:900;background:#fff;padding:6px 16px;border-radius:14px}
-.vm-desc{font-size:13px;font-weight:600;line-height:1.5;max-width:280px;margin-top:12px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .95s both}
-.vm-btn{margin-top:26px;padding:15px 44px;border:none;border-radius:18px;background:#fff;font-weight:900;font-size:15px;cursor:pointer;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) 1.1s both;font-family:inherit}
+.vm-path .new{font-size:20px;font-weight:900;background:#fff;color:#000;padding:6px 16px;border-radius:14px;box-shadow:0 0 24px rgba(255,255,255,.45)}
+.vm-desc{font-size:13px;font-weight:600;line-height:1.5;max-width:280px;margin-top:12px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .95s both;color:rgba(255,255,255,.88)}
+.vm-btn{margin-top:26px;padding:15px 44px;border:none;border-radius:18px;background:#fff;color:#000;font-weight:900;font-size:15px;cursor:pointer;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) 1.1s both;font-family:inherit;box-shadow:0 0 30px rgba(255,255,255,.35)}
 .vm-btn:active{transform:scale(.96)}
 @keyframes vmPop{from{opacity:0;transform:translateY(22px) scale(.85)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes vmBadge{0%{opacity:0;transform:scale(0) rotate(-20deg)}60%{opacity:1;transform:scale(1.12) rotate(6deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+
+/* ═══ V78 — ONBOARDING: maskot + yeni slaytlar ═══ */
+#vmObChar svg{width:100%;height:100%;overflow:visible;display:block}
+.vm-ob-char{display:flex;flex-direction:column;align-items:center;margin-bottom:18px;animation:obFadeIn .5s ease .05s both}
+.vm-ob-charsvg{width:150px;height:150px}
+.vm-ob-charname{margin-top:6px;font-size:22px;font-weight:900;letter-spacing:-.5px;transition:color .4s}
+.vm-ob-charrow{display:flex;gap:6px;margin-top:10px}
+.vm-ob-charrow i{width:8px;height:8px;border-radius:99px;background:var(--border);transition:all .3s}
+.vm-ob-charrow i.on{width:20px;background:var(--accent)}
+.vm-ob-cards{width:100%;padding:0 24px;margin-bottom:22px;display:flex;flex-direction:column;gap:10px;animation:obFadeIn .5s ease .05s both}
+.vm-ob-card{border-radius:18px;padding:16px;background:linear-gradient(145deg,#1a1a20,#141417);border:1px solid var(--border)}
+.vm-ob-card-chip{width:30px;height:22px;border-radius:5px;background:linear-gradient(135deg,#FFD60A,#E8A000);margin-bottom:12px}
+.vm-ob-card-name{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.vm-ob-card-amt{font-size:22px;font-weight:900;letter-spacing:-.6px;margin-top:2px}
+.vm-ob-card-cut{font-size:11px;color:var(--muted);font-weight:600;margin-top:4px}
+.vm-ob-wallets{display:flex;gap:8px}
+.vm-ob-wallets span{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:10px 8px;font-size:11px;font-weight:700;color:var(--muted);text-align:center}
+.vm-ob-wallets b{display:block;color:var(--text);font-size:14px;font-weight:900;margin-top:2px}
+.vm-ob-streak{display:flex;flex-direction:column;align-items:center;margin-bottom:20px;animation:obFadeIn .5s ease .05s both}
+.vm-ob-flame{display:flex;align-items:center;gap:10px}
+.vm-ob-flame svg{width:44px;height:44px;stroke:#FF9500;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 10px rgba(255,149,0,.6));animation:vmFlame 1.6s ease-in-out infinite}
+@keyframes vmFlame{0%,100%{transform:scale(1)}50%{transform:scale(1.08) translateY(-2px)}}
+.vm-ob-flame b{font-size:54px;font-weight:900;letter-spacing:-2px;color:#FF9500;line-height:1}
+.vm-ob-flame small{font-size:13px;font-weight:700;color:var(--muted);align-self:flex-end;margin-bottom:8px}
+.vm-ob-badges{display:flex;gap:12px;margin-top:16px}
+.vm-ob-badge{width:52px;height:52px;border-radius:50%;border:1.5px solid rgba(255,214,10,.5);background:rgba(255,214,10,.08);display:flex;align-items:center;justify-content:center}
+.vm-ob-badge svg{width:24px;height:24px;stroke:#FFD60A;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.vm-ob-badge.lock{border-color:var(--border);background:var(--surface)}
+.vm-ob-badge.lock svg{stroke:var(--muted)}
+
+/* seviye sayfasi modu */
+.vm-ladder{display:none;align-items:center;gap:6px;margin-top:12px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .8s both}
+.vm-ladder i{width:9px;height:9px;border-radius:99px;background:rgba(255,255,255,.28);display:block;transition:all .3s}
+.vm-ladder i.done{background:rgba(255,255,255,.7)}
+.vm-ladder i.cur{width:26px;background:#fff;box-shadow:0 0 14px #fff}
+.vm-ladder small{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.7);margin:0 4px}
+.vm-nextbox{display:none;margin-top:14px;max-width:300px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:16px;padding:12px 14px;text-align:left;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) 1s both}
+.vm-nextbox b{display:block;font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:#fff;margin-bottom:4px;text-shadow:0 0 10px rgba(255,255,255,.5)}
+.vm-nextbox span{font-size:13px;font-weight:600;line-height:1.5;color:rgba(255,255,255,.9)}
+.vm-btns{display:flex;gap:10px;margin-top:26px}
+.vm-btns .vm-btn{margin-top:0}
+.vm-btn2{display:none;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.4);box-shadow:none}
+#vmCeleb.level .vm-path{display:none}
+#vmCeleb.level .vm-ladder{display:flex}
+#vmCeleb.level .vm-nextbox{display:block}
+#vmCeleb.level .vm-btn2{display:inline-block}
 </style>
 </head>
 <body>
@@ -2414,8 +2489,42 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         <div class="ob-body">Tatil, araba, acil fon — hedef ekle, VAULT ne zaman yeteceğini hesaplar.</div>
       </div>
 
-      <!-- SLIDE 4: Kasanda ne kadar var? -->
+      <!-- SLIDE 4 (V78): Finansal karakter + maskot -->
       <div class="splash-slide" data-idx="4">
+        <div class="vm-ob-char"><div id="vmObChar" class="vm-ob-charsvg"></div><div class="vm-ob-charname" id="vmObCharName">Borçlu</div><div class="vm-ob-charrow" id="vmObCharRow"></div></div>
+        <div class="ob-tag">Finansal karakter</div>
+        <div class="ob-title">Karakterin<br><em>seninle gelişir.</em></div>
+        <div class="ob-body">VAULT nakit akışına bakıp karakterini belirler. Disiplin arttıkça Borçlu'dan Yatırımcı'ya yükselirsin — her atlamada kutlama var.</div>
+      </div>
+
+      <!-- SLIDE 5 (V78): Kartlar & cüzdanlar -->
+      <div class="splash-slide" data-idx="5">
+        <div class="vm-ob-cards">
+          <div class="vm-ob-card"><div class="vm-ob-card-chip"></div><div class="vm-ob-card-name">Kredi kartı</div><div class="vm-ob-card-amt">Ekstre · 4.250₺</div><div class="vm-ob-card-cut">Kesim 12 · Son ödeme 22</div></div>
+          <div class="vm-ob-wallets"><span>Market<b>2.400₺</b></span><span>Eğlence<b>900₺</b></span><span>Ulaşım<b>650₺</b></span></div>
+        </div>
+        <div class="ob-tag">Kartlar & cüzdanlar</div>
+        <div class="ob-title">Kart ekstresi,<br><em>cüzdan bütçesi.</em></div>
+        <div class="ob-body">Kart harcamaların ekstreye yazılır, bakiyen ödeme gününe kadar düşmez. Harcamalarını cüzdanlara ayır, her birine limit koy.</div>
+      </div>
+
+      <!-- SLIDE 6 (V78): Seri & kazanımlar -->
+      <div class="splash-slide" data-idx="6">
+        <div class="vm-ob-streak">
+          <div class="vm-ob-flame"><svg viewBox="0 0 24 24"><path d="M12 12c2 -2.96 0 -7 -1 -8c0 3.038 -1.773 4.741 -3 6c-1.226 1.26 -2 3.24 -2 5a6 6 0 1 0 12 0c0 -1.532 -1.056 -3.94 -2 -5c-1.786 3 -2.791 3 -4 2z"/></svg><b>12</b><small>gün seri</small></div>
+          <div class="vm-ob-badges">
+            <div class="vm-ob-badge"><svg viewBox="0 0 24 24"><path d="M8 21l8 0"/><path d="M12 17l0 4"/><path d="M7 4l10 0"/><path d="M17 4v8a5 5 0 0 1 -10 0v-8"/><path d="M5 9m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M19 9m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/></svg></div>
+            <div class="vm-ob-badge"><svg viewBox="0 0 24 24"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg></div>
+            <div class="vm-ob-badge lock"><svg viewBox="0 0 24 24"><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z"/><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M8 11v-4a4 4 0 1 1 8 0v4"/></svg></div>
+          </div>
+        </div>
+        <div class="ob-tag">Seri & kazanımlar</div>
+        <div class="ob-title">Her gün limitinde kal,<br><em>serini büyüt.</em></div>
+        <div class="ob-body">Limit içinde kaldığın her gün serin uzar, rozetler açılır. Küçük alışkanlıklar, büyük fark.</div>
+      </div>
+
+      <!-- SLIDE 7: Kasanda ne kadar var? -->
+      <div class="splash-slide" data-idx="7">
         <div class="ob-tag">Başlayalım</div>
         <div class="ob-title">Şu an kasanda<br><em>ne kadar var?</em></div>
         <div class="ob-body">VAULT bunu günlük limitini hesaplamak için kullanır.</div>
@@ -2429,7 +2538,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       </div>
 
       <!-- SLIDE 5: Cüzdan ismi - geçilebilir -->
-      <div class="splash-slide" data-idx="5">
+      <div class="splash-slide" data-idx="8">
         <div style="height:16px"></div>
         <div class="ob-tag">Kişiselleştir</div>
         <div class="ob-title">Cüzdanına<br><em>istediğin ismi ver.</em></div>
@@ -2449,6 +2558,9 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         <span class="splash-dot" onclick="goSplash(3)"></span>
         <span class="splash-dot" onclick="goSplash(4)"></span>
         <span class="splash-dot" onclick="goSplash(5)"></span>
+        <span class="splash-dot" onclick="goSplash(6)"></span>
+        <span class="splash-dot" onclick="goSplash(7)"></span>
+        <span class="splash-dot" onclick="goSplash(8)"></span>
       </div>
       <div class="splash-cta">
         <button class="btn btn-primary btn-full" id="splashBtn" onclick="nextSplash()">Devam</button>
@@ -3910,7 +4022,7 @@ function isPaidThisMonth(item, mk) {
 
 // =================== ONBOARDING ===================
 let _splashIdx = 0;
-const _SPLASH_COUNT = 6;
+const _SPLASH_COUNT = 9; // V78: +karakter, +kartlar/cuzdanlar, +seri/kazanimlar
 
 function initSplash() {
   _splashIdx = 0;
@@ -12303,10 +12415,10 @@ const VM = (function(){
     KIRILGAN:  {shape:'squircle',color:'#9B6FD4',eyes:'worried',mouth:'flat', scene:'TAMPON GÜÇLENİYOR'},
     ACEMI:     {shape:'egg',     color:'#38BDF8',eyes:'wide',   mouth:'smile',scene:'YOLA ÇIKTIN',    name:'Acemi',    tagline:'Yeni başladın — merakla öğreniyorsun.'},
     HARCAYAN:  {shape:'star',    color:'#E8792B',eyes:'wide',   mouth:'look', scene:'KONTROL SENDE'},
-    DENGELI:   {shape:'blob',    color:'#34D399',eyes:'content',mouth:'smile',scene:'DENGE OTURDU',   name:'Dengeli',  tagline:'Gelir-gider dengesi oturdu, sarsıntıya dayanıklısın.'},
+    DENGELI:   {shape:'blob',    color:'#F472B6',eyes:'content',mouth:'smile',scene:'DENGE OTURDU',   name:'Dengeli',  tagline:'Gelir-gider dengesi oturdu, sarsıntıya dayanıklısın.'},
     TUTUMLU:   {shape:'gem',     color:'#14B8A6',eyes:'focused',mouth:'flat', scene:'KURUŞ KURUŞ',    name:'Tutumlu',  tagline:'Kuruşu kuruşuna — her harcamayı tartıyorsun.'},
-    BIRIKTIREN:{shape:'flower',  color:'#2E7D46',eyes:'happy',  mouth:'happy',scene:'DİSİPLİN YERLEŞTİ'},
-    HEDEFCI:   {shape:'heart',   color:'#F5B927',eyes:'focused',mouth:'smile',scene:'HEDEFE KİLİTLİ', name:'Hedefçi',  tagline:'Hedefe kilitlendin — her ay planına sadıksın.'},
+    BIRIKTIREN:{shape:'flower',  color:'#FBBF24',eyes:'happy',  mouth:'happy',scene:'DİSİPLİN YERLEŞTİ'},
+    HEDEFCI:   {shape:'heart',   color:'#FB7185',eyes:'focused',mouth:'smile',scene:'HEDEFE KİLİTLİ', name:'Hedefçi',  tagline:'Hedefe kilitlendin — her ay planına sadıksın.'},
     YATIRIMCI: {shape:'star',    color:'#3E7CC4',eyes:'cool',   mouth:'happy',scene:'BÜYÜME ZAMANI'},
     OZGUR:     {shape:'gem',     color:'#8B5CF6',eyes:'happy',  mouth:'happy',scene:'ZİRVE',          name:'Özgür',    tagline:'Finansal özgürlük — para senin için çalışıyor.'},
   };
@@ -12326,7 +12438,7 @@ const VM = (function(){
   const $=id=>document.getElementById(id);
 
   // ---- durum ----
-  let key='BIRIKTIREN', M=null, away=false, busy=false, mounted=false, lastTap=0, retT=null, livenT=[], cbM=null, bgT=[], cbEyesKind='happy';
+  let key='BIRIKTIREN', M=null, away=true, busy=false, mounted=false, lastTap=0, livenT=[], cbM=null, bgT=[], cbEyesKind='happy';
   function currentKey(){try{const k=_planClassifyChar(calcFreeBudget(monthKey())).key;if(CH[k])return k;}catch(e){}return (data&&CH[data.mascotChar])?data.mascotChar:'BIRIKTIREN';}
 
   // ---- header'a mount ----
@@ -12340,10 +12452,11 @@ const VM = (function(){
       '<g id="vmEyes"></g><path id="vmMouth" d="" stroke="#111" stroke-width="5" fill="none" stroke-linecap="round"/></g></svg>';
     clip.appendChild(w);hd.appendChild(clip);
     const say=document.createElement('div');say.id='vmSay';hd.appendChild(say);
+    if(!$('vmAddWallet')&&typeof openBudgetAdd==='function'){const add=document.createElement('button');add.id='vmAddWallet';add.className='hero-add vm-hdr-add'+(((data&&data.budgets)||[]).length===0?' pulse':'');add.setAttribute('aria-label','Cüzdan ekle');add.textContent='+';add.onclick=()=>{add.classList.remove('pulse');openBudgetAdd();};hd.appendChild(add);}
     M=makeMorph($('vmPath'),{jelly:true});
     key=currentKey();applyChar(key,false);
     // tek tik = Selam, cift tik = git
-    w.addEventListener('click',e=>{e.stopPropagation();const n=Date.now();if(n-lastTap<380){lastTap=0;leave();}else{lastTap=n;setTimeout(()=>{if(lastTap===n&&!away)react('happy','Selam');},390);}});
+    w.addEventListener('click',e=>{e.stopPropagation();const n=Date.now();if(n-lastTap<380){lastTap=0;leave();}else{lastTap=n;setTimeout(()=>{if(lastTap===n&&!away){react('happy','Selam');stay(4000);}},390);}});
     liven();
   }
   function applyChar(k,anim){const c=info(k);key=k;if(!M)return;anim===false?M.set(c.shape):M.to(c.shape,700);$('vmPath').setAttribute('fill',c.color);$('vmEyes').innerHTML=eyesHTML(c.eyes,'vm');$('vmMouth').setAttribute('d',MOUTHS[c.mouth]);}
@@ -12353,42 +12466,48 @@ const VM = (function(){
     if(!mounted)return;resetFace();const m=$('vmWrap').querySelector('svg');
     if(kind==='happy'){m.animate([{transform:'translateY(0) scale(1,1)'},{transform:'translateY(2px) scale(1.1,.88)',offset:.18},{transform:'translateY(-16px) scale(.92,1.1)',offset:.5},{transform:'translateY(3px) scale(1.06,.95)',offset:.78},{transform:'translateY(0) scale(1,1)'}],{duration:700,easing:'cubic-bezier(.34,1.3,.6,1)'});$('vmMouth').setAttribute('d',MOUTHS.happy);const ey=$('vmEyes');if(ey&&info(key).eyes!=='cool'){ey.style.transformBox='fill-box';ey.style.transformOrigin='center';ey.style.transition='transform .2s';ey.style.transform='scaleY(.55)';}}
     if(kind==='worried'){m.animate([{transform:'translateX(0)'},{transform:'translateX(-6px) rotate(-3deg)',offset:.2},{transform:'translateX(6px) rotate(3deg)',offset:.4},{transform:'translateX(-4px)',offset:.6},{transform:'translateX(0)'}],{duration:520});$('vmBrowL').style.opacity=1;$('vmBrowR').style.opacity=1;$('vmBrowL').style.transform='rotate(16deg)';$('vmBrowR').style.transform='rotate(-16deg)';$('vmMouth').setAttribute('d',MOUTHS.sad);}
+    if(kind==='poof'){m.animate([{transform:'scale(1) rotate(0)'},{transform:'scale(.78) rotate(-10deg)',offset:.3},{transform:'scale(1.14) rotate(6deg)',offset:.62},{transform:'scale(1) rotate(0)'}],{duration:640,easing:'cubic-bezier(.34,1.4,.6,1)'});$('vmMouth').setAttribute('d','M92 122 a8 6 0 0 0 16 0 a8 6 0 0 0 -16 0');const ey=$('vmEyes');if(ey&&info(key).eyes!=='cool'){ey.style.transformBox='fill-box';ey.style.transformOrigin='center';ey.style.transition='transform .2s';ey.style.transform='scale(1.25)';}}
+    if(kind==='nod'){m.animate([{transform:'translateY(0) rotate(0)'},{transform:'translateY(5px) rotate(4deg)',offset:.25},{transform:'translateY(-2px) rotate(-2deg)',offset:.5},{transform:'translateY(5px) rotate(4deg)',offset:.75},{transform:'translateY(0) rotate(0)'}],{duration:620,easing:'ease-in-out'});$('vmMouth').setAttribute('d',MOUTHS.smile);}
     if(msg)say(msg);clearTimeout(react._t);react._t=setTimeout(resetFace,1700);
   }
 
-  // ---- hibrit: git / gel — hep hero'nun altina dalar, ayni yere doner ----
-  let moveAnim=null;
-  function leave(){
-    if(away||!mounted)return;away=true;clearTimeout(retT);
-    say('Görüşürüz, geleceğim',1200);
-    setTimeout(()=>{const w=$('vmWrap');if(moveAnim)moveAnim.cancel();
-      moveAnim=w.animate([
-        {transform:'translateY(0) scale(1,1)'},
-        {transform:'translateY(-9px) scale(1.08,.92)',offset:.24},          // anticipation: once hafif yukari + yassilas
-        {transform:'translateY(6px) scale(.96,1.06)',offset:.42},
-        {transform:'translateY(100px) scale(.9,1.12) rotate(5deg)',offset:1} // hero'nun altina dalis (header kirpar)
-      ],{duration:640,easing:'cubic-bezier(.5,0,.8,.3)',fill:'forwards'});
-    },850);
-    retT=setTimeout(comeBack,6000+Math.random()*6000);
-  }
-  function comeBack(){
-    if(!away||!mounted)return;clearTimeout(retT);const w=$('vmWrap');if(moveAnim)moveAnim.cancel();
+  // ---- ara sira gorunen maskot: hero'nun altindan logonun onune yukselir, biraz kalir, geri dalar ----
+  let moveAnim=null,stayT=null;
+  function stay(ms){clearTimeout(stayT);stayT=setTimeout(()=>{if(!busy)leave();else stay(1500);},ms||4200);}
+  function comeBack(msg){
+    if(!away||!mounted)return;const w=$('vmWrap');if(moveAnim)moveAnim.cancel();
     moveAnim=w.animate([
-      {transform:'translateY(100px) scale(.9,1.12)'},
-      {transform:'translateY(-14px) scale(1.08,.92)',offset:.58},             // altindan firlayip overshoot
-      {transform:'translateY(4px) scale(.96,1.05)',offset:.8},                // yerlesme squash
+      {transform:'translateY(110px) scale(.9,1.12)'},
+      {transform:'translateY(-12px) scale(1.08,.92)',offset:.58},              // altindan firlayip overshoot
+      {transform:'translateY(4px) scale(.96,1.05)',offset:.8},                 // yerlesme squash
       {transform:'translateY(0) scale(1,1)'}
     ],{duration:760,easing:'cubic-bezier(.22,1,.36,1)',fill:'forwards'});
     away=false;
-    setTimeout(()=>react('happy','Geldim'),700);
+    if(msg)setTimeout(()=>react('happy',msg),700);
+    stay();
   }
-  function ensureHere(cb){if(away){comeBack();setTimeout(cb,800);}else cb();}
+  function leave(){
+    if(away||!mounted)return;away=true;clearTimeout(stayT);const w=$('vmWrap');if(moveAnim)moveAnim.cancel();
+    moveAnim=w.animate([
+      {transform:'translateY(0) scale(1,1)'},
+      {transform:'translateY(-9px) scale(1.08,.92)',offset:.24},               // anticipation
+      {transform:'translateY(6px) scale(.96,1.06)',offset:.42},
+      {transform:'translateY(110px) scale(.9,1.12) rotate(5deg)',offset:1}     // hero'nun altina dalis (header kirpar)
+    ],{duration:640,easing:'cubic-bezier(.5,0,.8,.3)',fill:'forwards'});
+  }
+  // arada kendiliginden: ~6 sn'de bir %14 sans (ortalama 40 sn), kutlama acik degilse
+  const HELLO=['Selam','Buradayım','Nasıl gidiyor','Harcamalara dikkat','İyi gidiyorsun'];
+  setInterval(()=>{if(!mounted||!away||busy)return;const cel=$('vmCeleb');if(cel&&cel.classList.contains('show'))return;if(Math.random()<0.14)comeBack(HELLO[Math.floor(Math.random()*HELLO.length)]);},6000);
+  function ensureHere(cb){if(away){comeBack();setTimeout(cb,800);}else{clearTimeout(stayT);cb();}}
 
+  // ---- silme / duzenleme tepkileri ----
+  function onDelete(){if(!mounted||busy)return;busy=true;ensureHere(()=>{react('poof','Sildim');setTimeout(()=>{busy=false;stay(2400);},900);});}
+  function onEdit(){if(!mounted||busy)return;busy=true;ensureHere(()=>{react('nod','Düzenledim');setTimeout(()=>{busy=false;stay(2400);},900);});}
   // ---- islem tepkisi (txSheetSave sarmalayicisindan) ----
   function onTx(type,amount){
     if(!mounted||busy)return;busy=true;
     ensureHere(()=>{
-      if(type==='income'){react('happy','Gelir geldi');setTimeout(()=>busy=false,900);return;}
+      if(type==='income'){react('happy','Gelir geldi');setTimeout(()=>{busy=false;stay(2600);},900);return;}
       // harcama: dikkatli inceleme
       resetFace();const m=$('vmWrap').querySelector('svg');
       m.style.transition='transform .4s cubic-bezier(.34,1.45,.6,1)';m.style.transform='translate(-4px,10px) rotate(-14deg) scale(1.06)';
@@ -12397,7 +12516,7 @@ const VM = (function(){
         let fb=null;try{fb=calcFreeBudget(monthKey());}catch(e){}
         const high=fb?(fb.daily>0&&amount>fb.daily*0.6):(amount>=300);
         if(high)react('worried','Bu biraz yüksek');else react('happy','Tamam, kaydettim');
-        setTimeout(()=>busy=false,800);},1400);
+        setTimeout(()=>{busy=false;stay(2600);},800);},1400);
     });
   }
 
@@ -12416,30 +12535,89 @@ const VM = (function(){
     data.mascotChar=k;try{save();}catch(e){}
     if(prev&&CH[prev]&&prev!==k){showCeleb(prev,k);}else if(mounted&&key!==k){applyChar(k,true);}
   }
-  const BG_ORDER=['circle','star','flower','squircle','heart','gem','triangle','blob'];
-  function startBg(){stopBg();const host=$('vmBgShapes');if(!host)return;[[-6,4,150],[72,-4,120],[-10,58,130],[76,54,140],[34,86,96],[58,26,70]].forEach((s,i)=>{const d=document.createElement('div');d.className='vm-bgshape';d.style.left=s[0]+'%';d.style.top=s[1]+'%';d.style.width=s[2]+'px';d.style.height=s[2]+'px';d.innerHTML='<svg viewBox="0 0 200 200"><path fill="#fff"/></svg>';host.appendChild(d);const m=makeMorph(d.querySelector('path'));let k=i;m.set(BG_ORDER[k%8]);const dr=d.animate([{transform:'translateY(0) rotate(0)'},{transform:'translateY(-18px) rotate('+(i%2?8:-8)+'deg)'},{transform:'translateY(0) rotate(0)'}],{duration:3600+i*500,iterations:Infinity,easing:'ease-in-out'});const t=setInterval(()=>{k++;m.to(BG_ORDER[k%8],900);},1500+i*300);bgT.push({d,t,dr});});}
-  function stopBg(){bgT.forEach(o=>{clearInterval(o.t);o.dr.cancel();o.d.remove();});bgT=[];}
-  function shock(color){const host=$('vmCeleb');for(let j=0;j<3;j++){const r=document.createElement('div');r.className='vm-shock';r.style.borderColor=color;r.style.width='40px';r.style.height='40px';host.appendChild(r);r.animate([{width:'40px',height:'40px',opacity:.9,borderWidth:'4px'},{width:'520px',height:'520px',opacity:0,borderWidth:'1px'}],{duration:900,delay:j*160,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>r.remove();}}
+  // ---- synthwave sahne: suzulen geometrik cizgi-sekiller + neon halka patlamasi ----
+  const GEO=['<polygon points="50,8 92,88 8,88" fill="none" stroke="#fff" stroke-width="3"/>','<circle cx="50" cy="50" r="40" fill="none" stroke="#fff" stroke-width="3"/>','<rect x="14" y="14" width="72" height="72" fill="none" stroke="#fff" stroke-width="3" transform="rotate(45 50 50)"/>','<rect x="16" y="16" width="68" height="68" rx="6" fill="none" stroke="#fff" stroke-width="3"/>','<polygon points="50,6 90,28 90,72 50,94 10,72 10,28" fill="none" stroke="#fff" stroke-width="3"/>'];
+  function startBg(){stopBg();const host=$('vmGeo');if(!host)return;[[10,14,34],[80,10,26],[6,40,22],[86,36,30],[22,26,18],[70,26,20]].forEach((s,i)=>{const d=document.createElement('div');d.className='vm-geo';d.style.left=s[0]+'%';d.style.top=s[1]+'%';d.style.width=s[2]+'px';d.style.height=s[2]+'px';d.style.animationDelay=(1.2+i*.15)+'s,'+(1.2+i*.4)+'s';d.innerHTML='<svg viewBox="0 0 100 100">'+GEO[i%GEO.length]+'</svg>';host.appendChild(d);});}
+  function stopBg(){const host=$('vmGeo');if(host)host.innerHTML='';}
+  function rings(){const host=$('vmCeleb');for(let j=0;j<3;j++){const r=document.createElement('div');r.className='vm-ring';r.style.width='30px';r.style.height='30px';host.appendChild(r);r.animate([{width:'30px',height:'30px',opacity:1,borderWidth:'3px'},{width:'620px',height:'620px',opacity:0,borderWidth:'1px'}],{duration:1300,delay:j*180,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>r.remove();}}
+  function flash(){const fl=$('vmFlash');if(!fl)return;fl.animate([{opacity:0,transform:'translate(-50%,-50%) scale(.4)'},{opacity:.95,transform:'translate(-50%,-50%) scale(1.6)',offset:.35},{opacity:0,transform:'translate(-50%,-50%) scale(2.4)'}],{duration:900,easing:'ease-out'});
+    const bm=$('vmBeam');if(bm)bm.animate([{opacity:0},{opacity:1,offset:.3},{opacity:.35}],{duration:1400,fill:'forwards',easing:'ease-out'});}
   function showCeleb(oldK,newK){
-    const cel=$('vmCeleb');if(!cel)return;const o=info(oldK),n=info(newK);
+    const cel=$('vmCeleb');if(!cel)return;const o=info(oldK),n=info(newK);showCeleb._preview=false;
     if(!cbM)cbM=makeMorph($('vmCbPath'));
-    const bg=shade(n.color,-62);$('vmCelebBg').style.background=bg;$('vmIn').style.color='#fff';$('vmBtn').style.color=bg;
-    $('vmKick').textContent=n.scene;$('vmOld').textContent=o.name;$('vmNew').textContent=n.name;$('vmNew').style.color=n.color;$('vmDesc').textContent=n.tagline;
-    cbM.set(o.shape);$('vmCbPath').setAttribute('fill',o.color);$('vmCbMouth').setAttribute('d',MOUTHS[o.mouth]);$('vmCbEyes').innerHTML=eyesHTML(o.eyes,'vmcb');
+    cel.style.setProperty('--vmc',n.color);cel.classList.remove('level');$('vmTitle').textContent='Tebrikler!';$('vmBtn').textContent='Devam et';
+    $('vmKick').textContent=n.scene;$('vmOld').textContent=o.name;$('vmNew').textContent=n.name;$('vmDesc').textContent=n.tagline;
+    // eski karakter: once beyaz isik kuresi gibi (parlak), sonra yeni sekle donusur
+    cbM.set(o.shape);$('vmCbPath').setAttribute('fill','#ffffff');$('vmCbMouth').setAttribute('d',MOUTHS[o.mouth]);$('vmCbEyes').innerHTML=eyesHTML(o.eyes,'vmcb');
+    const bm=$('vmBeam');if(bm)bm.style.opacity=0;
     startBg();cel.classList.add('show');
-    setTimeout(()=>{cbM.to(n.shape,900);$('vmCbPath').animate([{fill:o.color},{fill:n.color}],{duration:900,fill:'forwards'});$('vmCbPath').setAttribute('fill',n.color);
+    setTimeout(()=>{$('vmCbPath').animate([{fill:'#ffffff'},{fill:o.color}],{duration:500,fill:'forwards'});$('vmCbPath').setAttribute('fill',o.color);},500);
+    setTimeout(()=>{ // donusum ani: flash + halkalar + morph + renk
+      flash();rings();
+      cbM.to(n.shape,1000);
+      $('vmCbPath').animate([{fill:o.color},{fill:'#ffffff',offset:.35},{fill:n.color}],{duration:1000,fill:'forwards'});$('vmCbPath').setAttribute('fill',n.color);
       $('vmCbMouth').setAttribute('d',MOUTHS[n.mouth]);$('vmCbEyes').innerHTML=eyesHTML(n.eyes,'vmcb');
-      $('vmCbSvg').animate([{transform:'scale(1)'},{transform:'scale(1.16) rotate(-6deg)',offset:.4},{transform:'scale(.97) rotate(4deg)',offset:.7},{transform:'scale(1) rotate(0)'}],{duration:900,easing:'cubic-bezier(.34,1.45,.6,1)'});
-      shock(n.color);
-      $('vmCbBody').classList.add('vm-alive');},1100);
+      $('vmCbSvg').animate([{transform:'scale(1)'},{transform:'scale(1.18) rotate(-6deg)',offset:.4},{transform:'scale(.97) rotate(4deg)',offset:.7},{transform:'scale(1) rotate(0)'}],{duration:1000,easing:'cubic-bezier(.34,1.45,.6,1)'});
+      $('vmCbBody').classList.add('vm-alive');},1500);
     showCeleb._new=newK;
   }
-  function closeCeleb(){const cel=$('vmCeleb');if(cel)cel.classList.remove('show');stopBg();const b=$('vmCbBody');if(b)b.classList.remove('vm-alive');if(showCeleb._new)applyChar(showCeleb._new,true);}
+  function closeCeleb(){const cel=$('vmCeleb');if(cel){cel.classList.remove('show','level');}const bt=$('vmBtn');if(bt)bt.textContent='Devam et';const tt=$('vmTitle');if(tt)tt.textContent='Tebrikler!';stopBg();const b=$('vmCbBody');if(b)b.classList.remove('vm-alive');if(showCeleb._new&&!showCeleb._preview)applyChar(showCeleb._new,true);showCeleb._preview=false;}
 
   // ---- baslat: DOM hazir olunca header'a tak ----
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else setTimeout(mount,0);
 
-  return {mount,onTx,onCharacter,closeCeleb,leave,comeBack,react,say,applyChar};
+  // ---- Plan karakter kartina canli avatar ----
+  let planM=null;
+  function renderPlanAvatar(k){
+    const host=document.querySelector('#planCharCard .plan-char-gradient');if(!host)return;const c=info(k||key);
+    let svg=host.querySelector('.vm-plan-avatar');
+    if(!svg){host.insertAdjacentHTML('beforeend','<svg class="vm-plan-avatar" viewBox="0 0 200 200"><g id="vmPlBody" class="vm-alive"><path id="vmPlPath" d=""/><circle cx="62" cy="112" r="8" fill="#FF7BA0" opacity=".7"/><circle cx="138" cy="112" r="8" fill="#FF7BA0" opacity=".7"/><g id="vmPlEyes"></g><path id="vmPlMouth" d="" stroke="#111" stroke-width="5" fill="none" stroke-linecap="round"/></g></svg>');svg=host.querySelector('.vm-plan-avatar');planM=makeMorph($('vmPlPath'),{jelly:true});}
+    planM.set(c.shape);$('vmPlPath').setAttribute('fill',c.color);$('vmPlEyes').innerHTML=eyesHTML(c.eyes,'vmpl');$('vmPlMouth').setAttribute('d',MOUTHS[c.mouth]);
+    if(!svg._live){svg._live=true;liveEyes(()=>$('vmPlEyes'),'vmplpL','vmplpR',()=>info(planKey).eyes);svg.addEventListener('click',e=>{e.stopPropagation();showLevel(planKey);});}
+    planKey=k||key;
+  }
+  let planKey='BIRIKTIREN';
+  const REAL_ORDER=['BORCLU','KIRILGAN','HARCAYAN','BIRIKTIREN','YATIRIMCI'];
+  // kutlama ONIZLEME: mevcut karakter → siradaki (veriye dokunmaz)
+  function previewCeleb(){const cur=planKey||key;const i=REAL_ORDER.indexOf(cur);const next=REAL_ORDER[(i+1)%REAL_ORDER.length];showCeleb(cur,next);showCeleb._preview=true;}
+  // SEVIYE SAYFASI: hangi seviyedesin, siradaki ne, oraya nasil gidilir (animasyonlu sahne, veriye dokunmaz)
+  function showLevel(k){
+    const cel=$('vmCeleb');if(!cel)return;k=k||planKey||key;const c=info(k);const pc=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[k])||{};
+    if(!cbM)cbM=makeMorph($('vmCbPath'));
+    cel.style.setProperty('--vmc',c.color);cel.classList.add('level');
+    $('vmKick').textContent='Finansal Karakterin';$('vmTitle').textContent=c.name;$('vmDesc').textContent=c.tagline;$('vmBtn').textContent='Kapat';
+    const i=REAL_ORDER.indexOf(k);
+    $('vmLadder').innerHTML='<small>Risk</small>'+REAL_ORDER.map((r,j)=>'<i class="'+(j<i?'done':j===i?'cur':'')+'" title="'+info(r).name+'"></i>').join('')+'<small>Büyüme</small>';
+    $('vmNext').innerHTML='<b>'+(pc.nextLabel||'Sıradaki adım')+'</b><span>'+(pc.next||'')+'</span>';
+    cbM.set(c.shape);$('vmCbPath').setAttribute('fill',c.color);$('vmCbMouth').setAttribute('d',MOUTHS[c.mouth]);$('vmCbEyes').innerHTML=eyesHTML(c.eyes,'vmcb');
+    const bm=$('vmBeam');if(bm)bm.style.opacity=0;
+    startBg();cel.classList.add('show');
+    setTimeout(()=>{flash();rings();$('vmCbSvg').animate([{transform:'scale(1)'},{transform:'scale(1.12) rotate(-5deg)',offset:.4},{transform:'scale(1) rotate(0)'}],{duration:800,easing:'cubic-bezier(.34,1.45,.6,1)'});$('vmCbBody').classList.add('vm-alive');},900);
+    showCeleb._new=null;showCeleb._preview=true;
+  }
+  function watchNext(){closeCeleb();setTimeout(previewCeleb,350);}
+  // ---- ortak goz canlandirici: pupiller bakinir + kirpar (baglanti kopunca kendini durdurur) ----
+  function liveEyes(getEyes,pL,pR,kindFn){
+    const t1=setInterval(()=>{const g=getEyes();if(!g||!g.isConnected){clearInterval(t1);return;}const k=kindFn();if(k==='cool'||k==='content')return;
+      const dx=[-5,-3,0,3,5][Math.floor(Math.random()*5)],dy=[-2,0,2][Math.floor(Math.random()*3)];
+      [pL,pR].forEach(id=>{const p=document.getElementById(id);if(!p)return;p.style.transition='transform .28s cubic-bezier(.34,1.45,.6,1)';p.style.transform='translate('+dx+'px,'+dy+'px)';});},1200+Math.random()*500);
+    const t2=setInterval(()=>{const g=getEyes();if(!g||!g.isConnected){clearInterval(t2);return;}const k=kindFn();if(k==='cool'||k==='content')return;
+      g.style.transformBox='fill-box';g.style.transformOrigin='center';g.style.transition='transform .08s';g.style.transform='scaleY(.08)';setTimeout(()=>g.style.transform='',110);},2600+Math.random()*900);
+    return ()=>{clearInterval(t1);clearInterval(t2);};
+  }
+  // ---- bagimsiz maskot ureteci (onboarding vb.) ----
+  let spawnN=0;
+  function spawn(container,key0){
+    if(!container)return null;
+    container.innerHTML='<svg viewBox="0 0 200 200"><g class="vm-alive"><path class="vm-sp-path" d=""/><circle cx="62" cy="112" r="8" fill="#FF7BA0" opacity=".7"/><circle cx="138" cy="112" r="8" fill="#FF7BA0" opacity=".7"/><g class="vm-sp-eyes"></g><path class="vm-sp-mouth" d="" stroke="#111" stroke-width="5" fill="none" stroke-linecap="round"/></g></svg>';
+    const path=container.querySelector('.vm-sp-path'),eyes=container.querySelector('.vm-sp-eyes'),mouth=container.querySelector('.vm-sp-mouth');
+    const m=makeMorph(path,{jelly:true});let cur=key0||'ACEMI';const pfx='vmsp'+(++spawnN)+'_';
+    function setChar(k,anim){const c=info(k);cur=k;anim===false?m.set(c.shape):m.to(c.shape,800);path.setAttribute('fill',c.color);eyes.innerHTML=eyesHTML(c.eyes,pfx);mouth.setAttribute('d',MOUTHS[c.mouth]);}
+    setChar(cur,false);
+    liveEyes(()=>eyes,pfx+'pL',pfx+'pR',()=>info(cur).eyes);
+    return {setChar,morph:m,el:container};
+  }
+  return {mount,onTx,onDelete,onEdit,onCharacter,closeCeleb,previewCeleb,showLevel,watchNext,leave,comeBack,react,say,applyChar,renderPlanAvatar,spawn};
 })();
 
 // ---- SARMALAYICILAR (orijinal fonksiyonlar dokunulmadan) ----
@@ -12450,10 +12628,45 @@ txSheetSave = function(){
   try{if((data.transactions||[]).length>n0)VM.onTx(type,amt);}catch(e){}
   return r;
 };
+const _vmOrigDeleteTx = deleteTx;
+deleteTx = function(){
+  const n0=(data.transactions||[]).length;const r=_vmOrigDeleteTx.apply(this,arguments);
+  try{if((data.transactions||[]).length<n0)VM.onDelete();}catch(e){}
+  return r;
+};
+const _vmOrigSaveTxEdit = saveTxEdit;
+saveTxEdit = function(){
+  const r=_vmOrigSaveTxEdit.apply(this,arguments);
+  try{const t=document.getElementById('toast');if(t&&t.innerHTML.indexOf('İşlem güncellendi')!==-1)VM.onEdit();}catch(e){}
+  return r;
+};
+// ---- ONBOARDING: slayt 0 maskot + karakter slayti (idx 4) morph dongusu ----
+let _vmObChar=null,_vmObCycle=null;
+const _VM_OB_ORDER=['BORCLU','KIRILGAN','HARCAYAN','BIRIKTIREN','YATIRIMCI'];
+function _vmObCharCycle(on){
+  clearInterval(_vmObCycle);_vmObCycle=null;if(!on||!_vmObChar)return;
+  let i=0;const nameEl=document.getElementById('vmObCharName'),row=document.getElementById('vmObCharRow');
+  if(row&&!row.children.length)row.innerHTML=_VM_OB_ORDER.map(()=>'<i></i>').join('');
+  const step=()=>{const k=_VM_OB_ORDER[i%5];const pc=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[k])||{};_vmObChar.setChar(k,true);
+    if(nameEl){nameEl.textContent=pc.name||k;nameEl.style.color=pc.accentColor||'#fff';}
+    if(row)Array.from(row.children).forEach((d,j)=>d.classList.toggle('on',j===i%5));i++;};
+  step();_vmObCycle=setInterval(step,1500);
+}
+const _vmOrigInitSplash = initSplash;
+initSplash = function(){
+  const r=_vmOrigInitSplash.apply(this,arguments);
+  try{if(!_vmObChar)_vmObChar=VM.spawn(document.getElementById('vmObChar'),'BORCLU');
+      _vmObCharCycle(false);}catch(e){}
+  return r;
+};
+const _vmOrigGoSplash = goSplash;
+goSplash = function(idx){const r=_vmOrigGoSplash.apply(this,arguments);try{_vmObCharCycle(idx===4);}catch(e){}return r;};
+const _vmOrigFinishOnboarding = finishOnboarding;
+finishOnboarding = function(){try{_vmObCharCycle(false);}catch(e){}return _vmOrigFinishOnboarding.apply(this,arguments);};
 const _vmOrigRenderPlanChar = _renderPlanChar;
 _renderPlanChar = function(core){
   const r=_vmOrigRenderPlanChar.apply(this,arguments);
-  try{VM.onCharacter(core&&core.character&&core.character.key);}catch(e){}
+  try{const k=core&&core.character&&core.character.key;VM.onCharacter(k);VM.renderPlanAvatar(k);}catch(e){}
   return r;
 };
 
@@ -12720,14 +12933,18 @@ setInterval(checkMonthRollover, 60000);
 
 <!-- ═══════════ V78 — MASKOT: karakter atlama overlay ═══════════ -->
 <div id="vmCeleb">
-  <div id="vmCelebBg"></div><div id="vmBgShapes"></div>
+  <div class="vm-sun" id="vmSun"></div><div class="vm-sunlines"></div><div class="vm-horizon"></div>
+  <div class="vm-orbit"></div><div class="vm-beam" id="vmBeam"></div><div class="vm-flash" id="vmFlash"></div>
+  <div id="vmGeo"></div>
   <div class="vm-in" id="vmIn">
     <div class="vm-kick" id="vmKick">Karakter Gelişimi</div>
     <div class="vm-badge"><svg id="vmCbSvg" viewBox="0 0 200 200"><g id="vmCbBody"><path id="vmCbPath" d=""/><ellipse cx="72" cy="62" rx="22" ry="12" fill="#fff" opacity=".22" transform="rotate(-25 72 62)"/><circle cx="60" cy="112" r="9" fill="#FF7BA0" opacity=".75"/><circle cx="140" cy="112" r="9" fill="#FF7BA0" opacity=".75"/><g id="vmCbEyes"></g><path id="vmCbMouth" d="" stroke="#111" stroke-width="5" fill="none" stroke-linecap="round"/></g></svg></div>
-    <div class="vm-title">Tebrikler!</div>
+    <div class="vm-title" id="vmTitle">Tebrikler!</div>
     <div class="vm-path"><span class="old" id="vmOld"></span><span>→</span><span class="new" id="vmNew"></span></div>
+    <div class="vm-ladder" id="vmLadder"></div>
     <div class="vm-desc" id="vmDesc"></div>
-    <button class="vm-btn" id="vmBtn" onclick="VM.closeCeleb()">Devam et</button>
+    <div class="vm-nextbox" id="vmNext"></div>
+    <div class="vm-btns"><button class="vm-btn vm-btn2" id="vmBtn2" onclick="VM.watchNext()">Dönüşümü izle</button><button class="vm-btn" id="vmBtn" onclick="VM.closeCeleb()">Devam et</button></div>
   </div>
 </div>
 </body>
