@@ -2494,7 +2494,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         <div class="vm-ob-char"><div id="vmObChar" class="vm-ob-charsvg"></div><div class="vm-ob-charname" id="vmObCharName">Borçlu</div><div class="vm-ob-charrow" id="vmObCharRow"></div></div>
         <div class="ob-tag">Finansal karakter</div>
         <div class="ob-title">Karakterin<br><em>seninle gelişir.</em></div>
-        <div class="ob-body">VAULT nakit akışına bakıp karakterini belirler. Disiplin arttıkça Borçlu'dan Yatırımcı'ya yükselirsin — her atlamada kutlama var.</div>
+        <div class="ob-body">VAULT nakit akışına bakıp 10 karakterden birini verir. Disiplin arttıkça Acemi'den Özgür'e yükselirsin — her atlamada kutlama var.</div>
       </div>
 
       <!-- SLIDE 5 (V78): Kartlar & cüzdanlar -->
@@ -8497,7 +8497,7 @@ const PLAN_CHARACTERS = {
     gradient: 'linear-gradient(145deg, #0A84FF 0%, #004799 40%, #000d1a 100%)',
     accentColor: '#60A5FA',
     why: 'Sabit yükler kontrol altında, birikim disiplini yerleşmiş, aylık marj kalıcı. Bu pozisyon artık savunmadan büyümeye odaklanmaya izin veriyor.',
-    nextLabel: 'Şu an için önerilen yön',
+    nextLabel: 'Yatırımcı → Özgür',
     next: 'Mevcut birikim hedeflerini koru. Fazla marjın en az yarısını uzun vadeli bir büyüme aracına yönlendir.',
   },
   HARCAYAN: {
@@ -8507,7 +8507,7 @@ const PLAN_CHARACTERS = {
     gradient: 'linear-gradient(145deg, #FF9500 0%, #7A4200 40%, #150a00 100%)',
     accentColor: '#FBBF24',
     why: 'Sabit yapı sorunlu değil. Değişken harcamalar bütçeyi düzensiz tüketiyor. Tanımsız kalan para çoğu zaman en hızlı kaybolan paradır.',
-    nextLabel: 'Bir sonraki adım',
+    nextLabel: 'Harcayan → Dengeli',
     next: 'Aylık marjın en az yarısına bir isim ver. Hedefsiz birikim korunmaz — küçük bir hedef bile bu parayı saklar.',
   },
   KIRILGAN: {
@@ -8517,7 +8517,7 @@ const PLAN_CHARACTERS = {
     gradient: 'linear-gradient(145deg, #BF5AF2 0%, #5B1A8B 40%, #0d0014 100%)',
     accentColor: '#D88FFF',
     why: 'Aylık rakamlar iyi görünebilir — ama acil durum tamponu olmadan bu denge kırılgan. Beklenmedik bir gider tüm yapıyı zorlayabilir.',
-    nextLabel: 'Öncelikli adım',
+    nextLabel: 'Kırılgan → Dengeli',
     next: '3 aylık gider kadar bir acil fon oluştur. Bu tampon kurulmadan uzun vadeli plan anlamlı değil.',
   },
 };
@@ -12577,7 +12577,7 @@ const VM = (function(){
     planKey=k||key;
   }
   let planKey='BIRIKTIREN';
-  const REAL_ORDER=['BORCLU','KIRILGAN','HARCAYAN','BIRIKTIREN','YATIRIMCI'];
+  const REAL_ORDER=['ACEMI','BORCLU','KIRILGAN','HARCAYAN','DENGELI','TUTUMLU','BIRIKTIREN','HEDEFCI','YATIRIMCI','OZGUR'];
   // kutlama ONIZLEME: mevcut karakter → siradaki (veriye dokunmaz)
   function previewCeleb(){const cur=planKey||key;const i=REAL_ORDER.indexOf(cur);const next=REAL_ORDER[(i+1)%REAL_ORDER.length];showCeleb(cur,next);showCeleb._preview=true;}
   // SEVIYE SAYFASI: hangi seviyedesin, siradaki ne, oraya nasil gidilir (animasyonlu sahne, veriye dokunmaz)
@@ -12620,6 +12620,84 @@ const VM = (function(){
   return {mount,onTx,onDelete,onEdit,onCharacter,closeCeleb,previewCeleb,showLevel,watchNext,leave,comeBack,react,say,applyChar,renderPlanAvatar,spawn};
 })();
 
+// ═══════════ V78 — 10 FINANSAL KARAKTER: 5 yeni persona (metin + kural), orijinal siniflandirici korunur ═══════════
+Object.assign(PLAN_CHARACTERS, {
+  ACEMI: {
+    key: 'ACEMI', name: 'Acemi',
+    tagline: 'Henüz yeterli veri yok — resim yeni netleşiyor.',
+    gradient: 'linear-gradient(145deg, #38BDF8 0%, #0B5A85 40%, #04141f 100%)', accentColor: '#7DD3FC',
+    why: 'VAULT karakterini nakit akışından okur; birkaç haftalık kayıt olmadan yorum yanıltıcı olur. Şu an gördüğün yalnızca başlangıç noktası.',
+    nextLabel: 'Acemi → Dengeli',
+    next: 'İki hafta boyunca her harcamayı gir. Veri biriktikçe karakterin ve önerilerin netleşir.',
+  },
+  DENGELI: {
+    key: 'DENGELI', name: 'Dengeli',
+    tagline: 'Gelir-gider oturmuş; büyüme için henüz bir yön yok.',
+    gradient: 'linear-gradient(145deg, #F472B6 0%, #8A1C5E 40%, #1a0612 100%)', accentColor: '#F9A8D4',
+    why: 'Sabit yükler makul, ay sonunda para artıyor. Ama artan para bir hedefe bağlı değil — dengede ama duran bir yapı. Hedefsiz marj en hızlı eriyen paradır.',
+    nextLabel: 'Dengeli → Biriktiren',
+    next: 'Artan marja bir isim ver: küçük de olsa aylık bir birikim hedefi aç. Otomatik tutar, kararı senden alır.',
+  },
+  TUTUMLU: {
+    key: 'TUTUMLU', name: 'Tutumlu',
+    tagline: 'Harcamalar sıkı kontrolde — marj yüksek, hedef yok.',
+    gradient: 'linear-gradient(145deg, #14B8A6 0%, #0B5F56 40%, #04191a 100%)', accentColor: '#5EEAD4',
+    why: 'Değişken harcamaların gelirine göre düşük; disiplin var. Eksik olan şey biriken paranın nereye gideceği — tasarruf tek başına bir plan değildir.',
+    nextLabel: 'Tutumlu → Hedefçi',
+    next: 'Önce 3 aylık acil fon, sonra tek bir büyük hedef. Kontrolün var; ona bir yön ekle.',
+  },
+  HEDEFCI: {
+    key: 'HEDEFCI', name: 'Hedefçi',
+    tagline: 'Hedefe kilitlisin — her ay düzenli yatırıyorsun.',
+    gradient: 'linear-gradient(145deg, #FB7185 0%, #8B1E3A 40%, #1a0509 100%)', accentColor: '#FDA4AF',
+    why: 'Son üç ayda kesintisiz hedef yatırımı var. Bu, birikimden daha güçlü bir sinyal: taahhüt. Yapı hedef odaklı ve tutarlı.',
+    nextLabel: 'Hedefçi → Yatırımcı',
+    next: 'Acil fonu 3 aylık gidere tamamla; sonra hedef dışı marjı uzun vadeli bir büyüme aracına yönlendir.',
+  },
+  OZGUR: {
+    key: 'OZGUR', name: 'Özgür',
+    tagline: 'Tampon tam, marj geniş — para artık senin için çalışıyor.',
+    gradient: 'linear-gradient(145deg, #8B5CF6 0%, #3B1E86 40%, #0c0518 100%)', accentColor: '#C4B5FD',
+    why: '6 aydan uzun acil fon, yüksek aylık marj ve aktif hedefler bir arada. Beklenmedik bir gider planını bozamaz; seçim özgürlüğü var.',
+    nextLabel: 'Şu an için önerilen yön',
+    next: 'Koru ve çeşitlendir. Marjın büyük kısmını büyüme araçlarına, bir kısmını yaşam kalitesine ayır — özgürlük harcanmak için de var.',
+  },
+});
+const _vmOrigClassify = _planClassifyChar;
+_planClassifyChar = function(fb){
+  const base = _vmOrigClassify(fb);
+  try{
+    const P = PLAN_CHARACTERS, txs = data.transactions || [];
+    // ACEMI: az veri (8'den az islem veya 30 gunden kisa gecmis)
+    if (txs.length < 8) return P.ACEMI;
+    const oldest = txs.reduce((m,t)=> (t.date && t.date < m) ? t.date : m, today());
+    const days = Math.round((new Date(today()+'T00:00:00') - new Date(oldest+'T00:00:00')) / 86400000);
+    if (days < 30) return P.ACEMI;
+    if (!fb.income) return base;
+    const inc = fb.income, savRatio = Math.max(0, fb.remaining) / inc, fixedRatio = (fb.recTotal + fb.debtTotal) / inc, varRatio = (fb.varSpent || 0) / inc;
+    const goals = data.savingsGoals || [], hasGoals = goals.some(g => g.monthly > 0);
+    const emg = goals.filter(g => ['acil','fon','yedek'].some(k => (g.name||'').toLowerCase().includes(k)));
+    const emgTotal = emg.reduce((s,g) => s + (g.deposits||[]).reduce((a,d) => a + (d.amount||0), 0), 0);
+    const monthlyOut = (fb.recTotal + fb.debtTotal + (fb.varSpent||0)) || inc * 0.7;
+    const emgMonths = emgTotal / Math.max(1, monthlyOut);
+    const last3 = [0,1,2].map(i => { const d = new Date(); d.setDate(1); d.setMonth(d.getMonth()-i); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); });
+    const depMonths = new Set(); goals.forEach(g => (g.deposits||[]).forEach(d => { if (d.date) depMonths.add(monthKey(d.date)); }));
+    const regular = last3.every(m => depMonths.has(m));
+    if (base.key === 'BORCLU' && fixedRatio > 0.60) return base;           // agir borc/sabit baskisi: base
+    if (fb.debtTotal / inc > 0.28) return base;                            // BORCLU
+    if (fb.remaining < 0) return base;                                     // KIRILGAN (acik)
+    if (emgMonths >= 6 && savRatio > 0.30 && hasGoals) return P.OZGUR;
+    if (base.key === 'YATIRIMCI') return base;
+    if (hasGoals && regular && savRatio > 0.10) return P.HEDEFCI;
+    if (base.key === 'BIRIKTIREN' && hasGoals) return base;
+    if (!hasGoals && varRatio < 0.25 && savRatio > 0.15) return P.TUTUMLU;
+    if (base.key === 'HARCAYAN') return base;
+    if (fixedRatio > 0.60) return base;                                    // BORCLU
+    if (!hasGoals && fixedRatio < 0.40 && savRatio >= 0.06 && savRatio <= 0.12) return P.DENGELI;
+    return base;
+  }catch(e){ return base; }
+};
+
 // ---- SARMALAYICILAR (orijinal fonksiyonlar dokunulmadan) ----
 const _vmOrigTxSheetSave = txSheetSave;
 txSheetSave = function(){
@@ -12642,15 +12720,15 @@ saveTxEdit = function(){
 };
 // ---- ONBOARDING: slayt 0 maskot + karakter slayti (idx 4) morph dongusu ----
 let _vmObChar=null,_vmObCycle=null;
-const _VM_OB_ORDER=['BORCLU','KIRILGAN','HARCAYAN','BIRIKTIREN','YATIRIMCI'];
+const _VM_OB_ORDER=['ACEMI','BORCLU','KIRILGAN','HARCAYAN','DENGELI','TUTUMLU','BIRIKTIREN','HEDEFCI','YATIRIMCI','OZGUR'];
 function _vmObCharCycle(on){
   clearInterval(_vmObCycle);_vmObCycle=null;if(!on||!_vmObChar)return;
   let i=0;const nameEl=document.getElementById('vmObCharName'),row=document.getElementById('vmObCharRow');
   if(row&&!row.children.length)row.innerHTML=_VM_OB_ORDER.map(()=>'<i></i>').join('');
-  const step=()=>{const k=_VM_OB_ORDER[i%5];const pc=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[k])||{};_vmObChar.setChar(k,true);
+  const step=()=>{const n=_VM_OB_ORDER.length;const k=_VM_OB_ORDER[i%n];const pc=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[k])||{};_vmObChar.setChar(k,true);
     if(nameEl){nameEl.textContent=pc.name||k;nameEl.style.color=pc.accentColor||'#fff';}
-    if(row)Array.from(row.children).forEach((d,j)=>d.classList.toggle('on',j===i%5));i++;};
-  step();_vmObCycle=setInterval(step,1500);
+    if(row)Array.from(row.children).forEach((d,j)=>d.classList.toggle('on',j===i%n));i++;};
+  step();_vmObCycle=setInterval(step,1300);
 }
 const _vmOrigInitSplash = initSplash;
 initSplash = function(){
