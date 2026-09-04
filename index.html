@@ -12371,11 +12371,17 @@ const VM = (function(){
     heart:()=>{const o=[];for(let i=0;i<N;i++){const t=2*Math.PI*i/N;const x=16*Math.pow(Math.sin(t),3);const y=13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t);o.push([CX+x*4.2,CY-y*4.2+8]);}return o;},
     gem:()=>ring(a=>R*(0.90+0.12*Math.cos(6*a))),
     egg:()=>{const o=[];for(let i=0;i<N;i++){const a=2*Math.PI*i/N;const ry=R*1.08,rx=R*(0.86-0.10*Math.sin(a));o.push([CX+rx*Math.cos(a),CY+ry*Math.sin(a)-4]);}return o;},
-    bolt:()=>resample([[112,22],[68,110],[96,110],[84,178],[132,88],[104,88]]),
+    bolt:()=>resample([[133,20],[10,120],[82,120],[59,180],[190,80],[118,80]]),   // enine COK genis (180px): yuz govdenin icinde kalir
     leaf:()=>{const o=[];const c=Math.cos(.35),s=Math.sin(.35);for(let i=0;i<N;i++){const t=2*Math.PI*i/N;const x=70*Math.sin(t)*Math.sin(t/2),y=-72*Math.cos(t)+6;o.push([CX+x*c-y*s,CY+x*s+y*c]);}return o;},
     cloud:()=>ring(a=>R*(0.80+0.17*Math.abs(Math.cos(2*a+0.3)))).map(p=>[p[0],Math.min(p[1],CY+R*0.52)]),
     ghost:()=>{const V=[];for(let i=0;i<=12;i++){const a=Math.PI+Math.PI*i/12;V.push([100+62*Math.cos(a),86+62*Math.sin(a)]);}V.push([162,140],[147,158],[131,142],[116,160],[100,142],[84,160],[69,142],[53,158],[38,140]);return resample(V);},
-    bean:()=>ring(a=>R*(0.92+0.10*Math.cos(2*a+0.8)))
+    bean:()=>ring(a=>R*(0.92+0.10*Math.cos(2*a+0.8))),
+    droplet:()=>{const o=[];for(let i=0;i<N;i++){const t=2*Math.PI*i/N;o.push([CX+66*Math.sin(t)*Math.sin(t/2),CY-74*Math.cos(t)+8]);}return o;},
+    pill:()=>{const V=[];for(let i=0;i<=16;i++){const a=-Math.PI/2+Math.PI*i/16;V.push([140+42*Math.cos(a),100+42*Math.sin(a)]);}for(let i=0;i<=16;i++){const a=Math.PI/2+Math.PI*i/16;V.push([60+42*Math.cos(a),100+42*Math.sin(a)]);}return resample(V);},
+    diamond:()=>resample([[100,22],[172,100],[100,178],[28,100]]),
+    spark:()=>ring(a=>R*(0.55+0.45*Math.abs(Math.cos(2*a)))),
+    clover:()=>ring(a=>R*(0.62+0.38*Math.abs(Math.sin(2*a)))),
+    bubble:()=>{const V=[];const d=Math.PI/180;for(let i=0;i<=40;i++){const a=(145+320*i/40)*d;V.push([100+64*Math.cos(a),94+64*Math.sin(a)]);}V.push([46,172]);return resample(V);}
   };
   function resample(V){const segs=[];let total=0;for(let i=0;i<V.length;i++){const a=V[i],b=V[(i+1)%V.length];const L=Math.hypot(b[0]-a[0],b[1]-a[1]);segs.push(L);total+=L;}
     const out=[];let si=0,acc=0;for(let k=0;k<N;k++){const tg=total*k/N;while(acc+segs[si]<tg){acc+=segs[si];si=(si+1)%V.length;}const a=V[si],b=V[(si+1)%V.length];const t=segs[si]?(tg-acc)/segs[si]:0;out.push([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]);}return out;}
@@ -12391,18 +12397,17 @@ const VM = (function(){
       to(n,dur){dur=dur||700;const t=SH[n](),f=cur.map(p=>[p[0],p[1]]);cancelAnimationFrame(raf);const t0=performance.now();
         (function s(now){let k=Math.min((now-t0)/dur,1),e=easeOutBack(k);const P=f.map((p,i)=>[p[0]+(t[i][0]-p[0])*e,p[1]+(t[i][1]-p[1])*e]);cur=P;if(!live)el.setAttribute('d',pathOf(P));if(k<1)raf=requestAnimationFrame(s);else cur=t;})(performance.now());}
     };}
-  function shade(hex,p){let n=parseInt(hex.slice(1),16),r=(n>>16)+p,g=(n>>8&255)+p,b=(n&255)+p;r=Math.max(0,Math.min(255,r));g=Math.max(0,Math.min(255,g));b=Math.max(0,Math.min(255,b));return '#'+(r<<16|g<<8|b).toString(16).padStart(6,'0');}
 
   // ---- karakter → sekil/renk/goz (PLAN_CHARACTERS anahtarlariyla; 5 ek persona ileride siniflandiriciya baglanabilir) ----
   const CH={
-    BORCLU:    {shape:'bean',color:'#E8402C',eyes:'tired',  mouth:'sad',  scene:'DENGE KURULUYOR'},
-    KIRILGAN:  {shape:'ghost',color:'#9B6FD4',eyes:'worried',mouth:'flat', scene:'TAMPON GÜÇLENİYOR'},
+    BORCLU:    {shape:'ghost',color:'#E8402C',eyes:'tired',  mouth:'sad',  scene:'DENGE KURULUYOR'},
+    KIRILGAN:  {shape:'diamond',color:'#9B6FD4',eyes:'worried',mouth:'flat', scene:'TAMPON GÜÇLENİYOR'},
     ACEMI:     {shape:'blob',     color:'#38BDF8',eyes:'wide',   mouth:'smile',scene:'YOLA ÇIKTIN',    name:'Acemi',    tagline:'Yeni başladın — merakla öğreniyorsun.'},
     HARCAYAN:  {shape:'bolt',    color:'#E8792B',eyes:'wide',   mouth:'look', scene:'KONTROL SENDE'},
-    DENGELI:   {shape:'cloud',    color:'#F472B6',eyes:'content',mouth:'smile',scene:'DENGE OTURDU',   name:'Dengeli',  tagline:'Gelir-gider dengesi oturdu, sarsıntıya dayanıklısın.'},
-    TUTUMLU:   {shape:'leaf',     color:'#14B8A6',eyes:'focused',mouth:'flat', scene:'KURUŞ KURUŞ',    name:'Tutumlu',  tagline:'Kuruşu kuruşuna — her harcamayı tartıyorsun.'},
-    BIRIKTIREN:{shape:'flower',  color:'#FBBF24',eyes:'happy',  mouth:'happy',scene:'DİSİPLİN YERLEŞTİ'},
-    HEDEFCI:   {shape:'heart',   color:'#FB7185',eyes:'focused',mouth:'smile',scene:'HEDEFE KİLİTLİ', name:'Hedefçi',  tagline:'Hedefe kilitlendin — her ay planına sadıksın.'},
+    DENGELI:   {shape:'heart',    color:'#F472B6',eyes:'content',mouth:'smile',scene:'DENGE OTURDU',   name:'Dengeli',  tagline:'Gelir-gider dengesi oturdu, sarsıntıya dayanıklısın.'},
+    TUTUMLU:   {shape:'clover',     color:'#14B8A6',eyes:'focused',mouth:'flat', scene:'KURUŞ KURUŞ',    name:'Tutumlu',  tagline:'Kuruşu kuruşuna — her harcamayı tartıyorsun.'},
+    BIRIKTIREN:{shape:'droplet',  color:'#FBBF24',eyes:'happy',  mouth:'happy',scene:'DİSİPLİN YERLEŞTİ'},
+    HEDEFCI:   {shape:'spark',   color:'#FB7185',eyes:'focused',mouth:'smile',scene:'HEDEFE KİLİTLİ', name:'Hedefçi',  tagline:'Hedefe kilitlendin — her ay planına sadıksın.'},
     YATIRIMCI: {shape:'star',    color:'#3E7CC4',eyes:'cool',   mouth:'happy',scene:'BÜYÜME ZAMANI'},
     OZGUR:     {shape:'gem',     color:'#8B5CF6',eyes:'happy',  mouth:'happy',scene:'ZİRVE',          name:'Özgür',    tagline:'Finansal özgürlük — para senin için çalışıyor.'},
   };
@@ -12523,7 +12528,7 @@ const VM = (function(){
     livenT.push(setInterval(()=>{if(busy||away)return;const k=info(key).eyes;if(k==='cool'||k==='content')return;const dx=[-5,-3,0,3,5][Math.floor(Math.random()*5)],dy=[-2,0,2][Math.floor(Math.random()*3)];['vmpL','vmpR'].forEach(id=>{const p=$(id);if(!p)return;p.style.transition='transform .28s cubic-bezier(.34,1.45,.6,1)';p.style.transform='translate('+dx+'px,'+dy+'px)';});},1200));
     livenT.push(setInterval(()=>{if(busy||away)return;const k=info(key).eyes;if(k==='cool'||k==='content')return;const g=$('vmEyes');if(!g)return;g.style.transformBox='fill-box';g.style.transformOrigin='center';g.style.transition='transform .08s';g.style.transform='scaleY(.08)';setTimeout(()=>g.style.transform='',110);},2600));
     livenT.push(setInterval(()=>{if(busy||away||Math.random()>.5)return;const m=$('vmWrap')&&$('vmWrap').querySelector('svg');if(m)m.animate([{transform:'rotate(0) scale(1)'},{transform:'rotate(-16deg) scale(1.08) translateY(-8px)',offset:.4},{transform:'rotate(12deg) scale(1.02)',offset:.7},{transform:'rotate(0) scale(1)'}],{duration:720,easing:'cubic-bezier(.34,1.45,.6,1)'});},4000));
-    const others=['blob','bolt','leaf','heart','cloud','ghost','star','egg'];
+    const others=['leaf','cloud','bean','flower','egg','circle','squircle','pill'];
     livenT.push(setInterval(()=>{if(busy||away||!M)return;M.to(others[Math.floor(Math.random()*others.length)],700);setTimeout(()=>M.to(info(key).shape,700),1300);},9000));
   }
 
