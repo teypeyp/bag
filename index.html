@@ -1433,7 +1433,18 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   font-size:22px; font-weight:800; letter-spacing:-.06em;
   min-width:90px; text-align:right;
   transition:color .2s ease;
+  cursor:pointer;
 }
+.sc-q-bigval::after {
+  content:''; display:inline-block; width:0; height:0;
+}
+.sc-q-card .sc-q-bigval { text-decoration:underline dashed rgba(255,255,255,.28); text-decoration-thickness:1px; text-underline-offset:4px; }
+.sc-val-input {
+  width:118px; background:var(--surface3); border:1px solid var(--border);
+  border-radius:8px; color:var(--sc-vc,#fff); font:inherit; font-size:17px;
+  font-weight:800; letter-spacing:-.03em; text-align:right; padding:5px 9px; outline:none;
+}
+.sc-val-input:focus { border-color:var(--sc-vc,var(--accent)); box-shadow:0 0 0 3px rgba(255,255,255,.05); }
 .sc-q-hint {
   font-size:12px; font-weight:400; color:var(--muted);
   margin-bottom:12px; letter-spacing:-.01em;
@@ -1444,8 +1455,9 @@ input[type=range].sc-range {
   -webkit-appearance:none; appearance:none;
   width:100%; height:5px;
   background:linear-gradient(to right,
-    var(--sc-fill,var(--accent)) 0%, var(--sc-fill,var(--accent)) var(--sc-pct,0%),
-    rgba(255,255,255,.1) var(--sc-pct,0%), rgba(255,255,255,.1) 100%);
+    rgba(255,255,255,.1) 0%, rgba(255,255,255,.1) var(--sc-a,0%),
+    var(--sc-fill,var(--accent)) var(--sc-a,0%), var(--sc-fill,var(--accent)) var(--sc-b,0%),
+    rgba(255,255,255,.1) var(--sc-b,0%), rgba(255,255,255,.1) 100%);
   border-radius:99px; outline:none; cursor:pointer;
 }
 input[type=range].sc-range::-webkit-slider-thumb {
@@ -1542,6 +1554,48 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   margin-top:2px;
 }
 .sc-reset-btn:active { color:var(--text); }
+
+/* ═══════════ V79 — SIMULASYON OYUN ALANI ═══════════ */
+/* Preset chipleri */
+.sc-presets{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.sc-presets::-webkit-scrollbar{display:none}
+.sc-chip{flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:9px 14px;border-radius:999px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12.5px;font-weight:700;letter-spacing:-.01em;cursor:pointer;transition:transform .18s var(--spring),background .2s,border-color .2s,box-shadow .2s;user-select:none;-webkit-user-select:none}
+.sc-chip:active{transform:scale(.94)}
+.sc-chip .sc-chip-emo{display:flex;align-items:center;line-height:1}
+.sc-chip.on{background:var(--sc-chip-bg,rgba(45,184,102,.14));border-color:var(--sc-chip-bd,var(--accent));box-shadow:0 4px 18px -6px var(--sc-chip-bd,var(--accent));color:#fff}
+/* Kokpit */
+.sc-cockpit{position:relative;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;padding:16px 16px 14px}
+.sc-cockpit::before{content:'';position:absolute;inset:0;background:var(--sc-cp-bg,radial-gradient(120% 90% at 20% 0%,rgba(45,184,102,.10),transparent 60%));transition:background .5s;pointer-events:none}
+.sc-cockpit.pulse-good{animation:scPulseGood .9s var(--smooth)}
+@keyframes scPulseGood{0%{box-shadow:0 0 0 0 rgba(45,184,102,0)}30%{box-shadow:0 0 0 4px rgba(45,184,102,.28),0 10px 40px -6px rgba(45,184,102,.35)}100%{box-shadow:0 0 0 0 rgba(45,184,102,0)}}
+.sc-cp-top{position:relative;z-index:1;display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.sc-cp-avatar{position:relative;width:88px;flex:0 0 88px;text-align:center}
+.sc-cp-avatar-host{width:76px;height:76px;margin:0 auto}
+.sc-cp-avatar-host svg{width:100%;height:100%;overflow:visible;display:block}
+.sc-cp-avatar.rankup .sc-cp-avatar-host{animation:scRankUp .9s var(--spring)}
+@keyframes scRankUp{0%{transform:scale(1)}35%{transform:scale(1.25) rotate(-6deg)}65%{transform:scale(.94) rotate(3deg)}100%{transform:scale(1)}}
+.sc-cp-charname{margin-top:3px;font-size:11.5px;font-weight:800;letter-spacing:-.01em;transition:color .3s}
+.sc-cp-gaugewrap{position:relative;flex:1;text-align:center;min-width:0}
+.sc-cp-gauge{width:150px;max-width:100%;margin:0 auto;display:block}
+#scNeedle{transform-box:view-box;transform-origin:75px 64px;transition:transform .8s var(--spring)}
+.sc-cp-scorewrap{margin-top:-7px;position:relative;z-index:1}
+.sc-cp-score{font-size:29px;font-weight:800;letter-spacing:-.06em;color:#fff;line-height:1;font-variant-numeric:tabular-nums}
+.sc-cp-score small{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:0}
+.sc-cp-risk{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-top:3px;transition:color .3s}
+/* Grafik */
+.sc-chart{position:relative;z-index:1;margin:8px -4px 10px}
+.sc-chart svg{width:100%;height:auto;display:block}
+.sc-chart text{font-family:'Montserrat',sans-serif}
+/* Metrik satiri */
+.sc-cp-metrics{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.sc-cp-m{position:relative;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:10px 11px;overflow:hidden}
+.sc-cp-m-l{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-cp-m-v{font-size:15px;font-weight:800;letter-spacing:-.04em;color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sc-cp-m-d{font-size:11px;font-weight:700;margin-top:2px;letter-spacing:-.01em;min-height:13px}
+.sc-cp-m-d.pos{color:var(--accent)}.sc-cp-m-d.neg{color:var(--danger)}.sc-cp-m-d.neu{color:transparent}
+.sc-cp-note{position:relative;z-index:1;margin-top:10px;font-size:12px;font-weight:600;line-height:1.55;color:var(--muted);letter-spacing:-.01em;min-height:16px}
+.sc-cp-note b{color:var(--text);font-weight:700}
+.sc-empty{padding:26px 12px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6}
 
 /* ── Analiz preview card (Özet sayfası) ── */
 @keyframes previewIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
@@ -2932,13 +2986,14 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     <div id="planSubAudit"></div>
   </div>
 
-  <!-- 5. SİMÜLASYON -->
+  <!-- 5. SİMÜLASYON — V79: oyun alanı (presetler + kokpit + projeksiyon eğrisi) -->
   <div class="plan-section-block">
     <div class="plan-section-label">Simülasyon</div>
-    <div style="background:var(--surface2);border-radius:var(--radius);overflow:hidden">
+    <div class="sc-presets" id="planScenPresets"></div>
+    <div id="planScenResult"></div>
+    <div style="background:var(--surface2);border-radius:var(--radius);overflow:hidden;margin-top:10px">
       <div style="padding:4px 18px 8px" id="planScenSliders"></div>
     </div>
-    <div id="planScenResult" style="margin-top:8px"></div>
     <button class="sc-reset-btn" onclick="planScenReset()">Sıfırla</button>
   </div>
 
@@ -8533,24 +8588,11 @@ function _planCalcCore(fb, sc) {
   const adjRec    = Math.max(0, fb.recTotal + (sc.recDelta||0));
   const adjAvail  = adjIncome - adjRec - fb.debtTotal - fb.goalTotal - fb.savTarget;
 
-  // Tipik aylık değişken harcama: son 3 ayın ortalaması
-  // Bu "hayatta kalma maliyeti" — birikim bunu çıkardıktan sonra kalır
-  const _months = [];
-  for (let i = 1; i <= 3; i++) {
-    const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - i);
-    _months.push(d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'));
-  }
-  const _pastVars = _months.map(m => {
-    const { txs } = calcMonthData(m);
-    const exp = txs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
-    const fixed = txs.filter(t=>t.isRecurring||t.isDebt||t.isGoalDeposit).reduce((s,t)=>s+t.amount,0);
-    return Math.max(0, exp - fixed);
-  }).filter(v => v > 0);
-  const typicalVar = _pastVars.length > 0
-    ? _pastVars.reduce((s,v)=>s+v,0) / _pastVars.length
-    : fb.varSpent;  // geçmiş yoksa bu ayı baz al
-
-  const adjVar    = typicalVar + (sc.lifeDelta||0) + (sc.plannedExp||0);
+  // V79: tipik değişken harcama — cache'li helper (bkz. _planTypicalVar).
+  // plannedExp artık AYLIK maliyete eklenmiyor: TEK SEFERLİK gider olarak
+  // projeksiyonun 1. ayına düşer (_planProject) — aylık risk/kalan bundan etkilenmez.
+  const typicalVar = _planTypicalVar(fb);
+  const adjVar    = Math.max(0, typicalVar + (sc.lifeDelta||0));
   const adjRemain = adjAvail - adjVar;
   const savPot    = Math.max(0, adjRemain);
   const fixedRatio= adjIncome > 0 ? (adjRec + fb.debtTotal) / adjIncome : 1;
@@ -8569,13 +8611,18 @@ function _planCalcCore(fb, sc) {
   const scFb = { ...fb, recTotal: adjRec, income: adjIncome, remaining: adjRemain, varSpent: adjVar };
   const character = _planClassifyChar(scFb);
 
-  // Hedef süreleri
+  // Hedef süreleri — V79: optimize tempo = kendi aylık katkısı + serbest marj;
+  // borç erimesi ve tek seferlik gider dahil (36 ay ufuklu projeksiyon).
+  const _proj36 = _planProject(fb, sc, 36);
   const goals = data.savingsGoals.map(g => {
     const dep  = (g.deposits||[]).reduce((s,d) => s+d.amount, 0);
     const left = Math.max(0, g.target - dep);
     const pct  = Math.min(100, dep > 0 ? Math.round(dep/g.target*100) : 0);
     const cur  = (g.monthly > 0 && left > 0) ? Math.ceil(left / g.monthly)    : null;
-    const opt  = (savPot > 0   && left > 0) ? Math.ceil(left / savPot)        : null;
+    let opt = null;
+    if (left > 0) for (let m = 1; m <= 36; m++) {
+      if ((g.monthly||0)*m + Math.max(0, _proj36.cum[m]) >= left) { opt = m; break; }
+    }
     return { ...g, dep, left, pct, curMonths: cur, optMonths: opt };
   });
 
@@ -9090,7 +9137,6 @@ function renderPlan() {
   renderBudgetStatus(); // V73
   renderSubAudit(fb); // V70
   _updatePlanImpact(fb, core);
-  _syncPlanCollapseSummaries(core);
 }
 
 // ── V70: ABONELİK DENETİMİ ─────────────────────────────────
@@ -9499,31 +9545,108 @@ function _renderPlanGoalDetail(fb, core) {
 }
 
 
-// ── 5. Simülasyon ────────────────────────────────────────────────────────────
+// ── 5. Simülasyon — V79: OYUN ALANI (projeksiyon + kokpit + maskot + presetler)
 let _sc = { extraIncome:0, recDelta:0, lifeDelta:0, plannedExp:0 };
-let _impactRendered = false;
+let _scUI = { built:false, avatar:null, lastChar:null, lastRisk:null, lastScore:null,
+              lastGoalOpt:null, activePreset:null, scoreRaf:null, tweenRaf:null };
+
+const _SC_ORDER = ['ACEMI','BORCLU','KIRILGAN','HARCAYAN','DENGELI','TUTUMLU','BIRIKTIREN','HEDEFCI','YATIRIMCI','OZGUR'];
+const _SC_RISK  = { low:{l:'Dengeli',c:'var(--accent)',cc:'#2DB866'}, mid:{l:'Dikkat',c:'var(--warning)',cc:'#FFD60A'}, high:{l:'Baskılı',c:'var(--danger)',cc:'#FF453A'} };
+const _SC_AYLAR = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+
+// ─── Tipik değişken harcama — cache'li (V79: perf + gün-bazlı fallback) ──────
+let _tvCache = { k:null, v:0 };
+function _planTypicalVar(fb) {
+  const mk = monthKey(), n = (data.transactions||[]).length;
+  const key = mk + ':' + n + ':' + Math.round(fb.varSpent||0);
+  if (_tvCache.k === key) return _tvCache.v;
+  const months = [];
+  for (let i = 1; i <= 3; i++) {
+    const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - i);
+    months.push(d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'));
+  }
+  const past = months.map(m => {
+    const { txs } = calcMonthData(m);
+    const exp = txs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
+    const fixed = txs.filter(t=>t.isRecurring||t.isDebt||t.isGoalDeposit).reduce((s,t)=>s+t.amount,0);
+    return Math.max(0, exp - fixed);
+  }).filter(v => v > 0);
+  let v;
+  if (past.length) v = past.reduce((s,x)=>s+x,0) / past.length;
+  else {
+    // Geçmiş yok: cari ayın kısmi harcamasını tam aya projekte et (eski hali ay başında aşırı iyimserdi)
+    const day = Math.max(1, new Date().getDate());
+    v = (fb.varSpent||0) / day * daysInMonth(mk);
+  }
+  _tvCache = { k:key, v:v };
+  return v;
+}
+
+// ─── Borç takvimi: gelecekteki her ay için taksit yükü + biten borçlar ───────
+function _planDebtSchedule(months) {
+  const mk = monthKey();
+  const load = new Array(months+1).fill(0);
+  const drops = [];
+  (data.debts||[]).filter(d=>d.active).forEach(d => {
+    let rem = Math.max(0, (d.installments||0) - (d.paidCount||0));
+    if (!(d.paidMonths||[]).includes(mk)) rem = Math.max(0, rem - 1); // bu ayın taksiti bu aya ait
+    for (let m = 1; m <= Math.min(months, rem); m++) load[m] += d.monthlyAmount||0;
+    if (rem < months) drops.push({ m:rem+1, name:d.name||'Borç', amt:d.monthlyAmount||0 });
+  });
+  drops.sort((a,b)=>a.m-b.m);
+  return { load:load, drops:drops };
+}
+
+// ─── Projeksiyon: kümülatif serbest birikim (borç erimesi + tek seferlik gider)
+function _planProject(fb, sc, months) {
+  months = months || 12; sc = sc || {};
+  const tv  = _planTypicalVar(fb);
+  const inc = (fb.income||0) + (sc.extraIncome||0);
+  const rec = Math.max(0, (fb.recTotal||0) + (sc.recDelta||0));
+  const vr  = Math.max(0, tv + (sc.lifeDelta||0));
+  const ds  = _planDebtSchedule(months);
+  const cum = [0], nets = [];
+  for (let m = 1; m <= months; m++) {
+    const avail = inc - rec - ds.load[m] - (fb.goalTotal||0) - (fb.savTarget||0);
+    let net = avail - vr;
+    if (m === 1) net -= (sc.plannedExp||0); // tek seferlik gider 1. aya düşer
+    nets.push(net);
+    cum.push(cum[m-1] + net);
+  }
+  return { cum:cum, nets:nets, drops:ds.drops };
+}
 
 // ─── Soru tanımları ─────────────────────────────────────────────────────────
 function _planGetSliderDefs(fb) {
   const inc  = Math.max(fb.income   || 10000, 2000);
   const fix  = Math.max(fb.recTotal || 2000,  500);
-  const vari = Math.max(fb.varSpent || 2000,  500);
+  const vari = Math.max(Math.round(_planTypicalVar(fb)) || 2000, 500);
   function stp(r){ return r<=2000?100:r<=10000?500:1000; }
   const mI = Math.round(inc*.5/500)*500;
   const mR = Math.round(fix*.4/200)*200;
   const mL = Math.round(vari*.4/200)*200;
-  const mP = Math.round(inc*.4/500)*500;
+  const mP = Math.round(inc*.6/500)*500;
   return [
-    { id:'extraIncome', q:'Ek bir gelir gelse?',         hint:'Freelance, kira, ikramiye…',           min:0,  max:mI,  step:stp(mI), color:'var(--accent)',  glow:'rgba(45,184,102,.18)',  fmt:v=>v===0?'—':'+'+fmtTL(v) },
-    { id:'recDelta',    q:'Sabit giderler azalsa?',       hint:'Abonelik, servis, kira müzakeresi…',   min:-mR,max:0,   step:stp(mR), color:'var(--warning)', glow:'rgba(255,214,10,.18)',  fmt:v=>v===0?'—':(v>0?'+':'')+fmtTL(v) },
-    { id:'lifeDelta',   q:'Harcama ritmi değişse?',       hint:'Yeme-içme, alışveriş, eğlence…',       min:-mL,max:Math.round(mL*.5/200)*200,step:stp(mL),color:'#BF5AF2',glow:'rgba(191,90,242,.18)',fmt:v=>v===0?'—':(v>0?'+':'')+fmtTL(v) },
-    { id:'plannedExp',  q:'Planladığın bir gider var mı?',hint:'Tatil, elektronik, tamirat…',          min:0,  max:mP,  step:stp(mP), color:'var(--blue)',    glow:'rgba(10,132,255,.18)',  fmt:v=>v===0?'—':'−'+fmtTL(v) },
+    { id:'extraIncome', q:'Gelir değişse?',          hint:'Zam, ek iş, kira… ya da gelir kaybı', min:-mI, max:mI, step:stp(mI), color:'var(--accent)',  glow:'rgba(45,184,102,.18)',  fmt:v=>v===0?'—':(v>0?'+':'')+fmtTL(v) },
+    { id:'recDelta',    q:'Sabit giderler azalsa?',  hint:'Abonelik, servis, kira müzakeresi…',  min:-mR, max:0,  step:stp(mR), color:'var(--warning)', glow:'rgba(255,214,10,.18)',  fmt:v=>v===0?'—':(v>0?'+':'')+fmtTL(v) },
+    { id:'lifeDelta',   q:'Harcama ritmi değişse?',  hint:'Yeme-içme, alışveriş, eğlence…',      min:-mL, max:Math.round(mL*.5/200)*200, step:stp(mL), color:'#BF5AF2', glow:'rgba(191,90,242,.18)', fmt:v=>v===0?'—':(v>0?'+':'')+fmtTL(v) },
+    { id:'plannedExp',  q:'Tek seferlik bir gider?', hint:'Tatil, elektronik, tamirat…',         min:0,   max:mP, step:stp(mP), color:'var(--blue)',    glow:'rgba(10,132,255,.18)',  fmt:v=>v===0?'—':'−'+fmtTL(v) },
   ];
 }
 
 function _sliderPct(d, v) {
   if (d.max===d.min) return 0;
-  return Math.round(((v-d.min)/(d.max-d.min))*100);
+  return Math.max(0, Math.min(100, Math.round(((v-d.min)/(d.max-d.min))*100)));
+}
+// V79: bipolar dolgu — 0 noktasından thumb'a boyanır; değer rengi (negatif gelir kırmızı)
+function _scFillVars(d, v) {
+  const z = _sliderPct(d, Math.max(d.min, Math.min(d.max, 0))), p = _sliderPct(d, v);
+  return { a: Math.min(z, p), b: Math.max(z, p) };
+}
+function _scValColor(d, v) {
+  if (v === 0) return 'var(--muted)';
+  if (d.id === 'extraIncome' && v < 0) return 'var(--danger)';
+  return d.color;
 }
 
 // ─── Slider render — her soru kendi kartı ───────────────────────────────────
@@ -9533,49 +9656,176 @@ function _planRenderSliders(fb) {
   const defs = _planGetSliderDefs(fb);
 
   el.innerHTML = defs.map((d, i) => {
-    const v = _sc[d.id]||0, pct = _sliderPct(d,v);
-    const valColor = v!==0 ? d.color : 'var(--muted)';
+    const v = _sc[d.id]||0, f = _scFillVars(d, v);
     return `
     <div class="sc-q-card ${v!==0?'active':''}" id="scCard_${d.id}"
          style="animation-delay:${i*55}ms;--sc-color:${d.color}">
       <div class="sc-q-top">
         <div class="sc-q-label">${d.q}</div>
-        <div class="sc-q-bigval" id="scVal_${d.id}" style="color:${valColor}">${d.fmt(v)}</div>
+        <div class="sc-q-bigval" id="scVal_${d.id}" style="color:${_scValColor(d,v)}" onclick="_scEditVal('${d.id}')" role="button" aria-label="Değeri elle gir">${d.fmt(v)}</div>
       </div>
       <div class="sc-q-hint">${d.hint}</div>
       <input type="range" class="sc-range" id="scRange_${d.id}"
         min="${d.min}" max="${d.max}" step="${d.step}" value="${v}"
-        style="--sc-fill:${d.color};--sc-glow:${d.glow};--sc-pct:${pct}%"
+        style="--sc-fill:${d.color};--sc-glow:${d.glow};--sc-a:${f.a}%;--sc-b:${f.b}%"
         oninput="_scMove('${d.id}',this)">
     </div>`;
   }).join('');
+
+  _planRenderPresets(fb);
+}
+
+// ─── Hazır senaryolar ───────────────────────────────────────────────────────
+function _scChipIcon(d, color) {
+  return '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>';
+}
+const _SC_PRESETS = [
+  { id:'raise', icon:'<path d="M4 13a8 8 0 0 1 7 7a6 6 0 0 0 3 -5a9 9 0 0 0 6 -8a3 3 0 0 0 -3 -3a9 9 0 0 0 -8 6a6 6 0 0 0 -5 3"/><path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3"/><path d="M15 9m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/>',
+    label:'Zam geldi',     color:'#2DB866', make:(fb,tv)=>({ extraIncome:  fb.income*0.15 }) },
+  { id:'shock', icon:'<path d="M3 7l6 6l4 -4l8 8"/><path d="M21 10l0 7l-7 0"/>',
+    label:'Gelir şoku',    color:'#FF453A', make:(fb,tv)=>({ extraIncome: -fb.income*0.30 }) },
+  { id:'trip',  icon:'<path d="M14.639 10.258l4.83 -1.294a2 2 0 1 1 1.035 3.863l-14.489 3.883l-4.45 -5.02l2.897 -.776l2.45 1.414l2.897 -.776l-3.743 -6.244l2.898 -.777l5.675 5.727z"/><path d="M3 21h18"/>',
+    label:'Büyük harcama', color:'#0A84FF', make:(fb,tv)=>({ plannedExp: Math.max(2000, fb.income*0.35) }) },
+  { id:'lean',  icon:'<path d="M6 7m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M6 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M8.6 8.6l10.4 10.4"/><path d="M8.6 15.4l10.4 -10.4"/>',
+    label:'Kemer sıkma',   color:'#FFD60A', make:(fb,tv)=>({ recDelta: -fb.recTotal*0.15, lifeDelta: -tv*0.25 }) },
+];
+
+function _planRenderPresets(fb) {
+  const el = document.getElementById('planScenPresets'); if (!el) return;
+  el.innerHTML = _SC_PRESETS.map(p =>
+    `<button class="sc-chip ${_scUI.activePreset===p.id?'on':''}" id="scChip_${p.id}"
+       style="--sc-chip-bd:${p.color};--sc-chip-bg:${p.color}22"
+       onclick="_scApplyPreset('${p.id}')"><span class="sc-chip-emo">${_scChipIcon(p.icon, p.color)}</span>${p.label}</button>`
+  ).join('');
+}
+
+// ─── V80: değere dokun → elle gir (slider sınırlarının ötesi de yazılabilir) ─
+function _scTypedBounds(def, fb) {
+  const big = 9999999;
+  switch (def.id) {
+    case 'extraIncome': return { lo: -(fb.income||0), hi: big };
+    case 'recDelta':    return { lo: -(fb.recTotal||0), hi: 0 };
+    case 'lifeDelta':   return { lo: -Math.round(_planTypicalVar(fb)), hi: big };
+    case 'plannedExp':  return { lo: 0, hi: big };
+  }
+  return { lo: -big, hi: big };
+}
+function _scEditVal(id) {
+  const el = document.getElementById('scVal_'+id);
+  if (!el || el.querySelector('input')) return;
+  const fb = calcFreeBudget(currentMonth);
+  const def = _planGetSliderDefs(fb).find(d=>d.id===id); if (!def) return;
+  const cur = _sc[id]||0;
+  el.innerHTML = `<input type="text" inputmode="numeric" class="sc-val-input" value="${cur!==0?cur:''}" placeholder="0" style="--sc-vc:${def.color}">`;
+  const inp = el.querySelector('input');
+  try { inp.focus(); inp.select(); } catch(e) {}
+  let done = false;
+  const commit = ok => {
+    if (done) return; done = true;
+    if (ok) {
+      const raw = (inp.value||'').trim().replace(/\s/g,'').replace(/\./g,'').replace(/,/g,'.');
+      let v = parseFloat(raw);
+      if (!isFinite(v)) v = cur;
+      if (def.max <= 0 && v > 0) v = -v; // "Sabit giderler azalsa?"na 2000 yazana kolaylık: -2000 say
+      const b = _scTypedBounds(def, fb);
+      v = Math.max(b.lo, Math.min(b.hi, Math.round(v)));
+      _sc[id] = v;
+      if (_scUI.activePreset) {
+        _scUI.activePreset = null;
+        document.querySelectorAll('.sc-chip').forEach(c=>c.classList.remove('on'));
+      }
+    }
+    _scSetSliderUI(id, _sc[id]||0, _planGetSliderDefs(fb));
+    _scRecalc(fb);
+  };
+  inp.addEventListener('blur', () => commit(true));
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); inp.blur(); }
+    else if (e.key === 'Escape') { commit(false); }
+  });
+}
+
+function _scSnap(v, def) {
+  const s = def.step||100;
+  return Math.max(def.min, Math.min(def.max, Math.round(v/s)*s));
+}
+
+function _scApplyPreset(id) {
+  const fb = calcFreeBudget(currentMonth);
+  const p = _SC_PRESETS.find(x=>x.id===id); if (!p) return;
+  const defs = _planGetSliderDefs(fb);
+  const target = { extraIncome:0, recDelta:0, lifeDelta:0, plannedExp:0 };
+  if (_scUI.activePreset === id) {
+    _scUI.activePreset = null; // aynı chip'e tekrar dokun → temizle
+  } else {
+    const raw = p.make(fb, _planTypicalVar(fb));
+    Object.keys(raw).forEach(k => { const d = defs.find(x=>x.id===k); if (d) target[k] = _scSnap(raw[k], d); });
+    _scUI.activePreset = id;
+  }
+  document.querySelectorAll('.sc-chip').forEach(c=>c.classList.remove('on'));
+  const chip = document.getElementById('scChip_'+id);
+  if (chip && _scUI.activePreset===id) chip.classList.add('on');
+  _scTweenTo(target);
+}
+
+// ─── Slider UI + tween ──────────────────────────────────────────────────────
+function _scSetSliderUI(id, v, defs) {
+  const def = defs.find(d=>d.id===id); if (!def) return;
+  const input = document.getElementById('scRange_'+id);
+  if (input) {
+    input.value = v;
+    const f = _scFillVars(def, v);
+    input.style.setProperty('--sc-a', f.a+'%');
+    input.style.setProperty('--sc-b', f.b+'%');
+  }
+  const valEl = document.getElementById('scVal_'+id);
+  if (valEl) { valEl.textContent = def.fmt(v); valEl.style.color = _scValColor(def, v); }
+  const card = document.getElementById('scCard_'+id);
+  if (card) card.classList.toggle('active', v!==0);
+}
+
+function _scTweenTo(target, done) {
+  if (_scUI.tweenRaf) cancelAnimationFrame(_scUI.tweenRaf);
+  const fb = calcFreeBudget(currentMonth);
+  const defs = _planGetSliderDefs(fb);
+  const keys = ['extraIncome','recDelta','lifeDelta','plannedExp'];
+  const from = {}; keys.forEach(k=>from[k]=_sc[k]||0);
+  const t0 = performance.now(), dur = 560, stag = 55;
+  const ease = x => 1 - Math.pow(1-x, 3);
+  (function step(now){
+    const el = now - t0; let all = true;
+    keys.forEach((k,i)=>{
+      const kk = Math.min(1, Math.max(0, (el - i*stag) / (dur - stag*3)));
+      if (kk < 1) all = false;
+      const def = defs.find(d=>d.id===k);
+      let v = from[k] + ((target[k]||0) - from[k]) * ease(kk);
+      v = Math.round(v / (def.step||100)) * (def.step||100);
+      _sc[k] = v; _scSetSliderUI(k, v, defs);
+    });
+    _scRecalc(fb);
+    if (!all) _scUI.tweenRaf = requestAnimationFrame(step);
+    else {
+      keys.forEach(k=>{ _sc[k] = target[k]||0; _scSetSliderUI(k, _sc[k], defs); });
+      _scRecalc(fb); _scUI.tweenRaf = null;
+      if (done) done();
+    }
+  })(t0);
 }
 
 // ─── Slider hareketi ─────────────────────────────────────────────────────────
 function _scMove(id, input) {
-  const mk=currentMonth, fb=calcFreeBudget(mk);
-  const def=_planGetSliderDefs(fb).find(d=>d.id===id);
-  if (!def) return;
-  const v=parseFloat(input.value);
-  _sc[id]=v;
-
-  // Track rengi
-  input.style.setProperty('--sc-pct', _sliderPct(def,v)+'%');
-
-  // Kart aktif state
-  const card=document.getElementById('scCard_'+id);
-  if (card) { card.classList.toggle('active', v!==0); }
-
-  // Big val — animasyonlu
-  const valEl=document.getElementById('scVal_'+id);
-  if (valEl) {
-    valEl.textContent=def.fmt(v);
-    valEl.style.color=v!==0?def.color:'var(--muted)';
+  const fb = calcFreeBudget(currentMonth);
+  const defs = _planGetSliderDefs(fb);
+  const def = defs.find(d=>d.id===id); if (!def) return;
+  if (_scUI.tweenRaf) { cancelAnimationFrame(_scUI.tweenRaf); _scUI.tweenRaf = null; }
+  if (_scUI.activePreset) {
+    _scUI.activePreset = null;
+    document.querySelectorAll('.sc-chip').forEach(c=>c.classList.remove('on'));
   }
-
-  const core=_planCalcCore(fb,{..._sc});
-  _updatePlanImpact(fb, core);
-  _syncPlanCollapseSummaries(core);
+  const v = parseFloat(input.value);
+  _sc[id] = v;
+  _scSetSliderUI(id, v, defs);
+  _scRecalc(fb);
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -9583,128 +9833,317 @@ function _planGetScenario() {
   return { extraIncome:_sc.extraIncome||0, recDelta:_sc.recDelta||0,
            lifeDelta:_sc.lifeDelta||0, plannedExp:_sc.plannedExp||0 };
 }
-function _animNum(id, text, color) {
-  const el=document.getElementById(id); if (!el) return;
-  el.textContent=text;
-  if(color) el.style.color=color;
-}
-function _dc(v){ return Math.abs(v)<50?'neu':v>0?'pos':'neg'; }
-function _df(v){ return Math.abs(v)<50?'':(v>0?'+':'')+fmtTL(Math.round(v)); }
-function _planGetBestGoal(core,base){
-  const g=core.goals.filter(g=>g.optMonths!=null).sort((a,b)=>(a.optMonths||999)-(b.optMonths||999))[0];
-  if(!g)return{goal:null,delta:0};
-  const bg=base.goals.find(x=>x.id===g.id);
-  return{goal:g, delta:(bg&&bg.optMonths&&g.optMonths)?bg.optMonths-g.optMonths:0};
+
+function _scRecalc(fb) {
+  fb = fb || calcFreeBudget(currentMonth);
+  const core = _planCalcCore(fb, _planGetScenario());
+  _updatePlanImpact(fb, core);
 }
 
 function planScenCalc() {
-  const mk=currentMonth,fb=calcFreeBudget(mk),sc=_planGetScenario();
-  const core=_planCalcCore(fb,sc);
-  _renderPlanHero(fb,core); _renderPlanChar(core);
-  _renderPlanRiskDetail(core); _renderPlanGoalDetail(fb,core);
-  _updatePlanImpact(fb,core); _syncPlanCollapseSummaries(core);
+  const fb = calcFreeBudget(currentMonth);
+  const core = _planCalcCore(fb, _planGetScenario());
+  _renderPlanHero(fb, core); _renderPlanChar(core);
+  _renderPlanRiskDetail(core); _renderPlanGoalDetail(fb, core);
+  _updatePlanImpact(fb, core);
 }
 
-// ─── Impact card — referans: büyük status + metric grid ──────────────────────
+function _scMonthName(m) {
+  const d = new Date(); d.setDate(1); d.setMonth(d.getMonth()+m);
+  return _SC_AYLAR[d.getMonth()];
+}
+
+function _scSet(id, txt, color) {
+  const el = document.getElementById(id);
+  if (el) { el.textContent = txt; if (color) el.style.color = color; }
+}
+function _scDelta(id, v, show) {
+  const el = document.getElementById(id); if (!el) return;
+  const s = show && Math.abs(v) >= 50;
+  el.textContent = s ? ((v>0?'+':'')+fmtTL(Math.round(v))) : '';
+  el.className = 'sc-cp-m-d ' + (s ? (v>0?'pos':'neg') : 'neu');
+}
+function _scGoalDelta(id, d, show) {
+  const el = document.getElementById(id); if (!el) return;
+  if (!show || !d) { el.textContent=''; el.className='sc-cp-m-d neu'; return; }
+  el.textContent = d>0 ? (d+' ay erken') : (Math.abs(d)+' ay geç');
+  el.className = 'sc-cp-m-d ' + (d>0?'pos':'neg');
+}
+
+// ─── Mikro kutlama: spark patlaması (streak-spark keyframe'i yeniden kullanılır)
+function _scSpark(host, color, n) {
+  if (!host) return;
+  for (let i=0; i<(n||8); i++) {
+    const s = document.createElement('span'); s.className = 'streak-spark';
+    if (color) s.style.background = color;
+    const a = Math.random()*Math.PI*2, d = 20+Math.random()*30;
+    s.style.setProperty('--sx', (Math.cos(a)*d).toFixed(0)+'px');
+    s.style.setProperty('--sy', (Math.sin(a)*d).toFixed(0)+'px');
+    host.appendChild(s);
+    setTimeout(()=>{ try{ s.remove(); }catch(e){} }, 700);
+  }
+}
+
+// ─── Kokpit iskeleti ─────────────────────────────────────────────────────────
+function _scGaugeSvg() {
+  function arc(a1, a2, color) {
+    const r=52, cx=75, cy=64, RAD=Math.PI/180;
+    const x1=cx+r*Math.cos(a1*RAD), y1=cy-r*Math.sin(a1*RAD);
+    const x2=cx+r*Math.cos(a2*RAD), y2=cy-r*Math.sin(a2*RAD);
+    return `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}" stroke="${color}" stroke-width="9" fill="none" stroke-linecap="round" opacity=".85"/>`;
+  }
+  return `<svg class="sc-cp-gauge" viewBox="0 0 150 78">
+    ${arc(180,124,'#FF453A')}${arc(116,64,'#FFD60A')}${arc(56,0,'#2DB866')}
+    <g id="scNeedle"><line x1="75" y1="64" x2="75" y2="30" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/><circle cx="75" cy="30" r="4" fill="#fff"/></g>
+    <circle cx="75" cy="64" r="5.5" fill="#fff"/>
+  </svg>`;
+}
+
+function _scChartSvg() {
+  return `<svg viewBox="0 0 340 168" id="scChartSvg">
+    <defs><linearGradient id="scAreaG" x1="0" y1="0" x2="0" y2="1">
+      <stop id="scAG0" offset="0" stop-color="#2DB866" stop-opacity=".28"/>
+      <stop id="scAG1" offset="1" stop-color="#2DB866" stop-opacity="0"/>
+    </linearGradient></defs>
+    <line id="scZero" x1="8" x2="332" y1="0" y2="0" stroke="rgba(255,255,255,.14)" stroke-width="1" stroke-dasharray="2 4"/>
+    <g id="scMarks"></g>
+    <path id="scArea" d="" fill="url(#scAreaG)"/>
+    <path id="scGhost" d="" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2" stroke-dasharray="4 5" stroke-linecap="round"/>
+    <path id="scLine" d="" fill="none" stroke="#2DB866" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <g id="scFlags"></g>
+    <circle id="scEndDot" r="4.5" fill="#2DB866" stroke="#0A0A0D" stroke-width="2"/>
+    <text id="scEndVal" font-size="11" font-weight="800" fill="#fff" text-anchor="end"></text>
+    <g id="scXlab"></g>
+  </svg>`;
+}
+
+function _scEnsureCockpit() {
+  const host = document.getElementById('planScenResult');
+  if (!host) return false;
+  if (_scUI.built && document.getElementById('scCockpit')) return true;
+  host.innerHTML = `
+   <div class="sc-cockpit" id="scCockpit">
+     <div class="sc-cp-top">
+       <div class="sc-cp-avatar" id="scAvatarWrap">
+         <div class="sc-cp-avatar-host" id="scAvatarHost"></div>
+         <div class="sc-cp-charname" id="scCharName">—</div>
+       </div>
+       <div class="sc-cp-gaugewrap">
+         ${_scGaugeSvg()}
+         <div class="sc-cp-scorewrap">
+           <div class="sc-cp-score"><span id="scScoreNum">0</span><small>/100</small></div>
+           <div class="sc-cp-risk" id="scRiskLbl">—</div>
+         </div>
+       </div>
+     </div>
+     <div class="sc-chart">${_scChartSvg()}</div>
+     <div class="sc-cp-metrics">
+       <div class="sc-cp-m"><div class="sc-cp-m-l">Aylık kalan</div><div class="sc-cp-m-v" id="scMRem">—</div><div class="sc-cp-m-d neu" id="scMRemD"></div></div>
+       <div class="sc-cp-m"><div class="sc-cp-m-l">12 ay sonra</div><div class="sc-cp-m-v" id="scMYear">—</div><div class="sc-cp-m-d neu" id="scMYearD"></div></div>
+       <div class="sc-cp-m" id="scMGoalBox"><div class="sc-cp-m-l" id="scMGoalL">Hedef</div><div class="sc-cp-m-v" id="scMGoal">—</div><div class="sc-cp-m-d neu" id="scMGoalD"></div></div>
+     </div>
+     <div class="sc-cp-note" id="scNote"></div>
+   </div>`;
+  _scUI.built = true;
+  _scUI.avatar = null; _scUI.lastChar = null; _scUI.lastRisk = null;
+  _scUI.lastScore = null; _scUI.lastGoalOpt = null;
+  try {
+    if (typeof VM !== 'undefined' && VM.spawn) _scUI.avatar = VM.spawn(document.getElementById('scAvatarHost'));
+  } catch(e) {}
+  return true;
+}
+
+// ─── Skor sayacı ─────────────────────────────────────────────────────────────
+function _scScoreTween(to) {
+  const el = document.getElementById('scScoreNum'); if (!el) return;
+  const from = _scUI.lastScore==null ? to : _scUI.lastScore;
+  _scUI.lastScore = to;
+  if (_scUI.scoreRaf) cancelAnimationFrame(_scUI.scoreRaf);
+  const t0 = performance.now(), dur = 480;
+  (function f(now){
+    const k = Math.min(1,(now-t0)/dur), e = 1-Math.pow(1-k,3);
+    el.textContent = Math.round(from+(to-from)*e);
+    if (k<1) _scUI.scoreRaf = requestAnimationFrame(f); else _scUI.scoreRaf = null;
+  })(t0);
+}
+
+// ─── Projeksiyon eğrisi ──────────────────────────────────────────────────────
+function _scDrawChart(fb, core, hasDelta) {
+  const svg = document.getElementById('scChartSvg'); if (!svg) return null;
+  const S = _planProject(fb, core.sc, 12);
+  const B = hasDelta ? _planProject(fb, {}, 12) : S;
+  const W=340, H=168, pl=8, pr=8, pt=30, pb=20;
+  const all = S.cum.concat(B.cum);
+  let ymin = Math.min(0, Math.min.apply(null, all));
+  let ymax = Math.max(1, Math.max.apply(null, all));
+  const span = (ymax-ymin)||1; ymax += span*.10; ymin -= span*.06;
+  const X = m => pl + (W-pl-pr)*m/12;
+  const Y = v => pt + (H-pt-pb)*(1-(v-ymin)/(ymax-ymin));
+  const path = arr => arr.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(' ');
+  const rc = _SC_RISK[core.riskLevel].cc;
+  const y0 = Y(0);
+
+  const gh = document.getElementById('scGhost');
+  gh.setAttribute('d', path(B.cum));
+  gh.style.opacity = hasDelta ? '1' : '0';
+
+  const ln = document.getElementById('scLine');
+  ln.setAttribute('d', path(S.cum));
+  ln.setAttribute('stroke', rc);
+
+  document.getElementById('scArea').setAttribute('d',
+    path(S.cum) + 'L'+X(12).toFixed(1)+' '+y0.toFixed(1)+' L'+X(0).toFixed(1)+' '+y0.toFixed(1)+' Z');
+  document.getElementById('scAG0').setAttribute('stop-color', rc);
+  document.getElementById('scAG1').setAttribute('stop-color', rc);
+
+  const z = document.getElementById('scZero');
+  z.setAttribute('y1', y0.toFixed(1)); z.setAttribute('y2', y0.toFixed(1));
+
+  const ex = X(12), ey = Y(S.cum[12]);
+  const dot = document.getElementById('scEndDot');
+  dot.setAttribute('cx', ex.toFixed(1)); dot.setAttribute('cy', ey.toFixed(1)); dot.setAttribute('fill', rc);
+  const ev = document.getElementById('scEndVal');
+  ev.setAttribute('x', (ex-2).toFixed(1)); ev.setAttribute('y', Math.max(pt-6, ey-10).toFixed(1));
+  ev.setAttribute('fill', rc); ev.textContent = fmtTL(Math.round(S.cum[12]));
+
+  document.getElementById('scXlab').innerHTML =
+    `<text x="${X(0).toFixed(1)}" y="${H-6}" font-size="9.5" fill="rgba(255,255,255,.4)" text-anchor="start" font-weight="600">Bugün</text>
+     <text x="${X(6).toFixed(1)}" y="${H-6}" font-size="9.5" fill="rgba(255,255,255,.4)" text-anchor="middle" font-weight="600">${_scMonthName(6)}</text>
+     <text x="${X(12).toFixed(1)}" y="${H-6}" font-size="9.5" fill="rgba(255,255,255,.4)" text-anchor="end" font-weight="600">${_scMonthName(12)}</text>`;
+
+  // Borç bitişleri (ilk 2)
+  let marks = '';
+  S.drops.filter(d=>d.m>=1 && d.m<=12).slice(0,2).forEach((d, di) => {
+    const x = Math.max(64, Math.min(276, X(d.m)));
+    const ly = 9 + di*11; // V80: her etiket kendi satırında — çakışma olmaz
+    marks += `<line x1="${X(d.m).toFixed(1)}" x2="${X(d.m).toFixed(1)}" y1="${pt-4}" y2="${H-pb}" stroke="rgba(255,255,255,.13)" stroke-width="1" stroke-dasharray="2 4"/>
+      <circle cx="${x.toFixed(1)}" cy="${ly-3}" r="0" fill="none"/>
+      <text x="${x.toFixed(1)}" y="${ly}" font-size="8" font-weight="800" fill="#FFD60A" text-anchor="middle">${esc((d.name||'').slice(0,8))} bitti · +${fmtTL(d.amt)}</text>`;
+  });
+  document.getElementById('scMarks').innerHTML = marks;
+
+  // Hedef bayrakları (en yakın 2)
+  let flags = '';
+  (core.goals||[]).filter(g=>g.optMonths && g.optMonths<=12)
+    .sort((a,b)=>a.optMonths-b.optMonths).slice(0,2).forEach((g, gi) => {
+      const x = X(g.optMonths), y = Y(S.cum[g.optMonths]);
+      const right = x > 250, h = 18 + gi*15; // ikinci bayrak daha yüksek → etiketler çakışmaz
+      flags += `<line x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="${y.toFixed(1)}" y2="${(y-h).toFixed(1)}" stroke="${rc}" stroke-width="1.6"/>
+        <path d="M${x.toFixed(1)} ${(y-h).toFixed(1)} l${right?-12:12} 4 l${right?12:-12} 4 Z" fill="${rc}"/>
+        <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${rc}"/>
+        <text x="${(right?x-15:x+15).toFixed(1)}" y="${(y-h+7).toFixed(1)}" font-size="8.5" font-weight="700" fill="rgba(255,255,255,.75)" text-anchor="${right?'end':'start'}">${esc((g.name||'').slice(0,10))}</text>`;
+    });
+  document.getElementById('scFlags').innerHTML = flags;
+
+  return { S:S, B:B };
+}
+
+// ─── Kokpit ana güncelleme (renderPlan + her slider tick) ────────────────────
 function _updatePlanImpact(fb, core) {
-  const el=document.getElementById('planScenResult'); if (!el) return;
-  const hasDelta=Object.values(core.sc||{}).some(v=>v!==0);
-
-  if (!hasDelta) {
-    if (_impactRendered) {
-      el.style.transition='opacity .22s'; el.style.opacity='0';
-      setTimeout(()=>{ _impactRendered=false; el.style.opacity=''; el.style.transition='';
-        el.innerHTML=`<div class="sc-invite"><div class="sc-invite-text">Değerleri ayarla, etkisini gör.</div></div>`; }, 230);
-    } else {
-      el.innerHTML=`<div class="sc-invite"><div class="sc-invite-text">Değerleri ayarla, etkisini gör.</div></div>`;
-    }
+  const host = document.getElementById('planScenResult'); if (!host) return;
+  if (!fb.income) {
+    host.innerHTML = `<div class="sc-cockpit"><div class="sc-empty">Simülasyon için önce bu aya gelir ekle.<br>Gelir girildiğinde 12 aylık gidişatını burada canlı izlersin.</div></div>`;
+    _scUI.built = false;
     return;
   }
+  if (!_scEnsureCockpit()) return;
+  const cockpit = document.getElementById('scCockpit');
+  const hasDelta = Object.values(core.sc||{}).some(v=>v!==0);
+  const base = hasDelta ? _planCalcCore(fb, {extraIncome:0,recDelta:0,lifeDelta:0,plannedExp:0}) : core;
+  const R = _SC_RISK[core.riskLevel];
 
-  const base=_planCalcCore(fb,{extraIncome:0,recDelta:0,lifeDelta:0,plannedExp:0});
-  const rd=core.adjRemain-base.adjRemain, sd=core.savPot-base.savPot;
-  const rc=core.riskLevel!==base.riskLevel, cc=core.character.key!==base.character.key;
-  const rlLabel={low:'Dengeli',mid:'Dikkat',high:'Baskılı'}[core.riskLevel];
-  const rlColor={low:'var(--accent)',mid:'var(--warning)',high:'var(--danger)'}[core.riskLevel];
-  // Gradient arka plan — risk seviyesine göre
-  const rlBgGrad={
-    low: 'linear-gradient(135deg,rgba(45,184,102,.22) 0%,rgba(45,184,102,.06) 100%)',
-    mid: 'linear-gradient(135deg,rgba(255,214,10,.18) 0%,rgba(255,214,10,.05) 100%)',
-    high:'linear-gradient(135deg,rgba(255,69,58,.2) 0%,rgba(255,69,58,.05) 100%)',
-  }[core.riskLevel];
+  // Skor + gauge + risk etiketi
+  const score = Math.max(0, Math.min(100, Math.round(100 - core.rs/9*100)));
+  _scScoreTween(score);
+  const nd = document.getElementById('scNeedle');
+  if (nd) nd.style.transform = 'rotate(' + (score*1.8-90).toFixed(1) + 'deg)';
+  const rl = document.getElementById('scRiskLbl');
+  if (rl) { rl.textContent = hasDelta ? 'Bu senaryoda · '+R.l : R.l; rl.style.color = R.c; }
+  cockpit.style.setProperty('--sc-cp-bg', 'radial-gradient(120% 90% at 20% 0%, '+R.cc+'1c, transparent 60%)');
 
-  const bg=_planGetBestGoal(core,base);
+  // Risk iyileşme kutlaması (kenar tetikli)
+  const ord = { high:0, mid:1, low:2 };
+  if (_scUI.lastRisk != null && ord[core.riskLevel] > ord[_scUI.lastRisk]) {
+    cockpit.classList.remove('pulse-good'); void cockpit.offsetWidth; cockpit.classList.add('pulse-good');
+    _scSpark(document.getElementById('scAvatarWrap'), R.cc, 9);
+  }
+  _scUI.lastRisk = core.riskLevel;
 
-  if (_impactRendered) {
-    // In-place güncelle
-    _animNum('scImpStatus', rlLabel, rlColor);
-    _animNum('scImpRem',    fmtTL(Math.round(core.adjRemain)), core.adjRemain>=0?'#fff':'var(--danger)');
-    _animNum('scImpSav',    fmtTL(Math.round(core.savPot)),    '#fff');
-    const dRem=document.getElementById('scDRem'), dSav=document.getElementById('scDSav');
-    if(dRem){dRem.textContent=_df(rd);dRem.className='sc-metric-delta '+_dc(rd);}
-    if(dSav){dSav.textContent=_df(sd);dSav.className='sc-metric-delta '+_dc(sd);}
-    if(bg.goal){ _animNum('scImpGoal',bg.goal.optMonths+' ay','#fff'); }
-    const grad=document.getElementById('scImpGrad');
-    if(grad) grad.style.setProperty('--sc-impact-bg',rlBgGrad);
-    const note=document.getElementById('scImpNote');
-    if(note){
-      if(rc||cc){
-        note.style.color=rlColor;
-        note.textContent=rc?`Risk ${core.riskLevel==='low'?'iyileşti':'arttı'} — ${rlLabel.toLowerCase()}`+(cc?` · ${core.character.name}`:''): `Karakter: ${core.character.name}`;
-        note.style.display='';
-      } else note.style.display='none';
+  // Avatar + karakter
+  const k = core.character && core.character.key;
+  if (k && k !== _scUI.lastChar) {
+    const nm = document.getElementById('scCharName');
+    if (nm) { nm.textContent = core.character.name; nm.style.color = core.character.accentColor || '#fff'; }
+    if (_scUI.avatar) { try { _scUI.avatar.setChar(k, _scUI.lastChar != null); } catch(e) {} }
+    const wrap = document.getElementById('scAvatarWrap');
+    if (wrap && _scUI.lastChar && _SC_ORDER.indexOf(k) > _SC_ORDER.indexOf(_scUI.lastChar)) {
+      wrap.classList.remove('rankup'); void wrap.offsetWidth; wrap.classList.add('rankup');
+      _scSpark(wrap, core.character.accentColor, 10);
     }
-    return;
+    _scUI.lastChar = k;
   }
 
-  // ─── İlk tam render ───────────────────────────────────────────────────────
-  const shiftText = (rc||cc)
-    ? (rc?`Risk ${core.riskLevel==='low'?'iyileşti':'arttı'} — ${rlLabel.toLowerCase()}`+(cc?` · ${core.character.name}`:''):`Karakter: ${core.character.name}`)
-    : '';
+  // Grafik
+  const P = _scDrawChart(fb, core, hasDelta);
 
-  el.innerHTML = `
-    <div class="sc-impact-card">
-      <div class="sc-impact-gradient" id="scImpGrad" style="--sc-impact-bg:${rlBgGrad}">
-        <div class="sc-impact-overline">Bu senaryoda</div>
-        <div class="sc-impact-status" id="scImpStatus" style="color:${rlColor}">${rlLabel}</div>
-        <div class="sc-metric-grid">
-          <div class="sc-metric-block">
-            <div class="sc-metric-label">Aylık kalan</div>
-            <div class="sc-metric-val" id="scImpRem" style="color:${core.adjRemain<0?'var(--danger)':'#fff'}">${fmtTL(Math.round(core.adjRemain))}</div>
-            <div class="sc-metric-delta ${_dc(rd)}" id="scDRem">${_df(rd)}</div>
-          </div>
-          <div class="sc-metric-block">
-            <div class="sc-metric-label">Birikim potansiyeli</div>
-            <div class="sc-metric-val" id="scImpSav">${fmtTL(Math.round(core.savPot))}</div>
-            <div class="sc-metric-delta ${_dc(sd)}" id="scDSav">${_df(sd)}</div>
-          </div>
-          ${bg.goal?`<div class="sc-metric-block">
-            <div class="sc-metric-label">${esc(bg.goal.name)}</div>
-            <div class="sc-metric-val" id="scImpGoal">${bg.goal.optMonths} ay</div>
-            <div class="sc-metric-delta ${bg.delta>0?'pos':'neu'}">${bg.delta>0?bg.delta+' ay erken':''}</div>
-          </div>`:''}
-          <div class="sc-metric-block">
-            <div class="sc-metric-label">Karakter</div>
-            <div class="sc-metric-val" style="font-size:16px;color:${core.character.accentColor||'#fff'}">${core.character.name}</div>
-            <div class="sc-metric-delta ${cc?'pos':'neu'}">${cc?'Değişti':''}</div>
-          </div>
-        </div>
-      </div>
-      <div class="sc-shift-note" id="scImpNote" style="color:${rlColor};${shiftText?'':'display:none'}">${shiftText}</div>
-    </div>`;
-  _impactRendered=true;
+  // Metrikler
+  const rem = Math.round(core.adjRemain);
+  _scSet('scMRem', fmtTL(rem), rem<0 ? 'var(--danger)' : '#fff');
+  _scDelta('scMRemD', core.adjRemain - base.adjRemain, hasDelta);
+  let yr = 0, yrD = 0;
+  if (P) { yr = Math.round(P.S.cum[12]); yrD = P.S.cum[12] - P.B.cum[12]; }
+  _scSet('scMYear', fmtTL(yr), yr<0 ? 'var(--danger)' : '#fff');
+  _scDelta('scMYearD', yrD, hasDelta);
+
+  const g = (core.goals||[]).filter(x=>x.optMonths).sort((a,b)=>a.optMonths-b.optMonths)[0];
+  const gB = g ? (base.goals||[]).find(x=>x.id===g.id) : null;
+  if (g) {
+    _scSet('scMGoalL', g.name); _scSet('scMGoal', g.optMonths+' ay', '#fff');
+    const dd = (gB && gB.optMonths) ? (gB.optMonths - g.optMonths) : 0;
+    _scGoalDelta('scMGoalD', dd, hasDelta);
+    if (hasDelta && dd > 0 && _scUI.lastGoalOpt != null && g.optMonths < _scUI.lastGoalOpt) {
+      _scSpark(document.getElementById('scMGoalBox'), R.cc, 7);
+    }
+    _scUI.lastGoalOpt = g.optMonths;
+  } else {
+    _scSet('scMGoalL', 'Hedef'); _scSet('scMGoal', '—', '#fff');
+    _scGoalDelta('scMGoalD', 0, false);
+    _scUI.lastGoalOpt = null;
+  }
+
+  // Anlatı notu
+  const notes = [];
+  if (hasDelta) {
+    if (yrD > 50)       notes.push('Bu senaryo 12 ayda <b>+'+fmtTL(Math.round(yrD))+'</b> fark yaratıyor.');
+    else if (yrD < -50) notes.push('Bu senaryo 12 ayda <b>'+fmtTL(Math.round(yrD))+'</b> kaybettiriyor.');
+    if (g && gB && gB.optMonths && gB.optMonths > g.optMonths)
+      notes.push('"'+esc(g.name)+'" hedefi <b>'+(gB.optMonths-g.optMonths)+' ay erken</b> geliyor.');
+    else if (g && gB && gB.optMonths && g.optMonths > gB.optMonths)
+      notes.push('"'+esc(g.name)+'" hedefi '+(g.optMonths-gB.optMonths)+' ay gecikiyor.');
+    if (!notes.length) notes.push('Etki sınırlı — kaydırıcıları biraz daha zorla.');
+  } else {
+    const dr = P ? P.S.drops.filter(d=>d.m>=1 && d.m<=12)[0] : null;
+    if (dr) notes.push('"'+esc(dr.name)+'" '+_scMonthName(dr.m)+' ayında bitiyor → aylık <b>+'+fmtTL(dr.amt)+'</b> açılıyor.');
+    if (yr > 0)      notes.push('Bu gidişle 12 ayda <b>'+fmtTL(yr)+'</b> serbest birikim.');
+    else if (yr < 0) notes.push('Bu gidişle yapı 12 ayda <b>'+fmtTL(yr)+'</b> açığa gidiyor.');
+    notes.push('Kaydır ya da üstten bir senaryo seç.');
+  }
+  const nt = document.getElementById('scNote');
+  if (nt) nt.innerHTML = notes.slice(0,2).join(' ');
 }
 
 function planScenReset() {
-  _sc={extraIncome:0,recDelta:0,lifeDelta:0,plannedExp:0};
-  _impactRendered=false;
-  const mk=currentMonth,fb=calcFreeBudget(mk);
-  _planRenderSliders(fb); planScenCalc();
-}
-
-
-function _syncPlanCollapseSummaries(core) {
-
+  _scUI.activePreset = null;
+  document.querySelectorAll('.sc-chip').forEach(c=>c.classList.remove('on'));
+  const any = Object.values(_sc).some(v=>v!==0);
+  if (any && _scUI.built && document.getElementById('scCockpit')) {
+    _scTweenTo({extraIncome:0,recDelta:0,lifeDelta:0,plannedExp:0}, function(){ planScenCalc(); });
+  } else {
+    _sc = { extraIncome:0, recDelta:0, lifeDelta:0, plannedExp:0 };
+    const fb = calcFreeBudget(currentMonth);
+    _planRenderSliders(fb);
+    planScenCalc();
+  }
 }
 
 // ── Analiz preview card — Özet sayfasında ────────────────────────────────────
