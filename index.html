@@ -2254,7 +2254,13 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 #vmWrap svg{width:100%;height:100%;overflow:visible;display:block}
 #appHeader .vm-hdr-add{position:absolute;right:16px;top:50%;margin-top:calc(env(safe-area-inset-top,0px)/2);width:30px;height:30px;font-size:18px;font-weight:600;line-height:1;font-family:'Montserrat',sans-serif}  /* alttaki .hero-add ile ayni tip */
 #heroAdd{display:none!important}                                                                /* alttaki "+" artik gereksiz */
-.vm-plan-avatar{pointer-events:auto;cursor:pointer}
+.vm-plan-avatar{pointer-events:auto;cursor:pointer;z-index:3}
+/* "siradaki adim" satiri — dikkat cekici */
+.plan-char-next.vm-next-hot{background:var(--vm-acc-bg);border-top:none;border-left:3px solid var(--vm-acc);padding:16px 22px 16px 19px}
+.plan-char-next.vm-next-hot .plan-char-next-arrow{color:var(--vm-acc);font-size:18px;margin-top:0;animation:vmNudge 1.4s ease-in-out infinite}
+@keyframes vmNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+.plan-char-next.vm-next-hot .plan-char-next-text{color:#F2F1EB;font-weight:500}
+.plan-char-next.vm-next-hot .plan-char-next-text b{display:block;color:var(--vm-acc);font-weight:800;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:4px}
 .vm-alive{transform-box:fill-box;transform-origin:50% 88%;animation:vmAlive 4.2s ease-in-out infinite}
 @keyframes vmAlive{0%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(2deg) translateY(-3px)}100%{transform:rotate(-2deg) translateY(0)}}
 /* Plan karakter karti avatari */
@@ -2338,21 +2344,21 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .vm-ob-badge.lock svg{stroke:var(--muted)}
 
 /* seviye sayfasi modu */
-.vm-ladder{display:none;align-items:center;gap:6px;margin-top:12px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .8s both}
+.vm-ladder{display:flex;align-items:center;gap:6px;margin-top:12px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .8s both}
 .vm-ladder i{width:9px;height:9px;border-radius:99px;background:rgba(255,255,255,.28);display:block;transition:all .3s}
 .vm-ladder i.done{background:rgba(255,255,255,.7)}
 .vm-ladder i.cur{width:26px;background:#fff;box-shadow:0 0 14px #fff}
 .vm-ladder small{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.7);margin:0 4px}
-.vm-nextbox{display:none;margin-top:14px;max-width:300px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:16px;padding:12px 14px;text-align:left;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) 1s both}
+.vm-nextbox{display:block;margin-top:14px;max-width:300px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:16px;padding:12px 14px;text-align:left;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) 1s both}
 .vm-nextbox b{display:block;font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:#fff;margin-bottom:4px;text-shadow:0 0 10px rgba(255,255,255,.5)}
 .vm-nextbox span{font-size:13px;font-weight:600;line-height:1.5;color:rgba(255,255,255,.9)}
 .vm-btns{display:flex;gap:10px;margin-top:26px}
 .vm-btns .vm-btn{margin-top:0}
 .vm-btn2{display:none;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.4);box-shadow:none}
 #vmCeleb.level .vm-path{display:none}
-#vmCeleb.level .vm-ladder{display:flex}
-#vmCeleb.level .vm-nextbox{display:block}
-#vmCeleb.level .vm-btn2{display:inline-block}
+#vmCeleb.level .vm-btn2,#vmCeleb.preview .vm-btn2{display:inline-block}
+.vm-plan-lvl{position:relative;z-index:3;display:inline-block;margin-top:10px;padding:6px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;font-size:11px;font-weight:800;letter-spacing:.5px;cursor:pointer;font-family:'Montserrat',sans-serif;-webkit-tap-highlight-color:transparent}
+.vm-plan-lvl:active{transform:scale(.95)}
 </style>
 </head>
 <body>
@@ -12535,6 +12541,7 @@ const VM = (function(){
     data.mascotChar=k;try{save();}catch(e){}
     if(prev&&CH[prev]&&prev!==k){showCeleb(prev,k);}else if(mounted&&key!==k){applyChar(k,true);}
   }
+  const REAL_ORDER=['ACEMI','BORCLU','KIRILGAN','HARCAYAN','DENGELI','TUTUMLU','BIRIKTIREN','HEDEFCI','YATIRIMCI','OZGUR'];
   // ---- synthwave sahne: suzulen geometrik cizgi-sekiller + neon halka patlamasi ----
   const GEO=['<polygon points="50,8 92,88 8,88" fill="none" stroke="#fff" stroke-width="3"/>','<circle cx="50" cy="50" r="40" fill="none" stroke="#fff" stroke-width="3"/>','<rect x="14" y="14" width="72" height="72" fill="none" stroke="#fff" stroke-width="3" transform="rotate(45 50 50)"/>','<rect x="16" y="16" width="68" height="68" rx="6" fill="none" stroke="#fff" stroke-width="3"/>','<polygon points="50,6 90,28 90,72 50,94 10,72 10,28" fill="none" stroke="#fff" stroke-width="3"/>'];
   function startBg(){stopBg();const host=$('vmGeo');if(!host)return;[[10,14,34],[80,10,26],[6,40,22],[86,36,30],[22,26,18],[70,26,20]].forEach((s,i)=>{const d=document.createElement('div');d.className='vm-geo';d.style.left=s[0]+'%';d.style.top=s[1]+'%';d.style.width=s[2]+'px';d.style.height=s[2]+'px';d.style.animationDelay=(1.2+i*.15)+'s,'+(1.2+i*.4)+'s';d.innerHTML='<svg viewBox="0 0 100 100">'+GEO[i%GEO.length]+'</svg>';host.appendChild(d);});}
@@ -12542,10 +12549,13 @@ const VM = (function(){
   function rings(){const host=$('vmCeleb');for(let j=0;j<3;j++){const r=document.createElement('div');r.className='vm-ring';r.style.width='30px';r.style.height='30px';host.appendChild(r);r.animate([{width:'30px',height:'30px',opacity:1,borderWidth:'3px'},{width:'620px',height:'620px',opacity:0,borderWidth:'1px'}],{duration:1300,delay:j*180,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>r.remove();}}
   function flash(){const fl=$('vmFlash');if(!fl)return;fl.animate([{opacity:0,transform:'translate(-50%,-50%) scale(.4)'},{opacity:.95,transform:'translate(-50%,-50%) scale(1.6)',offset:.35},{opacity:0,transform:'translate(-50%,-50%) scale(2.4)'}],{duration:900,easing:'ease-out'});
     const bm=$('vmBeam');if(bm)bm.animate([{opacity:0},{opacity:1,offset:.3},{opacity:.35}],{duration:1400,fill:'forwards',easing:'ease-out'});}
-  function showCeleb(oldK,newK){
-    const cel=$('vmCeleb');if(!cel)return;const o=info(oldK),n=info(newK);showCeleb._preview=false;
+  function showCeleb(oldK,newK,preview){
+    const cel=$('vmCeleb');if(!cel)return;const o=info(oldK),n=info(newK);showCeleb._preview=!!preview;
+    const po=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[oldK])||{},pn=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[newK])||{};
+    const ni=REAL_ORDER.indexOf(newK);$('vmLadder').innerHTML='<small>Risk</small>'+REAL_ORDER.map((r,j)=>'<i class="'+(j<ni?'done':j===ni?'cur':'')+'"></i>').join('')+'<small>Büyüme</small>';
+    $('vmNext').innerHTML=preview?('<b>'+(po.nextLabel||'Sıradaki adım')+'</b><span>'+(po.next||'')+'</span>'):('<b>'+(pn.nextLabel||'Sıradaki adım')+'</b><span>'+(pn.next||'')+'</span>');
     if(!cbM)cbM=makeMorph($('vmCbPath'));
-    cel.style.setProperty('--vmc',n.color);cel.classList.remove('level');$('vmTitle').textContent='Tebrikler!';$('vmBtn').textContent='Devam et';
+    cel.style.setProperty('--vmc',n.color);cel.classList.remove('level');cel.classList.toggle('preview',!!preview);$('vmTitle').textContent=preview?'Sıradaki seviye':'Tebrikler!';$('vmBtn').textContent=preview?'Kapat':'Devam et';$('vmBtn2').textContent='Seviyemi gör';
     $('vmKick').textContent=n.scene;$('vmOld').textContent=o.name;$('vmNew').textContent=n.name;$('vmDesc').textContent=n.tagline;
     // eski karakter: once beyaz isik kuresi gibi (parlak), sonra yeni sekle donusur
     cbM.set(o.shape);$('vmCbPath').setAttribute('fill','#ffffff');$('vmCbMouth').setAttribute('d',MOUTHS[o.mouth]);$('vmCbEyes').innerHTML=eyesHTML(o.eyes,'vmcb');
@@ -12561,7 +12571,7 @@ const VM = (function(){
       $('vmCbBody').classList.add('vm-alive');},1500);
     showCeleb._new=newK;
   }
-  function closeCeleb(){const cel=$('vmCeleb');if(cel){cel.classList.remove('show','level');}const bt=$('vmBtn');if(bt)bt.textContent='Devam et';const tt=$('vmTitle');if(tt)tt.textContent='Tebrikler!';stopBg();const b=$('vmCbBody');if(b)b.classList.remove('vm-alive');if(showCeleb._new&&!showCeleb._preview)applyChar(showCeleb._new,true);showCeleb._preview=false;}
+  function closeCeleb(){const cel=$('vmCeleb');if(cel){cel.classList.remove('show','level','preview');}const bt=$('vmBtn');if(bt)bt.textContent='Devam et';const tt=$('vmTitle');if(tt)tt.textContent='Tebrikler!';stopBg();const b=$('vmCbBody');if(b)b.classList.remove('vm-alive');if(showCeleb._new&&!showCeleb._preview)applyChar(showCeleb._new,true);showCeleb._preview=false;}
 
   // ---- baslat: DOM hazir olunca header'a tak ----
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else setTimeout(mount,0);
@@ -12573,18 +12583,20 @@ const VM = (function(){
     let svg=host.querySelector('.vm-plan-avatar');
     if(!svg){host.insertAdjacentHTML('beforeend','<svg class="vm-plan-avatar" viewBox="0 0 200 200"><g id="vmPlBody" class="vm-alive"><path id="vmPlPath" d=""/><circle cx="62" cy="112" r="8" fill="#FF7BA0" opacity=".7"/><circle cx="138" cy="112" r="8" fill="#FF7BA0" opacity=".7"/><g id="vmPlEyes"></g><path id="vmPlMouth" d="" stroke="#111" stroke-width="5" fill="none" stroke-linecap="round"/></g></svg>');svg=host.querySelector('.vm-plan-avatar');planM=makeMorph($('vmPlPath'),{jelly:true});}
     planM.set(c.shape);$('vmPlPath').setAttribute('fill',c.color);$('vmPlEyes').innerHTML=eyesHTML(c.eyes,'vmpl');$('vmPlMouth').setAttribute('d',MOUTHS[c.mouth]);
-    if(!svg._live){svg._live=true;liveEyes(()=>$('vmPlEyes'),'vmplpL','vmplpR',()=>info(planKey).eyes);svg.addEventListener('click',e=>{e.stopPropagation();showLevel(planKey);});}
+    if(!svg._live){svg._live=true;liveEyes(()=>$('vmPlEyes'),'vmplpL','vmplpR',()=>info(planKey).eyes);svg.addEventListener('click',e=>{e.stopPropagation();previewCeleb();});}
+    const card=host.closest('.plan-char-card'),nx=card&&card.querySelector('.plan-char-next');const pcc=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[k||key])||{};
+    if(nx){nx.classList.add('vm-next-hot');const acc=pcc.accentColor||c.color;nx.style.setProperty('--vm-acc',acc);nx.style.setProperty('--vm-acc-bg',acc+'1f');}
+    if(!host.querySelector('.vm-plan-lvl')){const b=document.createElement('button');b.className='vm-plan-lvl';b.textContent='Seviyeni gör';b.onclick=e=>{e.stopPropagation();showLevel(planKey);};host.appendChild(b);}
     planKey=k||key;
   }
   let planKey='BIRIKTIREN';
-  const REAL_ORDER=['ACEMI','BORCLU','KIRILGAN','HARCAYAN','DENGELI','TUTUMLU','BIRIKTIREN','HEDEFCI','YATIRIMCI','OZGUR'];
   // kutlama ONIZLEME: mevcut karakter → siradaki (veriye dokunmaz)
-  function previewCeleb(){const cur=planKey||key;const i=REAL_ORDER.indexOf(cur);const next=REAL_ORDER[(i+1)%REAL_ORDER.length];showCeleb(cur,next);showCeleb._preview=true;}
+  function previewCeleb(){const cur=planKey||key;const i=REAL_ORDER.indexOf(cur);const next=REAL_ORDER[Math.min(i+1,REAL_ORDER.length-1)]===cur?cur:REAL_ORDER[Math.min(i+1,REAL_ORDER.length-1)];showCeleb(cur,next,true);}
   // SEVIYE SAYFASI: hangi seviyedesin, siradaki ne, oraya nasil gidilir (animasyonlu sahne, veriye dokunmaz)
   function showLevel(k){
     const cel=$('vmCeleb');if(!cel)return;k=k||planKey||key;const c=info(k);const pc=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[k])||{};
     if(!cbM)cbM=makeMorph($('vmCbPath'));
-    cel.style.setProperty('--vmc',c.color);cel.classList.add('level');
+    cel.style.setProperty('--vmc',c.color);cel.classList.add('level');cel.classList.remove('preview');$('vmBtn2').textContent='Dönüşümü izle';
     $('vmKick').textContent='Finansal Karakterin';$('vmTitle').textContent=c.name;$('vmDesc').textContent=c.tagline;$('vmBtn').textContent='Kapat';
     const i=REAL_ORDER.indexOf(k);
     $('vmLadder').innerHTML='<small>Risk</small>'+REAL_ORDER.map((r,j)=>'<i class="'+(j<i?'done':j===i?'cur':'')+'" title="'+info(r).name+'"></i>').join('')+'<small>Büyüme</small>';
@@ -12596,6 +12608,7 @@ const VM = (function(){
     showCeleb._new=null;showCeleb._preview=true;
   }
   function watchNext(){closeCeleb();setTimeout(previewCeleb,350);}
+  function btn2(){const cel=$('vmCeleb');if(cel&&cel.classList.contains('level'))watchNext();else{closeCeleb();setTimeout(()=>showLevel(planKey||key),350);}}
   // ---- ortak goz canlandirici: pupiller bakinir + kirpar (baglanti kopunca kendini durdurur) ----
   function liveEyes(getEyes,pL,pR,kindFn){
     const t1=setInterval(()=>{const g=getEyes();if(!g||!g.isConnected){clearInterval(t1);return;}const k=kindFn();if(k==='cool'||k==='content')return;
@@ -12617,7 +12630,7 @@ const VM = (function(){
     liveEyes(()=>eyes,pfx+'pL',pfx+'pR',()=>info(cur).eyes);
     return {setChar,morph:m,el:container};
   }
-  return {mount,onTx,onDelete,onEdit,onCharacter,closeCeleb,previewCeleb,showLevel,watchNext,leave,comeBack,react,say,applyChar,renderPlanAvatar,spawn};
+  return {mount,onTx,onDelete,onEdit,onCharacter,closeCeleb,previewCeleb,showLevel,watchNext,btn2,leave,comeBack,react,say,applyChar,renderPlanAvatar,spawn};
 })();
 
 // ═══════════ V78 — 10 FINANSAL KARAKTER: 5 yeni persona (metin + kural), orijinal siniflandirici korunur ═══════════
@@ -13022,7 +13035,7 @@ setInterval(checkMonthRollover, 60000);
     <div class="vm-ladder" id="vmLadder"></div>
     <div class="vm-desc" id="vmDesc"></div>
     <div class="vm-nextbox" id="vmNext"></div>
-    <div class="vm-btns"><button class="vm-btn vm-btn2" id="vmBtn2" onclick="VM.watchNext()">Dönüşümü izle</button><button class="vm-btn" id="vmBtn" onclick="VM.closeCeleb()">Devam et</button></div>
+    <div class="vm-btns"><button class="vm-btn vm-btn2" id="vmBtn2" onclick="VM.btn2()">Dönüşümü izle</button><button class="vm-btn" id="vmBtn" onclick="VM.closeCeleb()">Devam et</button></div>
   </div>
 </div>
 </body>
