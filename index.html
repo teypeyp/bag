@@ -1548,6 +1548,34 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .gf-sim-btn:active { transform:scale(.97); }
 .gf-basis { margin-top:8px; padding-top:8px; border-top:1px dashed rgba(255,255,255,.12); font-size:11px; font-weight:500; color:rgba(233,232,240,.6); line-height:1.55; }
 .gf-basis b { color:rgba(233,232,240,.9); }
+
+/* ═══ V89 — DEĞDİ Mİ? + SIZINTI + AY KAPANIŞI ═══ */
+.worth-btn { flex:1; padding:11px 10px; background:var(--surface2); border:1px solid var(--border); border-radius:12px; color:rgba(233,232,240,.75); font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; transition:all .18s var(--spring); -webkit-tap-highlight-color:transparent; }
+.worth-btn:active { transform:scale(.96); }
+.worth-btn.on-yes { background:rgba(45,184,102,.14); border-color:var(--accent); color:var(--accent); }
+.worth-btn.on-no  { background:rgba(255,69,58,.12); border-color:var(--danger); color:var(--danger); }
+.tx-worth-flag { font-size:11px; opacity:.9; }
+.leak-card { border-color:rgba(191,90,242,.3); }
+.mc-overlay { position:fixed; inset:0; background:rgba(6,6,9,.88); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); z-index:210; display:flex; align-items:center; justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity .3s; }
+.mc-overlay.show { opacity:1; pointer-events:auto; }
+.mc-card { width:100%; max-width:360px; background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:24px 22px 20px; text-align:center; position:relative; transform:translateY(14px); transition:transform .35s var(--spring); }
+.mc-overlay.show .mc-card { transform:translateY(0); }
+.mc-avatar { width:72px; height:72px; margin:-58px auto 4px; }
+.mc-avatar svg { width:100%; height:100%; overflow:visible; }
+.mc-overline { font-size:10.5px; font-weight:800; letter-spacing:.14em; color:var(--muted); margin-bottom:12px; }
+.mc-grade { width:64px; height:64px; margin:0 auto 10px; border-radius:50%; border:2px solid; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:900; }
+.mc-title { font-size:19px; font-weight:900; letter-spacing:-.02em; color:var(--text); margin-bottom:14px; }
+.mc-rows { text-align:left; margin-bottom:16px; }
+.mc-row { display:flex; justify-content:space-between; align-items:center; padding:8px 2px; border-top:1px solid rgba(255,255,255,.06); font-size:13px; }
+.mc-row span { color:rgba(233,232,240,.65); font-weight:600; }
+.mc-row b { font-weight:800; font-variant-numeric:tabular-nums; }
+.mc-focus-label { font-size:12px; font-weight:700; color:rgba(233,232,240,.8); margin-bottom:10px; }
+.mc-chips { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+.mc-chip { padding:12px; background:rgba(45,184,102,.09); border:1px solid rgba(45,184,102,.3); border-radius:12px; color:var(--text); font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; transition:transform .15s var(--spring); -webkit-tap-highlight-color:transparent; }
+.mc-chip:active { transform:scale(.97); }
+.mc-skip { background:none; border:none; color:var(--muted); font-family:inherit; font-size:12.5px; font-weight:600; cursor:pointer; padding:6px; }
+.plan-focus-chip { margin-top:12px; display:inline-flex; align-items:center; gap:6px; padding:8px 12px; background:rgba(45,184,102,.09); border:1px solid rgba(45,184,102,.28); border-radius:99px; font-size:12px; font-weight:600; color:rgba(233,232,240,.85); position:relative; z-index:1; }
+.plan-focus-chip b { font-weight:800; color:var(--text); }
 .sc-q-hint {
   font-size:12px; font-weight:400; color:var(--muted);
   margin-bottom:12px; letter-spacing:-.01em;
@@ -3517,6 +3545,12 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   </div>
   <div style="height:300px;overflow-y:auto;padding:4px 20px 8px;flex-shrink:0">
     <div id="editTxCatGrid" class="cat-grid" style="padding:0"></div>
+  </div>
+  <div style="padding:10px 20px 0;flex-shrink:0" id="editTxWorthWrap">
+    <div style="display:flex;gap:8px">
+      <button type="button" class="worth-btn" id="worthYes" onclick="_setWorth(1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"/></svg>Değdi</button>
+      <button type="button" class="worth-btn" id="worthNo" onclick="_setWorth(-1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M7 13v-8a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v7a1 1 0 0 0 1 1h3a4 4 0 0 1 4 4v1a2 2 0 0 0 4 0v-5h3a2 2 0 0 0 2 -2l-1 -5a2 3 0 0 0 -2 -2h-7a3 3 0 0 0 -3 3"/></svg>Değmedi</button>
+    </div>
   </div>
   <div style="padding:12px 20px 20px;flex-shrink:0;border-top:1px solid rgba(255,255,255,.06)">
     <button class="btn btn-primary btn-full" onclick="saveTxEdit()">Kaydet</button>
@@ -5927,7 +5961,7 @@ function renderTxList(container, txs, limitTo5, prefix) {
       itemsHtml += `<div class="tx-item ${cardClass}${_freshTxView?' stagger-item':''}${t.id===_newTxId?' tx-enter':''}" id="tx_${domId}" onclick="toggleTxDelete('${t.id}','${pfx}')">
         <div class="tx-icon ${t.type}" style="background:${iconBg}">${iconHtml}</div>
         <div class="tx-info">
-          <div class="tx-desc">${esc(catName)}${cardBadge}${isCardPay ? ' <span class="tx-card-badge" style="background:rgba(255,255,255,.07);color:var(--muted)">TRANSFER</span>' : ''}</div>
+          <div class="tx-desc">${esc(catName)}${cardBadge}${t.worth === -1 ? ' <span class="tx-worth-flag" title="Değmedi"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><path d="M7 13v-8a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v7a1 1 0 0 0 1 1h3a4 4 0 0 1 4 4v1a2 2 0 0 0 4 0v-5h3a2 2 0 0 0 2 -2l-1 -5a2 3 0 0 0 -2 -2h-7a3 3 0 0 0 -3 3"/></svg></span>' : ''}${isCardPay ? ' <span class="tx-card-badge" style="background:rgba(255,255,255,.07);color:var(--muted)">TRANSFER</span>' : ''}</div>
         </div>
         <div class="tx-right">
           <div class="tx-amount ${t.type}"${isCardPay ? ' style="color:var(--muted)"' : ''}>${t.type==='income' ? '+' : '−'}${fmtTL(t.amount)}</div>
@@ -6151,7 +6185,21 @@ function openEditTx(id) {
     }).join('') + _CAT_EDIT_CELL;
   }
 
+  // V89: değdi mi? durumu
+  _editTxWorth = tx.worth || 0;
+  const _ww = document.getElementById('editTxWorthWrap');
+  if (_ww) _ww.style.display = tx.type === 'expense' ? '' : 'none';
+  _worthSync();
+
   document.getElementById('txEditModal').classList.add('show');document.getElementById('txEditSheet').classList.add('show');document.body.style.overflow='hidden';
+}
+
+let _editTxWorth = 0;
+function _setWorth(v) { _editTxWorth = (_editTxWorth === v ? 0 : v); _worthSync(); }
+function _worthSync() {
+  const y = document.getElementById('worthYes'), n = document.getElementById('worthNo');
+  if (y) y.classList.toggle('on-yes', _editTxWorth === 1);
+  if (n) n.classList.toggle('on-no', _editTxWorth === -1);
 }
 
 function selectEditCat(catId, accentColor, accentDim, accentBorder) {
@@ -6196,6 +6244,7 @@ function saveTxEdit() {
   tx.desc = desc; tx.amount = amount;
   if (date) tx.date = date;
   tx.category = category;
+  if (tx.type === 'expense') { if (_editTxWorth) tx.worth = _editTxWorth; else delete tx.worth; }
   save(); closeTxEdit(); renderAll();
   const histOverlay = document.getElementById('historyOverlay');
   if (histOverlay && histOverlay.style.display === 'flex') {
@@ -9205,6 +9254,10 @@ function renderMonthlyReportCard() {
   else if (top) odak = `Dengeli bir ay. En büyük kalem ${getCat(top[0]).name} — düzeni koru.`;
   else odak = 'Dengeli bir ay — aynı düzeni koru.';
 
+  // V89: "değmedi" toplamı (pişmanlık raporu)
+  const _regrets = data.transactions.filter(t => monthKey(t.date) === pm && t.type === 'expense' && t.worth === -1);
+  const regretTotal = _regrets.reduce((s, t) => s + t.amount, 0);
+
   // V81: son 6 ayın tasarruf oranı sparkline'ı
   const _spMonths = ms.slice(Math.max(0, idx - 5), idx + 1);
   const _spRates = _spMonths.map(m => {
@@ -9260,6 +9313,7 @@ function renderMonthlyReportCard() {
     ${savDep > 0 ? row('Birikime giden', fmtTL(savDep), '#0A84FF') : ''}
     ${top ? row('En büyük kalem', esc(getCat(top[0]).name) + ' · ' + fmtTL(Math.round(top[1])), 'var(--text)') : ''}
     ${rising ? row('En çok artan', esc(getCat(rising.id).name) + ' +' + fmtTL(Math.round(rising.inc)), 'var(--warning)') : ''}
+    ${regretTotal > 0 ? row('"Değmedi" dediklerin', '−' + fmtTL(Math.round(regretTotal)) + ' · ' + _regrets.length + ' işlem', 'var(--danger)') : ''}
     ${row('Ay sonu kalan', (fbP.remaining >= 0 ? '+' : '−') + fmtTL(Math.abs(Math.round(fbP.remaining))), fbP.remaining >= 0 ? 'var(--accent)' : 'var(--danger)')}
 
     <div class="report-focus">${odak}</div>
@@ -9526,6 +9580,7 @@ function _renderPlanHero(fb, core) {
       </div>
       ${breakHtml}
       ${trendHtml}
+      ${(data.monthFocus||{})[monthKey()] ? `<div class="plan-focus-chip">🎯 Bu ayın odağı: <b>${esc((data.monthFocus||{})[monthKey()])}</b></div>` : ''}
     </div>
   </div>`;
 
@@ -9619,7 +9674,7 @@ function _renderPlanRiskDetail(core) {
     ? `<div class="plan-bar-legend" style="margin-top:8px">| çentik = sağlıklı sınır ${core.drivers.filter(d=>d.thLabel).map(d=>`· ${(d.short||d.label).toLocaleLowerCase('tr')} ${d.thLabel.replace('sınır ','').replace('hedef ','')}`).join(' ')}</div>` : '';
 
   // Aksiyonlar tek yerde yaşar — "04 · Yol Haritası". Burada tekrar edilmez.
-  el.innerHTML = `<div class="drv-grid">${driverHtml}</div>` + legend + _snowballCardHtml();
+  el.innerHTML = `<div class="drv-grid">${driverHtml}</div>` + legend + _snowballCardHtml() + _leakCardHtml();
   _snowRender();
 }
 
@@ -10154,6 +10209,42 @@ function _snowRender() {
 }
 
 function _snowMove(inp) { _snowExtra = parseFloat(inp.value) || 0; _snowRender(); }
+
+// ═══ V89 — SIZINTI AVCISI: küçük ama sık harcamalar ═════════════════════════
+function _planLeaks() {
+  const c = new Date(); c.setDate(c.getDate() - 30);
+  const cs = c.getFullYear() + '-' + String(c.getMonth()+1).padStart(2,'0') + '-' + String(c.getDate()).padStart(2,'0');
+  const by = {};
+  (data.transactions||[]).forEach(t => {
+    if (t.type !== 'expense' || t.isRecurring || t.isDebt || t.isGoalDeposit || t.type === 'cardpay') return;
+    if (!t.date || t.date < cs) return;
+    const nm = (t.desc||'').trim();
+    const key = nm.toLocaleLowerCase('tr') || ('cat:' + (t.category||''));
+    if (!by[key]) by[key] = { name: nm || (t.category && typeof getCat === 'function' ? getCat(t.category).name : 'Diğer'), count: 0, total: 0 };
+    by[key].count++; by[key].total += t.amount;
+  });
+  return Object.values(by)
+    .filter(l => l.count >= 4 && l.total >= 300)
+    .sort((a, b) => b.total - a.total).slice(0, 3);
+}
+
+function _leakCardHtml() {
+  const leaks = _planLeaks();
+  if (!leaks.length) return '';
+  const halfSum = Math.round(leaks.reduce((s, l) => s + l.total, 0) / 2);
+  const rows = leaks.map(l => `
+    <div class="snow-row"><span class="snow-nm">${esc(l.name)} × ${l.count}</span>
+    <span class="snow-fig">${fmtTL(Math.round(l.total))} · yılda ≈${fmtTL(Math.round(l.total * 12))}</span></div>`).join('');
+  return `
+  <div class="drv-card leak-card" style="margin-top:10px">
+    <div class="drv-head">
+      <div class="drv-label">Sızıntı Avcısı — küçük ama sık</div>
+      <span class="drv-badge" style="background:rgba(191,90,242,.14);color:#D88FFF">SON 30 GÜN</span>
+    </div>
+    ${rows}
+    <div class="snow-note">Bu kalemleri yarıya indirsen ayda ≈${fmtTL(halfSum)} cebinde kalır. Küçük görünen, yılda büyür.</div>
+  </div>`;
+}
 
 // ═══ V85 — HEDEF SİHİRBAZI: canlı fizibilite ═════════════════════════════════
 function _goalFeasUpdate() {
@@ -12739,7 +12830,72 @@ function init() {
   } else {
     renderAll();
     requestAnimationFrame(() => updatePillIndicator('aylik'));
+    setTimeout(_maybeMonthClose, 900); // V89: yeni aya girildiyse kapanış seremonisi
   }
+}
+
+// ═══ V89 — AY KAPANIŞ SEREMONİSİ ═════════════════════════════════════════════
+function _maybeMonthClose() {
+  try {
+    if (!data.onboarded) return;
+    const pm = prevMonthKey(1);
+    if (data.monthCloseDone === pm) return;
+    const txs = data.transactions.filter(t => monthKey(t.date) === pm);
+    if (!txs.length) return;
+    const { income, expense } = calcMonthData(pm);
+    if (income <= 0) { data.monthCloseDone = pm; try { save(); } catch(e){} return; }
+    const savRate = Math.round(((income - expense) / income) * 100);
+    const dim = daysInMonth(pm); let g = 0, r = 0;
+    for (let d2 = 1; d2 <= dim; d2++) {
+      const st = getDayInfo(pm + '-' + String(d2).padStart(2,'0')).status;
+      if (st === 'green' || st === 'frozen') g++; else if (st === 'red') r++;
+    }
+    const uyum = (g + r) > 0 ? Math.round(g / (g + r) * 100) : 50;
+    const comp = Math.round(uyum * 0.5 + (Math.max(0, Math.min(30, savRate)) / 30) * 50);
+    const grade = comp >= 80 ? 'A' : comp >= 60 ? 'B' : comp >= 40 ? 'C' : 'D';
+    const gc = grade === 'A' ? '#2DB866' : grade === 'B' ? '#0A84FF' : grade === 'C' ? '#FFD60A' : '#FF453A';
+    const kal = income - expense;
+    const regrets = txs.filter(t => t.type === 'expense' && t.worth === -1).reduce((s, t) => s + t.amount, 0);
+    const by = {};
+    txs.filter(t => t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+       .forEach(t => { by[t.category] = (by[t.category] || 0) + t.amount; });
+    const top = Object.entries(by).sort((a, b) => b[1] - a[1])[0];
+
+    document.getElementById('mcTitle').textContent = (typeof _mkLabel === 'function' ? _mkLabel(pm) : _planAySade(pm)) + ' karnen';
+    const gr = document.getElementById('mcGrade');
+    gr.textContent = grade; gr.style.color = gc; gr.style.borderColor = gc;
+    gr.style.background = gc + '1f'; gr.style.boxShadow = '0 10px 34px -8px ' + gc;
+    const row = (l, v, c) => `<div class="mc-row"><span>${l}</span><b style="color:${c||'var(--text)'}">${v}</b></div>`;
+    document.getElementById('mcRows').innerHTML =
+      row('Ay sonu kalan', (kal >= 0 ? '+' : '−') + fmtTL(Math.abs(Math.round(kal))), kal >= 0 ? 'var(--accent)' : 'var(--danger)') +
+      row('Tasarruf oranı', savRate >= 0 ? '%' + savRate : '%0') +
+      (top ? row('En büyük kalem', esc(getCat(top[0]).name) + ' · ' + fmtTL(Math.round(top[1]))) : '') +
+      (regrets > 0 ? row('"Değmedi" dediklerin', '−' + fmtTL(Math.round(regrets)), 'var(--danger)') : '');
+    const opts = [];
+    if (top) opts.push(getCat(top[0]).name + ' harcamasını kısmak');
+    opts.push('Birikimi artırmak');
+    opts.push(data.debts.some(d => d.active) ? 'Borç kapatmak' : 'Acil fon başlatmak');
+    document.getElementById('mcChips').innerHTML =
+      opts.map(o => { const s = esc(o).replace(/'/g, ''); return `<button class="mc-chip" onclick="_mcClose('${s}')">${s}</button>`; }).join('');
+    try {
+      if (typeof VM !== 'undefined' && VM.spawn && !_maybeMonthClose._sp)
+        _maybeMonthClose._sp = VM.spawn(document.getElementById('mcAvatar'));
+    } catch(e) {}
+    _maybeMonthClose._pm = pm;
+    document.getElementById('mcOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  } catch(e) {}
+}
+
+function _mcClose(choice) {
+  data.monthCloseDone = _maybeMonthClose._pm || prevMonthKey(1);
+  if (choice) { data.monthFocus = data.monthFocus || {}; data.monthFocus[monthKey()] = choice; }
+  try { save(); } catch(e) {}
+  const o = document.getElementById('mcOverlay');
+  if (o) o.classList.remove('show');
+  document.body.style.overflow = '';
+  if (choice) { try { showToast(TOAST_OK + ' Bu ayın odağı: ' + choice); } catch(e) {} }
+  if (currentTab === 'plan') { try { renderPlan(); } catch(e) {} }
 }
 
 
@@ -13839,6 +13995,20 @@ setInterval(checkMonthRollover, 60000);
   </div>
 </div>
 
+
+<!-- ═══════════ V89 — AY KAPANIŞ SEREMONİSİ ═══════════ -->
+<div id="mcOverlay" class="mc-overlay">
+  <div class="mc-card">
+    <div class="mc-avatar" id="mcAvatar"></div>
+    <div class="mc-overline">AY KAPANDI</div>
+    <div class="mc-grade" id="mcGrade">—</div>
+    <div class="mc-title" id="mcTitle"></div>
+    <div class="mc-rows" id="mcRows"></div>
+    <div class="mc-focus-label">Gelecek ay tek odağın ne olsun?</div>
+    <div class="mc-chips" id="mcChips"></div>
+    <button class="mc-skip" onclick="_mcClose(null)">Şimdilik geç</button>
+  </div>
+</div>
 
 <!-- ═══════════ V78 — MASKOT: karakter atlama overlay ═══════════ -->
 <div id="vmCeleb">
