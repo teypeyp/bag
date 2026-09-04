@@ -2254,7 +2254,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 #vmWrap svg{width:100%;height:100%;overflow:visible;display:block}
 #appHeader .vm-hdr-add{position:absolute;right:16px;top:50%;margin-top:calc(env(safe-area-inset-top,0px)/2);width:30px;height:30px;font-size:18px;font-weight:600;line-height:1;font-family:'Montserrat',sans-serif}  /* alttaki .hero-add ile ayni tip */
 #heroAdd{display:none!important}                                                                /* alttaki "+" artik gereksiz */
-.vm-plan-avatar{pointer-events:auto;cursor:pointer;z-index:3}
 /* "siradaki adim" satiri — dikkat cekici */
 .plan-char-next.vm-next-hot{background:var(--vm-acc-bg);border-top:none;border-left:3px solid var(--vm-acc);padding:16px 22px 16px 19px}
 .plan-char-next.vm-next-hot .plan-char-next-arrow{color:var(--vm-acc);font-size:18px;margin-top:0;animation:vmNudge 1.4s ease-in-out infinite}
@@ -2264,52 +2263,75 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .vm-alive{transform-box:fill-box;transform-origin:50% 88%;animation:vmAlive 4.2s ease-in-out infinite}
 @keyframes vmAlive{0%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(2deg) translateY(-3px)}100%{transform:rotate(-2deg) translateY(0)}}
 /* Plan karakter karti avatari */
-.vm-plan-avatar{position:absolute;right:16px;top:14px;width:78px;height:78px;overflow:visible;pointer-events:none}
-#planCharCard .plan-char-gradient{padding-right:112px}
+.vm-plan-tap{position:absolute;right:8px;top:6px;width:128px;height:128px;z-index:6;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+.vm-plan-tap:active .vm-plan-avatar{transform:scale(.94)}
+.vm-plan-avatar{width:112px;height:112px;overflow:visible;pointer-events:none;transition:transform .12s}
+#planCharCard,#planCharCard *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#planCharCard .plan-char-gradient{padding-right:140px}
 .plan-char-gradient{position:relative}
-#vmSay{position:absolute;top:100%;margin-top:6px;left:50%;background:#fff;color:#111;font-size:12px;font-weight:800;padding:6px 11px;border-radius:12px;white-space:nowrap;
-  opacity:0;transform:translateX(-50%) translateY(-6px) scale(.7);transform-origin:50% 0;transition:all .3s cubic-bezier(.34,1.45,.6,1);pointer-events:none;font-family:'Montserrat',sans-serif;z-index:3}
-#vmSay::after{content:"";position:absolute;top:-6px;left:50%;transform:translateX(-50%);border:6px solid transparent;border-bottom-color:#fff;border-top:0}
-#vmSay.show{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
-/* karakter atlama — SYNTHWAVE (kara bosluk, yukselen gradient gunes, neon halkalar, isik) */
-#vmCeleb{position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;overflow:hidden;font-family:'Montserrat',sans-serif;background:#000;--vmc:#FF7BA0}
-#vmCeleb.show{display:flex;animation:vmFade .5s ease}
+#vmRoll{width:100%;height:100%;will-change:transform}
+#vmSay{position:absolute;top:calc(10px + env(safe-area-inset-top,0px) + 24px);left:50%;transform:translateY(-50%) scale(.6);transform-origin:left center;background:#fff;color:#111;font-size:12px;font-weight:800;padding:7px 12px;border-radius:14px;white-space:nowrap;
+  opacity:0;transition:opacity .22s,transform .38s cubic-bezier(.34,1.45,.6,1);pointer-events:none;font-family:'Montserrat',sans-serif;z-index:3}
+#vmSay::after{content:"";position:absolute;left:-6px;top:50%;transform:translateY(-50%);border:6px solid transparent;border-right-color:#fff;border-left:0}
+#vmSay.show{opacity:1;transform:translateY(-50%) scale(1)}
+/* karakter atlama — DREAMY ORB (kara zemin, parlayan kure, donen tac yapraklari, yorungeler, gradient kubbe) */
+#vmCeleb{position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;overflow:hidden;font-family:'Montserrat',sans-serif;background:#050507;--vmc:#7C7CF5}
+#vmCeleb.show{display:flex;animation:vmFade .6s ease}
 @keyframes vmFade{from{opacity:0}to{opacity:1}}
-.vm-sun{position:absolute;left:50%;bottom:-40%;width:150vw;max-width:760px;aspect-ratio:1;border-radius:50%;z-index:0;opacity:0;transform:translate(-50%,60%);
-  background:radial-gradient(circle at 50% 38%,#fff3cf 0%,var(--vmc) 16%,#ff3d8f 42%,#6d1cab 66%,transparent 71%);filter:blur(1.5px)}
-#vmCeleb.show .vm-sun{animation:vmSunRise 1.7s cubic-bezier(.2,.8,.2,1) .15s forwards,vmSunBreath 7s ease-in-out 2s infinite}
-@keyframes vmSunRise{from{opacity:0;transform:translate(-50%,62%)}to{opacity:1;transform:translate(-50%,42%)}}
-@keyframes vmSunBreath{0%,100%{transform:translate(-50%,42%) scale(1)}50%{transform:translate(-50%,40.5%) scale(1.035)}}
-.vm-sunlines{position:absolute;left:0;right:0;bottom:0;height:44%;z-index:0;pointer-events:none;opacity:0;
-  background:repeating-linear-gradient(180deg,transparent 0 13px,rgba(0,0,0,.88) 13px 19px)}
-#vmCeleb.show .vm-sunlines{animation:vmFade .8s ease .9s forwards,vmLines 3.2s linear 1s infinite}
-@keyframes vmLines{from{background-position:0 0}to{background-position:0 19px}}
-.vm-horizon{position:absolute;left:0;right:0;bottom:44%;height:2px;z-index:1;opacity:0;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 12px #fff}
-#vmCeleb.show .vm-horizon{animation:vmFade .6s ease 1.1s forwards}
-.vm-orbit{position:absolute;left:50%;top:38%;width:300px;height:300px;border-radius:50%;border:2px solid rgba(255,255,255,.85);z-index:1;pointer-events:none;opacity:0;
-  box-shadow:0 0 12px rgba(255,255,255,.7),0 0 30px var(--vmc);transform:translate(-50%,-50%) rotateX(72deg)}
-#vmCeleb.show .vm-orbit{animation:vmFade .6s ease 1.3s forwards,vmOrbit 7s linear 1.3s infinite}
-@keyframes vmOrbit{from{transform:translate(-50%,-50%) rotateX(72deg) rotateZ(0)}to{transform:translate(-50%,-50%) rotateX(72deg) rotateZ(360deg)}}
-.vm-ring{position:absolute;left:50%;top:38%;border-radius:50%;border:2px solid rgba(255,255,255,.95);z-index:1;pointer-events:none;transform:translate(-50%,-50%);
-  box-shadow:0 0 14px rgba(255,255,255,.8),0 0 36px var(--vmc),inset 0 0 14px rgba(255,255,255,.35)}
-.vm-geo{position:absolute;z-index:1;opacity:0;pointer-events:none}
-.vm-geo svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 6px rgba(255,255,255,.6))}
-#vmCeleb.show .vm-geo{animation:vmGeoIn 1s ease 1.2s forwards,vmDrift 7s ease-in-out 1.2s infinite}
-@keyframes vmGeoIn{to{opacity:.6}}
-@keyframes vmDrift{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-16px) rotate(14deg)}}
-.vm-beam{position:absolute;left:50%;top:-12%;width:200px;height:72%;transform:translateX(-50%);z-index:1;pointer-events:none;opacity:0;
-  background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.3) 45%,rgba(255,255,255,0));filter:blur(20px)}
-.vm-flash{position:absolute;left:50%;top:38%;width:12px;height:12px;border-radius:50%;background:#fff;transform:translate(-50%,-50%);z-index:3;opacity:0;pointer-events:none;box-shadow:0 0 70px 50px #fff}
+#vmScene{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#vmScene g,#vmScene circle,#vmScene ellipse,#vmScene polygon{transform-box:fill-box;transform-origin:center}
+/* SAHNE A (0–1.8s): tac yapragi spirali */
+#vmScene .scA{opacity:0}
+#vmCeleb.show .scA{animation:vmA 1.9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes vmA{0%{opacity:0;transform:scale(1.3) rotate(-14deg)}14%{opacity:1}72%{opacity:1;transform:scale(1) rotate(6deg)}100%{opacity:0;transform:scale(.88) rotate(14deg)}}
+#vmScene .r1{animation:vmSpin 16s linear infinite}
+#vmScene .r2{animation:vmSpinR 24s linear infinite}
+#vmScene .r3{animation:vmSpin 34s linear infinite}
+/* SAHNE B: kure isimasi (surekli, donusumde nabiz) */
+#vmScene .gl{animation:vmGlow 4.5s ease-in-out infinite}
+/* SAHNE C (2.6–4s): isik konisi + kubbe */
+#vmScene .cone{opacity:0;transform-origin:50% 100%}
+#vmCeleb.show .cone{animation:vmC 1.7s ease 2.5s both}
+@keyframes vmC{0%{opacity:0;transform:scaleY(.15)}30%{opacity:.95;transform:scaleY(1)}78%{opacity:.95}100%{opacity:0}}
+#vmScene .dome{opacity:0}
+#vmCeleb.show .dome{animation:vmD 1.9s cubic-bezier(.2,.8,.2,1) 2.5s both}
+@keyframes vmD{0%{opacity:0;transform:translateY(220px)}38%{opacity:1;transform:translateY(0)}82%{opacity:1}100%{opacity:0;transform:translateY(80px)}}
+/* SAHNE D (4–5s→kalir): gezegen sistemi */
+#vmScene .scD{opacity:0}
+#vmCeleb.show .scD{animation:vmDin 1.3s cubic-bezier(.2,.8,.2,1) 3.9s both}
+@keyframes vmDin{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+#vmScene .ring1{animation:vmSpin 22s linear infinite}
+#vmScene .ring2{animation:vmSpinR 36s linear infinite}
+#vmScene .fl{animation:vmDrift 6s ease-in-out infinite}
+#vmScene .f2{animation-delay:-2s}#vmScene .f3{animation-delay:-4s}
+@keyframes vmDrift{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+/* SAHNE E (5s→kalir): isin yelpazesi + sicak zemin */
+#vmScene .fanIn{opacity:0}
+#vmCeleb.show .fanIn{animation:vmFin 1.6s ease 4.9s both}
+@keyframes vmFin{from{opacity:0}to{opacity:1}}
+#vmScene .fan{transform-origin:50% 100%;animation:vmSway 40s ease-in-out infinite}
+@keyframes vmSway{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+@keyframes vmSpin{to{transform:rotate(360deg)}}
+@keyframes vmSpinR{to{transform:rotate(-360deg)}}
+@keyframes vmGlow{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:.85;transform:scale(1.1)}}
 .vm-in{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;color:#fff}
-.vm-kick{font-size:12px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .35s both;text-shadow:0 0 14px rgba(255,255,255,.55)}
+.vm-kick{font-size:12px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.7);opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) 1.9s both}
 .vm-badge{width:240px;height:236px;position:relative;display:flex;align-items:center;justify-content:center;margin:6px 0 0;opacity:0;animation:vmBadge .7s cubic-bezier(.34,1.45,.6,1) .15s both}
-.vm-badge svg{width:218px;height:218px;overflow:visible;filter:drop-shadow(0 0 16px var(--vmc)) drop-shadow(0 0 44px rgba(255,255,255,.28))}
-.vm-title{font-size:36px;font-weight:900;letter-spacing:-1.2px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .6s both;text-shadow:0 0 26px rgba(255,255,255,.5)}
-.vm-path{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:800;margin-top:8px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .8s both}
+.vm-badge svg{width:218px;height:218px;overflow:visible}
+.vm-title{font-size:36px;font-weight:900;letter-spacing:-1.2px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) 2.2s both}
+.vm-path{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:800;margin-top:8px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) 2.45s both}
 .vm-path .old{opacity:.6;text-decoration:line-through}
-.vm-path .new{font-size:20px;font-weight:900;background:#fff;color:#000;padding:6px 16px;border-radius:14px;box-shadow:0 0 24px rgba(255,255,255,.45)}
-.vm-desc{font-size:13px;font-weight:600;line-height:1.5;max-width:280px;margin-top:12px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .95s both;color:rgba(255,255,255,.88)}
-.vm-btn{margin-top:26px;padding:15px 44px;border:none;border-radius:18px;background:#fff;color:#000;font-weight:900;font-size:15px;cursor:pointer;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) 1.1s both;font-family:inherit;box-shadow:0 0 30px rgba(255,255,255,.35)}
+.vm-path .new{font-size:20px;font-weight:900;background:#fff;color:#000;padding:6px 16px;border-radius:14px}
+.vm-ladder{display:flex;align-items:center;gap:6px;margin-top:14px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) 2.65s both}
+.vm-ladder i{width:7px;height:7px;border-radius:99px;background:rgba(255,255,255,.22);display:block;transition:all .3s}
+.vm-ladder i.done{background:rgba(255,255,255,.55)}
+.vm-ladder i.cur{width:22px;background:#fff}
+.vm-ladder small{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.45);margin:0 4px}
+.vm-desc{font-size:13px;font-weight:600;line-height:1.5;max-width:280px;margin-top:12px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) 2.85s both;color:rgba(255,255,255,.85)}
+.vm-nextbox{margin-top:14px;max-width:300px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:12px 14px;text-align:left;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) 3.05s both}
+.vm-nextbox b{display:block;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#fff;margin-bottom:4px}
+.vm-nextbox span{font-size:13px;font-weight:600;line-height:1.5;color:rgba(255,255,255,.85)}
+.vm-btn{margin-top:26px;padding:15px 44px;border:none;border-radius:18px;background:#fff;color:#000;font-weight:900;font-size:15px;cursor:pointer;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) 3.4s both;font-family:inherit}
 .vm-btn:active{transform:scale(.96)}
 @keyframes vmPop{from{opacity:0;transform:translateY(22px) scale(.85)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes vmBadge{0%{opacity:0;transform:scale(0) rotate(-20deg)}60%{opacity:1;transform:scale(1.12) rotate(6deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
@@ -2343,22 +2365,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .vm-ob-badge.lock{border-color:var(--border);background:var(--surface)}
 .vm-ob-badge.lock svg{stroke:var(--muted)}
 
-/* seviye sayfasi modu */
-.vm-ladder{display:flex;align-items:center;gap:6px;margin-top:12px;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) .8s both}
-.vm-ladder i{width:9px;height:9px;border-radius:99px;background:rgba(255,255,255,.28);display:block;transition:all .3s}
-.vm-ladder i.done{background:rgba(255,255,255,.7)}
-.vm-ladder i.cur{width:26px;background:#fff;box-shadow:0 0 14px #fff}
-.vm-ladder small{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.7);margin:0 4px}
-.vm-nextbox{display:block;margin-top:14px;max-width:300px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:16px;padding:12px 14px;text-align:left;opacity:0;animation:vmPop .55s cubic-bezier(.34,1.45,.6,1) 1s both}
-.vm-nextbox b{display:block;font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:#fff;margin-bottom:4px;text-shadow:0 0 10px rgba(255,255,255,.5)}
-.vm-nextbox span{font-size:13px;font-weight:600;line-height:1.5;color:rgba(255,255,255,.9)}
-.vm-btns{display:flex;gap:10px;margin-top:26px}
-.vm-btns .vm-btn{margin-top:0}
-.vm-btn2{display:none;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.4);box-shadow:none}
-#vmCeleb.level .vm-path{display:none}
-#vmCeleb.level .vm-btn2,#vmCeleb.preview .vm-btn2{display:inline-block}
-.vm-plan-lvl{position:relative;z-index:3;display:inline-block;margin-top:10px;padding:6px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;font-size:11px;font-weight:800;letter-spacing:.5px;cursor:pointer;font-family:'Montserrat',sans-serif;-webkit-tap-highlight-color:transparent}
-.vm-plan-lvl:active{transform:scale(.95)}
 </style>
 </head>
 <body>
@@ -12452,10 +12458,10 @@ const VM = (function(){
     if(mounted)return;const hd=$('appHeader');if(!hd)return;mounted=true;
     const clip=document.createElement('div');clip.id='vmClip';
     const w=document.createElement('div');w.id='vmWrap';
-    w.innerHTML='<svg viewBox="0 0 200 200"><g id="vmBody" class="vm-alive"><path id="vmPath" d=""/>'+
+    w.innerHTML='<div id="vmRoll"><svg viewBox="0 0 200 200"><g id="vmBody" class="vm-alive"><path id="vmPath" d=""/>'+
       '<circle cx="62" cy="112" r="8" fill="#FF7BA0" opacity=".7"/><circle cx="138" cy="112" r="8" fill="#FF7BA0" opacity=".7"/>'+
       '<rect id="vmBrowL" x="63" y="66" width="18" height="5" rx="2.5" fill="#111" opacity="0"/><rect id="vmBrowR" x="119" y="66" width="18" height="5" rx="2.5" fill="#111" opacity="0"/>'+
-      '<g id="vmEyes"></g><path id="vmMouth" d="" stroke="#111" stroke-width="5" fill="none" stroke-linecap="round"/></g></svg>';
+      '<g id="vmEyes"></g><path id="vmMouth" d="" stroke="#111" stroke-width="5" fill="none" stroke-linecap="round"/></g></svg></div>';
     clip.appendChild(w);hd.appendChild(clip);
     const say=document.createElement('div');say.id='vmSay';hd.appendChild(say);
     if(!$('vmAddWallet')&&typeof openBudgetAdd==='function'){const add=document.createElement('button');add.id='vmAddWallet';add.className='hero-add vm-hdr-add'+(((data&&data.budgets)||[]).length===0?' pulse':'');add.setAttribute('aria-label','Cüzdan ekle');add.textContent='+';add.onclick=()=>{add.classList.remove('pulse');openBudgetAdd();};hd.appendChild(add);}
@@ -12466,7 +12472,15 @@ const VM = (function(){
     liven();
   }
   function applyChar(k,anim){const c=info(k);key=k;if(!M)return;anim===false?M.set(c.shape):M.to(c.shape,700);$('vmPath').setAttribute('fill',c.color);$('vmEyes').innerHTML=eyesHTML(c.eyes,'vm');$('vmMouth').setAttribute('d',MOUTHS[c.mouth]);}
-  function say(t,ms){const s=$('vmSay');if(!s)return;s.textContent=t;s.classList.add('show');clearTimeout(say._t);say._t=setTimeout(()=>s.classList.remove('show'),ms||1500);}
+  let rollX=0,rollAnim=null;
+  function roll(dx){const r=$('vmRoll');if(!r)return;const d0=Math.round(rollX/24*57.3),d1=Math.round(dx/24*57.3);if(rollAnim)rollAnim.cancel();
+    rollAnim=r.animate([{transform:'translateX('+rollX+'px) rotate('+d0+'deg)'},{transform:'translateX('+dx+'px) rotate('+d1+'deg)'}],{duration:640,easing:'cubic-bezier(.34,1.3,.6,1)',fill:'forwards'});rollX=dx;}
+  function say(t,ms){const s=$('vmSay');if(!s||!mounted)return;
+    s.textContent=t;s.style.visibility='hidden';s.classList.add('show');const tw=s.offsetWidth||80;s.classList.remove('show');s.style.visibility='';
+    const dx=-Math.round((tw+10)/2);                   // maskot sola yuvarlanir, yazi sagina gelir, ikili grup ortalanir
+    roll(dx);s.style.left='calc(50% + '+(dx+24+8)+'px)';
+    clearTimeout(say._s);say._s=setTimeout(()=>s.classList.add('show'),400);
+    clearTimeout(say._t);say._t=setTimeout(()=>{s.classList.remove('show');setTimeout(()=>roll(0),220);},ms||1600);}
   function resetFace(){const c=info(key);['vmBrowL','vmBrowR'].forEach(id=>{const e=$(id);if(e){e.style.opacity=0;e.style.transform='';}});const ey=$('vmEyes');if(ey)ey.style.transform='';const sv=$('vmWrap')&&$('vmWrap').querySelector('svg');if(sv)sv.style.transform='';const mo=$('vmMouth');if(mo)mo.setAttribute('d',MOUTHS[c.mouth]);}
   function react(kind,msg){
     if(!mounted)return;resetFace();const m=$('vmWrap').querySelector('svg');
@@ -12481,7 +12495,7 @@ const VM = (function(){
   let moveAnim=null,stayT=null;
   function stay(ms){clearTimeout(stayT);stayT=setTimeout(()=>{if(!busy)leave();else stay(1500);},ms||4200);}
   function comeBack(msg){
-    if(!away||!mounted)return;const w=$('vmWrap');if(moveAnim)moveAnim.cancel();
+    if(!away||!mounted)return;const w=$('vmWrap');if(moveAnim)moveAnim.cancel();const s=$('vmSay');if(s)s.classList.remove('show');roll(0);
     moveAnim=w.animate([
       {transform:'translateY(110px) scale(.9,1.12)'},
       {transform:'translateY(-12px) scale(1.08,.92)',offset:.58},              // altindan firlayip overshoot
@@ -12493,13 +12507,14 @@ const VM = (function(){
     stay();
   }
   function leave(){
-    if(away||!mounted)return;away=true;clearTimeout(stayT);const w=$('vmWrap');if(moveAnim)moveAnim.cancel();
+    if(away||!mounted)return;away=true;clearTimeout(stayT);say('Görüşürüz, geleceğim',1000);
+    setTimeout(()=>{const w=$('vmWrap');if(moveAnim)moveAnim.cancel();
     moveAnim=w.animate([
       {transform:'translateY(0) scale(1,1)'},
       {transform:'translateY(-9px) scale(1.08,.92)',offset:.24},               // anticipation
       {transform:'translateY(6px) scale(.96,1.06)',offset:.42},
       {transform:'translateY(110px) scale(.9,1.12) rotate(5deg)',offset:1}     // hero'nun altina dalis (header kirpar)
-    ],{duration:640,easing:'cubic-bezier(.5,0,.8,.3)',fill:'forwards'});
+    ],{duration:640,easing:'cubic-bezier(.5,0,.8,.3)',fill:'forwards'});},1400);
   }
   // arada kendiliginden: ~6 sn'de bir %14 sans (ortalama 40 sn), kutlama acik degilse
   const HELLO=['Selam','Buradayım','Nasıl gidiyor','Harcamalara dikkat','İyi gidiyorsun'];
@@ -12542,36 +12557,35 @@ const VM = (function(){
     if(prev&&CH[prev]&&prev!==k){showCeleb(prev,k);}else if(mounted&&key!==k){applyChar(k,true);}
   }
   const REAL_ORDER=['ACEMI','BORCLU','KIRILGAN','HARCAYAN','DENGELI','TUTUMLU','BIRIKTIREN','HEDEFCI','YATIRIMCI','OZGUR'];
-  // ---- synthwave sahne: suzulen geometrik cizgi-sekiller + neon halka patlamasi ----
-  const GEO=['<polygon points="50,8 92,88 8,88" fill="none" stroke="#fff" stroke-width="3"/>','<circle cx="50" cy="50" r="40" fill="none" stroke="#fff" stroke-width="3"/>','<rect x="14" y="14" width="72" height="72" fill="none" stroke="#fff" stroke-width="3" transform="rotate(45 50 50)"/>','<rect x="16" y="16" width="68" height="68" rx="6" fill="none" stroke="#fff" stroke-width="3"/>','<polygon points="50,6 90,28 90,72 50,94 10,72 10,28" fill="none" stroke="#fff" stroke-width="3"/>'];
-  function startBg(){stopBg();const host=$('vmGeo');if(!host)return;[[10,14,34],[80,10,26],[6,40,22],[86,36,30],[22,26,18],[70,26,20]].forEach((s,i)=>{const d=document.createElement('div');d.className='vm-geo';d.style.left=s[0]+'%';d.style.top=s[1]+'%';d.style.width=s[2]+'px';d.style.height=s[2]+'px';d.style.animationDelay=(1.2+i*.15)+'s,'+(1.2+i*.4)+'s';d.innerHTML='<svg viewBox="0 0 100 100">'+GEO[i%GEO.length]+'</svg>';host.appendChild(d);});}
-  function stopBg(){const host=$('vmGeo');if(host)host.innerHTML='';}
-  function rings(){const host=$('vmCeleb');for(let j=0;j<3;j++){const r=document.createElement('div');r.className='vm-ring';r.style.width='30px';r.style.height='30px';host.appendChild(r);r.animate([{width:'30px',height:'30px',opacity:1,borderWidth:'3px'},{width:'620px',height:'620px',opacity:0,borderWidth:'1px'}],{duration:1300,delay:j*180,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>r.remove();}}
-  function flash(){const fl=$('vmFlash');if(!fl)return;fl.animate([{opacity:0,transform:'translate(-50%,-50%) scale(.4)'},{opacity:.95,transform:'translate(-50%,-50%) scale(1.6)',offset:.35},{opacity:0,transform:'translate(-50%,-50%) scale(2.4)'}],{duration:900,easing:'ease-out'});
-    const bm=$('vmBeam');if(bm)bm.animate([{opacity:0},{opacity:1,offset:.3},{opacity:.35}],{duration:1400,fill:'forwards',easing:'ease-out'});}
+  // ---- dreamy orb sahnesi: tac yapraklari (bir kez uretilir) ----
+  function buildScene(){
+    const mk=(id,R,N,w,hh)=>{const g=$(id);if(!g||g.childElementCount)return;let s='';for(let i=0;i<N;i++){const a=360*i/N;s+='<rect x="'+(200-w/2)+'" y="'+(330-R-hh/2)+'" width="'+w+'" height="'+hh+'" rx="'+(w/2)+'" fill="url(#vmPet)" opacity=".94" transform="rotate('+a+' 200 330)"/>';}g.innerHTML=s;};
+    mk('vmR1',148,16,20,46);mk('vmR2',204,20,27,62);mk('vmR3',266,24,34,78);
+    const fan=$('vmFan');if(fan&&!fan.childElementCount){let s='';const ax=200,ay=1010,R=980;for(let i=0;i<26;i++){const a0=(190+i*6.2)*Math.PI/180,a1=(190+i*6.2+3.4)*Math.PI/180;s+='<polygon points="'+ax+','+ay+' '+(ax+R*Math.cos(a0)).toFixed(1)+','+(ay+R*Math.sin(a0)).toFixed(1)+' '+(ax+R*Math.cos(a1)).toFixed(1)+','+(ay+R*Math.sin(a1)).toFixed(1)+'" fill="url(#vmRay)" opacity=".55"/>';}fan.innerHTML=s;}
+  }
+  function pulse(){const gl=$('vmScene')&&$('vmScene').querySelector('.gl');if(gl)gl.animate([{transform:'scale(1)',opacity:.6},{transform:'scale(1.6)',opacity:1,offset:.4},{transform:'scale(1)',opacity:.6}],{duration:1100,easing:'cubic-bezier(.2,.8,.2,1)'});
+  }
   function showCeleb(oldK,newK,preview){
-    const cel=$('vmCeleb');if(!cel)return;const o=info(oldK),n=info(newK);showCeleb._preview=!!preview;
+    const cel=$('vmCeleb');if(!cel)return;cel.classList.add('show');try{
+    const o=info(oldK),n=info(newK);showCeleb._preview=!!preview;
     const po=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[oldK])||{},pn=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[newK])||{};
+    if(!cbM)cbM=makeMorph($('vmCbPath'));buildScene();
+    cel.style.setProperty('--vmc',n.color);
+    $('vmKick').textContent=n.scene;$('vmTitle').textContent=preview?'Sıradaki seviye':'Tebrikler!';$('vmBtn').textContent=preview?'Kapat':'Devam et';
+    $('vmOld').textContent=o.name;$('vmNew').textContent=n.name;$('vmDesc').textContent=n.tagline;
     const ni=REAL_ORDER.indexOf(newK);$('vmLadder').innerHTML='<small>Risk</small>'+REAL_ORDER.map((r,j)=>'<i class="'+(j<ni?'done':j===ni?'cur':'')+'"></i>').join('')+'<small>Büyüme</small>';
     $('vmNext').innerHTML=preview?('<b>'+(po.nextLabel||'Sıradaki adım')+'</b><span>'+(po.next||'')+'</span>'):('<b>'+(pn.nextLabel||'Sıradaki adım')+'</b><span>'+(pn.next||'')+'</span>');
-    if(!cbM)cbM=makeMorph($('vmCbPath'));
-    cel.style.setProperty('--vmc',n.color);cel.classList.remove('level');cel.classList.toggle('preview',!!preview);$('vmTitle').textContent=preview?'Sıradaki seviye':'Tebrikler!';$('vmBtn').textContent=preview?'Kapat':'Devam et';$('vmBtn2').textContent='Seviyemi gör';
-    $('vmKick').textContent=n.scene;$('vmOld').textContent=o.name;$('vmNew').textContent=n.name;$('vmDesc').textContent=n.tagline;
-    // eski karakter: once beyaz isik kuresi gibi (parlak), sonra yeni sekle donusur
-    cbM.set(o.shape);$('vmCbPath').setAttribute('fill','#ffffff');$('vmCbMouth').setAttribute('d',MOUTHS[o.mouth]);$('vmCbEyes').innerHTML=eyesHTML(o.eyes,'vmcb');
-    const bm=$('vmBeam');if(bm)bm.style.opacity=0;
-    startBg();cel.classList.add('show');
-    setTimeout(()=>{$('vmCbPath').animate([{fill:'#ffffff'},{fill:o.color}],{duration:500,fill:'forwards'});$('vmCbPath').setAttribute('fill',o.color);},500);
-    setTimeout(()=>{ // donusum ani: flash + halkalar + morph + renk
-      flash();rings();
-      cbM.to(n.shape,1000);
-      $('vmCbPath').animate([{fill:o.color},{fill:'#ffffff',offset:.35},{fill:n.color}],{duration:1000,fill:'forwards'});$('vmCbPath').setAttribute('fill',n.color);
+    cbM.set(o.shape);$('vmCbPath').setAttribute('fill',o.color);$('vmCbMouth').setAttribute('d',MOUTHS[o.mouth]);$('vmCbEyes').innerHTML=eyesHTML(o.eyes,'vmcb');
+    setTimeout(()=>{ // donusum: yumusak — morph + glow nabzi + tac yapraklari hafif doner
+      cbM.to(n.shape,1000);pulse();
+      $('vmCbPath').animate([{fill:o.color},{fill:n.color}],{duration:900,fill:'forwards'});$('vmCbPath').setAttribute('fill',n.color);
       $('vmCbMouth').setAttribute('d',MOUTHS[n.mouth]);$('vmCbEyes').innerHTML=eyesHTML(n.eyes,'vmcb');
-      $('vmCbSvg').animate([{transform:'scale(1)'},{transform:'scale(1.18) rotate(-6deg)',offset:.4},{transform:'scale(.97) rotate(4deg)',offset:.7},{transform:'scale(1) rotate(0)'}],{duration:1000,easing:'cubic-bezier(.34,1.45,.6,1)'});
-      $('vmCbBody').classList.add('vm-alive');},1500);
+      $('vmCbSvg').animate([{transform:'scale(1)'},{transform:'scale(1.14) rotate(-5deg)',offset:.4},{transform:'scale(.98) rotate(3deg)',offset:.7},{transform:'scale(1) rotate(0)'}],{duration:1000,easing:'cubic-bezier(.34,1.45,.6,1)'});
+      $('vmCbBody').classList.add('vm-alive');},2000);
     showCeleb._new=newK;
+    }catch(e){console.warn('vm celeb',e);}
   }
-  function closeCeleb(){const cel=$('vmCeleb');if(cel){cel.classList.remove('show','level','preview');}const bt=$('vmBtn');if(bt)bt.textContent='Devam et';const tt=$('vmTitle');if(tt)tt.textContent='Tebrikler!';stopBg();const b=$('vmCbBody');if(b)b.classList.remove('vm-alive');if(showCeleb._new&&!showCeleb._preview)applyChar(showCeleb._new,true);showCeleb._preview=false;}
+  function closeCeleb(){const cel=$('vmCeleb');if(cel)cel.classList.remove('show');const b=$('vmCbBody');if(b)b.classList.remove('vm-alive');if(showCeleb._new&&!showCeleb._preview)applyChar(showCeleb._new,true);showCeleb._preview=false;}
 
   // ---- baslat: DOM hazir olunca header'a tak ----
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else setTimeout(mount,0);
@@ -12580,35 +12594,22 @@ const VM = (function(){
   let planM=null;
   function renderPlanAvatar(k){
     const host=document.querySelector('#planCharCard .plan-char-gradient');if(!host)return;const c=info(k||key);
-    let svg=host.querySelector('.vm-plan-avatar');
-    if(!svg){host.insertAdjacentHTML('beforeend','<svg class="vm-plan-avatar" viewBox="0 0 200 200"><g id="vmPlBody" class="vm-alive"><path id="vmPlPath" d=""/><circle cx="62" cy="112" r="8" fill="#FF7BA0" opacity=".7"/><circle cx="138" cy="112" r="8" fill="#FF7BA0" opacity=".7"/><g id="vmPlEyes"></g><path id="vmPlMouth" d="" stroke="#111" stroke-width="5" fill="none" stroke-linecap="round"/></g></svg>');svg=host.querySelector('.vm-plan-avatar');planM=makeMorph($('vmPlPath'),{jelly:true});}
+    let tap=host.querySelector('.vm-plan-tap');
+    if(!tap){
+      host.insertAdjacentHTML('beforeend','<div class="vm-plan-tap" role="button" aria-label="Karakter gelişimini gör"><svg class="vm-plan-avatar" viewBox="0 0 200 200"><g id="vmPlBody" class="vm-alive"><path id="vmPlPath" d=""/><circle cx="62" cy="112" r="8" fill="#FF7BA0" opacity=".7"/><circle cx="138" cy="112" r="8" fill="#FF7BA0" opacity=".7"/><g id="vmPlEyes"></g><path id="vmPlMouth" d="" stroke="#111" stroke-width="5" fill="none" stroke-linecap="round"/></g></svg></div>');
+      tap=host.querySelector('.vm-plan-tap');planM=makeMorph($('vmPlPath'),{jelly:true});
+      const go=e=>{if(e.cancelable)e.preventDefault();e.stopPropagation();if(go._t&&Date.now()-go._t<600)return;go._t=Date.now();previewCeleb();};
+      tap.addEventListener('touchend',go,{passive:false});tap.addEventListener('click',go);
+      liveEyes(()=>$('vmPlEyes'),'vmplpL','vmplpR',()=>info(planKey).eyes);
+    }
     planM.set(c.shape);$('vmPlPath').setAttribute('fill',c.color);$('vmPlEyes').innerHTML=eyesHTML(c.eyes,'vmpl');$('vmPlMouth').setAttribute('d',MOUTHS[c.mouth]);
-    if(!svg._live){svg._live=true;liveEyes(()=>$('vmPlEyes'),'vmplpL','vmplpR',()=>info(planKey).eyes);svg.addEventListener('click',e=>{e.stopPropagation();previewCeleb();});}
+    planKey=k||key;
     const card=host.closest('.plan-char-card'),nx=card&&card.querySelector('.plan-char-next');const pcc=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[k||key])||{};
     if(nx){nx.classList.add('vm-next-hot');const acc=pcc.accentColor||c.color;nx.style.setProperty('--vm-acc',acc);nx.style.setProperty('--vm-acc-bg',acc+'1f');}
-    if(!host.querySelector('.vm-plan-lvl')){const b=document.createElement('button');b.className='vm-plan-lvl';b.textContent='Seviyeni gör';b.onclick=e=>{e.stopPropagation();showLevel(planKey);};host.appendChild(b);}
-    planKey=k||key;
   }
   let planKey='BIRIKTIREN';
   // kutlama ONIZLEME: mevcut karakter → siradaki (veriye dokunmaz)
   function previewCeleb(){const cur=planKey||key;const i=REAL_ORDER.indexOf(cur);const next=REAL_ORDER[Math.min(i+1,REAL_ORDER.length-1)]===cur?cur:REAL_ORDER[Math.min(i+1,REAL_ORDER.length-1)];showCeleb(cur,next,true);}
-  // SEVIYE SAYFASI: hangi seviyedesin, siradaki ne, oraya nasil gidilir (animasyonlu sahne, veriye dokunmaz)
-  function showLevel(k){
-    const cel=$('vmCeleb');if(!cel)return;k=k||planKey||key;const c=info(k);const pc=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[k])||{};
-    if(!cbM)cbM=makeMorph($('vmCbPath'));
-    cel.style.setProperty('--vmc',c.color);cel.classList.add('level');cel.classList.remove('preview');$('vmBtn2').textContent='Dönüşümü izle';
-    $('vmKick').textContent='Finansal Karakterin';$('vmTitle').textContent=c.name;$('vmDesc').textContent=c.tagline;$('vmBtn').textContent='Kapat';
-    const i=REAL_ORDER.indexOf(k);
-    $('vmLadder').innerHTML='<small>Risk</small>'+REAL_ORDER.map((r,j)=>'<i class="'+(j<i?'done':j===i?'cur':'')+'" title="'+info(r).name+'"></i>').join('')+'<small>Büyüme</small>';
-    $('vmNext').innerHTML='<b>'+(pc.nextLabel||'Sıradaki adım')+'</b><span>'+(pc.next||'')+'</span>';
-    cbM.set(c.shape);$('vmCbPath').setAttribute('fill',c.color);$('vmCbMouth').setAttribute('d',MOUTHS[c.mouth]);$('vmCbEyes').innerHTML=eyesHTML(c.eyes,'vmcb');
-    const bm=$('vmBeam');if(bm)bm.style.opacity=0;
-    startBg();cel.classList.add('show');
-    setTimeout(()=>{flash();rings();$('vmCbSvg').animate([{transform:'scale(1)'},{transform:'scale(1.12) rotate(-5deg)',offset:.4},{transform:'scale(1) rotate(0)'}],{duration:800,easing:'cubic-bezier(.34,1.45,.6,1)'});$('vmCbBody').classList.add('vm-alive');},900);
-    showCeleb._new=null;showCeleb._preview=true;
-  }
-  function watchNext(){closeCeleb();setTimeout(previewCeleb,350);}
-  function btn2(){const cel=$('vmCeleb');if(cel&&cel.classList.contains('level'))watchNext();else{closeCeleb();setTimeout(()=>showLevel(planKey||key),350);}}
   // ---- ortak goz canlandirici: pupiller bakinir + kirpar (baglanti kopunca kendini durdurur) ----
   function liveEyes(getEyes,pL,pR,kindFn){
     const t1=setInterval(()=>{const g=getEyes();if(!g||!g.isConnected){clearInterval(t1);return;}const k=kindFn();if(k==='cool'||k==='content')return;
@@ -12630,7 +12631,7 @@ const VM = (function(){
     liveEyes(()=>eyes,pfx+'pL',pfx+'pR',()=>info(cur).eyes);
     return {setChar,morph:m,el:container};
   }
-  return {mount,onTx,onDelete,onEdit,onCharacter,closeCeleb,previewCeleb,showLevel,watchNext,btn2,leave,comeBack,react,say,applyChar,renderPlanAvatar,spawn};
+  return {mount,onTx,onDelete,onEdit,onCharacter,closeCeleb,previewCeleb,leave,comeBack,react,say,applyChar,renderPlanAvatar,spawn};
 })();
 
 // ═══════════ V78 — 10 FINANSAL KARAKTER: 5 yeni persona (metin + kural), orijinal siniflandirici korunur ═══════════
@@ -13024,9 +13025,29 @@ setInterval(checkMonthRollover, 60000);
 
 <!-- ═══════════ V78 — MASKOT: karakter atlama overlay ═══════════ -->
 <div id="vmCeleb">
-  <div class="vm-sun" id="vmSun"></div><div class="vm-sunlines"></div><div class="vm-horizon"></div>
-  <div class="vm-orbit"></div><div class="vm-beam" id="vmBeam"></div><div class="vm-flash" id="vmFlash"></div>
-  <div id="vmGeo"></div>
+  <svg id="vmScene" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <radialGradient id="vmGrad" cx="50%" cy="50%" r="50%"><stop offset="0" style="stop-color:var(--vmc);stop-opacity:.85"/><stop offset="1" style="stop-color:var(--vmc);stop-opacity:0"/></radialGradient>
+      <linearGradient id="vmPet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F1F2FF" stop-opacity=".96"/><stop offset=".55" style="stop-color:var(--vmc)"/><stop offset="1" stop-color="#0a0a22"/></linearGradient>
+      <linearGradient id="vmCone" x1="0" y1="1" x2="0" y2="0"><stop offset="0" style="stop-color:var(--vmc);stop-opacity:.95"/><stop offset=".55" style="stop-color:var(--vmc);stop-opacity:.22"/><stop offset="1" style="stop-color:var(--vmc);stop-opacity:0"/></linearGradient>
+      <linearGradient id="vmDom" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--vmc);stop-opacity:.9"/><stop offset="1" stop-color="#050507"/></linearGradient>
+      <linearGradient id="vmOrb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd1f0"/><stop offset=".5" stop-color="#ffe680"/><stop offset="1" style="stop-color:var(--vmc)"/></linearGradient>
+      <linearGradient id="vmRay" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity=".85"/><stop offset=".5" style="stop-color:var(--vmc);stop-opacity:.35"/><stop offset="1" style="stop-color:var(--vmc);stop-opacity:0"/></linearGradient>
+      <linearGradient id="vmWarm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff5d6" stop-opacity="0"/><stop offset="1" stop-color="#fff5d6" stop-opacity=".9"/></linearGradient>
+    </defs>
+    <g class="fanIn"><g class="fan" id="vmFan"></g><rect x="0" y="620" width="400" height="180" fill="url(#vmWarm)"/></g>
+    <g class="dome"><circle cx="200" cy="1080" r="440" fill="url(#vmDom)"/></g>
+    <g class="cone"><polygon points="200,330 -80,-90 480,-90" fill="url(#vmCone)"/></g>
+    <circle class="gl" cx="200" cy="330" r="150" fill="url(#vmGrad)"/>
+    <g class="scA"><g class="r3" id="vmR3"></g><g class="r2" id="vmR2"></g><g class="r1" id="vmR1"></g></g>
+    <g class="scD">
+      <g class="ring1"><circle cx="200" cy="330" r="226" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="1.2"/><circle cx="426" cy="330" r="10" fill="url(#vmOrb)"/></g>
+      <g class="ring2"><circle cx="200" cy="330" r="268" fill="none" stroke="#fff" stroke-opacity=".11" stroke-width="1"/><circle cx="200" cy="62" r="6" fill="#fff" opacity=".9"/><circle cx="200" cy="598" r="4" fill="url(#vmOrb)"/></g>
+      <ellipse class="fl f1" cx="86" cy="560" rx="48" ry="14" fill="#fff" opacity=".5"/>
+      <ellipse class="fl f2" cx="326" cy="606" rx="36" ry="10" fill="#fff" opacity=".38"/>
+      <ellipse class="fl f3" cx="256" cy="512" rx="22" ry="7" fill="#fff" opacity=".45"/>
+    </g>
+  </svg>
   <div class="vm-in" id="vmIn">
     <div class="vm-kick" id="vmKick">Karakter Gelişimi</div>
     <div class="vm-badge"><svg id="vmCbSvg" viewBox="0 0 200 200"><g id="vmCbBody"><path id="vmCbPath" d=""/><ellipse cx="72" cy="62" rx="22" ry="12" fill="#fff" opacity=".22" transform="rotate(-25 72 62)"/><circle cx="60" cy="112" r="9" fill="#FF7BA0" opacity=".75"/><circle cx="140" cy="112" r="9" fill="#FF7BA0" opacity=".75"/><g id="vmCbEyes"></g><path id="vmCbMouth" d="" stroke="#111" stroke-width="5" fill="none" stroke-linecap="round"/></g></svg></div>
@@ -13035,8 +13056,9 @@ setInterval(checkMonthRollover, 60000);
     <div class="vm-ladder" id="vmLadder"></div>
     <div class="vm-desc" id="vmDesc"></div>
     <div class="vm-nextbox" id="vmNext"></div>
-    <div class="vm-btns"><button class="vm-btn vm-btn2" id="vmBtn2" onclick="VM.btn2()">Dönüşümü izle</button><button class="vm-btn" id="vmBtn" onclick="VM.closeCeleb()">Devam et</button></div>
+    <button class="vm-btn" id="vmBtn" onclick="VM.closeCeleb()">Devam et</button>
   </div>
+</div>
 </div>
 </body>
 </html>
