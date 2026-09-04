@@ -2248,10 +2248,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .tx-card-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:900;background:rgba(10,132,255,.12);color:var(--blue);padding:2px 6px;border-radius:6px;letter-spacing:.3px;vertical-align:middle}
 
 /* ═══════════ V78 — MASKOT (bagimsiz modul, vm- namespace) ═══════════ */
-#vmClip{position:absolute;inset:0;overflow:hidden;pointer-events:none}          /* hero'nun altina dalis icin kirpma */
-#vmWrap{position:absolute;left:50%;margin-left:-24px;top:calc(10px + env(safe-area-inset-top,0px));width:48px;height:48px;z-index:3;cursor:pointer;pointer-events:auto;-webkit-tap-highlight-color:transparent;will-change:transform;
-  transform:translateY(110px)}                                                     /* varsayilan: gizli (hero'nun altinda) */
-#vmWrap svg{width:100%;height:100%;overflow:visible;display:block}
 #appHeader .vm-hdr-add{position:absolute;right:16px;top:50%;margin-top:calc(env(safe-area-inset-top,0px)/2);width:30px;height:30px;font-size:18px;font-weight:600;line-height:1;font-family:'Montserrat',sans-serif}  /* alttaki .hero-add ile ayni tip */
 #heroAdd{display:none!important}                                                                /* alttaki "+" artik gereksiz */
 /* "siradaki adim" satiri — dikkat cekici */
@@ -2260,8 +2256,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 @keyframes vmNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
 .plan-char-next.vm-next-hot .plan-char-next-text{color:#F2F1EB;font-weight:500}
 .plan-char-next.vm-next-hot .plan-char-next-text b{display:block;color:var(--vm-acc);font-weight:800;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:4px}
-.vm-alive{transform-box:fill-box;transform-origin:50% 88%;animation:vmAlive 4.2s ease-in-out infinite}
-@keyframes vmAlive{0%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(2deg) translateY(-3px)}100%{transform:rotate(-2deg) translateY(0)}}
 /* Plan karakter karti avatari */
 .vm-plan-tap{position:absolute;right:8px;top:6px;width:128px;height:128px;z-index:6;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
 .vm-plan-tap:active .vm-plan-avatar{transform:scale(.94)}
@@ -2269,16 +2263,8 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 #planCharCard,#planCharCard *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 #planCharCard .plan-char-gradient{padding-right:140px}
 .plan-char-gradient{position:relative}
-#vmRoll{width:100%;height:100%;will-change:transform}
-#vmSay{position:absolute;top:calc(10px + env(safe-area-inset-top,0px) + 24px);left:50%;transform:translateY(-50%) translateX(-8px) scale(.85);transform-origin:left center;
-  background:rgba(14,14,18,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--vmSayC,#7CE83A);box-shadow:0 0 18px var(--vmSayG,rgba(124,232,58,.35)),inset 0 0 0 1px rgba(255,255,255,.04);
-  color:#fff;font-size:12px;font-weight:700;letter-spacing:.1px;padding:7px 12px 7px 11px;border-radius:14px;white-space:nowrap;min-width:24px;
-  opacity:0;transition:opacity .22s,transform .42s cubic-bezier(.34,1.45,.6,1);pointer-events:none;font-family:'Montserrat',sans-serif;z-index:3}
-#vmSay::after{content:"";position:absolute;left:-7px;top:50%;transform:translateY(-50%);border:7px solid transparent;border-right-color:var(--vmSayC,#7CE83A);border-left:0}
-#vmSay::before{content:"";position:absolute;left:-5px;top:50%;transform:translateY(-50%);border:6px solid transparent;border-right-color:rgba(14,14,18,.98);border-left:0;z-index:1}
-#vmSay .vm-cur{display:inline-block;width:2px;height:11px;background:var(--vmSayC,#7CE83A);margin-left:2px;vertical-align:-1px;animation:vmCur .8s steps(1) infinite}
-@keyframes vmCur{50%{opacity:0}}
-#vmSay.show{opacity:1;transform:translateY(-50%) translateX(0) scale(1)}
+.vm-alive{transform-box:fill-box;transform-origin:50% 88%;animation:vmAlive 4.2s ease-in-out infinite}
+@keyframes vmAlive{0%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(2deg) translateY(-3px)}100%{transform:rotate(-2deg) translateY(0)}}
 /* karakter atlama — DREAMY ORB (kara zemin, parlayan kure, donen tac yapraklari, yorungeler, gradient kubbe) */
 #vmCeleb{position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;overflow:hidden;font-family:'Montserrat',sans-serif;background:#000;--vmc:#7CE83A}
 #vmCeleb.show{display:flex;animation:vmFade .6s ease}
@@ -12441,116 +12427,18 @@ const VM = (function(){
   const $=id=>document.getElementById(id);
 
   // ---- durum ----
-  let key='BIRIKTIREN', M=null, away=true, busy=false, mounted=false, lastTap=0, livenT=[], cbM=null, bgT=[], cbEyesKind='happy';
+  let key='BIRIKTIREN', mounted=false, cbM=null;
   function currentKey(){try{const k=_planClassifyChar(calcFreeBudget(monthKey())).key;if(CH[k])return k;}catch(e){}return (data&&CH[data.mascotChar])?data.mascotChar:'BIRIKTIREN';}
-
-  // ---- header'a mount ----
+  // ---- header: sadece cuzdan ekleme "+" (maskot header'da yasamiyor) ----
   function mount(){
-    if(mounted)return;const hd=$('appHeader');if(!hd)return;mounted=true;
-    const clip=document.createElement('div');clip.id='vmClip';
-    const w=document.createElement('div');w.id='vmWrap';
-    w.innerHTML='<div id="vmRoll"><svg viewBox="0 0 200 200">'+svgMarkup('vm',true)+'</svg></div>';
-    clip.appendChild(w);hd.appendChild(clip);
-    const say=document.createElement('div');say.id='vmSay';hd.appendChild(say);
+    if(mounted)return;const hd=$('appHeader');if(!hd)return;mounted=true;key=currentKey();
     if(!$('vmAddWallet')&&typeof openBudgetAdd==='function'){const add=document.createElement('button');add.id='vmAddWallet';add.className='hero-add vm-hdr-add'+(((data&&data.budgets)||[]).length===0?' pulse':'');add.setAttribute('aria-label','Cüzdan ekle');add.textContent='+';add.onclick=()=>{add.classList.remove('pulse');openBudgetAdd();};hd.appendChild(add);}
-    M=makeMorph($('vmPath'),{jelly:true});
-    key=currentKey();applyChar(key,false);
-    // tek tik = Selam, cift tik = git
-    w.addEventListener('click',e=>{e.stopPropagation();const n=Date.now();if(n-lastTap<380){lastTap=0;leave();}else{lastTap=n;setTimeout(()=>{if(lastTap===n&&!away){react('happy','Selam');stay(4000);}},390);}});
-    liven();
   }
-  function applyChar(k,anim){const c=info(k);key=k;if(!M)return;anim===false?M.set(c.shape):M.to(c.shape,700);paint('vm',c.color);$('vmEyes').innerHTML=eyesHTML(c.eyes,'vm');$('vmMouth').setAttribute('d',MOUTHS[c.mouth]);}
-  let rollX=0,rollAnim=null,talking=false;
-  const IDLE_SHAPES=['leaf','cloud','bean','flower','egg','circle','squircle','pill'];
-  function roll(dx,dur){const r=$('vmRoll');if(!r)return;const d0=Math.round(rollX/24*57.3),d1=Math.round(dx/24*57.3);if(rollAnim)rollAnim.cancel();
-    rollAnim=r.animate([{transform:'translateX('+rollX+'px) rotate('+d0+'deg)'},{transform:'translateX('+dx+'px) rotate('+d1+'deg)'}],{duration:dur||1100,easing:'cubic-bezier(.45,.05,.25,1)',fill:'forwards'});rollX=dx;}
-  function typeInto(el,text,cps){el.innerHTML='<span class="vm-t"></span><i class="vm-cur"></i>';const t=el.querySelector('.vm-t');let i=0;clearInterval(typeInto._t);
-    typeInto._t=setInterval(()=>{i++;t.textContent=text.slice(0,i);if(i>=text.length){clearInterval(typeInto._t);setTimeout(()=>{const c=el.querySelector('.vm-cur');if(c)c.remove();},600);}},cps||28);}
-  function say(t,ms){const s=$('vmSay');if(!s||!mounted||!M)return;talking=true;
-    const c=info(key);s.style.setProperty('--vmSayC',c.color);s.style.setProperty('--vmSayG',c.color+'59');
-    s.textContent=t;s.style.visibility='hidden';s.classList.add('show');const tw=s.offsetWidth||80;s.classList.remove('show');s.style.visibility='';s.textContent='';
-    const dx=-Math.round((tw+12)/2);
-    // 1) yavas yuvarlan + bosta sekillerden birine donus
-    M.to(IDLE_SHAPES[Math.floor(Math.random()*IDLE_SHAPES.length)],850);roll(dx,1100);s.style.left='calc(50% + '+(dx+24+10)+'px)';
-    // 2) varinca BALON sekline don + chat balonu acil, harf harf yaz
-    clearTimeout(say._a);say._a=setTimeout(()=>{M.to('bubbleR',700);s.classList.add('show');typeInto(s,t,28);},1000);
-    // 3) bitince kapat, geri yuvarlan, kendi sekline don
-    const hold=(ms||1600)+t.length*28;
-    clearTimeout(say._t);say._t=setTimeout(()=>{s.classList.remove('show');setTimeout(()=>{roll(0,1100);M.to(info(key).shape,850);setTimeout(()=>{talking=false;},1100);},240);},1000+hold);}
-  function resetFace(){const c=info(key);['vmBrowL','vmBrowR'].forEach(id=>{const e=$(id);if(e){e.style.opacity=0;e.style.transform='';}});const ey=$('vmEyes');if(ey)ey.style.transform='';const sv=$('vmWrap')&&$('vmWrap').querySelector('svg');if(sv)sv.style.transform='';const mo=$('vmMouth');if(mo)mo.setAttribute('d',MOUTHS[c.mouth]);}
-  function react(kind,msg){
-    if(!mounted)return;resetFace();const m=$('vmWrap').querySelector('svg');
-    if(kind==='happy'){m.animate([{transform:'translateY(0) scale(1,1)'},{transform:'translateY(2px) scale(1.1,.88)',offset:.18},{transform:'translateY(-16px) scale(.92,1.1)',offset:.5},{transform:'translateY(3px) scale(1.06,.95)',offset:.78},{transform:'translateY(0) scale(1,1)'}],{duration:700,easing:'cubic-bezier(.34,1.3,.6,1)'});$('vmMouth').setAttribute('d',MOUTHS.happy);const ey=$('vmEyes');if(ey&&info(key).eyes!=='cool'){ey.style.transformBox='fill-box';ey.style.transformOrigin='center';ey.style.transition='transform .2s';ey.style.transform='scaleY(.55)';}}
-    if(kind==='worried'){m.animate([{transform:'translateX(0)'},{transform:'translateX(-6px) rotate(-3deg)',offset:.2},{transform:'translateX(6px) rotate(3deg)',offset:.4},{transform:'translateX(-4px)',offset:.6},{transform:'translateX(0)'}],{duration:520});$('vmBrowL').style.opacity=1;$('vmBrowR').style.opacity=1;$('vmBrowL').style.transform='rotate(16deg)';$('vmBrowR').style.transform='rotate(-16deg)';$('vmMouth').setAttribute('d',MOUTHS.sad);}
-    if(kind==='poof'){m.animate([{transform:'scale(1) rotate(0)'},{transform:'scale(.78) rotate(-10deg)',offset:.3},{transform:'scale(1.14) rotate(6deg)',offset:.62},{transform:'scale(1) rotate(0)'}],{duration:640,easing:'cubic-bezier(.34,1.4,.6,1)'});$('vmMouth').setAttribute('d','M94 112 a6 5 0 0 0 12 0 a6 5 0 0 0 -12 0');const ey=$('vmEyes');if(ey&&info(key).eyes!=='cool'){ey.style.transformBox='fill-box';ey.style.transformOrigin='center';ey.style.transition='transform .2s';ey.style.transform='scale(1.25)';}}
-    if(kind==='nod'){m.animate([{transform:'translateY(0) rotate(0)'},{transform:'translateY(5px) rotate(4deg)',offset:.25},{transform:'translateY(-2px) rotate(-2deg)',offset:.5},{transform:'translateY(5px) rotate(4deg)',offset:.75},{transform:'translateY(0) rotate(0)'}],{duration:620,easing:'ease-in-out'});$('vmMouth').setAttribute('d',MOUTHS.smile);}
-    if(msg)say(msg);clearTimeout(react._t);react._t=setTimeout(resetFace,1700);
-  }
-
-  // ---- ara sira gorunen maskot: hero'nun altindan logonun onune yukselir, biraz kalir, geri dalar ----
-  let moveAnim=null,stayT=null;
-  function stay(ms){clearTimeout(stayT);stayT=setTimeout(()=>{if(!busy&&!talking)leave();else stay(1200);},ms||4200);}
-  function comeBack(msg){
-    if(!away||!mounted)return;const w=$('vmWrap');if(moveAnim)moveAnim.cancel();const s=$('vmSay');if(s)s.classList.remove('show');roll(0,300);talking=false;
-    moveAnim=w.animate([
-      {transform:'translateY(110px) scale(.9,1.12)'},
-      {transform:'translateY(-12px) scale(1.08,.92)',offset:.58},              // altindan firlayip overshoot
-      {transform:'translateY(4px) scale(.96,1.05)',offset:.8},                 // yerlesme squash
-      {transform:'translateY(0) scale(1,1)'}
-    ],{duration:760,easing:'cubic-bezier(.22,1,.36,1)',fill:'forwards'});
-    away=false;
-    if(msg)setTimeout(()=>react('happy',msg),700);
-    stay();
-  }
-  function leave(){
-    if(away||!mounted)return;away=true;clearTimeout(stayT);say('Görüşürüz, geleceğim',900);
-    setTimeout(()=>{const w=$('vmWrap');if(moveAnim)moveAnim.cancel();
-    moveAnim=w.animate([
-      {transform:'translateY(0) scale(1,1)'},
-      {transform:'translateY(-9px) scale(1.08,.92)',offset:.24},               // anticipation
-      {transform:'translateY(6px) scale(.96,1.06)',offset:.42},
-      {transform:'translateY(110px) scale(.9,1.12) rotate(5deg)',offset:1}     // hero'nun altina dalis (header kirpar)
-    ],{duration:640,easing:'cubic-bezier(.5,0,.8,.3)',fill:'forwards'});},3400);
-  }
-  // arada kendiliginden: ~6 sn'de bir %14 sans (ortalama 40 sn), kutlama acik degilse
-  const HELLO=['Selam','Buradayım','Nasıl gidiyor','Harcamalara dikkat','İyi gidiyorsun'];
-  setInterval(()=>{if(!mounted||!away||busy)return;const cel=$('vmCeleb');if(cel&&cel.classList.contains('show'))return;if(Math.random()<0.14)comeBack(HELLO[Math.floor(Math.random()*HELLO.length)]);},6000);
-  function ensureHere(cb){if(away){comeBack();setTimeout(cb,800);}else{clearTimeout(stayT);cb();}}
-
-  // ---- silme / duzenleme tepkileri ----
-  function onDelete(){if(!mounted||busy)return;busy=true;ensureHere(()=>{react('poof','Sildim');setTimeout(()=>{busy=false;stay(2400);},900);});}
-  function onEdit(){if(!mounted||busy)return;busy=true;ensureHere(()=>{react('nod','Düzenledim');setTimeout(()=>{busy=false;stay(2400);},900);});}
-  // ---- islem tepkisi (txSheetSave sarmalayicisindan) ----
-  function onTx(type,amount){
-    if(!mounted||busy)return;busy=true;
-    ensureHere(()=>{
-      if(type==='income'){react('happy','Gelir geldi');setTimeout(()=>{busy=false;stay(2600);},900);return;}
-      // harcama: dikkatli inceleme
-      resetFace();const m=$('vmWrap').querySelector('svg');
-      m.style.transition='transform .4s cubic-bezier(.34,1.45,.6,1)';m.style.transform='translate(-4px,10px) rotate(-14deg) scale(1.06)';
-      setTimeout(()=>{$('vmBrowL').style.opacity=1;$('vmBrowL').style.transform='translateY(-4px) rotate(-8deg)';const ey=$('vmEyes');ey.style.transition='transform .3s';ey.style.transform='translate(-4px,4px)';$('vmMouth').setAttribute('d',MOUTHS.flat);},250);
-      setTimeout(()=>{m.style.transform='';$('vmEyes').style.transform='';
-        let fb=null;try{fb=calcFreeBudget(monthKey());}catch(e){}
-        const high=fb?(fb.daily>0&&amount>fb.daily*0.6):(amount>=300);
-        if(high)react('worried','Bu biraz yüksek');else react('happy','Tamam, kaydettim');
-        setTimeout(()=>{busy=false;stay(2600);},800);},1400);
-    });
-  }
-
-  // ---- canlilik: bak, kirp, arada zipla, bosta morph ----
-  function liven(){
-    livenT.push(setInterval(()=>{if(busy||away)return;const k=info(key).eyes;if(k==='cool'||k==='content')return;const dx=[-5,-3,0,3,5][Math.floor(Math.random()*5)],dy=[-2,0,2][Math.floor(Math.random()*3)];['vmpL','vmpR'].forEach(id=>{const p=$(id);if(!p)return;p.style.transition='transform .28s cubic-bezier(.34,1.45,.6,1)';p.style.transform='translate('+dx+'px,'+dy+'px)';});},1200));
-    livenT.push(setInterval(()=>{if(busy||away)return;const k=info(key).eyes;if(k==='cool'||k==='content')return;const g=$('vmEyes');if(!g)return;g.style.transformBox='fill-box';g.style.transformOrigin='center';g.style.transition='transform .08s';g.style.transform='scaleY(.08)';setTimeout(()=>g.style.transform='',110);},2600));
-    livenT.push(setInterval(()=>{if(busy||away||Math.random()>.5)return;const m=$('vmWrap')&&$('vmWrap').querySelector('svg');if(m)m.animate([{transform:'rotate(0) scale(1)'},{transform:'rotate(-16deg) scale(1.08) translateY(-8px)',offset:.4},{transform:'rotate(12deg) scale(1.02)',offset:.7},{transform:'rotate(0) scale(1)'}],{duration:720,easing:'cubic-bezier(.34,1.45,.6,1)'});},4000));
-    const others=['leaf','cloud','bean','flower','egg','circle','squircle','pill'];
-    livenT.push(setInterval(()=>{if(busy||away||talking||!M)return;M.to(others[Math.floor(Math.random()*others.length)],700);setTimeout(()=>{if(!talking)M.to(info(key).shape,700);},1300);},9000));
-  }
-
   // ---- karakter degisimi (Plan render'indan) → full-screen kutlama ----
   function onCharacter(k){
     if(!k||!CH[k])return;const prev=data.mascotChar;
     data.mascotChar=k;try{save();}catch(e){}
-    if(prev&&CH[prev]&&prev!==k){showCeleb(prev,k);}else if(mounted&&key!==k){applyChar(k,true);}
+    key=k;if(prev&&CH[prev]&&prev!==k)showCeleb(prev,k);
   }
   const REAL_ORDER=['ACEMI','BORCLU','KIRILGAN','HARCAYAN','DENGELI','TUTUMLU','BIRIKTIREN','HEDEFCI','YATIRIMCI','OZGUR'];
   // ---- dreamy orb sahnesi: tac yapraklari (bir kez uretilir) ----
@@ -12575,7 +12463,7 @@ const VM = (function(){
     showCeleb._new=newK;
     }catch(e){console.warn('vm celeb',e);}
   }
-  function closeCeleb(){const cel=$('vmCeleb');if(cel)cel.classList.remove('show');const b=$('vmCbBody');if(b)b.classList.remove('vm-alive');if(showCeleb._new&&!showCeleb._preview)applyChar(showCeleb._new,true);showCeleb._preview=false;}
+  function closeCeleb(){const cel=$('vmCeleb');if(cel)cel.classList.remove('show');const b=$('vmCbBody');if(b)b.classList.remove('vm-alive');if(showCeleb._new&&!showCeleb._preview)key=showCeleb._new;showCeleb._preview=false;}
 
   // ---- baslat: DOM hazir olunca header'a tak ----
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else setTimeout(mount,0);
@@ -12621,7 +12509,7 @@ const VM = (function(){
     liveEyes(()=>eyes,pfx+'_pL',pfx+'_pR',()=>info(cur).eyes);
     return {setChar,morph:m,el:container};
   }
-  return {mount,onTx,onDelete,onEdit,onCharacter,closeCeleb,previewCeleb,leave,comeBack,react,say,applyChar,renderPlanAvatar,spawn};
+  return {mount,onCharacter,closeCeleb,previewCeleb,renderPlanAvatar,spawn};
 })();
 
 // ═══════════ V78 — 10 FINANSAL KARAKTER: 5 yeni persona (metin + kural), orijinal siniflandirici korunur ═══════════
@@ -12703,25 +12591,6 @@ _planClassifyChar = function(fb){
 };
 
 // ---- SARMALAYICILAR (orijinal fonksiyonlar dokunulmadan) ----
-const _vmOrigTxSheetSave = txSheetSave;
-txSheetSave = function(){
-  const amt=parseNum(((document.getElementById('txSheetAmount')||{}).value)||'');const type=_sheetType;const n0=(data.transactions||[]).length;
-  const r=_vmOrigTxSheetSave.apply(this,arguments);
-  try{if((data.transactions||[]).length>n0)VM.onTx(type,amt);}catch(e){}
-  return r;
-};
-const _vmOrigDeleteTx = deleteTx;
-deleteTx = function(){
-  const n0=(data.transactions||[]).length;const r=_vmOrigDeleteTx.apply(this,arguments);
-  try{if((data.transactions||[]).length<n0)VM.onDelete();}catch(e){}
-  return r;
-};
-const _vmOrigSaveTxEdit = saveTxEdit;
-saveTxEdit = function(){
-  const r=_vmOrigSaveTxEdit.apply(this,arguments);
-  try{const t=document.getElementById('toast');if(t&&t.innerHTML.indexOf('İşlem güncellendi')!==-1)VM.onEdit();}catch(e){}
-  return r;
-};
 // ---- ONBOARDING: slayt 0 maskot + karakter slayti (idx 4) morph dongusu ----
 let _vmObChar=null,_vmObCycle=null;
 const _VM_OB_ORDER=['ACEMI','BORCLU','KIRILGAN','HARCAYAN','DENGELI','TUTUMLU','BIRIKTIREN','HEDEFCI','YATIRIMCI','OZGUR'];
