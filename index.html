@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
-<!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu Kuralı) -->
+<!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu Kuralı · Acil Fon) -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="VAULT">
@@ -14071,7 +14071,7 @@ setInterval(checkMonthRollover, 60000);
 .fl-block{position:absolute;inset:0;z-index:1;background:var(--fl-block);clip-path:circle(0% at 12% 8%);transition:clip-path .8s var(--fl-out),background .4s;pointer-events:none}
 .fl-block.fl-on{clip-path:circle(180% at 12% 8%)}
 /* kütüphane */
-.fl-lib{position:absolute;inset:0;z-index:7;display:none;flex-direction:column;background:#050505;padding:calc(env(safe-area-inset-top) + 30px) 20px 28px;overflow-y:auto}
+.fl-lib{position:absolute;inset:0;z-index:7;display:none;flex-direction:column;background:#050505;color:#F2F1EB;padding:calc(env(safe-area-inset-top) + 30px) 20px 28px;overflow-y:auto}
 .fl-lib.fl-show{display:flex;align-items:center}
 .fl-libin{width:100%;max-width:430px;margin:0 auto}
 .fl-lib-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
@@ -14122,9 +14122,11 @@ setInterval(checkMonthRollover, 60000);
 .fl-line{font-size:17px;font-weight:800;line-height:1.32;letter-spacing:-.3px;margin-top:10px;max-width:340px}.fl-line .fl-w{display:inline-block;animation:flWIn .6s var(--fl-spring) both}
 .fl-hint{font-size:11px;font-weight:700;opacity:.55;margin-top:8px}
 .fl-fb{margin-top:8px;font-size:13px;font-weight:700;line-height:1.45;min-height:18px}.fl-fb.fl-ok{color:var(--fl-accent)}.fl-fb.fl-bad{color:#FF8A94}
-.fl-cta{margin-top:14px;width:100%;padding:17px;border:none;border-radius:var(--fl-rc);background:var(--fl-accent);color:#04170D;font-size:16px;font-weight:800;cursor:pointer;transition:transform .2s var(--fl-spring);animation:flWIn .6s .35s var(--fl-spring) both;box-shadow:0 14px 34px rgba(25,230,140,.35)}
+.fl-cta{margin-top:14px;width:100%;padding:17px;border:none;border-radius:var(--fl-rc);background:var(--fl-accent);color:#04170D;font-size:16px;font-weight:800;cursor:pointer;transition:transform .2s var(--fl-spring);animation:flWIn .6s .35s var(--fl-spring) both;box-shadow:0 14px 34px color-mix(in srgb,var(--fl-accent) 35%,transparent)}
 .fl-cta.fl-inv{background:#07120C;color:var(--fl-lesson);box-shadow:0 14px 34px rgba(7,18,12,.3)}.fl-cta:active{transform:scale(.97)}
 .fl-pop{animation:flNumPop .5s var(--fl-spring)}@keyframes flNumPop{40%{transform:scale(1.06)}}
+.fl-pill{font-size:11px;font-weight:800;letter-spacing:.6px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.08);white-space:nowrap;animation:flWIn .5s var(--d,0s) var(--fl-spring) both}
+.fl-pill.fl-solid{background:var(--fl-lesson);color:var(--fl-hlfg)}
 /* grafikler */
 .fl-bars{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;width:100%;height:100%;align-items:end}
 .fl-bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
@@ -14144,6 +14146,7 @@ setInterval(checkMonthRollover, 60000);
 .fl-gauge{width:44%;height:100%;border-radius:var(--fl-rc);border:3px solid rgba(255,255,255,.28);position:relative;overflow:hidden;transition:border-color .3s}
 .fl-gauge .fl-fill{position:absolute;left:0;right:0;bottom:0;height:12%;background:var(--fl-lesson);transition:height .7s var(--fl-out),background .3s}
 .fl-gauge.fl-over{border-color:#FF4B5C;animation:flShake .5s}.fl-gauge.fl-over .fl-fill{background:#FF4B5C}
+.fl-gauge.fl-shake{animation:flShake .5s}
 .fl-limit{position:absolute;left:-6px;width:calc(44% + 12px);top:35%;border-top:2px dashed #fff;font-size:10.5px;font-weight:800;padding-top:4px;color:#fff;z-index:2}
 .fl-warn{position:absolute;left:0;width:44%;top:6%;display:flex;justify-content:center;opacity:0;transition:opacity .2s,transform .3s var(--fl-spring);transform:scale(.7)}.fl-warn span{background:#0a0a0a;color:#FF4B5C;font-size:13px;font-weight:800;letter-spacing:1px;padding:8px 14px;border-radius:999px;box-shadow:0 10px 24px rgba(0,0,0,.5)}.fl-gauge.fl-over~.fl-warn{opacity:1;transform:scale(1)}
 .fl-fut{width:38%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
@@ -14154,8 +14157,8 @@ setInterval(checkMonthRollover, 60000);
 .fl-tile{aspect-ratio:1/1.35;border-radius:var(--fl-rc);display:flex;align-items:flex-end;padding:14px;font-weight:800;font-size:17px;color:#0a0a0a;background:linear-gradient(160deg,color-mix(in srgb,var(--c) 70%,#fff),var(--c) 50%,color-mix(in srgb,var(--c) 75%,#000));cursor:pointer;transition:transform .2s var(--fl-spring),opacity .3s;box-shadow:0 16px 30px -14px var(--c);animation:flTileIn .5s var(--fl-spring) both}
 .fl-tile:active{transform:scale(.95)}.fl-tile.fl-bad{animation:flShake .45s}.fl-tile.fl-gone{opacity:0;pointer-events:none}
 @keyframes flTileIn{from{opacity:0;transform:translateY(18px) scale(.9)}}
-.fl-slot{width:100%;height:70px;border:2px dashed rgba(25,230,140,.7);border-radius:var(--fl-rc);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;letter-spacing:1.2px;color:var(--fl-lesson);margin-top:12px;transition:background .3s,border-style .3s}
-.fl-slot.fl-filled{background:rgba(25,230,140,.14);border-style:solid}
+.fl-slot{width:100%;height:70px;border:2px dashed color-mix(in srgb,var(--fl-lesson) 70%,transparent);border-radius:var(--fl-rc);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;letter-spacing:1.2px;color:var(--fl-lesson);margin-top:12px;transition:background .3s,border-style .3s}
+.fl-slot.fl-filled{background:color-mix(in srgb,var(--fl-lesson) 14%,transparent);border-style:solid}
 .fl-flying{position:absolute;z-index:9;border-radius:var(--fl-rc);display:flex;align-items:flex-end;padding:14px;font-weight:800;font-size:17px;color:#0a0a0a;pointer-events:none}
 .fl-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:2fr 1fr;gap:9px;width:100%;height:100%}
 .fl-cell{border-radius:var(--fl-rc);padding:12px;display:flex;flex-direction:column;justify-content:flex-end;color:#0a0a0a;background:linear-gradient(160deg,color-mix(in srgb,var(--c) 72%,#fff),var(--c) 50%,color-mix(in srgb,var(--c) 75%,#000));min-width:0;box-shadow:0 18px 34px -16px var(--c);animation:flTileIn .55s var(--fl-spring) both;position:relative;overflow:hidden}
@@ -14207,6 +14210,57 @@ setInterval(checkMonthRollover, 60000);
 .fl-cl b{font-size:14px;font-weight:800;letter-spacing:-.3px}.fl-cl span{font-size:10.5px;font-weight:800;opacity:.65;white-space:nowrap}
 /* düşen paralar (yedek grafik) */
 .fl-card{width:100%;border-radius:var(--fl-rc);background:linear-gradient(160deg,#4CF0A8,#19E68C 45%,#0FA666);color:#04170D;padding:20px 22px;position:relative;z-index:2}
+/* ── ders 2: acil fon grafikleri ── */
+.fl-mon{width:100%;display:flex;flex-direction:column;gap:14px}
+.fl-inc{display:flex;align-items:center;gap:10px;height:34px}
+.fl-inclbl{font-size:11px;font-weight:800;letter-spacing:1px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.08);white-space:nowrap;transition:background .3s,color .3s;flex-shrink:0}
+.fl-incbar{flex:1;height:14px;border-radius:var(--fl-rb);background:linear-gradient(90deg,color-mix(in srgb,var(--fl-lesson) 70%,#fff),var(--fl-lesson));transform-origin:left;transition:transform 1.1s var(--fl-out);box-shadow:0 10px 24px -10px var(--fl-lesson)}
+.fl-inc.fl-stop .fl-incbar{transform:scaleX(0)}.fl-inc.fl-stop .fl-inclbl{background:#FF4B5C;color:#fff}
+.fl-mgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;width:100%}
+.fl-mt{--c:var(--fl-lesson);aspect-ratio:1/1.5;border-radius:var(--fl-rb);border:2px solid color-mix(in srgb,var(--c) 40%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:9.5px;font-weight:800;letter-spacing:.8px;color:rgba(242,241,235,.6);transition:background .35s,color .35s,border-color .35s;animation:flTileIn .5s var(--d) var(--fl-spring) both;min-width:0}
+.fl-mt b{font-size:22px;letter-spacing:-1px;line-height:1;color:#F2F1EB;transition:color .35s}
+.fl-mt i{font-style:normal;font-size:12px;margin-top:4px;opacity:0;transition:opacity .3s}
+.fl-mt.fl-on{background:linear-gradient(160deg,color-mix(in srgb,var(--c) 72%,#fff),var(--c) 50%,color-mix(in srgb,var(--c) 75%,#000));border-color:transparent;color:var(--fl-hlfg);box-shadow:0 14px 30px -14px var(--c)}
+.fl-mt.fl-on b{color:var(--fl-hlfg)}.fl-mt.fl-on i{opacity:1}
+.fl-mt.fl-soft{background:color-mix(in srgb,var(--c) 18%,transparent);border-color:transparent}.fl-mt.fl-soft i{opacity:.6}
+.fl-mleg{display:flex;gap:8px}
+.fl-lad{width:100%;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.fl-step{width:var(--w);height:64px;border-radius:var(--fl-rc);display:flex;align-items:center;gap:12px;padding:0 16px;border:2px solid color-mix(in srgb,var(--c) 45%,transparent);color:#F2F1EB;animation:flTileIn .55s var(--d) var(--fl-spring) both;position:relative}
+.fl-step b{width:30px;height:30px;border-radius:50%;background:var(--c);color:#0a0a0a;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.fl-step .fl-sn{font-size:15px;font-weight:800;letter-spacing:-.3px;white-space:nowrap}.fl-step .fl-ss{font-size:11px;font-weight:700;opacity:.6;margin-top:1px;white-space:nowrap}
+.fl-step.fl-cur{background:linear-gradient(160deg,color-mix(in srgb,var(--c) 72%,#fff),var(--c) 50%,color-mix(in srgb,var(--c) 75%,#000));border-color:transparent;color:var(--fl-hlfg);box-shadow:0 16px 30px -14px var(--c)}
+.fl-step.fl-cur b{background:var(--fl-hlfg);color:var(--c)}.fl-step.fl-cur .fl-ss{opacity:.75}
+.fl-here{position:absolute;right:-4px;top:-15px;background:#fff;color:#000;font-size:10px;font-weight:800;letter-spacing:1px;padding:6px 10px;border-radius:999px;--r:4deg;animation:flSlap .55s 1.15s var(--fl-spring) both;box-shadow:0 8px 20px rgba(0,0,0,.4);z-index:2}
+.fl-choice{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.fl-ch{--c:var(--fl-lesson);aspect-ratio:1/1.12;border-radius:var(--fl-rc);border:2px solid color-mix(in srgb,var(--c) 40%,transparent);padding:16px;display:flex;flex-direction:column;cursor:pointer;position:relative;color:#F2F1EB;transition:transform .2s var(--fl-spring),background .3s,color .3s,border-color .3s;animation:flTileIn .5s var(--d) var(--fl-spring) both}
+.fl-ch:active{transform:scale(.96)}
+.fl-ch .fl-chn{display:flex;align-items:baseline;gap:5px;font-size:12px;font-weight:800;letter-spacing:1px}.fl-ch .fl-chn b{font-size:56px;letter-spacing:-3px;line-height:.9}
+.fl-ch .fl-cht{font-size:14px;font-weight:800;margin-top:auto;letter-spacing:-.2px}.fl-ch .fl-chs{font-size:11px;font-weight:700;opacity:.6;margin-top:2px}
+.fl-ch .fl-cha{font-size:16px;font-weight:800;letter-spacing:-.5px;margin-top:8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.fl-ch .fl-chk{position:absolute;right:12px;top:12px;width:26px;height:26px;border-radius:50%;background:var(--fl-hlfg);color:var(--c);display:flex;align-items:center;justify-content:center;font-style:normal;font-size:13px;font-weight:800;opacity:0;transform:scale(.5);transition:opacity .2s,transform .3s var(--fl-spring)}
+.fl-ch.fl-sel{background:linear-gradient(160deg,color-mix(in srgb,var(--c) 72%,#fff),var(--c) 50%,color-mix(in srgb,var(--c) 75%,#000));border-color:transparent;color:var(--fl-hlfg);box-shadow:0 16px 30px -14px var(--c)}
+.fl-ch.fl-sel .fl-chs{opacity:.75}.fl-ch.fl-sel .fl-chk{opacity:1;transform:none}
+.fl-jarwrap{width:100%;height:100%;display:flex;gap:16px;align-items:stretch}
+.fl-jar{flex-shrink:0}.fl-jar .fl-fill{height:0;transition:height .22s linear}
+.fl-jlbl{position:absolute;left:0;right:0;top:12px;text-align:center;font-size:11px;font-weight:800;letter-spacing:1.2px;color:#fff;z-index:2}
+.fl-jside{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;min-width:0}
+.fl-jk{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;opacity:.6}
+.fl-jnum{font-size:30px;font-weight:800;letter-spacing:-1.5px;font-variant-numeric:tabular-nums;color:var(--fl-lesson);line-height:1;white-space:nowrap}
+.fl-jdots{display:flex;flex-wrap:wrap;gap:5px}.fl-jdots i{width:10px;height:10px;border-radius:3px;background:rgba(255,255,255,.12);transition:background .2s}.fl-jdots i.fl-on{background:var(--fl-lesson)}
+.fl-jdone{align-self:flex-start;background:#fff;color:#000;font-size:11px;font-weight:800;letter-spacing:1px;padding:7px 12px;border-radius:999px;opacity:0;transform:scale(.6);transition:opacity .2s,transform .35s var(--fl-spring)}.fl-jdone.fl-show{opacity:1;transform:none}
+.fl-tile.fl-info{cursor:default;flex-direction:column;justify-content:flex-end;align-items:flex-start}
+.fl-tile.fl-dim{background:#1A1A1F;color:#F2F1EB;box-shadow:none}
+.fl-tile .fl-tn{font-size:15px;font-weight:800;line-height:1.1;letter-spacing:-.3px}.fl-tile .fl-ts2{font-size:10.5px;font-weight:700;opacity:.7;margin-top:4px;line-height:1.25}
+.fl-bd{position:absolute;left:12px;top:12px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;--r:0deg;animation:flSlap .5s var(--d) var(--fl-spring) both}
+.fl-bd.fl-yes{background:var(--fl-hlfg);color:var(--fl-lesson)}.fl-bd.fl-no{background:#FF4B5C;color:#fff}
+.fl-drainwrap{width:100%;height:100%;display:flex;gap:16px;align-items:stretch}
+.fl-dg{flex-shrink:0}
+.fl-dlist{flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px;min-width:0}
+.fl-dit{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-radius:var(--fl-rc);background:rgba(255,255,255,.07);font-size:14px;font-weight:800;opacity:0;transform:translateX(18px);transition:opacity .3s,transform .5s var(--fl-spring),background .3s,color .3s;white-space:nowrap}
+.fl-dit.fl-in{opacity:1;transform:none}
+.fl-dit i{font-style:normal;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;opacity:0;transform:scale(.5);transition:opacity .2s,transform .3s var(--fl-spring);flex-shrink:0}
+.fl-dit.fl-dno{background:rgba(255,75,92,.16);color:#FF8A94}.fl-dit.fl-dno i{background:#FF4B5C;color:#fff;opacity:1;transform:none}
+.fl-dit.fl-dok{background:var(--fl-lesson);color:var(--fl-hlfg)}.fl-dit.fl-dok i{background:var(--fl-hlfg);color:var(--fl-lesson);opacity:1;transform:none}
 /* alt nav */
 .fl-nav{position:relative;z-index:6;display:flex;justify-content:space-between;align-items:center;padding:8px 22px calc(18px + env(safe-area-inset-bottom))}
 .fl-next{width:64px;height:64px;border-radius:50%;background:#fff;color:#000;font-size:26px;box-shadow:0 12px 30px rgba(255,255,255,.18)}.fl-next:disabled{opacity:.3;box-shadow:none;cursor:default}
@@ -14247,10 +14301,11 @@ canvas.fl-conf{position:absolute;inset:0;z-index:8;pointer-events:none}
 const $=id=>document.getElementById('fl_'+id);
 const $$=sel=>document.querySelectorAll('#flOverlay '+sel);
 const fmt=n=>Math.round(n).toLocaleString('tr-TR');const num=s=>parseInt(String(s).replace(/\D/g,''))||0;
-const LESSON='#19E68C';
+const tx=v=>typeof v==='function'?v():v;
+const MN=(typeof MONTH_NAMES!=='undefined')?MONTH_NAMES:['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
 const BOX=[{nm:'Yaşam',c:'#19E68C',p:.65,line:'Kira, market, ulaşım, faturalar. [[Ayda en fazla bu kadar.]]'},{nm:'Keyif',c:'#FF8A3D',p:.05,line:'Kahve, dışarısı, küçük zevkler. [[Bu para senin; rahat harca.]]'},{nm:'Borç',c:'#FF4B5C',p:.10,line:'Borç ödemene bu kadar ayır. [[Borcun yoksa Gelecek’e ekle.]]'},{nm:'Hedef',c:'#B48CFF',p:.10,line:'Ev, araba, tatil gibi büyük hedefler. [[Her ay bu kadar biriktir.]]'},{nm:'Gelecek',c:'#5AA8FF',p:.10,line:'Bu parayı yatırıma koy. [[Sen uyurken bile çalışır.]]'}];
 
-/* ---- kütüphane (7 ipucu; şimdilik 1. ders hazır) ---- */
+/* ---- kütüphane (7 ipucu; 2 ders hazır) ---- */
 const ICON={
   calc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8 7h8M8 11h2M12 11h2M16 11h0M8 15h2M12 15h2M16 15v2"/></svg>',
   buoy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.5 3.5M14.9 14.9l3.5 3.5M18.4 5.6l-3.5 3.5M9.1 14.9l-3.5 3.5"/></svg>',
@@ -14262,7 +14317,7 @@ const ICON={
 
 const TIPS=[
   {id:'kutular',icon:'calc',c:'rgba(25,230,140,.16)',ic:'#19E68C',title:'5 Kutu Kuralı',sub:'Maaşını nasıl bölmelisin? 15 sayfalık maskotlu ders.',ready:true},
-  {id:'acilfon',icon:'buoy',c:'rgba(10,132,255,.16)',ic:'#5AA8FF',title:'Acil Fon',sub:'Kaç aylık tampon lazım? Hesaplayalım.',ready:false},
+  {id:'acilfon',icon:'buoy',c:'rgba(10,132,255,.16)',ic:'#5AA8FF',title:'Acil Fon',sub:'Kaç aylık tampon lazım? 13 sayfalık maskotlu ders.',ready:true},
   {id:'kartopu',icon:'snow',c:'rgba(255,75,92,.16)',ic:'#FF4B5C',title:'Borç Kartopu',sub:'Borçtan çıkışın en motive edici yolu.',ready:false},
   {id:'503020',icon:'scale',c:'rgba(251,191,36,.16)',ic:'#FBBF24',title:'50/30/20 mı Sana Uygun?',sub:'Klasik kural senin gelirinde işliyor mu?',ready:false},
   {id:'sizinti',icon:'search',c:'rgba(191,90,242,.16)',ic:'#BF5AF2',title:'Abonelik Sızıntısı',sub:'Küçük ama sık ödemeler yılda ne tutuyor?',ready:false},
@@ -14276,10 +14331,13 @@ function renderLib(){const ds=doneSet();$('lib').innerHTML=`<div class="fl-libin
   TIPS.map(t=>`<div class="fl-tip ${t.ready?'':'fl-locked'}" data-id="${t.id}"><div class="fl-emo" style="--c:${t.c};color:${t.ic}">${ICON[t.icon]}</div><div class="fl-tx"><div class="fl-tt">${t.title}</div><div class="fl-ts">${t.sub}</div></div>${t.ready?(ds.has(t.id)?'<span class="fl-badge fl-done">✓ TAMAMLANDI</span>':'<span class="fl-badge fl-go">BAŞLA</span>'):'<span class="fl-badge">YAKINDA</span>'}</div>`).join('')+`</div>`;
   $('libclose').addEventListener('click',close);
   $$('.fl-tip').forEach(el=>el.addEventListener('click',()=>{const t=TIPS.find(x=>x.id===el.dataset.id);if(t&&t.ready)openLesson(t.id);}));}
-function renderEntry(){const host=document.getElementById('flEntryHost');if(!host)return;const ds=doneSet();const n=ds.size;host.innerHTML=`<div class="fl-entry" onclick="FL.openLibrary()"><div class="fl-eemo" style="color:#19E68C">${ICON.calc}</div><div class="fl-etx"><div class="fl-ek">Finansal İpuçları</div><div class="fl-et">${n?`${n}/7 ders tamamlandı`:'5 Kutu Kuralı ile başla'}</div><div class="fl-es">Maskotların anlattığı kısa, animasyonlu dersler. Maaşını nasıl böleceğini 3 dakikada öğren.</div></div><div class="fl-ego">→</div></div>`;}
+function renderEntry(){const host=document.getElementById('flEntryHost');if(!host)return;const ds=doneSet();const n=ds.size;const next=TIPS.find(t=>t.ready&&!ds.has(t.id));
+  const et=n?(next?`Sırada: ${next.title}`:'Tüm dersler tamamlandı'):'5 Kutu Kuralı ile başla';
+  const es=n?`${n}/7 ders tamamlandı. Maskotların anlattığı kısa, animasyonlu dersler.`:'Maskotların anlattığı kısa, animasyonlu dersler. Maaşını nasıl böleceğini 3 dakikada öğren.';
+  host.innerHTML=`<div class="fl-entry" onclick="FL.openLibrary()"><div class="fl-eemo" style="color:#19E68C">${ICON.calc}</div><div class="fl-etx"><div class="fl-ek">Finansal İpuçları</div><div class="fl-et">${et}</div><div class="fl-es">${es}</div></div><div class="fl-ego">→</div></div>`;}
 
-/* ---- ders 1 sayfaları ---- */
-const PAGES=[
+/* ---- ders 1: 5 Kutu Kuralı ---- */
+const PAGES1=[
   {L:'poster',bg:'#7C5CFF',ink:'#FFFFFF',hl:'#0a0a0a',hlfg:'#fff',char:'ACEMI',m:['br',140],h:'Maaş geldi.|Ay sonu|[[bitti.]]|Nereye|gitti?',line:'Çoğu kişi bilmiyor.|[[Bu derste düzelteceğiz.]]',
     stk:[{t:'kira 20.000',bg:'#FF4B5C',fg:'#fff',x:'66%',y:'8%',r:-8},{t:'market 12.000',bg:'#FFE97A',fg:'#000',x:'56%',y:'21%',r:7},{t:'kafe',bg:'#FF8A3D',fg:'#000',x:'44%',y:'34%',r:-12},{t:'netflix',bg:'#0a0a0a',fg:'#fff',x:'60%',y:'46%',r:9},{t:'taksi',bg:'#5AA8FF',fg:'#000',x:'50%',y:'59%',r:-5},{t:'41.700 kayıp',bg:'#fff',fg:'#000',x:'8%',y:'70%',r:6}],
     doodles:[{k:'flower',x:'70%',y:'-7%',s:92,c:'#FFB3D9'},{k:'arrow',x:'58%',y:'68%',s:82,c:'#0a0a0a'}]},
@@ -14287,20 +14345,58 @@ const PAGES=[
   {L:'tg',g:'scale',char:'DENGELI',m:['mr',104],kick:'neden yüzde',h:'Maaş artınca|hepsi artar.',line:'Parçalar sabit para değil, maaşının yüzdesi. [[Maaş büyüyünce parçalar da büyür.]]'},
   {L:'ml',g:'giant',char:'ACEMI',m:['bl',152],fixed:80000,kick:'örnek',h:'Diyelim|maaşın|80.000.',line:'Eline geçen net maaş bu olsun. [[Şimdi 5 parçaya böleceğiz.]]'},
   {L:'tg',g:'bars',amounts:true,fixed:80000,char:'ACEMI',m:['tr',104],kick:'örnek',h:'Yaşam için|en fazla 52.000.',line:'80.000’in %65’i 52.000. Kira, market, ulaşım için [[ayda en fazla bu kadar.]] Keyif 4.000; borç, hedef, gelecek 8.000’er.'},
-  {L:'center',g:'input',type:'ask',char:'ACEMI',m:['tc',146],kick:'şimdi sen',h:'Aylık net|maaşın?',line:'Eline geçen net maaşını yaz. Hesabı buna göre yapacağız.'},
+  {L:'center',g:'input',type:'ask',key:'inc',char:'ACEMI',m:['tc',146],kick:'şimdi sen',h:'Aylık net|maaşın?',line:'Eline geçen net maaşını yaz. Hesabı buna göre yapacağız.'},
   {L:'result',type:'result',char:'ACEMI',k:1,m:['tr',118]},
   {L:'result',type:'result',char:'HARCAYAN',k:2,m:['tl',118]},
   {L:'result',type:'result',char:'BORCLU',k:3,m:['tr',118]},
   {L:'result',type:'result',char:'HEDEFCI',k:4,m:['tl',118]},
   {L:'result',type:'result',char:'YATIRIMCI',k:5,m:['tr',118]},
   {L:'tg',g:'gauge',char:'KIRILGAN',m:['mr',108],accent:'#FF4B5C',hlfg:'#fff',kick:'dikkat',h:'%65 hedef değil,|[[tavan.]]',line:'%65 harcaman gereken miktar değil, [[aşmaman gereken sınır.]] Altında kalırsan fark Gelecek’e gider.'},
-  {L:'tg',g:'tiles',type:'quiz',char:'DENGELI',m:['tr',106],opts:[{t:'Kira',c:'#19E68C'},{t:'Netflix',c:'#FF4B5C'},{t:'Tatil',c:'#B48CFF'}],ans:0,ok:'Doğru. Kira olmadan yaşayamazsın. Netflix ve tatil Keyif parçasına girer.',no:'Bir daha düşün: hangisi olmadan yaşayamazsın?',kick:'mini test',h:'Hangisi|yaşam gideri?'},
+  {L:'tg',g:'tiles',type:'quiz',char:'DENGELI',m:['tr',106],opts:[{t:'Kira',c:'#19E68C'},{t:'Netflix',c:'#FF4B5C'},{t:'Tatil',c:'#B48CFF'}],ans:0,slot:'YAŞAM PARÇASI',slotOk:'✓ KİRA → YAŞAM',ok:'Doğru. Kira olmadan yaşayamazsın. Netflix ve tatil Keyif parçasına girer.',no:'Bir daha düşün: hangisi olmadan yaşayamazsın?',kick:'mini test',h:'Hangisi|yaşam gideri?'},
   {L:'tg',g:'grid',char:'OZGUR',m:['tr',110],kick:'özet',h:'Senin [[planın.]]',line:'Her ay maaş gelince [[bu 5 parçaya böl.]] Bu kadar.'},
   {L:'poster',type:'action',bg:'#19E68C',ink:'#07120C',hl:'#fff',hlfg:'#07120C',char:'OZGUR',m:['mr',124],cta:true,h:'Her ay:|maaş gelir,|[[5’e böl.]]|Bu kadar.',line:'Hedef ve bütçeleri hazırlarım,|[[sen sadece onaylarsın.]]',
     stk:[{t:'Gelecek %10',bg:'#5AA8FF',fg:'#000',x:'4%',y:'44%',r:-6},{t:'Keyif %5',bg:'#FF8A3D',fg:'#000',x:'34%',y:'50%',r:5},{t:'Borç %10',bg:'#FF4B5C',fg:'#fff',x:'8%',y:'58%',r:-9},{t:'Hedef %10',bg:'#B48CFF',fg:'#000',x:'38%',y:'65%',r:8},{t:'Yaşam %65',bg:'#07120C',fg:'#19E68C',x:'12%',y:'73%',r:-4}],
     doodles:[{k:'star',x:'72%',y:'2%',s:76,c:'#07120C'},{k:'squig',x:'56%',y:'74%',s:70,c:'#fff'}]},
 ];
-let pi=0,A={inc:80000},quizOK=false,busy=false,timers=[],mascot=null,lessonId='kutular';
+
+/* ---- ders 2: Acil Fon ---- */
+const fundT=()=>Math.round(A.exp*A.months);
+const fundN=()=>Math.max(1,Math.ceil(fundT()/Math.max(1,A.save)));
+const fundDate=short=>{const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+fundN());const m=MN[d.getMonth()];return (short?m.slice(0,3):m)+' '+d.getFullYear();};
+const PAGES2=[
+  {L:'poster',bg:'#FF4B5C',ink:'#FFFFFF',hl:'#0a0a0a',hlfg:'#fff',char:'KIRILGAN',m:['br',140],h:'Hayat|sormadan|[[gelir.]]|Hazır|mısın?',line:'Tamir, diş, işten çıkarma.|[[Bu derste tamponunu kuracağız.]]',
+    stk:[{t:'tamir 15.000',bg:'#0a0a0a',fg:'#fff',x:'60%',y:'-1%',r:-8},{t:'diş 8.000',bg:'#FFE97A',fg:'#000',x:'58%',y:'22%',r:7},{t:'telefon kırıldı',bg:'#fff',fg:'#000',x:'50%',y:'34%',r:-10},{t:'3 ay maaş yok',bg:'#5AA8FF',fg:'#000',x:'52%',y:'47%',r:8},{t:'kredi kartı',bg:'#0a0a0a',fg:'#fff',x:'8%',y:'70%',r:5}],
+    doodles:[{k:'bolt',x:'72%',y:'-4%',s:84,c:'#FFE97A'},{k:'squig',x:'58%',y:'70%',s:74,c:'#0a0a0a'}]},
+  {L:'gb',g:'months',char:'DENGELI',m:['tr',96],kick:'ne bu',h:'Acil fon =|[[3–6 aylık]]|zorunlu gider.',line:'Gelir kesilse bile kira, market, fatura devam eder. [[Bu para o günler için.]]'},
+  {L:'tg',g:'ladder',char:'YATIRIMCI',m:['tr',104],kick:'sıra',h:'Önce tampon,|[[sonra yatırım.]]',line:'Acil fonun yoksa her sürpriz seni borca iter. [[Önce bunu doldur, sonra büyüt.]]'},
+  {L:'center',g:'input',type:'ask',key:'exp',char:'ACEMI',m:['tc',146],kick:'şimdi sen',h:'Aylık zorunlu|giderin?',line:()=>A.expSrc==='data'?'Kira, fatura, market, ulaşım. Uygulamadaki verinden hesapladım; düzeltebilirsin.':'Kira, fatura, market, ulaşım. Örnek bir tutar yazdım; kendi rakamını gir.'},
+  {L:'tg',g:'choice',char:'DENGELI',m:['tr',106],kick:'seç',h:'Kaç aylık|[[tampon?]]',line:'Maaşın düzenliyse 3 ay yeter. [[Tek gelir ya da serbestsen 6 ay.]]'},
+  {L:'result',type:'result',char:'BIRIKTIREN',m:['tr',118],kick:()=>`${A.months} ay × ${fmt(A.exp)} ₺`,h:'Tampon|[[hedefin.]]',line:()=>`Bu para kenarda durunca [[${A.months} ay]] kimseye muhtaç olmazsın.`,val:fundT,segs:()=>Array.from({length:A.months},(_,i)=>({t:`AY ${i+1} · ${fmt(A.exp)}`}))},
+  {L:'center',g:'input',type:'ask',key:'save',char:'TUTUMLU',m:['tc',146],kick:'plan',h:'Ayda ne kadar|ayırabilirsin?',line:()=>A.saveSrc==='data'?'Serbest bütçene göre bir öneri yazdım. İstersen değiştir.':'Hedefin 12’de biri kadar yazdım. İstersen değiştir.'},
+  {L:'tg',g:'fillup',char:'BIRIKTIREN',m:['tr',104],kick:'süre',h:()=>`[[${fundN()} ayda]]|hazır.`,line:()=>`Her ay ${fmt(A.save)} ₺ kenara koy. [[${fundDate()}]]: tampon dolu.`},
+  {L:'tg',g:'where',char:'TUTUMLU',m:['tr',104],kick:'nerede dursun',h:'Ayrı hesap,|[[gözden uzak.]]',line:'Ulaşabil ama her gün görme. Borsada olmaz: [[lazım olduğu gün düşmüş olabilir.]]'},
+  {L:'tg',g:'drain',char:'HARCAYAN',m:['tr',108],accent:'#FF4B5C',hlfg:'#fff',kick:'dikkat',h:'Tatil parası|[[değil.]]',line:'Sadece gerçek acil: [[sağlık, tamir, gelir kaybı.]] İndirim ve tatil buradan çıkmaz.'},
+  {L:'tg',g:'tiles',type:'quiz',char:'DENGELI',m:['tr',106],opts:[{t:'Yeni telefon',c:'#FF8A3D'},{t:'Araba tamiri',c:'#5AA8FF'},{t:'Tatil fırsatı',c:'#B48CFF'}],ans:1,slot:'ACİL FON',slotOk:'✓ TAMİR → ACİL FON',ok:'Doğru. Arabasız işe gidemezsin. Telefon ve tatil bekleyebilir.',no:'Bir daha düşün: hangisi bekleyemez?',kick:'mini test',h:'Hangisi|[[acil?]]'},
+  {L:'tg',g:'grid2',char:'OZGUR',m:['tr',110],kick:'özet',h:'Senin [[planın.]]',line:()=>`Her ay ${fmt(A.save)} ₺ ayır, [[${fundDate()}]] sonunda tampon hazır.`,
+    cells:()=>[{n:'Acil fon hedefi',v:fundT(),c:'#5AA8FF',p:`${A.months} AY`,big:true},{n:'Aylık',v:A.save,c:'#19E68C'},{n:'Gider',v:A.exp,c:'#FF8A3D'},{n:'Süre',t:`${fundN()} ay`,c:'#B48CFF'},{n:'Hazır',t:fundDate(true),c:'#FFE97A'}]},
+  {L:'poster',type:'action',bg:'#5AA8FF',ink:'#06101E',hl:'#06101E',hlfg:'#5AA8FF',char:'OZGUR',m:['mr',124],cta:true,ctaText:'Hedefi kur →',h:'Önce|tampon,|[[sonra]]|her şey.',line:'Acil Fon hedefini hazırlarım,|[[sen sadece onaylarsın.]]',
+    stk:()=>[{t:`${A.months} ay tampon`,bg:'#06101E',fg:'#5AA8FF',x:'4%',y:'44%',r:-6},{t:`${fmt(fundT())} ₺ hedef`,bg:'#fff',fg:'#000',x:'34%',y:'50%',r:5},{t:`ayda ${fmt(A.save)} ₺`,bg:'#19E68C',fg:'#000',x:'8%',y:'58%',r:-9},{t:'ayrı hesap',bg:'#FFE97A',fg:'#000',x:'38%',y:'65%',r:8},{t:'sadece acil',bg:'#FF4B5C',fg:'#fff',x:'12%',y:'73%',r:-4}],
+    doodles:[{k:'star',x:'72%',y:'2%',s:76,c:'#06101E'},{k:'flower',x:'60%',y:'72%',s:70,c:'#fff'}]},
+];
+
+const LESSONS={
+  kutular:{id:'kutular',color:'#19E68C',ink:'#07120C',hlfg:'#04170D',title:'5 Kutu Kuralı',pages:PAGES1,
+    init(){let inc=0;try{if(typeof calcFreeBudget==='function')inc=Math.round(calcFreeBudget(currentMonth).income||0);}catch(e){}A.inc=inc>0?inc:80000;},
+    apply(){applyPlan();}},
+  acilfon:{id:'acilfon',color:'#5AA8FF',ink:'#06101E',hlfg:'#06101E',title:'Acil Fon',pages:PAGES2,
+    init(){let exp=0,sug=0;
+      try{if(typeof _adviceCtx==='function'){const c=_adviceCtx();exp=Math.round((c.fb.recTotal||0)+(c.fb.debtTotal||0)+(c.avgVar3||0));const T=exp*3;if(T>0)sug=c.structCap>200?Math.max(200,Math.min(Math.ceil(T/6),Math.round(c.structCap*0.5))):Math.max(100,Math.ceil(T/24));}}catch(e){}
+      A.expSrc=exp>0?'data':'sample';
+      if(!(exp>0)){let inc=0;try{if(typeof calcFreeBudget==='function')inc=Math.round(calcFreeBudget(currentMonth).income||0);}catch(e){}exp=inc>0?Math.round(inc*0.65):40000;}
+      A.exp=exp;A.months=3;A.saveSrc=sug>0?'data':'sample';A.save=sug>0?sug:Math.ceil(exp*3/12);},
+    apply(){applyFund();}},
+};
+let pi=0,A={inc:80000,exp:40000,months:3,save:10000},quizOK=false,busy=false,timers=[],mascot=null,L=LESSONS.kutular;
 const later=(f,ms)=>timers.push(setTimeout(f,ms));const every=(f,ms)=>timers.push(setInterval(f,ms));
 function clearTimers(){timers.forEach(t=>{clearTimeout(t);clearInterval(t);});timers=[];}
 const ov=()=>document.getElementById('flOverlay');
@@ -14308,7 +14404,7 @@ const ov=()=>document.getElementById('flOverlay');
 /* ---- grafikler ---- */
 function barsHTML(inc,opts){opts=opts||{};const max=opts.max||(inc*0.65);return `<div class="fl-bars" id="fl_bars">`+BOX.map(b=>`<div class="fl-bar" style="--c:${b.c}"><div class="fl-btop">${opts.amounts?fmt(inc*b.p):'%'+Math.round(b.p*100)}</div><div class="fl-col" data-h="${Math.round(inc*b.p/max*100)}"></div><div class="fl-nm">${b.nm}</div>${opts.amounts?`<div class="fl-sub">%${Math.round(b.p*100)}</div>`:''}</div>`).join('')+`</div>`;}
 function growBars(delay){$$('#fl_bars .fl-col').forEach((c,i)=>later(()=>{c.style.height=c.dataset.h+'%';const t=c.parentElement.querySelector('.fl-btop');if(t)t.style.opacity=1;},(delay||120)+i*110));}
-const GALIGN={bars:'',cutbox:'fl-center',scale:'fl-stretch',giant:'',input:'fl-center',gauge:'',tiles:'fl-center',grid:'fl-stretch'};
+const GALIGN={bars:'',cutbox:'fl-center',scale:'fl-stretch',giant:'',input:'fl-center',gauge:'',tiles:'fl-center',grid:'fl-stretch',months:'fl-center',ladder:'fl-center',choice:'fl-center',fillup:'fl-stretch',where:'fl-center',drain:'fl-stretch',grid2:'fl-stretch'};
 const G={
   cutbox(){const cuts=[65,70,80,90];return `<div class="fl-cutwrap"><div class="fl-cutbox" id="fl_cutbox"><div class="fl-whole" id="fl_whole"><b>80.000 ₺</b><small>maaş · %100</small></div>
       ${cuts.map((x,i)=>`<div class="fl-cut" id="fl_cut${i+1}" style="left:calc(${x}% - 1px)"></div>`).join('')}
@@ -14317,10 +14413,20 @@ const G={
   bars(p){return barsHTML(p.fixed||A.inc,{amounts:p.amounts});},
   scale(){return `<div style="width:100%;height:100%;display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:11px;font-weight:800;opacity:.6;letter-spacing:1px">MAAŞ</span><b id="fl_scInc" style="font-size:30px;font-weight:800;letter-spacing:-1.5px;font-variant-numeric:tabular-nums;color:var(--fl-lesson)">80.000 ₺</b></div><div style="flex:1;min-height:0">${barsHTML(80000,{amounts:true,max:120000*0.65})}</div></div>`;},
   giant(p){return `<div class="fl-giant fl-green"><b><i>₺</i>${fmt(p.fixed)}</b></div>`;},
-  input(){return `<div style="width:100%"><div class="fl-bigin"><input id="fl_askIn" inputmode="numeric" value="${fmt(A.inc)}"><span class="fl-u">₺</span></div></div>`;},
+  input(p){const k=(p&&p.key)||'inc';return `<div style="width:100%"><div class="fl-bigin"><input id="fl_askIn" inputmode="numeric" value="${fmt(A[k])}"><span class="fl-u">₺</span></div></div>`;},
   gauge(){return `<div class="fl-gaugewrap"><div class="fl-gauge" id="fl_gauge"><div class="fl-fill" id="fl_gfill"></div></div><div class="fl-limit">%65 tavan</div><div class="fl-warn"><span>AŞTIN ✕</span></div><div class="fl-fut"><div class="fl-col" id="fl_futcol"></div><div class="fl-nm">Gelecek</div></div>${Array.from({length:8},(_,i)=>`<i class="fl-chip" id="fl_chip${i}"></i>`).join('')}</div>`;},
-  tiles(p){return `<div style="width:100%"><div class="fl-tiles">${p.opts.map((o,i)=>`<div class="fl-tile" data-i="${i}" style="--c:${o.c};animation-delay:${.15+i*.1}s">${o.t}</div>`).join('')}</div><div class="fl-slot" id="fl_slot">YAŞAM PARÇASI</div></div>`;},
+  tiles(p){return `<div style="width:100%"><div class="fl-tiles">${p.opts.map((o,i)=>`<div class="fl-tile" data-i="${i}" style="--c:${o.c};animation-delay:${.15+i*.1}s">${o.t}</div>`).join('')}</div><div class="fl-slot" id="fl_slot">${p.slot||'YAŞAM PARÇASI'}</div></div>`;},
   grid(){const inc=A.inc;return `<div class="fl-grid">`+BOX.map((b,i)=>`<div class="fl-cell ${i===0?'fl-big':'fl-small'}" style="--c:${b.c};animation-delay:${.1+i*.1}s"><div class="fl-n">${b.nm}</div><div class="fl-a" data-v="${inc*b.p}">${fmt(inc*b.p)}<small> ₺</small></div>${i===0?`<div class="fl-p">%65</div>`:''}</div>`).join('')+`</div>`;},
+  /* ders 2 */
+  months(){return `<div class="fl-mon"><div class="fl-inc" id="fl_inc"><span class="fl-inclbl" id="fl_inclbl">GELİR</span><span class="fl-incbar"></span></div><div class="fl-mgrid">${Array.from({length:6},(_,i)=>`<div class="fl-mt" id="fl_mt${i}" style="--d:${.15+i*.07}s"><b>${i+1}</b>AY<i>✓</i></div>`).join('')}</div><div class="fl-mleg"><span class="fl-pill fl-solid" style="--d:3.35s">3 ay · minimum</span><span class="fl-pill" style="--d:3.5s">6 ay · rahat</span></div></div>`;},
+  ladder(){const S=[{n:3,t:'Yatırım',s:'para büyüsün',c:'#19E68C',w:'64%',d:.55},{n:2,t:'Borçları bitir',s:'faiz yeme',c:'#FF4B5C',w:'82%',d:.35},{n:1,t:'Acil fon',s:'3–6 aylık gider',c:'#5AA8FF',w:'100%',d:.15,cur:true}];
+    return `<div class="fl-lad">${S.map(s=>`<div class="fl-step ${s.cur?'fl-cur':''}" style="--c:${s.c};--w:${s.w};--d:${s.d}s"><b>${s.n}</b><div><div class="fl-sn">${s.t}</div><div class="fl-ss">${s.s}</div></div>${s.cur?'<span class="fl-here">ÖNCE BU</span>':''}</div>`).join('')}</div>`;},
+  choice(){const O=[{v:3,t:'minimum',s:'düzenli maaş'},{v:6,t:'rahat',s:'tek gelir / serbest'}];return `<div class="fl-choice">${O.map((o,i)=>`<div class="fl-ch ${A.months===o.v?'fl-sel':''}" data-v="${o.v}" style="--d:${.15+i*.1}s"><div class="fl-chn"><b>${o.v}</b>AY</div><div class="fl-cht">${o.t}</div><div class="fl-chs">${o.s}</div><div class="fl-cha">${fmt(A.exp*o.v)} ₺</div><i class="fl-chk">✓</i></div>`).join('')}</div>`;},
+  fillup(){const N=fundN();return `<div class="fl-jarwrap"><div class="fl-gauge fl-jar"><div class="fl-fill" id="fl_jfill"></div><div class="fl-jlbl" id="fl_jlbl">AY 0</div></div><div class="fl-jside"><div class="fl-jk">Biriken</div><b class="fl-jnum" id="fl_jnum">0 ₺</b>${N<=36?`<div class="fl-jdots">${Array.from({length:N},(_,i)=>`<i id="fl_jd${i}"></i>`).join('')}</div>`:''}<span class="fl-jdone" id="fl_jdone">✓ TAMPON DOLU</span></div></div>`;},
+  where(){const T=[{t:'Ayrı hesap',s:'ulaşılır, gözden uzak',ok:true,c:'#5AA8FF'},{t:'Borsa / kripto',s:'lazım olunca düşmüş olabilir',ok:false,c:'#333'},{t:'Günlük hesap',s:'elin gider',ok:false,c:'#333'}];
+    return `<div style="width:100%"><div class="fl-tiles">${T.map((o,i)=>`<div class="fl-tile fl-info ${o.ok?'':'fl-dim'}" style="--c:${o.c};animation-delay:${.15+i*.1}s"><span class="fl-bd ${o.ok?'fl-yes':'fl-no'}" style="--d:${.9+i*.25}s">${o.ok?'✓':'✗'}</span><div><div class="fl-tn">${o.t}</div><div class="fl-ts2">${o.s}</div></div></div>`).join('')}</div></div>`;},
+  drain(){const I=[{t:'Tatil fırsatı',ok:0},{t:'Yeni telefon',ok:0},{t:'Araba tamiri',ok:1}];return `<div class="fl-drainwrap"><div class="fl-gauge fl-dg" id="fl_dg"><div class="fl-fill" id="fl_dfill" style="height:100%"></div><div class="fl-jlbl">ACİL FON</div></div><div class="fl-dlist">${I.map((o,i)=>`<div class="fl-dit" id="fl_di${i}"><span>${o.t}</span><i>${o.ok?'✓':'✗'}</i></div>`).join('')}</div></div>`;},
+  grid2(p){const C=p.cells();return `<div class="fl-grid">${C.map((c,i)=>`<div class="fl-cell ${c.big?'fl-big':'fl-small'}" style="--c:${c.c};animation-delay:${.1+i*.1}s"><div class="fl-n">${c.n}</div><div class="fl-a"${c.v!=null?` data-v="${c.v}"`:''}${!c.big&&c.v!=null&&fmt(c.v).length>7?' style="font-size:10.5px"':''}>${c.v!=null?fmt(c.v)+'<small> ₺</small>':c.t}</div>${c.p?`<div class="fl-p">${c.p}</div>`:''}</div>`).join('')}</div>`;},
 };
 const GA={
   cutbox(){const cut=i=>$('cut'+i),pc=i=>$('pc'+i),W=$('whole');const cuts=[65,70,80,90];
@@ -14328,16 +14434,26 @@ const GA={
     later(()=>{W.classList.add('fl-off');pc(4).classList.add('fl-free');},650+4*520-60);},
   bars(){growBars(150);},
   scale(){growBars(100);let t0=performance.now();every(()=>{const t=(performance.now()-t0)/1000;const inc=80000*(1+0.5*Math.sin(t*0.8-1.57));const el=$('scInc');if(el)el.textContent=fmt(inc)+' ₺';$$('#fl_bars .fl-bar').forEach((bar,i)=>{const b=BOX[i];bar.querySelector('.fl-col').style.height=(inc*b.p/(120000*0.65)*100)+'%';bar.querySelector('.fl-btop').textContent=fmt(inc*b.p);});},60);},
-  input(){const inp=$('askIn');const fit=()=>{const L=inp.value.length||1;const fs=(L<=7?60:L<=9?52:44);inp.style.fontSize=fs+'px';inp.style.width='10px';inp.style.width=(inp.scrollWidth+6)+'px';};inp.addEventListener('input',()=>{const v=num(inp.value);A.inc=v;inp.value=v?fmt(v):'';fit();updateNext();});fit();later(()=>inp.focus(),400);},
+  input(p){const k=(p&&p.key)||'inc';const inp=$('askIn');const fit=()=>{const L=inp.value.length||1;const fs=(L<=7?60:L<=9?52:44);inp.style.fontSize=fs+'px';inp.style.width='10px';inp.style.width=(inp.scrollWidth+6)+'px';};inp.addEventListener('input',()=>{const v=num(inp.value);A[k]=v;inp.value=v?fmt(v):'';fit();updateNext();});fit();later(()=>inp.focus(),400);},
   gauge(){const g=$('gauge'),f=$('gfill'),fut=$('futcol');const chips=Array.from({length:8},(_,i)=>$('chip'+i));const run=()=>{if(!$('gauge'))return;f.style.height='12%';g.classList.remove('fl-over');fut.style.height='22%';
       later(()=>{f.style.transition='height 2s cubic-bezier(.3,0,.6,1)';f.style.height='86%';},100);later(()=>g.classList.add('fl-over'),2000);
       later(()=>{g.classList.remove('fl-over');f.style.transition='height .9s var(--fl-out)';f.style.height='52%';},3100);
       later(()=>{fut.style.height='42%';chips.forEach((c,i)=>{const gw=g.getBoundingClientRect(),pw=g.parentElement.getBoundingClientRect(),fw=fut.getBoundingClientRect();const sx=gw.right-pw.left-10,sy=gw.top-pw.top+gw.height*.35;const ex=fw.left-pw.left+fw.width/2,ey=fw.top-pw.top+fw.height*.5;c.animate([{transform:`translate(${sx}px,${sy}px)`,opacity:0},{opacity:1,offset:.15},{transform:`translate(${(sx+ex)/2}px,${Math.min(sy,ey)-50}px)`,offset:.5},{transform:`translate(${ex}px,${ey}px)`,opacity:0}],{duration:1100,delay:i*90,easing:'ease-in-out'});});},4000);};run();every(run,6200);},
   tiles(p){$$('.fl-tile').forEach(t=>t.addEventListener('click',()=>{if(quizOK)return;const i=+t.dataset.i;const fb=$('fb');if(i===p.ans){quizOK=true;const r=t.getBoundingClientRect(),s=$('slot').getBoundingClientRect(),ph=ov().getBoundingClientRect();const fly=document.createElement('div');fly.className='fl-flying';fly.textContent=t.textContent;fly.style.cssText=`left:${r.left-ph.left}px;top:${r.top-ph.top}px;width:${r.width}px;height:${r.height}px;background:${p.opts[i].c}`;ov().appendChild(fly);t.classList.add('fl-gone');
         fly.animate([{transform:'translate(0,0) scale(1)'},{transform:`translate(${s.left+s.width/2-(r.left+r.width/2)}px,${s.top+s.height/2-(r.top+r.height/2)}px) scale(.5)`}],{duration:650,easing:'cubic-bezier(.34,1.56,.64,1)',fill:'forwards'});
-        later(()=>{fly.remove();$('slot').classList.add('fl-filled');$('slot').textContent='✓ KİRA → YAŞAM';},640);fb.className='fl-fb fl-ok';fb.textContent=p.ok;bounce(true);updateNext();}
+        later(()=>{fly.remove();$('slot').classList.add('fl-filled');$('slot').textContent=p.slotOk||'✓ KİRA → YAŞAM';},640);fb.className='fl-fb fl-ok';fb.textContent=p.ok;bounce(true);updateNext();}
       else{t.classList.remove('fl-bad');void t.offsetWidth;t.classList.add('fl-bad');fb.className='fl-fb fl-bad';fb.textContent=p.no;}}));},
   grid(){$$('.fl-cell .fl-a').forEach((a,i)=>later(()=>countUp(a,+a.dataset.v,800,' ₺'),500+i*120));},
+  /* ders 2 */
+  months(){later(()=>{const e=$('inc');if(e)e.classList.add('fl-stop');},900);later(()=>{const l=$('inclbl');if(l)l.textContent='GELİR KESİLDİ ✕';},1250);for(let i=0;i<6;i++)later(()=>{const t=$('mt'+i);if(t)t.classList.add(i<3?'fl-on':'fl-soft');},1700+i*230);},
+  ladder(){later(()=>bounce(false),1200);},
+  choice(){$$('.fl-ch').forEach(el=>el.addEventListener('click',()=>{A.months=+el.dataset.v;$$('.fl-ch').forEach(x=>x.classList.toggle('fl-sel',x===el));bounce(false);}));},
+  fillup(){const N=fundN(),T=fundT(),st=Math.max(110,Math.min(300,2600/N));const run=()=>{if(!$('jfill'))return;$('jfill').style.height='0%';$('jnum').textContent='0 ₺';$('jlbl').textContent='AY 0';$('jdone').classList.remove('fl-show');for(let i=0;i<N;i++){const d=$('jd'+i);if(d)d.classList.remove('fl-on');}
+      for(let k=1;k<=N;k++)later(()=>{if(!$('jfill'))return;$('jfill').style.height=(k/N*100)+'%';$('jnum').textContent=fmt(Math.min(T,A.save*k))+' ₺';$('jlbl').textContent='AY '+k;const d=$('jd'+(k-1));if(d)d.classList.add('fl-on');},500+k*st);
+      later(()=>{if(!$('jdone'))return;$('jdone').classList.add('fl-show');bounce(true);},500+N*st+250);};run();every(run,500+N*st+3800);},
+  drain(){const g=$('dg'),f=$('dfill');const run=()=>{if(!$('dg'))return;f.style.transition='none';f.style.height='100%';[0,1,2].forEach(i=>{$('di'+i).className='fl-dit';});
+      [[0,500],[1,1900],[2,3300]].forEach(([i,t])=>{later(()=>{const d=$('di'+i);if(d)d.classList.add('fl-in');},t);later(()=>{const d=$('di'+i);if(!d)return;if(i<2){d.classList.add('fl-dno');g.classList.remove('fl-shake');void g.offsetWidth;g.classList.add('fl-shake');}else{d.classList.add('fl-dok');f.style.transition='height .9s var(--fl-out)';f.style.height='58%';bounce(false);}},t+650);});};run();every(run,6800);},
+  grid2(){$$('.fl-cell .fl-a[data-v]').forEach((a,i)=>later(()=>countUp(a,+a.dataset.v,800,' ₺'),500+i*120));},
 };
 
 /* ---- maskot (uygulamanın VM motoru) ---- */
@@ -14350,47 +14466,57 @@ function bounce(big){const svg=$('mascot').querySelector('svg');if(!svg)return;s
 function talk(){const svg=$('mascot').querySelector('svg');if(!svg)return;svg.animate([{transform:'rotate(0)'},{transform:'rotate(-4deg)'},{transform:'rotate(4deg)'},{transform:'rotate(-2deg)'},{transform:'rotate(0)'}],{duration:520,delay:420,composite:'add'});}
 function setMascot(key,big){if(!mascot&&typeof VM!=='undefined'&&VM.spawn){mascot=VM.spawn($('mascot'),key);}else if(mascot){mascot.setChar(key);}bounce(big);talk();}
 function words(h){return (h||'').split('|').map((l,i)=>`<span class="fl-w" style="animation-delay:${.06+i*.09}s">${l.replace(/\[\[(.+?)\]\]/g,'<span class="fl-hl">$1</span>')}</span>`).join('<br>');}
-const DOODLE={arrow:'<svg viewBox="0 0 120 120"><path d="M18 18 C 62 -4, 96 34, 62 58 S 16 92, 72 104"/><path d="M52 94 L74 106 L66 84"/></svg>',star:'<svg viewBox="0 0 120 120"><path d="M60 8 L72 44 L110 46 L80 70 L92 108 L60 86 L28 108 L40 70 L10 46 L48 44 Z"/></svg>',flower:'<svg viewBox="0 0 120 120"><ellipse cx="60" cy="30" rx="16" ry="24"/><ellipse cx="86" cy="45" rx="16" ry="24" transform="rotate(60 86 45)"/><ellipse cx="86" cy="75" rx="16" ry="24" transform="rotate(120 86 75)"/><ellipse cx="60" cy="90" rx="16" ry="24"/><ellipse cx="34" cy="75" rx="16" ry="24" transform="rotate(60 34 75)"/><ellipse cx="34" cy="45" rx="16" ry="24" transform="rotate(120 34 45)"/></svg>',squig:'<svg viewBox="0 0 120 120"><path d="M10 70 C 30 20, 50 120, 70 60 S 100 30, 112 62"/></svg>'};
-function posterHTML(p){return `<div class="fl-poster">${(p.doodles||[]).map((d,i)=>`<div class="fl-doodle ${d.k==='flower'?'fl-spin':''}" style="--x:${d.x};--y:${d.y};--s:${d.s}px;--c:${d.c};--d:${.5+i*.35}s">${DOODLE[d.k]}</div>`).join('')}${(p.stk||[]).map((s,i)=>`<span class="fl-stk" style="--x:${s.x};--y:${s.y};--r:${s.r}deg;--bg:${s.bg};--fg:${s.fg};--d:${.45+i*.14}s">${s.t}</span>`).join('')}<div class="fl-ph">${words(p.h)}</div><div class="fl-sp"></div><div class="fl-pline">${words(p.line||'')}</div>${p.cta?`<button class="fl-cta fl-inv" id="fl_cta">Planı kur →</button>`:''}</div>`;}
+const DOODLE={arrow:'<svg viewBox="0 0 120 120"><path d="M18 18 C 62 -4, 96 34, 62 58 S 16 92, 72 104"/><path d="M52 94 L74 106 L66 84"/></svg>',star:'<svg viewBox="0 0 120 120"><path d="M60 8 L72 44 L110 46 L80 70 L92 108 L60 86 L28 108 L40 70 L10 46 L48 44 Z"/></svg>',flower:'<svg viewBox="0 0 120 120"><ellipse cx="60" cy="30" rx="16" ry="24"/><ellipse cx="86" cy="45" rx="16" ry="24" transform="rotate(60 86 45)"/><ellipse cx="86" cy="75" rx="16" ry="24" transform="rotate(120 86 75)"/><ellipse cx="60" cy="90" rx="16" ry="24"/><ellipse cx="34" cy="75" rx="16" ry="24" transform="rotate(60 34 75)"/><ellipse cx="34" cy="45" rx="16" ry="24" transform="rotate(120 34 45)"/></svg>',squig:'<svg viewBox="0 0 120 120"><path d="M10 70 C 30 20, 50 120, 70 60 S 100 30, 112 62"/></svg>',bolt:'<svg viewBox="0 0 120 120"><path d="M70 6 L28 66 L58 66 L44 114 L94 48 L62 48 Z"/></svg>'};
+function posterHTML(p){const stk=tx(p.stk)||[];return `<div class="fl-poster">${(p.doodles||[]).map((d,i)=>`<div class="fl-doodle ${d.k==='flower'?'fl-spin':''}" style="--x:${d.x};--y:${d.y};--s:${d.s}px;--c:${d.c};--d:${.5+i*.35}s">${DOODLE[d.k]}</div>`).join('')}${stk.map((s,i)=>`<span class="fl-stk" style="--x:${s.x};--y:${s.y};--r:${s.r}deg;--bg:${s.bg};--fg:${s.fg};--d:${.45+i*.14}s">${s.t}</span>`).join('')}<div class="fl-ph">${words(tx(p.h))}</div><div class="fl-sp"></div><div class="fl-pline">${words(tx(p.line)||'')}</div>${p.cta?`<button class="fl-cta fl-inv" id="fl_cta">${p.ctaText||'Planı kur →'}</button>`:''}</div>`;}
 function confetti(){const c=$('conf'),ctx=c.getContext('2d');const Wc=c.width=c.offsetWidth,Hc=c.height=c.offsetHeight;const cols=['#07120C','#fff','#FF6FB5','#5AA8FF','#FFE97A','#9B6BFF'];const P=Array.from({length:150},()=>({x:Wc/2+(Math.random()-.5)*60,y:Hc*.42,vx:(Math.random()-.5)*14,vy:-Math.random()*13-6,g:.32+Math.random()*.2,s:5+Math.random()*6,r:Math.random()*Math.PI,vr:(Math.random()-.5)*.3,c:cols[Math.floor(Math.random()*cols.length)],a:1}));const t0=performance.now();(function f(now){ctx.clearRect(0,0,Wc,Hc);let alive=false;P.forEach(p=>{p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.vx*=.985;p.r+=p.vr;if(now-t0>1400)p.a-=.03;if(p.a>0&&p.y<Hc+20){alive=true;ctx.save();ctx.globalAlpha=Math.max(0,p.a);ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);ctx.restore();}});if(alive)requestAnimationFrame(f);else ctx.clearRect(0,0,Wc,Hc);})(t0);}
 
 /* ---- sayfa render ---- */
-function txtHTML(p,extra){return `<div class="fl-txt"><div class="fl-kick">${p.kick||''}</div><div class="fl-h ${p.L==='ml'?'fl-xl':''}">${words(p.h)}</div>${extra||''}</div>`;}
+function txtHTML(p,extra){return `<div class="fl-txt"><div class="fl-kick">${tx(p.kick)||''}</div><div class="fl-h ${p.L==='ml'?'fl-xl':''}">${words(tx(p.h))}</div>${extra||''}</div>`;}
+function resHTML(p){const flip=!!p.flip,v=p.val();const segs=p.segs?p.segs():[];
+  return `<div class="fl-res ${flip?'fl-flip':''}"><div class="fl-rtxt"><div class="fl-kick">${tx(p.kick)||''}</div><div class="fl-h fl-xl">${words(tx(p.h))}</div><div class="fl-line">${words(tx(p.line)||'')}</div></div><div class="fl-stack">${segs.map(s=>`<div class="fl-seg" style="--p:${s.p||1}">${s.t}</div>`).join('')}</div><div class="fl-giant"><b><i>₺</i><span id="fl_giantNum">${fmt(v)}</span></b></div></div>`;}
 function html(p){
   if(p.L==='poster')return posterHTML(p);
-  if(p.type==='result'){const b=BOX[p.k-1],flip=p.k%2===0;
+  if(p.type==='result'){if(!p.k)return resHTML(p);const b=BOX[p.k-1],flip=p.k%2===0;
     return `<div class="fl-res ${flip?'fl-flip':''}"><div class="fl-rtxt"><div class="fl-kick">${p.k}. parça · %${Math.round(b.p*100)}</div><div class="fl-h fl-xl">${words(b.nm)}</div><div class="fl-line">${words(b.line)}</div></div><div class="fl-stack">${BOX.map((x,i)=>`<div class="fl-seg ${i+1===p.k?'fl-cur':i+1<p.k?'fl-done':''}" style="--p:${x.p*100}">${i+1<p.k?'✓ '+x.nm:x.nm+' · %'+Math.round(x.p*100)}</div>`).join('')}</div><div class="fl-giant"><b><i>₺</i><span id="fl_giantNum">${fmt(A.inc*b.p)}</span></b></div></div>`;}
   const gfx=`<div class="fl-gfx ${GALIGN[p.g]||''}">${G[p.g]?G[p.g](p):''}</div>`;
   let extra='';
-  if(p.type==='ask')extra=G.input()+`<div class="fl-hint">${p.line}</div>`;
+  if(p.type==='ask')extra=G.input(p)+`<div class="fl-hint">${tx(p.line)}</div>`;
   else if(p.type==='quiz')extra=`<div class="fl-fb" id="fl_fb">Bir tanesine dokun.</div>`;
-  else extra=`<div class="fl-line">${words(p.line||'')}</div>`;
+  else extra=`<div class="fl-line">${words(tx(p.line)||'')}</div>`;
   if(p.type==='ask')return txtHTML(p,extra);
   if(p.L==='tg')return txtHTML(p,extra)+gfx;
   return gfx+txtHTML(p,extra);}
 function after(p){
-  if(p.type==='result'){fitGiant();later(()=>countUp($('giantNum'),A.inc*BOX[p.k-1].p,900),350);return;}
-  if(p.cta){later(confetti,700);$('cta').addEventListener('click',applyPlan);return;}
+  if(p.type==='result'){fitGiant();const v=p.k?A.inc*BOX[p.k-1].p:p.val();later(()=>countUp($('giantNum'),v,900),350);
+    if(!p.k){const segs=Array.from($$('.fl-seg'));const st=Math.max(90,Math.min(220,900/Math.max(1,segs.length)));segs.forEach((s,i)=>later(()=>s.classList.add('fl-cur'),420+i*st));}return;}
+  if(p.cta){later(confetti,700);$('cta').addEventListener('click',()=>L.apply());return;}
   if(p.L==='poster')return;
   if(GA[p.g])GA[p.g](p);
 }
-function canAdvance(p){if(p.type==='ask')return A.inc>0;if(p.type==='quiz')return quizOK;return true;}
-function updateNext(){const p=PAGES[pi];const ok=canAdvance(p);$('next').disabled=!ok;$('next').classList.toggle('fl-pulse',ok&&(p.type==='ask'||p.type==='quiz'));}
-function render(dir){clearTimers();const p=PAGES[pi];const onB=p.type==='result'||p.L==='poster';const o=ov();
-  o.style.setProperty('--fl-block',p.type==='result'?BOX[p.k-1].c:(p.bg||LESSON));
-  o.style.setProperty('--fl-bink',p.ink||'#07120C');o.style.setProperty('--fl-accent',p.accent||LESSON);
-  o.style.setProperty('--fl-hl',p.type==='result'?'#07120C':(p.hl||p.accent||LESSON));o.style.setProperty('--fl-hlfg',p.type==='result'?BOX[p.k-1].c:(p.hlfg||'#04170D'));
+function canAdvance(p){if(p.type==='ask')return A[p.key||'inc']>0;if(p.type==='quiz')return quizOK;return true;}
+function updateNext(){const p=L.pages[pi];const ok=canAdvance(p);$('next').disabled=!ok;$('next').classList.toggle('fl-pulse',ok&&(p.type==='ask'||p.type==='quiz'));}
+function render(dir){clearTimers();const P=L.pages,p=P[pi];const onB=p.type==='result'||p.L==='poster';const o=ov();
+  const resC=p.type==='result'?(p.k?BOX[p.k-1].c:L.color):null;
+  o.style.setProperty('--fl-block',resC||p.bg||L.color);
+  o.style.setProperty('--fl-bink',p.ink||L.ink);o.style.setProperty('--fl-accent',p.accent||L.color);
+  o.style.setProperty('--fl-hl',p.type==='result'?(p.ink||L.ink):(p.hl||p.accent||L.color));o.style.setProperty('--fl-hlfg',p.type==='result'?resC:(p.hlfg||L.hlfg));
   $('block').classList.toggle('fl-on',onB);o.classList.toggle('fl-on-color',onB);
-  $('prog').innerHTML=PAGES.map((_,i)=>`<i class="${i<=pi?'fl-on':''}"></i>`).join('');
+  $('prog').innerHTML=P.map((_,i)=>`<i class="${i<=pi?'fl-on':''}"></i>`).join('');
   setMascot(p.char,onB);placeMascot(p.m[0],p.m[1]);
   const pg=$('page');pg.className='fl-page fl-enter fl-L-'+p.L+(dir<0?' fl-rev':'');pg.innerHTML=html(p);after(p);
-  $('back').style.visibility=pi===0?'hidden':'visible';$('next').textContent=pi===PAGES.length-1?'✓':'→';updateNext();}
-function go(dir){if(busy)return;const p=PAGES[pi];if(dir>0&&!canAdvance(p))return;
-  if(dir>0&&pi===PAGES.length-1){finish();return;}
-  const n=pi+dir;if(n<0||n>=PAGES.length)return;busy=true;$('page').className='fl-page fl-leave'+(dir<0?' fl-rev':'');setTimeout(()=>{pi=n;render(dir);busy=false;},240);}
-function finish(){markDone(lessonId);renderLib();showLib(true);if(typeof showToast==='function')showToast('✓ Ders tamamlandı — 5 Kutu Kuralı');}
+  $('back').style.visibility=pi===0?'hidden':'visible';$('next').textContent=pi===P.length-1?'✓':'→';updateNext();}
+function go(dir){if(busy)return;const P=L.pages,p=P[pi];if(dir>0&&!canAdvance(p))return;
+  if(dir>0&&pi===P.length-1){finish();return;}
+  const n=pi+dir;if(n<0||n>=P.length)return;busy=true;$('page').className='fl-page fl-leave'+(dir<0?' fl-rev':'');setTimeout(()=>{pi=n;render(dir);busy=false;},240);}
+function finish(){markDone(L.id);renderLib();showLib(true);if(typeof showToast==='function')showToast('✓ Ders tamamlandı — '+L.title);}
 
-/* ---- Planı kur: gerçek tutarlarla bütçe + hedef (onaylı) ---- */
+/* ---- onay penceresi (uygulamanın showConfirm'i, ders rengiyle) ---- */
+function confirmStyled(msg,cb,btn,title,color,fg){if(typeof showConfirm!=='function'){cb();return;}showConfirm(msg,cb,btn,title,'pause');
+  const ic=document.getElementById('confirmIconWrap'),ok=document.getElementById('confirmOkBtn');
+  if(ic){ic.style.background=`color-mix(in srgb,${color} 12%,transparent)`;ic.style.borderColor=`color-mix(in srgb,${color} 30%,transparent)`;ic.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px"><path d="M5 12l5 5L20 7"/></svg>`;}
+  if(ok){ok.style.background=color;ok.style.color=fg;ok.style.boxShadow=`0 4px 20px color-mix(in srgb,${color} 30%,transparent)`;}}
+
+/* ---- Planı kur (ders 1): gerçek tutarlarla bütçe + hedef (onaylı) ---- */
 function applyPlan(){const inc=A.inc;if(!inc){return;}
   const hasDebt=(typeof data!=='undefined')&&Array.isArray(data.debts)&&data.debts.some(d=>d.active);
   const futP=hasDebt?0.10:0.20;
@@ -14402,26 +14528,36 @@ function applyPlan(){const inc=A.inc;if(!inc){return;}
       save();if(typeof renderAll==='function')renderAll();if(typeof showToast==='function')showToast('✓ Planın kuruldu — bütçeler ve hedefler hazır');
     }catch(e){console.warn('FL applyPlan',e);}
     finish();};
-  if(typeof showConfirm==='function'){showConfirm(msg,doIt,'Kur','Planı kur','pause');
-    const ic=document.getElementById('confirmIconWrap'),ok=document.getElementById('confirmOkBtn');
-    if(ic){ic.style.background='rgba(25,230,140,.12)';ic.style.borderColor='rgba(25,230,140,.3)';ic.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="#19E68C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px"><path d="M5 12l5 5L20 7"/></svg>';}
-    if(ok){ok.style.background='#19E68C';ok.style.color='#04170D';ok.style.boxShadow='0 4px 20px rgba(25,230,140,.3)';}
-  }else doIt();}
+  confirmStyled(msg,doIt,'Kur','Planı kur','#19E68C','#04170D');}
+
+/* ---- Hedefi kur (ders 2): Acil Fon hedefi oluştur / güncelle (onaylı) ---- */
+function applyFund(){const T=fundT(),m=Math.round(A.save),N=fundN();if(!T||!m)return;
+  let ex=null;try{ex=(data.savingsGoals||[]).find(g=>g.isEmergency)||(typeof isEmergencyGoal==='function'?(data.savingsGoals||[]).find(isEmergencyGoal):null)||null;}catch(e){}
+  const msg=ex?`Mevcut “${ex.name}” hedefin güncellenecek:\n• Hedef ${fmt(T)} ₺ (${A.months} aylık gider)\n• Aylık ${fmt(m)} ₺ birikim\n• Kalan kısım ${N} ayda tamamlanır\nBiriktirdiklerin korunur.`:`Şu hedef kurulacak:\n• Acil Fon ${fmt(T)} ₺ (${A.months} aylık gider)\n• Aylık ${fmt(m)} ₺ birikim\n• ${N} ayda tamamlanır (${fundDate()})`;
+  const doIt=()=>{try{
+      if(ex){ex.target=T;ex.monthly=m;ex.isEmergency=true;ex.note=`${A.months} aylık gider tamponu · Acil Fon dersi`;}
+      else data.savingsGoals.push({id:uid(),name:'Acil Fon',emoji:'coin',isEmergency:true,target:T,monthly:m,note:`${A.months} aylık gider tamponu · Acil Fon dersi`,deposits:[],paidMonths:[]});
+      save();if(typeof renderAll==='function')renderAll();if(typeof showToast==='function')showToast(ex?'✓ Acil Fon hedefin güncellendi':'✓ Acil Fon hedefin kuruldu — Aylık Plan > Birikim');
+    }catch(e){console.warn('FL applyFund',e);}
+    finish();};
+  confirmStyled(msg,doIt,ex?'Güncelle':'Kur','Acil Fon hedefi','#5AA8FF','#06101E');}
 
 /* ---- aç / kapat ---- */
 function showLib(on){$('lib').classList.toggle('fl-show',on);}
 function openLibrary(){renderLib();ov().classList.add('fl-show');showLib(true);document.body.style.overflow='hidden';}
-function openLesson(id){lessonId=id;pi=0;quizOK=false;
-  let inc=0;try{if(typeof calcFreeBudget==='function')inc=Math.round(calcFreeBudget(currentMonth).income||0);}catch(e){}
-  A.inc=inc>0?inc:80000;showLib(false);render(1);}
+function openLesson(id){L=LESSONS[id]||LESSONS.kutular;pi=0;quizOK=false;try{L.init();}catch(e){}$('inner').style.setProperty('--fl-lesson',L.color);showLib(false);render(1);}
 function close(){clearTimers();ov().classList.remove('fl-show');showLib(false);document.body.style.overflow='';}
 function open(){openLibrary();}
 $('next').addEventListener('click',()=>go(1));$('back').addEventListener('click',()=>go(-1));$('close').addEventListener('click',close);
 let sx=0;$('stage').addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});$('stage').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>55)go(dx<0?1:-1);},{passive:true});
-window.addEventListener('resize',()=>{if(!ov().classList.contains('fl-show'))return;const p=PAGES[pi];if(p&&p.m)placeMascot(p.m[0],p.m[1]);fitGiant();});
+window.addEventListener('resize',()=>{if(!ov().classList.contains('fl-show'))return;const p=L.pages[pi];if(p&&p.m)placeMascot(p.m[0],p.m[1]);fitGiant();});
 document.addEventListener('DOMContentLoaded',renderEntry);setTimeout(renderEntry,0);
-window.FL={openLibrary,open,close,renderEntry,__goto:n=>{pi=Math.max(0,Math.min(PAGES.length-1,n));quizOK=false;render(1);},__setInc:v=>{A.inc=v;}};
+window.FL={openLibrary,open,close,renderEntry,
+  __open:id=>{ov().classList.add('fl-show');document.body.style.overflow='hidden';openLesson(id);},
+  __goto:n=>{pi=Math.max(0,Math.min(L.pages.length-1,n));quizOK=false;render(1);},
+  __setInc:v=>{A.inc=v;},__set:(k,v)=>{A[k]=v;},__A:()=>A};
 })();
 </script>
+
 </body>
 </html>
