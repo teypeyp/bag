@@ -14097,6 +14097,46 @@ setInterval(checkMonthRollover, 60000);
 .ob-flchips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:30px}
 .ob-flchips span{font-size:10.5px;font-weight:800;letter-spacing:.3px;padding:6px 10px;border-radius:999px;background:var(--c);color:#0a0a0a;animation:obFadeUp .5s cubic-bezier(.4,0,.2,1) var(--d) both;font-family:'Montserrat',sans-serif}
 </style>
+<style id="vjStyle">
+/* ═══ V91 — Karakter Yolculuğu ═══ */
+#vjOverlay{position:fixed;inset:0;z-index:100000;display:none;background:#050505;color:#F2F1EB;font-family:'Montserrat',system-ui,sans-serif;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(env(safe-area-inset-top) + 16px) 20px 40px}
+#vjOverlay.vj-show{display:block}
+:where(#vjOverlay) *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+.vj-in{max-width:430px;margin:0 auto}
+.vj-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.vj-top h1{font-size:11px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#8A8993}
+.vj-hero{position:relative;border-radius:22px;padding:22px 20px 20px;background:var(--g);overflow:hidden;display:flex;gap:14px;align-items:center;min-height:170px}
+.vj-hero .vj-hm{width:132px;height:132px;flex-shrink:0}.vj-hero .vj-hm svg{width:100%;height:100%;overflow:visible}#vjOverlay .vm-halo{display:none}
+.vj-hero .vj-hk{font-size:10.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;opacity:.75}
+.vj-hero .vj-hn{font-size:34px;font-weight:800;letter-spacing:-1.5px;line-height:1;margin-top:4px}
+.vj-hero .vj-ht{font-size:12.5px;font-weight:700;line-height:1.4;margin-top:8px;opacity:.9}
+.vj-pill{display:inline-block;margin-top:10px;font-size:11px;font-weight:800;letter-spacing:.6px;padding:7px 12px;border-radius:999px;background:rgba(0,0,0,.35);color:#fff}
+.vj-sect{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#8A8993;margin:22px 0 10px;display:flex;justify-content:space-between;align-items:center}
+.vj-sect b{color:#F2F1EB;letter-spacing:0;text-transform:none;font-size:12px}
+.vj-card{background:#121215;border:1px solid rgba(255,255,255,.07);border-radius:22px;padding:6px 6px}
+.vj-req{display:flex;align-items:center;gap:12px;padding:12px 12px;border-radius:16px}
+.vj-req+.vj-req{border-top:1px solid rgba(255,255,255,.05)}
+.vj-req i{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:14px;font-weight:800;flex-shrink:0;background:rgba(255,255,255,.08);color:#8A8993}
+.vj-req.ok i{background:#19E68C;color:#04170D}.vj-req.no i{background:rgba(255,75,92,.18);color:#FF8A94}
+.vj-req .vj-rt{flex:1;min-width:0}.vj-req .vj-rn{font-size:13.5px;font-weight:800}.vj-req .vj-rs{font-size:11px;font-weight:700;color:#8A8993;margin-top:2px}
+.vj-req .vj-rv{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;color:#F2F1EB}.vj-req.no .vj-rv{color:#FF8A94}
+.vj-bar{height:5px;border-radius:3px;background:rgba(255,255,255,.08);margin-top:6px;overflow:hidden}.vj-bar i{display:block;height:100%;width:var(--w);border-radius:3px;background:var(--c,#19E68C);transition:width .8s cubic-bezier(.22,1,.36,1)}
+.vj-list{display:flex;flex-direction:column;gap:8px}
+.vj-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:18px;background:#121215;border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:transform .15s,border-color .2s}
+.vj-row:active{transform:scale(.985)}
+.vj-row .vj-rm{width:44px;height:44px;flex-shrink:0}.vj-row .vj-rm svg{width:100%;height:100%;overflow:visible}
+.vj-row .vj-rx{flex:1;min-width:0}.vj-row .vj-rnm{font-size:14px;font-weight:800;letter-spacing:-.2px}.vj-row .vj-rsb{font-size:11px;font-weight:700;color:#8A8993;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vj-row .vj-st{font-size:9.5px;font-weight:800;letter-spacing:.8px;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.08);color:#8A8993;white-space:nowrap}
+.vj-row.cur{border-color:var(--c);background:color-mix(in srgb,var(--c) 12%,#121215)}.vj-row.cur .vj-st{background:var(--c);color:#0a0a0a}
+.vj-row.past .vj-st{background:rgba(25,230,140,.14);color:#19E68C}.vj-row.next .vj-st{background:#fff;color:#000}
+.vj-row.sel{outline:2px solid #fff}
+.vj-entry{margin:0 0 14px;padding:12px 14px;border-radius:16px;border:1px dashed rgba(255,255,255,.18);background:rgba(255,255,255,.03);display:flex;align-items:center;gap:10px;cursor:pointer;font-family:'Montserrat',sans-serif}
+.vj-entry .vj-ei{width:34px;height:34px;flex-shrink:0}.vj-entry .vj-ei svg{width:100%;height:100%;overflow:visible}.vj-entry .vm-halo{display:none}
+.vj-entry .vj-et{flex:1;min-width:0}.vj-entry .vj-ek{font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#8A8993}.vj-entry .vj-ev{font-size:13px;font-weight:800;color:#F2F1EB;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vj-entry b{color:#F2F1EB}
+.vj-close{width:38px;height:38px;border-radius:50%;border:none;background:rgba(255,255,255,.08);color:#F2F1EB;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit}
+</style>
+<div id="vjOverlay"><div class="vj-in"><div class="vj-top"><h1>Karakter yolculuğu</h1><button class="vj-close" id="vjClose" aria-label="Kapat">✕</button></div><div id="vjBody"></div></div></div>
 <style id="flStyle">
 #flOverlay{position:fixed;inset:0;z-index:100000;display:none;flex-direction:column;background:#050505;color:#F2F1EB;font-family:'Montserrat',system-ui,sans-serif;isolation:isolate;transition:color .45s;--fl-lesson:#19E68C;--fl-block:#19E68C;--fl-bink:#07120C;--fl-accent:#19E68C;--fl-hl:#19E68C;--fl-hlfg:#04170D;--fl-rc:22px;--fl-rb:4px;--fl-spring:cubic-bezier(.34,1.56,.64,1);--fl-out:cubic-bezier(.22,1,.36,1);padding-top:env(safe-area-inset-top)}
 #flOverlay.fl-show{display:flex;align-items:center;justify-content:center}
@@ -14718,7 +14758,7 @@ function renderHints(){const ds=doneSet();const put=(anchorId,hostId,show,id,txt
   put('debtList','flHintDebt',debts>0&&!ds.has('kartopu'),'kartopu','Borçları hangi sırayla kapatmalı? 2 dk’lık ders');
   put('cardList','flHintCard',card>0&&!ds.has('asgari'),'asgari','Asgari ödeme neden tuzak? 2 dk’lık ders');
   put('recList','flHintRec',subs>=2&&!ds.has('sizinti'),'sizinti','Abonelikler yılda ne tutuyor? 2 dk’lık ders');}
-function flHooks(){try{renderEntry();renderWeekTip();renderHints();if(typeof renderFeedbackPill==='function'&&typeof _carouselItems!=='undefined'&&Array.isArray(_carouselItems)&&_carouselItems.length&&!_carouselItems.some(i=>i.tip)){const fb=calcFreeBudget(currentMonth);if(fb&&fb.income)renderFeedbackPill(fb);}}catch(e){console.warn('FL hooks',e);}}
+function flHooks(){try{renderEntry();renderWeekTip();renderHints();renderVjEntry();if(typeof renderFeedbackPill==='function'&&typeof _carouselItems!=='undefined'&&Array.isArray(_carouselItems)&&_carouselItems.length&&!_carouselItems.some(i=>i.tip)){const fb=calcFreeBudget(currentMonth);if(fb&&fb.income)renderFeedbackPill(fb);}}catch(e){console.warn('FL hooks',e);}}
 /* ---- ders 1: 5 Kutu Kuralı ---- */
 const PAGES1=[
   {L:'poster',bg:'#7C5CFF',ink:'#FFFFFF',hl:'#0a0a0a',hlfg:'#fff',char:'ACEMI',m:['br',176],h:'Maaş geldi.|Ay sonu|[[bitti.]]|Nereye|gitti?',line:'Çoğu kişi bilmiyor.|[[Bu derste düzelteceğiz.]]',
@@ -15296,6 +15336,43 @@ function applyDream(){const m=dMonthly(),T=Math.round(A.target);if(!T||!m)return
       save();recordApplied('hedef',`${A.dream.name} ${fmt(T)} ₺ · ayda ${fmt(m)} ₺`,undo);if(typeof renderAll==='function')renderAll();if(typeof showToast==='function')showToast('✓ '+A.dream.name+' hedefi hazır — ayda '+fmt(m)+' ₺');}catch(e){console.warn('FL applyDream',e);}finish();};
   confirmStyled(msg,doIt,ex?'Güncelle':'Kur','Hayal hedefi','#EC4899','#fff');}
 
+/* ---- Karakter Yolculuğu ---- */
+const VJ_ORDER=['ACEMI','BORCLU','KIRILGAN','HARCAYAN','DENGELI','TUTUMLU','BIRIKTIREN','HEDEFCI','YATIRIMCI','OZGUR'];
+const VJ_NEXT={ACEMI:'DENGELI',BORCLU:'BIRIKTIREN',KIRILGAN:'DENGELI',HARCAYAN:'DENGELI',DENGELI:'BIRIKTIREN',TUTUMLU:'HEDEFCI',BIRIKTIREN:'YATIRIMCI',HEDEFCI:'YATIRIMCI',YATIRIMCI:'OZGUR',OZGUR:null};
+const VJ_HOW={ACEMI:'Başlangıç: 8 işlem ve 30 gün veri olana kadar.',BORCLU:'Borç/gelir %28’i ya da sabit+borç %60’ı aşınca.',KIRILGAN:'Ay sonu eksi, marj %6’nın altında ya da acil fon yok.',HARCAYAN:'Marj %18 üstü ama hedef yok — para tanımsız.',DENGELI:'Sabit yük %40 altı, marj %6–12, hedef yok.',TUTUMLU:'Değişken harcama %25 altı, marj %15 üstü, hedef yok.',BIRIKTIREN:'Aylık hedef var, marj %12 üstü.',HEDEFCI:'3 ay üst üste hedefe yatırım, marj %10 üstü.',YATIRIMCI:'Hedef + acil fon + marj %22 üstü.',OZGUR:'6 aylık acil fon, marj %30 üstü, aktif hedefler.'};
+function vjMetrics(){const m={txn:0,days:0,inc:0,debtR:0,fixR:0,rem:0,savR:0,varR:0,goals:false,emg:false,emgM:0,regular:false};try{const fb=calcFreeBudget(currentMonth);const txs=data.transactions||[];m.txn=txs.length;if(txs.length){const oldest=txs.reduce((a,t)=>(t.date&&t.date<a)?t.date:a,today());m.days=Math.round((new Date(today()+'T00:00:00')-new Date(oldest+'T00:00:00'))/86400000);}
+    m.inc=fb.income||0;if(m.inc>0){m.debtR=fb.debtTotal/m.inc;m.fixR=(fb.recTotal+fb.debtTotal)/m.inc;m.savR=Math.max(0,fb.remaining)/m.inc;m.varR=(fb.varSpent||0)/m.inc;}m.rem=fb.remaining||0;
+    const goals=data.savingsGoals||[];m.goals=goals.some(g=>g.monthly>0);const emg=goals.filter(g=>typeof isEmergencyGoal==='function'?isEmergencyGoal(g):g.isEmergency);m.emg=emg.length>0;const emgT=emg.reduce((s,g)=>s+(g.deposits||[]).reduce((a,d)=>a+(d.amount||0),0),0);const out=(fb.recTotal+fb.debtTotal+(fb.varSpent||0))||m.inc*0.7;m.emgM=out>0?emgT/out:0;
+    const last3=[0,1,2].map(i=>{const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');});const dm=new Set();goals.forEach(g=>(g.deposits||[]).forEach(d=>{if(d.date)dm.add(typeof monthKey==='function'?monthKey(d.date):d.date.slice(0,7));}));m.regular=last3.every(x=>dm.has(x));}catch(e){}return m;}
+const pc=v=>'%'+Math.round(v*100);
+function dat(n){const v=(n.toLocaleLowerCase('tr').match(/[aeıioöuü]/g)||['e']).pop();const back='aıou'.includes(v);const end=/[aeıioöuü]$/i.test(n);return n+'’'+(end?'y':'')+(back?'a':'e');}
+function vjReqs(target,m){const R=[];const base=()=>{R.push({n:'Yeterli veri',s:'8 işlem ve 30 gün',v:`${m.txn} işlem · ${m.days} gün`,ok:m.txn>=8&&m.days>=30,p:Math.min(1,Math.min(m.txn/8,m.days/30))});R.push({n:'Gelir girildi',s:'bu ay en az bir gelir',v:m.inc>0?fmt(m.inc)+' ₺':'yok',ok:m.inc>0});R.push({n:'Borç / gelir',s:'en fazla %28',v:pc(m.debtR),ok:m.debtR<=0.28,p:Math.max(0,1-Math.max(0,m.debtR-0.28)/0.28)});R.push({n:'Sabit + borç / gelir',s:'en fazla %60',v:pc(m.fixR),ok:m.fixR<=0.60});R.push({n:'Ay sonu artı',s:'gider gelirden az',v:(m.rem>=0?'+':'')+fmt(m.rem)+' ₺',ok:m.rem>=0});};
+  const marj=(lim,lbl)=>R.push({n:'Aylık marj',s:'en az '+pc(lim),v:pc(m.savR),ok:m.savR>=lim,p:Math.min(1,m.savR/lim),c:'#5AA8FF'});
+  const goal=()=>R.push({n:'Aylık birikim hedefi',s:'en az bir hedef, aylık tutarlı',v:m.goals?'var':'yok',ok:m.goals});
+  const emg=()=>R.push({n:'Acil fon hedefi',s:'Acil Fon dersiyle kurulur',v:m.emg?'var':'yok',ok:m.emg});
+  switch(target){case 'DENGELI':base();marj(0.06);break;case 'BIRIKTIREN':base();goal();marj(0.12);break;case 'TUTUMLU':base();marj(0.15);R.push({n:'Değişken harcama',s:'gelirin en fazla %25’i',v:pc(m.varR),ok:m.varR<0.25});break;case 'HARCAYAN':base();marj(0.18);break;case 'HEDEFCI':base();goal();marj(0.10);R.push({n:'Düzenli yatırım',s:'son 3 ayın her birinde hedefe para',v:m.regular?'3/3 ay':'eksik',ok:m.regular});break;case 'YATIRIMCI':base();goal();emg();marj(0.22);break;case 'OZGUR':base();goal();emg();R.push({n:'Acil fon büyüklüğü',s:'6 aylık gideri karşılasın',v:m.emgM.toFixed(1).replace('.',',')+' ay',ok:m.emgM>=6,p:Math.min(1,m.emgM/6),c:'#B48CFF'});marj(0.30);break;case 'KIRILGAN':R.push({n:'Kırılgan',s:'ay sonu eksi, marj %6 altı ya da acil fon yok',v:'—',ok:true});break;case 'BORCLU':R.push({n:'Borçlu',s:'borç/gelir %28 ya da sabit+borç %60 üstü',v:'—',ok:true});break;default:R.push({n:'Acemi',s:'veri birikene kadar',v:'—',ok:true});}
+  return R;}
+let vjBuilt=false,vjSel=null,vjMas={};
+function vjCur(){try{const fb=calcFreeBudget(currentMonth);const k=_planClassifyChar(fb).key;if(VJ_ORDER.includes(k))return k;}catch(e){}return (typeof data!=='undefined'&&data.mascotChar)||'ACEMI';}
+function vjOpen(sel){const o=document.getElementById('vjOverlay');if(!o)return;const cur=vjCur();vjSel=sel||VJ_NEXT[cur]||cur;const m=vjMetrics();const P=PLAN_CHARACTERS;const body=document.getElementById('vjBody');
+  if(!vjBuilt){body.innerHTML=`<div class="vj-hero" id="vjHero"><div class="vj-hm" id="vjHm"></div><div><div class="vj-hk">Şu anki karakterin</div><div class="vj-hn" id="vjHn"></div><div class="vj-ht" id="vjHt"></div><span class="vj-pill" id="vjHp"></span></div></div><div class="vj-sect" id="vjRsect"></div><div class="vj-card" id="vjReqs"></div><div class="vj-sect">Tüm karakterler <b>dokun, şartları gör</b></div><div class="vj-list" id="vjList">${VJ_ORDER.map(k=>`<div class="vj-row" data-k="${k}" style="--c:${P[k].accentColor}"><div class="vj-rm" id="vjM_${k}"></div><div class="vj-rx"><div class="vj-rnm">${P[k].name}</div><div class="vj-rsb">${VJ_HOW[k]}</div></div><span class="vj-st" id="vjS_${k}"></span></div>`).join('')}</div>`;
+    try{vjMas.hero=VM.spawn(document.getElementById('vjHm'),cur);VJ_ORDER.forEach(k=>{vjMas[k]=VM.spawn(document.getElementById('vjM_'+k),k);});}catch(e){}
+    document.getElementById('vjClose').addEventListener('click',vjClose);document.querySelectorAll('#vjOverlay .vj-row').forEach(r=>r.addEventListener('click',()=>vjOpen(r.dataset.k)));vjBuilt=true;}
+  const cp=P[cur];document.getElementById('vjHero').style.setProperty('--g',cp.gradient);document.getElementById('vjHn').textContent=cp.name;document.getElementById('vjHt').textContent=cp.tagline;try{vjMas.hero&&vjMas.hero.setChar(cur);}catch(e){}
+  const nx=VJ_NEXT[cur];const nreq=nx?vjReqs(nx,m):[];const left=nreq.filter(r=>!r.ok).length;document.getElementById('vjHp').textContent=nx?(left?`${dat(P[nx].name)} ${left} kriter kaldı`:`${P[nx].name} için şartlar tamam — ay kapanışında güncellenir`):'En üst seviye — koru';
+  const T=P[vjSel];const reqs=vjReqs(vjSel,m);const l2=reqs.filter(r=>!r.ok).length;document.getElementById('vjRsect').innerHTML=`<span>${vjSel===cur?'Şu an buradasın':vjSel===nx?'Sıradaki':'Şartlar'}: ${T.name}</span><b>${vjSel===cur?'':(l2?l2+' kriter kaldı':'✓ hepsi tamam')}</b>`;
+  document.getElementById('vjReqs').innerHTML=reqs.map(r=>`<div class="vj-req ${r.ok?'ok':'no'}"><i>${r.ok?'✓':'✗'}</i><div class="vj-rt"><div class="vj-rn">${r.n}</div><div class="vj-rs">${r.s}</div>${(!r.ok&&r.p!=null)?`<div class="vj-bar"><i style="--w:${Math.round(r.p*100)}%;--c:${r.c||'#19E68C'}"></i></div>`:''}</div><div class="vj-rv">${r.v}</div></div>`).join('');
+  const ci=VJ_ORDER.indexOf(cur);VJ_ORDER.forEach((k,i)=>{const row=document.querySelector(`.vj-row[data-k="${k}"]`),st=document.getElementById('vjS_'+k);row.className='vj-row'+(k===cur?' cur':k===nx?' next':i<ci?' past':'')+(k===vjSel?' sel':'');st.textContent=k===cur?'SEN':k===nx?'SIRADAKİ':i<ci?'GEÇİLDİ':'';});
+  o.classList.add('vj-show');document.body.style.overflow='hidden';const hero=document.getElementById('vjHero');if(sel)hero.scrollIntoView&&0;else o.scrollTop=0;}
+function vjClose(){const o=document.getElementById('vjOverlay');if(o)o.classList.remove('vj-show');document.body.style.overflow='';}
+let vjEntryMas=null;
+function renderVjEntry(){const card=document.getElementById('planCharCard');if(!card)return;let host=document.getElementById('vjEntryHost');if(!host){host=document.createElement('div');host.id='vjEntryHost';card.insertAdjacentElement('afterend',host);}
+  const cur=vjCur(),nx=VJ_NEXT[cur],P=PLAN_CHARACTERS;const m=vjMetrics();const left=nx?vjReqs(nx,m).filter(r=>!r.ok).length:0;
+  const txt=nx?(left?`${dat(P[nx].name)} ${left} kriter kaldı`:`${P[nx].name} için şartlar tamam`):'En üst seviyedesin';
+  if(!host.firstChild){host.innerHTML=`<div class="vj-entry" onclick="FL.journey()"><div class="vj-ei" id="vjEntryM"></div><div class="vj-et"><div class="vj-ek">Karakter yolculuğu</div><div class="vj-ev" id="vjEntryT"></div></div><b>→</b></div>`;try{vjEntryMas=VM.spawn(document.getElementById('vjEntryM'),nx||cur);}catch(e){}}
+  else{try{vjEntryMas&&vjEntryMas.setChar(nx||cur,false);}catch(e){}}
+  document.getElementById('vjEntryT').textContent=txt;}
+
 /* ---- aç / kapat ---- */
 function showLib(on){$('lib').classList.toggle('fl-show',on);}
 function openLibrary(){renderLib();ov().classList.add('fl-show');showLib(true);document.body.style.overflow='hidden';}
@@ -15330,7 +15407,7 @@ if(typeof switchTab==='function'){const _st=switchTab;switchTab=function(){const
   flSlideOn(idxOf()===tipsIdx);
 })();
 
-window.FL={openLibrary,open,close,renderEntry,openLesson:id=>{ov().classList.add('fl-show');document.body.style.overflow='hidden';renderLib();openLesson(id);},
+window.FL={openLibrary,open,close,renderEntry,journey:vjOpen,openLesson:id=>{ov().classList.add('fl-show');document.body.style.overflow='hidden';renderLib();openLesson(id);},
   __open:id=>{ov().classList.add('fl-show');document.body.style.overflow='hidden';openLesson(id);},
   __goto:n=>{pi=Math.max(0,Math.min(L.pages.length-1,n));quizOK=false;render(1);},
   __setInc:v=>{A.inc=v;},__set:(k,v)=>{A[k]=v;},__A:()=>A};
