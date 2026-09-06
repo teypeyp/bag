@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
-<!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu Kuralı · Acil Fon · Borç Kartopu) -->
+<!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="VAULT">
@@ -2580,7 +2580,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
           </div>
         </div>
         <div class="ob-tag">Hoş geldin</div>
-        <div class="ob-title">Paranı<br>Kontrolü al.</div>
+        <div class="ob-title">Paranı<br><em>kontrol et.</em></div>
         <div class="ob-body">Gelir, gider, borç ve birikimlerini tek ekranda takip et. Sade, hızlı, Türkçe.</div>
       </div>
 
@@ -2677,8 +2677,24 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         <div class="ob-body">Limit içinde kaldığın her gün serin uzar, rozetler açılır. Küçük alışkanlıklar, büyük fark.</div>
       </div>
 
-      <!-- SLIDE 7: Kasanda ne kadar var? -->
+      <!-- SLIDE 7 (V91): Finansal İpuçları -->
       <div class="splash-slide" data-idx="7">
+        <div class="ob-fl">
+          <div class="ob-flposter">
+            <div class="ob-flh">Maaş geldi.<br>Ay sonu <span class="ob-flhl">bitti.</span><br>Nereye gitti?</div>
+            <span class="ob-stk" style="--x:60%;--y:6%;--r:-8deg;--bg:#FF4B5C;--fg:#fff;--d:.7s">kira 20.000</span>
+            <span class="ob-stk" style="--x:64%;--y:38%;--r:7deg;--bg:#FFE97A;--fg:#000;--d:.85s">market</span>
+            <span class="ob-stk" style="--x:6%;--y:80%;--r:5deg;--bg:#fff;--fg:#000;--d:1s">5’e böl</span>
+            <div class="ob-flmascot" id="obFlMascot"></div>
+          </div>
+          <div class="ob-flchips"><span style="--c:#19E68C;--d:.5s">5 Kutu Kuralı</span><span style="--c:#5AA8FF;--d:.6s">Acil Fon</span><span style="--c:#FF4B5C;--d:.7s">Borç Kartopu</span><span style="--c:#FF6FB5;--d:.8s">Asgari Tuzağı</span></div>
+        </div>
+        <div class="ob-tag">Finansal ipuçları</div>
+        <div class="ob-title">Maskotlar anlatır,<br><em>sen uygularsın.</em></div>
+        <div class="ob-body">3 dakikalık animasyonlu dersler. Dersin sonunda planı tek dokunuşla kur — bütçeler, hedefler, taksitler hazır.</div>
+      </div>
+      <!-- SLIDE 7: Kasanda ne kadar var? -->
+      <div class="splash-slide" data-idx="8">
         <div class="ob-tag">Başlayalım</div>
         <div class="ob-title">Şu an kasanda<br><em>ne kadar var?</em></div>
         <div class="ob-body">VAULT bunu günlük limitini hesaplamak için kullanır.</div>
@@ -2692,7 +2708,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       </div>
 
       <!-- SLIDE 5: Cüzdan ismi - geçilebilir -->
-      <div class="splash-slide" data-idx="8">
+      <div class="splash-slide" data-idx="9">
         <div style="height:16px"></div>
         <div class="ob-tag">Kişiselleştir</div>
         <div class="ob-title">Cüzdanına<br><em>istediğin ismi ver.</em></div>
@@ -2715,6 +2731,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
         <span class="splash-dot" onclick="goSplash(6)"></span>
         <span class="splash-dot" onclick="goSplash(7)"></span>
         <span class="splash-dot" onclick="goSplash(8)"></span>
+        <span class="splash-dot" onclick="goSplash(9)"></span>
       </div>
       <div class="splash-cta">
         <button class="btn btn-primary btn-full" id="splashBtn" onclick="nextSplash()">Devam</button>
@@ -4199,7 +4216,7 @@ function isPaidThisMonth(item, mk) {
 
 // =================== ONBOARDING ===================
 let _splashIdx = 0;
-const _SPLASH_COUNT = 9; // V78: +karakter, +kartlar/cuzdanlar, +seri/kazanimlar
+const _SPLASH_COUNT = 10; // V91: +finansal ipuçları // V78: +karakter, +kartlar/cuzdanlar, +seri/kazanimlar
 
 function initSplash() {
   _splashIdx = 0;
@@ -14061,6 +14078,25 @@ setInterval(checkMonthRollover, 60000);
 </div>
 </div>
 <!-- ═══════════ V91 — FİNANSAL İPUÇLARI: maskotlu ders motoru (kendi içinde kapalı modül) ═══════════ -->
+<style id="obBoldStyle">
+/* ═══ V91 — Onboarding: ders dili (kelime animasyonu, highlight, etiketler, ipuçları slaytı) ═══ */
+.ob-title{overflow:visible}
+.ob-title .ob-w{display:inline-block;opacity:0;transform:translateY(18px) rotate(2deg)}
+.splash-slide.active .ob-title .ob-w{animation:obWIn .62s cubic-bezier(.34,1.56,.64,1) both;animation-delay:var(--d,0s)}
+@keyframes obWIn{from{opacity:0;transform:translateY(18px) rotate(2deg)}to{opacity:1;transform:none}}
+.ob-title em{font-style:normal;color:#07120C;background:var(--hl,var(--accent));padding:0 .12em;margin:0 -.02em;border-radius:.16em;display:inline-block;transform:rotate(-1.5deg);box-decoration-break:clone;-webkit-box-decoration-break:clone;line-height:1.05}
+.splash-slide .ob-tag{color:var(--hl,rgba(45,184,102,.65))}
+.ob-stk{position:absolute;left:var(--x);top:var(--y);padding:7px 11px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap;background:var(--bg);color:var(--fg);z-index:3;transform:rotate(var(--r));box-shadow:0 10px 24px -10px rgba(0,0,0,.6);animation:obSlap .55s var(--d) cubic-bezier(.34,1.56,.64,1) both;font-family:'Montserrat',sans-serif}
+@keyframes obSlap{0%{opacity:0;transform:rotate(calc(var(--r) + 28deg)) scale(1.9)}55%{opacity:1;transform:rotate(calc(var(--r) - 5deg)) scale(.94)}100%{opacity:1;transform:rotate(var(--r)) scale(1)}}
+.splash-slide:not(.active) .ob-stk{animation:none;opacity:0}
+.ob-fl{width:100%;padding:0 24px;margin-bottom:18px;animation:obFadeIn .5s ease .05s both}
+.ob-flposter{position:relative;width:100%;height:178px;border-radius:22px;background:#7C5CFF;color:#fff;padding:18px 18px 0;overflow:visible;box-shadow:0 30px 60px -28px rgba(124,92,255,.7);transform:rotate(-2deg);animation:cardSlide .55s cubic-bezier(.34,1.2,.64,1) .1s both}
+.ob-flh{font-size:28px;font-weight:800;line-height:.98;letter-spacing:-1.2px;font-family:'Montserrat',sans-serif;position:relative;z-index:2}
+.ob-flhl{display:inline-block;background:#0a0a0a;color:#fff;padding:0 .14em;border-radius:.16em;transform:rotate(-1.5deg)}
+.ob-flmascot{position:absolute;right:10px;bottom:-22px;width:96px;height:96px;z-index:4}.ob-flmascot svg{width:100%;height:100%;overflow:visible}.ob-flmascot .vm-halo{display:none}
+.ob-flchips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:30px}
+.ob-flchips span{font-size:10.5px;font-weight:800;letter-spacing:.3px;padding:6px 10px;border-radius:999px;background:var(--c);color:#0a0a0a;animation:obFadeUp .5s cubic-bezier(.4,0,.2,1) var(--d) both;font-family:'Montserrat',sans-serif}
+</style>
 <style id="flStyle">
 #flOverlay{position:fixed;inset:0;z-index:100000;display:none;flex-direction:column;background:#050505;color:#F2F1EB;font-family:'Montserrat',system-ui,sans-serif;isolation:isolate;transition:color .45s;--fl-lesson:#19E68C;--fl-block:#19E68C;--fl-bink:#07120C;--fl-accent:#19E68C;--fl-hl:#19E68C;--fl-hlfg:#04170D;--fl-rc:22px;--fl-rb:4px;--fl-spring:cubic-bezier(.34,1.56,.64,1);--fl-out:cubic-bezier(.22,1,.36,1);padding-top:env(safe-area-inset-top)}
 #flOverlay.fl-show{display:flex;align-items:center;justify-content:center}
@@ -14314,6 +14350,63 @@ setInterval(checkMonthRollover, 60000);
 .fl-ballwrap .fl-stk{font-size:12px}
 .fl-bign{position:absolute;left:calc(50% - 156px);top:calc(47% + 34px);background:#FF4B5C;color:#fff;padding:10px 18px 12px;border-radius:var(--fl-rc);font-size:46px;font-weight:800;letter-spacing:-2.4px;line-height:.95;--r:-7deg;transform:rotate(var(--r));animation:flSlap .6s 1.75s var(--fl-spring) both;z-index:3;box-shadow:0 14px 30px rgba(0,0,0,.45);font-variant-numeric:tabular-nums}
 .fl-bign i{font-style:normal;font-size:22px;letter-spacing:-.5px;margin-left:3px}.fl-bign small{display:block;font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;opacity:.85;margin-top:4px}
+/* ── ders 4: kredi kartı asgari tuzağı ── */
+.fl-ccwrap{width:100%;padding:14px 8px 18px}
+.fl-cc{width:100%;aspect-ratio:1.586;border-radius:var(--fl-rc);background:linear-gradient(135deg,#24081A 0%,#4A1236 55%,#8C2A66 100%);position:relative;padding:18px 20px;color:#fff;box-shadow:0 34px 70px -26px rgba(255,111,181,.55);--r:-5deg;transform:rotate(var(--r));animation:flCardIn 1s .1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes flCardIn{from{opacity:0;transform:rotate(14deg) translateY(70px) scale(.8)}to{opacity:1;transform:rotate(var(--r))}}
+.fl-cc::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 82% 18%,rgba(255,111,181,.38),transparent 52%);pointer-events:none}
+.fl-ccchip{width:38px;height:28px;border-radius:6px;background:linear-gradient(135deg,#FFE97A,#C9A227);position:relative}.fl-ccchip::after{content:'';position:absolute;inset:6px 4px;border:1.5px solid rgba(0,0,0,.25);border-radius:3px}
+.fl-ccslot{position:absolute;right:16px;top:12px;width:96px;height:96px;border-radius:50%;border:2px dashed rgba(255,255,255,.22)}
+.fl-ccnum{font-size:19px;font-weight:800;letter-spacing:2.5px;margin-top:24px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.fl-ccrow{display:flex;justify-content:space-between;margin-top:12px;font-size:9px;font-weight:800;letter-spacing:1.4px;opacity:.8}.fl-ccrow b{display:block;font-size:13px;letter-spacing:.2px;margin-top:2px}
+.fl-ccstamp{position:absolute;left:14px;bottom:-16px;border:3px solid #FF4B5C;color:#FF4B5C;background:rgba(10,10,10,.88);font-size:12px;font-weight:800;letter-spacing:2px;padding:7px 12px;border-radius:6px;--r:-8deg;transform:rotate(var(--r));animation:flSlap .55s 1.35s var(--fl-spring) both;z-index:2}
+.fl-ccstamp.fl-ok{border-color:#19E68C;color:#19E68C}
+.fl-ccplan{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:8.5px;font-weight:800;letter-spacing:1.2px;opacity:.85}.fl-ccplan b{display:block;font-size:14px;letter-spacing:-.2px;margin-top:1px;font-variant-numeric:tabular-nums}
+.fl-sl{width:100%;text-align:center}
+.fl-slv{font-size:72px;font-weight:800;letter-spacing:-3.5px;line-height:1;color:var(--fl-accent);font-variant-numeric:tabular-nums;animation:flWIn .6s var(--fl-spring) both;white-space:nowrap}
+.fl-slsub{font-size:14px;font-weight:800;margin-top:8px;opacity:.85;min-height:20px}
+.fl-slr{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:999px;background:linear-gradient(90deg,var(--fl-accent) var(--p,50%),rgba(255,255,255,.14) var(--p,50%));margin:28px 0 8px;outline:none;border:none}
+.fl-slr::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:var(--fl-accent);border:4px solid #0a0a0a;box-shadow:0 8px 20px color-mix(in srgb,var(--fl-accent) 50%,transparent);cursor:pointer}
+.fl-slr::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--fl-accent);border:4px solid #0a0a0a;cursor:pointer}
+.fl-slm{display:flex;justify-content:space-between;font-size:10.5px;font-weight:800;letter-spacing:1px;opacity:.5;text-transform:uppercase}
+.fl-tog{display:flex;background:rgba(255,255,255,.08);border-radius:999px;padding:4px;width:100%}
+.fl-tog button{flex:1;border:none;border-radius:999px;padding:14px;background:transparent;color:#F2F1EB;font-weight:800;font-size:16px;cursor:pointer;transition:background .25s,color .25s}
+.fl-tog button.fl-on{background:var(--fl-accent);color:var(--fl-hlfg)}
+.fl-tognote{font-size:11px;font-weight:700;opacity:.55;margin-top:10px;text-align:center}
+.fl-bigline{margin-top:28px;text-align:center;font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;opacity:.7}.fl-bigline b{display:block;font-size:46px;letter-spacing:-2px;margin-top:4px;opacity:1;color:var(--fl-accent);font-variant-numeric:tabular-nums;text-transform:none}
+.fl-stripwrap{width:100%;display:flex;flex-direction:column;gap:12px}
+.fl-strip{width:100%;overflow:hidden}
+.fl-stripin{display:flex;gap:8px;transition:transform .5s var(--fl-out)}
+.fl-fm{flex:0 0 72px;height:156px;border-radius:var(--fl-rc);background:rgba(0,0,0,.22);display:flex;flex-direction:column;align-items:center;padding:10px 7px 8px;opacity:0;transform:translateY(14px) scale(.9);transition:opacity .3s,transform .45s var(--fl-spring)}
+.fl-fm.fl-in{opacity:1;transform:none}
+.fl-fm b{font-size:9.5px;letter-spacing:1px;opacity:.7}.fl-fm span{font-size:10.5px;font-weight:800;margin-top:6px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.fl-fbar{flex:1;width:100%;display:flex;flex-direction:column;justify-content:flex-end;margin-top:6px}
+.fl-fbar em{display:block;width:100%;height:var(--f);border-radius:var(--fl-rb) var(--fl-rb) 0 0;background:#FF4B5C}.fl-fbar i{display:block;width:100%;height:var(--h);border-radius:0 0 var(--fl-rb) var(--fl-rb);background:#1A0612}
+.fl-ctr{display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.18);border-radius:var(--fl-rc);padding:12px 16px;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}.fl-ctr b{font-size:22px;letter-spacing:-1px;font-variant-numeric:tabular-nums;text-transform:none}
+.fl-split{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px;position:relative}
+.fl-spl{border-radius:var(--fl-rc);padding:18px 16px;min-height:236px;display:flex;flex-direction:column;background:rgba(255,255,255,.07);animation:flTileIn .55s var(--d) var(--fl-spring) both}
+.fl-spl.fl-hot{background:linear-gradient(160deg,color-mix(in srgb,var(--fl-lesson) 72%,#fff),var(--fl-lesson) 50%,color-mix(in srgb,var(--fl-lesson) 75%,#000));color:var(--fl-hlfg);box-shadow:0 18px 34px -16px var(--fl-lesson)}
+.fl-spl .fl-spk{font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;opacity:.7;white-space:nowrap}
+.fl-spl .fl-spn{margin-top:auto;font-size:54px;font-weight:800;letter-spacing:-3px;line-height:.95;font-variant-numeric:tabular-nums}.fl-spl .fl-spn i{font-style:normal;font-size:18px;letter-spacing:-.3px;margin-left:3px}
+.fl-spl .fl-spi{font-size:10.5px;font-weight:800;margin-top:10px;opacity:.75;letter-spacing:.3px}.fl-spl .fl-spi b{font-size:15px;display:block;letter-spacing:-.4px;margin-top:2px;opacity:1;font-variant-numeric:tabular-nums}
+.fl-vs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;box-shadow:0 10px 24px rgba(0,0,0,.45);opacity:0;transition:opacity .2s,transform .4s var(--fl-spring);z-index:2}
+.fl-vs.fl-show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.fl-bigres{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 6px}
+.fl-hugen{font-size:190px;font-weight:800;letter-spacing:-12px;line-height:.85;color:var(--fl-bink);font-variant-numeric:tabular-nums;animation:flWIn .7s .1s var(--fl-spring) both;display:flex;align-items:baseline;justify-content:center}
+.fl-hugen i{font-style:normal;font-size:44px;letter-spacing:-1.5px;margin-left:8px}
+.fl-bigres .fl-line{max-width:300px;margin-top:16px;text-align:center}
+.fl-notes{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;padding:8px 6px 4px}
+.fl-note{aspect-ratio:1/.9;background:var(--c);color:#111;padding:18px 14px 12px;border-radius:4px;position:relative;transform:rotate(var(--r));box-shadow:0 18px 30px -16px rgba(0,0,0,.7);animation:flSlap .55s var(--d) var(--fl-spring) both;display:flex;flex-direction:column;justify-content:flex-end}
+.fl-note::before{content:'';position:absolute;left:50%;top:-9px;width:64px;height:18px;margin-left:-32px;background:rgba(255,255,255,.6);transform:rotate(-2deg)}
+.fl-note .fl-nt{font-size:16px;font-weight:800;line-height:1.1;letter-spacing:-.3px}.fl-note .fl-ns{font-size:10.5px;font-weight:700;opacity:.65;margin-top:5px;line-height:1.25}
+.fl-note .fl-nb{position:absolute;right:12px;top:12px;width:28px;height:28px;border-radius:50%;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800}.fl-note .fl-nb.fl-x{background:#FF4B5C}
+.fl-tf{width:100%}
+.fl-tfcard{background:#fff;color:#111;border-radius:var(--fl-rc);padding:26px 22px;font-size:22px;font-weight:800;letter-spacing:-.6px;line-height:1.15;--r:-1.5deg;transform:rotate(var(--r));animation:flTileIn .5s .15s var(--fl-spring) both;box-shadow:0 24px 50px -20px rgba(0,0,0,.7);transition:background .3s,color .3s}
+.fl-tfcard small{display:block;font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;opacity:.55;margin-bottom:10px}
+.fl-tfcard.fl-ok{background:#19E68C;color:#04170D}.fl-tfcard.fl-bad{animation:flShake .45s}
+.fl-tfbtns{display:flex;gap:10px;margin-top:20px}
+.fl-tfbtns button{flex:1;border:none;border-radius:999px;padding:18px;font-size:16px;font-weight:800;cursor:pointer;color:#0a0a0a;transition:transform .2s var(--fl-spring),opacity .3s;animation:flTileIn .5s var(--d) var(--fl-spring) both}
+.fl-tfbtns button:active{transform:scale(.95)}.fl-tfbtns button.fl-dim{opacity:.3}
 /* konuşma balonu */
 .fl-bub{position:absolute;z-index:6;max-width:190px;background:#fff;color:#0a0a0a;font-size:13px;font-weight:800;line-height:1.25;padding:10px 14px;border-radius:999px;box-shadow:0 10px 24px rgba(0,0,0,.35);opacity:0;transform:scale(.6);transition:opacity .25s,transform .45s var(--fl-spring);pointer-events:none;white-space:nowrap}
 .fl-bub.fl-show{opacity:1;transform:none}
@@ -14385,6 +14478,7 @@ const ICON={
   buoy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M5.6 5.6l3.5 3.5M14.9 14.9l3.5 3.5M18.4 5.6l-3.5 3.5M9.1 14.9l-3.5 3.5"/></svg>',
   snow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"/></svg>',
   scale:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M4 20h16M6 7h12M6 7l-3 6a3 3 0 0 0 6 0zM18 7l-3 6a3 3 0 0 0 6 0z"/></svg>',
+  card:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18M7 15h3"/></svg>',
   search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.2-4.2"/></svg>',
   trend:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>',
   target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>'};
@@ -14393,7 +14487,7 @@ const TIPS=[
   {id:'kutular',icon:'calc',c:'rgba(25,230,140,.16)',ic:'#19E68C',title:'5 Kutu Kuralı',sub:'Maaşını nasıl bölmelisin? 15 sayfalık maskotlu ders.',ready:true},
   {id:'acilfon',icon:'buoy',c:'rgba(10,132,255,.16)',ic:'#5AA8FF',title:'Acil Fon',sub:'Kaç aylık tampon lazım? 13 sayfalık maskotlu ders.',ready:true},
   {id:'kartopu',icon:'snow',c:'rgba(255,75,92,.16)',ic:'#FF4B5C',title:'Borç Kartopu',sub:'En küçük borç önce. 12 sayfalık maskotlu ders.',ready:true},
-  {id:'503020',icon:'scale',c:'rgba(251,191,36,.16)',ic:'#FBBF24',title:'50/30/20 mı Sana Uygun?',sub:'Klasik kural senin gelirinde işliyor mu?',ready:false},
+  {id:'asgari',icon:'card',c:'rgba(255,111,181,.16)',ic:'#FF6FB5',title:'Kredi Kartı Asgari Tuzağı',sub:'Asgariyi ödemek neden borcu bitirmez? 12 sayfalık maskotlu ders.',ready:true},
   {id:'sizinti',icon:'search',c:'rgba(191,90,242,.16)',ic:'#BF5AF2',title:'Abonelik Sızıntısı',sub:'Küçük ama sık ödemeler yılda ne tutuyor?',ready:false},
   {id:'yatirim',icon:'trend',c:'rgba(52,211,153,.16)',ic:'#34D399',title:'Yatırıma Başlangıç',sub:'Bileşik büyüme: erken başlamanın gücü.',ready:false},
   {id:'hedef',icon:'target',c:'rgba(236,72,153,.16)',ic:'#EC4899',title:'Hayali Plana Çevir',sub:'Bir hedefi aylık birikime böl.',ready:false},
@@ -14485,9 +14579,37 @@ const PAGES3=[
   {L:'tg',g:'tiles',type:'quiz',char:'DENGELI',m:['tr',132],opts:[{t:'Kart 12.000',c:'#FF4B5C'},{t:'Araba 240.000',c:'#5AA8FF'},{t:'Kredi 90.000',c:'#B48CFF'}],ans:0,slot:'KARTOPU',slotOk:'✓ EN KÜÇÜK → ÖNCE',ok:'Doğru. En küçük borç ilk biter, taksiti kartopuna eklenir.',no:'Bir daha düşün: hangisi en hızlı biter?',kick:'mini test',h:'Hangisi|[[önce?]]'},
   {L:'tg',g:'ball',char:'BIRIKTIREN',m:['tr',132],kick:'özet',h:'Senin [[kartopun.]]',line:()=>`${A.extra>0?`Ekstra ${fmt(A.extra)} ₺ en küçük borca.`:'Biten borcun taksiti sonrakine.'} [[${snowDate()}]]: borç yok.`,
     cells:()=>{const S=snow();return [{n:'Borçsuz olma',t:`${S.months} ay`,c:'#FF4B5C',p:snowDate(true),big:true},(A.extra>0?{n:'Kartopu',v:A.extra,c:'#19E68C'}:{n:'Kartopu',t:'taksitler',c:'#19E68C'}),{n:'Toplam',v:A.debts.reduce((s,d)=>s+d.rem,0),c:'#FF8A3D'},{n:'İlk zafer',t:S.closes.length?`Ay ${S.closes[0].month}`:'—',c:'#B48CFF'},{n:'Erken',t:`${Math.max(0,snowBase()-S.months)} ay`,c:'#FFE97A'}];}},
-  {L:'poster',type:'action',bg:'#FF4B5C',ink:'#160406',hl:'#160406',hlfg:'#FF4B5C',char:'OZGUR',m:['mr',144],cta:true,ctaText:()=>A.debtsSrc==='data'?'Planı kur →':'Dersi bitir ✓',show:['BORCLU','KIRILGAN','TUTUMLU','OZGUR'],h:'Küçük|borç önce.|[[Kartopu]]|büyür.',line:()=>A.debtsSrc==='data'?'Kartopu zarfını kurarım,|[[sen sadece onaylarsın.]]':'Borç eklediğinde|[[kartopunu birlikte kurarız.]]',
+  {L:'poster',type:'action',bg:'#FF4B5C',ink:'#160406',hl:'#160406',hlfg:'#FF4B5C',char:'OZGUR',m:['mr',144],cta:true,ctaText:()=>A.debtsSrc==='data'?'Planı kur →':'Dersi bitir ✓',show:['BORCLU','KIRILGAN','TUTUMLU','OZGUR'],h:'Küçük|borç önce.|[[Kartopu]]|büyür.',line:()=>A.debtsSrc==='data'?'Ekstrayı en küçük borca eklerim,|[[sen sadece onaylarsın.]]':'Borç eklediğinde|[[kartopunu birlikte kurarız.]]',
     stk:()=>[{t:`${A.debts.length} borç`,bg:'#160406',fg:'#FF4B5C',x:'4%',y:'44%',r:-6},{t:A.extra>0?`kartopu +${fmt(A.extra)} ₺`:'taksitler devreder',bg:'#fff',fg:'#000',x:'24%',y:'50%',r:5},{t:`${snow().months} ay`,bg:'#19E68C',fg:'#000',x:'8%',y:'58%',r:-9},{t:'yeni borç yok',bg:'#FFE97A',fg:'#000',x:'30%',y:'65%',r:8},{t:'küçükten büyüğe',bg:'#0a0a0a',fg:'#fff',x:'12%',y:'73%',r:-4}],
     doodles:[{k:'star',x:'72%',y:'2%',s:76,c:'#160406'},{k:'flower',x:'60%',y:'72%',s:70,c:'#fff'}]},
+];
+
+/* ---- ders 4: Kredi Kartı Asgari Tuzağı ---- */
+function ccSim(D,r,minP,fixed){let bal=D,months=0,interest=0,guard=0;const hist=[];
+  while(bal>50&&guard++<600){months++;const i=bal*r;interest+=i;bal+=i;let pay=fixed!=null?fixed:Math.max(bal*minP,Math.min(bal,500));pay=Math.min(pay,bal);bal-=pay;hist.push({m:months,bal,pay,i});}
+  return {months,interest:Math.round(interest),hist,stuck:guard>=600};}
+const ccMin=()=>ccSim(A.cdebt,A.rate/100,A.minP/100,null);
+const ccFix=p=>ccSim(A.cdebt,A.rate/100,A.minP/100,p);
+const ccFirstMin=()=>Math.round(A.cdebt*(1+A.rate/100)*A.minP/100/100)*100;
+const ccDate=(n,short)=>{const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+n);const m=MN[d.getMonth()];return (short?m.slice(0,3):m)+' '+d.getFullYear();};
+const pct=v=>'%'+v.toFixed(2).replace('.',',');
+const PAGES4=[
+  {L:'gb',g:'card',char:'KIRILGAN',m:['at','#fl_ccslot'],kick:'tuzak',h:'Asgariyi|ödedin.|[[Borç bitmedi.]]',line:'Bankanın en sevdiği müşteri: [[her ay asgariyi ödeyen.]]'},
+  {L:'center',g:'slider',type:'ask',key:'rate',zero:true,char:'ACEMI',m:['tc',160],say:'Ekstrende yazar.',kick:'önce faiz',h:'Kartının|aylık faizi?',line:()=>`Yılda ${pct(A.rate*12)}. Bankadan bankaya değişir; ekstrende “akdi faiz” yazar.`,min:1,max:6,step:.25,fmtV:v=>pct(v)},
+  {L:'center',g:'input',type:'ask',key:'cdebt',char:'HARCAYAN',m:['tc',180],kick:'şimdi sen',h:'Kart|borcun?',line:()=>A.cdebtSrc==='data'?'Uygulamadaki kartlarından aldım; düzeltebilirsin.':'Örnek bir tutar yazdım; kendi ekstre borcunu gir.'},
+  {L:'tg',g:'tog',char:'DENGELI',m:['tr',132],kick:'asgari oranı',h:'Bu ay|[[en az]] ne kadar?',line:'Asgari, borcun bir yüzdesi. [[Borç küçüldükçe asgari de küçülür]] — tuzak tam burada.'},
+  {L:'gb',g:'strip',block:true,bg:'#FF6FB5',ink:'#1A0612',hl:'#1A0612',hlfg:'#FF6FB5',char:'BORCLU',m:['tr',132],kick:'ay ay',h:()=>`Asgariyi öde,|[[${ccMin().months} ay]] sürsün.`,line:()=>`Her ay ödedin ama faiz de her ay yazdı. [[${fmt(ccMin().interest)} ₺]] boşa gitti.`},
+  {L:'tg',g:'split',char:'YATIRIMCI',m:['tr',132],say:'Aynı ilk taksit!',kick:'karşılaştır',h:'Asgari mi,|[[sabit]] mi?',line:()=>`İlk ay ikisi de ${fmt(ccFirstMin())} ₺. Sabit ödersen ${ccFix(ccFirstMin()).months} ayda biter, asgaride ${ccMin().months} ay.`},
+  {L:'center',g:'slider',type:'ask',key:'pay',char:'TUTUMLU',m:['tc',160],kick:'plan',h:'Ayda ne kadar|ödeyebilirsin?',line:()=>{const S=ccFix(A.pay);return S.stuck?'Bu tutar faizi bile karşılamıyor — biraz artır.':`${S.months} ayda biter · toplam faiz ${fmt(S.interest)} ₺`;},min:()=>Math.max(100,Math.round(A.cdebt*A.rate/100/100)*100+100),max:()=>Math.round(A.cdebt/2/100)*100,step:100,fmtV:v=>fmt(v)+' ₺'},
+  {L:'bigres',type:'bigres',bg:'#FF6FB5',ink:'#1A0612',hl:'#1A0612',hlfg:'#FF6FB5',char:'BIRIKTIREN',m:['br',150],kick:()=>`ayda ${fmt(A.pay)} ₺`,val:()=>ccFix(A.pay).months,line:()=>`[[${ccDate(ccFix(A.pay).months)}]]: kart sıfır. Asgariye göre ${fmt(Math.max(0,ccMin().interest-ccFix(A.pay).interest))} ₺ faiz cebinde kaldı.`,
+    stk:()=>[{t:`${Math.max(0,ccMin().months-ccFix(A.pay).months)} ay erken`,bg:'#1A0612',fg:'#FF6FB5',x:'2%',y:'4%',r:-7},{t:`faiz ${fmt(ccFix(A.pay).interest)} ₺`,bg:'#fff',fg:'#000',x:'58%',y:'10%',r:6},{t:'asgari yok',bg:'#FF4B5C',fg:'#fff',x:'4%',y:'17%',r:-5},{t:`${fmt(A.cdebt)} ₺ borç`,bg:'#FFE97A',fg:'#000',x:'4%',y:'84%',r:5}]},
+  {L:'tg',g:'notes',char:'HEDEFCI',m:['tr',132],kick:'kurallar',h:'Kartla|[[barış]] planı.',line:'Dört not. Buzdolabına yapıştır.',
+    notes:[{t:'Ekstre günü tamamını öde',s:'faiz sıfır',ok:true,c:'#19E68C',r:-3},{t:'Asgari = kapan',s:'borç erimez',ok:false,c:'#FFE97A',r:2},{t:'Nakit avans çekme',s:'faiz ilk gün başlar',ok:false,c:'#FF8A94',r:-2},{t:'Yeni harcama yok',s:'kapanana kadar',ok:true,c:'#8FC4FF',r:3}]},
+  {L:'tg',g:'tf',type:'quiz',char:'DENGELI',m:['tr',132],kick:'doğru mu yanlış mı',h:'Mini|[[test.]]',st:'Asgariyi ödersem faiz işlemez.',ans:false,ok:'Yanlış. Kalan borca her ay faiz yazar; asgari sadece kartını kapattırmaz.',no:'Bir daha düşün: kalan borca ne olur?'},
+  {L:'gb',g:'card',mode:'plan',char:'YATIRIMCI',m:['at','#fl_ccslot'],kick:'özet',h:'Kapatma|[[planın.]]',line:()=>`Ayda ${fmt(A.pay)} ₺, ${ccFix(A.pay).months} ay. [[${ccDate(ccFix(A.pay).months)}]]: kart temiz.`},
+  {L:'poster',type:'action',bg:'#0a0a0a',ink:'#FFFFFF',hl:'#FF6FB5',hlfg:'#1A0612',char:'OZGUR',m:['mr',144],cta:true,ctaSolid:true,ctaText:'Planı kur →',show:['KIRILGAN','BORCLU','DENGELI','OZGUR'],h:'Asgari|değil,|[[tamamı.]]',line:'Taksitli kapatma planını Sabit’e eklerim,|[[sen sadece onaylarsın.]]',
+    stk:()=>[{t:`ayda ${fmt(A.pay)} ₺`,bg:'#FF6FB5',fg:'#1A0612',x:'4%',y:'44%',r:-6},{t:`${ccFix(A.pay).months} ay`,bg:'#fff',fg:'#000',x:'30%',y:'50%',r:5},{t:`faiz ${fmt(ccFix(A.pay).interest)} ₺`,bg:'#19E68C',fg:'#000',x:'8%',y:'58%',r:-9},{t:'ekstre günü',bg:'#FFE97A',fg:'#000',x:'30%',y:'65%',r:8},{t:'yeni harcama yok',bg:'#FF4B5C',fg:'#fff',x:'12%',y:'73%',r:-4}],
+    doodles:[{k:'bolt',x:'72%',y:'2%',s:76,c:'#FF6FB5'},{k:'flower',x:'60%',y:'72%',s:70,c:'#FF6FB5'}]},
 ];
 
 const LESSONS={
@@ -14505,12 +14627,16 @@ const LESSONS={
       if(inc>0){A.saveSrc='box';A.save=Math.round(inc*A.gelP/100);}else{A.saveSrc=sug>0?'data':'sample';A.save=sug>0?sug:Math.ceil(exp*3/12);}},
     apply(){applyFund();}},
   kartopu:{id:'kartopu',color:'#FF4B5C',ink:'#160406',hlfg:'#fff',title:'Borç Kartopu',pages:PAGES3,
-    init(){let list=[];try{list=(data.debts||[]).filter(d=>d.active).map(d=>({name:d.name||'Borç',rem:Math.max(0,((d.installments||0)-(d.paidCount||0))*(d.monthlyAmount||0)),monthly:d.monthlyAmount||0})).filter(d=>d.rem>0&&d.monthly>0);}catch(e){}
+    init(){let list=[];try{list=(data.debts||[]).filter(d=>d.active).map(d=>({id:d.id,name:d.name||'Borç',rem:Math.max(0,((d.installments||0)-(d.paidCount||0))*(d.monthlyAmount||0)),monthly:d.monthlyAmount||0})).filter(d=>d.rem>0&&d.monthly>0);}catch(e){}
       A.debtsSrc=list.length?'data':'sample';A.debts=list.length?list:SAMPLE_DEBTS.map(d=>Object.assign({},d));
       let inc=0;try{if(typeof calcFreeBudget==='function')inc=Math.round(calcFreeBudget(currentMonth).income||0);}catch(e){}
       const inst=A.debts.reduce((s,d)=>s+d.monthly,0);
       if(inc>0){A.extraSrc='box';A.extra=Math.max(0,Math.round(inc*0.10-inst));}else{A.extraSrc='sample';A.extra=2000;}},
     apply(){applyDebt();}},
+  asgari:{id:'asgari',color:'#FF6FB5',ink:'#1A0612',hlfg:'#1A0612',title:'Kredi Kartı Asgari Tuzağı',pages:PAGES4,
+    init(){let d=0,lim=0;try{if(typeof totalCardsDebt==='function')d=Math.round(totalCardsDebt());lim=(data.cards||[]).reduce((m,c)=>Math.max(m,c.limit||0),0);}catch(e){}
+      A.cdebtSrc=d>0?'data':'sample';A.cdebt=d>0?d:40000;A.rate=4;A.minP=(lim||A.cdebt)>25000?40:20;A.pay=ccFirstMin();},
+    apply(){applyCard();}},
 };
 let pi=0,A={inc:80000,exp:40000,months:3,save:10000},quizOK=false,busy=false,timers=[],mascot=null,L=LESSONS.kutular;
 const later=(f,ms)=>timers.push(setTimeout(f,ms));const every=(f,ms)=>timers.push(setInterval(f,ms));
@@ -14520,7 +14646,7 @@ const ov=()=>document.getElementById('flOverlay');
 /* ---- grafikler ---- */
 function barsHTML(inc,opts){opts=opts||{};const max=opts.max||(inc*0.65);return `<div class="fl-bars" id="fl_bars">`+BOX.map(b=>`<div class="fl-bar" style="--c:${b.c}"><div class="fl-btop">${opts.amounts?fmt(inc*b.p):'%'+Math.round(b.p*100)}</div><div class="fl-col" data-h="${Math.round(inc*b.p/max*100)}"></div><div class="fl-nm">${b.nm}</div>${opts.amounts?`<div class="fl-sub">%${Math.round(b.p*100)}</div>`:''}</div>`).join('')+`</div>`;}
 function growBars(delay){$$('#fl_bars .fl-col').forEach((c,i)=>later(()=>{c.style.height=c.dataset.h+'%';const t=c.parentElement.querySelector('.fl-btop');if(t)t.style.opacity=1;},(delay||120)+i*110));}
-const GALIGN={bars:'',cutbox:'fl-center',scale:'fl-stretch',giant:'',input:'fl-center',gauge:'',tiles:'fl-center',grid:'fl-stretch',months:'fl-center',ladder:'fl-center',choice:'fl-center',fillup:'fl-stretch',where:'fl-center',drain:'fl-stretch',grid2:'fl-stretch',snow:'fl-center',why:'fl-center',debts:'fl-center',rcpt:'fl-center',race:'fl-center',miles:'fl-center',ball:'fl-stretch'};
+const GALIGN={bars:'',cutbox:'fl-center',scale:'fl-stretch',giant:'',input:'fl-center',gauge:'',tiles:'fl-center',grid:'fl-stretch',months:'fl-center',ladder:'fl-center',choice:'fl-center',fillup:'fl-stretch',where:'fl-center',drain:'fl-stretch',grid2:'fl-stretch',snow:'fl-center',why:'fl-center',debts:'fl-center',rcpt:'fl-center',race:'fl-center',miles:'fl-center',ball:'fl-stretch',card:'fl-center',slider:'fl-center',tog:'fl-center',strip:'fl-center',split:'fl-center',notes:'fl-center',tf:'fl-center'};
 const G={
   cutbox(){const cuts=[65,70,80,90];return `<div class="fl-cutwrap"><div class="fl-cutbox" id="fl_cutbox"><div class="fl-whole" id="fl_whole"><b>80.000 ₺</b><small>maaş · %100</small></div>
       ${cuts.map((x,i)=>`<div class="fl-cut" id="fl_cut${i+1}" style="left:calc(${x}% - 1px)"></div>`).join('')}
@@ -14547,6 +14673,13 @@ const G={
   debts(){return `<div class="fl-dl">${debtSorted().map((d,i)=>`<div class="fl-drow" style="--d:${.15+i*.12}s"><b class="fl-rk">${i+1}</b><div class="fl-dn">${d.name}<small>${fmt(d.monthly)} ₺/ay taksit</small></div><div class="fl-da">${fmt(d.rem)} ₺</div></div>`).join('')}</div>`;},
   ball(){const S=snow();const stk=[{t:`${A.debts.length} borç`,bg:'#FF8A3D',fg:'#000',x:'calc(50% - 176px)',y:'calc(47% - 118px)',r:-8},{t:A.extra>0?`+${fmt(A.extra)} ₺/ay`:'taksitler devreder',bg:'#19E68C',fg:'#000',x:'calc(50% + 34px)',y:'calc(47% - 136px)',r:7},{t:S.closes.length?`ilk zafer · Ay ${S.closes[0].month}`:'',bg:'#B48CFF',fg:'#000',x:'calc(50% + 40px)',y:'calc(47% + 96px)',r:-6},{t:snowDate(),bg:'#FFE97A',fg:'#000',x:'calc(50% + 78px)',y:'calc(47% + 30px)',r:6},{t:`${Math.max(0,snowBase()-S.months)} ay erken`,bg:'#5AA8FF',fg:'#000',x:'calc(50% - 120px)',y:'calc(47% + 150px)',r:-4}].filter(x=>x.t);
     return `<div class="fl-ballwrap"><svg class="fl-slope" viewBox="0 0 360 70" preserveAspectRatio="none"><path d="M0 58 C 100 30, 210 68, 360 34"/></svg><span class="fl-bign"><b id="fl_bbN">0</b><i>ay</i><small>sonra borç yok</small></span>${stk.map((k,i)=>`<span class="fl-stk" style="--x:${k.x};--y:${k.y};--r:${k.r}deg;--bg:${k.bg};--fg:${k.fg};--d:${1.35+i*.16}s">${k.t}</span>`).join('')}</div>`;},
+  card(p){const plan=p&&p.mode==='plan';const S=plan?ccFix(A.pay):null;return `<div class="fl-ccwrap"><div class="fl-cc" id="fl_cc"><div class="fl-ccchip"></div><div class="fl-ccslot" id="fl_ccslot"></div><div class="fl-ccnum">•••• •••• •••• 4242</div>${plan?`<div class="fl-ccplan"><span>AYDA<b>${fmt(A.pay)} ₺</b></span><span>SÜRE<b>${S.months} ay</b></span><span>BİTİŞ<b>${ccDate(S.months,true)}</b></span><span>TOPLAM FAİZ<b>${fmt(S.interest)} ₺</b></span></div>`:`<div class="fl-ccrow"><span>KART SAHİBİ<b>SEN</b></span><span>EKSTRE<b>${fmt(A.cdebt)} ₺</b></span></div>`}<span class="fl-ccstamp ${plan?'fl-ok':''}">${plan?'KAPANIYOR ✓':'ASGARİ ÖDENDİ'}</span></div></div>`;},
+  slider(p){const mn=tx(p.min),mx=tx(p.max);let v=A[p.key];if(v<mn)v=mn;if(v>mx)v=mx;A[p.key]=v;const pc=(v-mn)/(mx-mn)*100;return `<div class="fl-sl"><div class="fl-slv" id="fl_slv">${p.fmtV(v)}</div><input type="range" class="fl-slr" id="fl_slr" min="${mn}" max="${mx}" step="${p.step}" value="${v}" style="--p:${pc}%"><div class="fl-slm"><span>${p.fmtV(mn)}</span><span>${p.fmtV(mx)}</span></div><div class="fl-slsub" id="fl_slsub">${tx(p.line)}</div></div>`;},
+  tog(){return `<div style="width:100%"><div class="fl-tog" id="fl_tog"><button data-v="20" class="${A.minP===20?'fl-on':''}">%20</button><button data-v="40" class="${A.minP===40?'fl-on':''}">%40</button></div><div class="fl-tognote">Genelde limit 25.000 ₺’ye kadar %20, üstü %40 — bankana göre değişir.</div><div class="fl-bigline">Bu ayki asgari<b id="fl_minv">${fmt(ccFirstMin())} ₺</b></div></div>`;},
+  strip(){const S=ccMin(),H=S.hist.slice(0,Math.min(S.hist.length,18)),D=A.cdebt*(1+A.rate/100);return `<div class="fl-stripwrap"><div class="fl-strip"><div class="fl-stripin" id="fl_stripin">${H.map((h,i)=>`<div class="fl-fm" id="fl_fm${i}"><b>AY ${h.m}</b><div class="fl-fbar"><em style="--f:${Math.max(3,h.i/D*100).toFixed(1)}%"></em><i style="--h:${Math.max(4,h.bal/D*100).toFixed(1)}%"></i></div><span>${fmt(h.bal)}</span></div>`).join('')}</div></div><div class="fl-ctr"><span>Ödenen faiz</span><b id="fl_ipaid">0 ₺</b></div><span class="fl-pill fl-rwin" id="fl_stripend" style="background:#1A0612;color:#FF6FB5">${S.months} AY · ${fmt(S.interest)} ₺ FAİZ</span></div>`;},
+  split(){const P=ccFirstMin(),M=ccMin(),F=ccFix(P);return `<div class="fl-split"><div class="fl-spl" style="--d:.15s"><div class="fl-spk">Asgari</div><div class="fl-spn"><span id="fl_spA" data-v="${M.months}">0</span><i>ay</i></div><div class="fl-spi">toplam faiz<b>${fmt(M.interest)} ₺</b></div></div><div class="fl-spl fl-hot" style="--d:.3s"><div class="fl-spk">Sabit ${fmt(P)} ₺</div><div class="fl-spn"><span id="fl_spB" data-v="${F.months}">0</span><i>ay</i></div><div class="fl-spi">toplam faiz<b>${fmt(F.interest)} ₺</b></div></div><div class="fl-vs" id="fl_vs">VS</div></div>`;},
+  notes(p){return `<div class="fl-notes">${p.notes.map((n,i)=>`<div class="fl-note" style="--c:${n.c};--r:${n.r}deg;--d:${.2+i*.18}s"><span class="fl-nb ${n.ok?'':'fl-x'}">${n.ok?'✓':'✗'}</span><div class="fl-nt">${n.t}</div><div class="fl-ns">${n.s}</div></div>`).join('')}</div>`;},
+  tf(p){return `<div class="fl-tf"><div class="fl-tfcard" id="fl_tfcard"><small>İddia</small>“${p.st}”</div><div class="fl-tfbtns"><button data-v="1" style="background:#19E68C;--d:.35s">DOĞRU</button><button data-v="0" style="background:#FF4B5C;color:#fff;--d:.45s">YANLIŞ</button></div></div>`;},
   rcpt(){const D=debtSorted(),T=D.reduce((s,d)=>s+d.rem,0);const dt=new Date();return `<div style="width:100%"><div class="fl-rcpt"><div class="fl-rh"><span>Borç fişi · kalan</span><span></span></div>${D.map((d,i)=>`<div class="fl-rr" style="--d:${.35+i*.16}s"><b class="fl-rk">${i+1}</b><div class="fl-rn">${d.name}<small>${fmt(d.monthly)} ₺/ay taksit</small></div><i class="fl-rdots"></i><span class="fl-ra">${fmt(d.rem)} ₺</span></div>`).join('')}<div class="fl-rt"><span>Toplam</span><b>${fmt(T)} ₺</b></div><span class="fl-rstamp">ÖNCE BU</span></div><div class="fl-rtear"></div></div>`;},
   race(){return `<div class="fl-race"><div class="fl-rrow"><div class="fl-rl">Taksitle</div><div class="fl-rbar"><i id="fl_rb0"></i></div><b id="fl_rm0">0 ay</b></div><div class="fl-rrow fl-hot"><div class="fl-rl">Kartopu</div><div class="fl-rbar"><i id="fl_rb1"></i></div><b id="fl_rm1">0 ay</b></div><span class="fl-pill fl-solid fl-rwin" id="fl_rwin">${Math.max(0,snowBase()-snow().months)} AY ERKEN</span></div>`;},
   miles(){const S=snow();let ball=A.extra;const rows=S.closes.slice(0,4).map((c,i)=>{ball+=c.monthly;return `<div class="fl-mrow" id="fl_mr${i}"><b class="fl-mm">AY ${c.month}</b><div class="fl-mt2"><div class="fl-mn">${c.name} bitti ✓</div><div class="fl-ms2">taksiti kartopuna: ${fmt(ball)} ₺/ay</div></div></div>`;});const more=S.closes.length>4?`<div class="fl-mrow" id="fl_mr4"><b class="fl-mm">…</b><div class="fl-mt2"><div class="fl-mn">${S.closes.length-4} borç daha</div></div></div>`:'';return `<div class="fl-ms">${rows.join('')}${more}<div class="fl-mrow fl-final" id="fl_mrF"><b class="fl-mm">AY ${S.months}</b><div class="fl-mt2"><div class="fl-mn">BORÇ YOK</div><div class="fl-ms2">${snowDate()} · ayda ${fmt(S.ball)} ₺ serbest kalır</div></div></div></div>`;},
@@ -14585,6 +14718,15 @@ const GA={
       later(()=>{const a=$('wAb'),b=$('wBb');if(a){a.textContent='3 zafer';a.classList.add('fl-show');}if(b){b.textContent='11 ay hiçbir şey';b.classList.add('fl-show');}},400+12*230+300);};run();every(run,400+12*230+4200);},
   debts(){later(()=>react('nod'),900);},
   rcpt(){later(()=>react('wow'),1200);},
+  card(p){later(()=>react('wow'),1300);later(()=>react(p&&p.mode==='plan'?'jump':'no'),1900);},
+  slider(p){const r=$('slr'),mn=tx(p.min),mx=tx(p.max);const upd=()=>{const v=parseFloat(r.value);A[p.key]=v;$('slv').textContent=p.fmtV(v);r.style.setProperty('--p',((v-mn)/(mx-mn)*100)+'%');$('slsub').textContent=tx(p.line);updateNext();if(!r._t||Date.now()-r._t>300){r._t=Date.now();react('nod');}};r.addEventListener('input',upd);later(()=>react('peek'),900);},
+  tog(){$$('#fl_tog button').forEach(b=>b.addEventListener('click',()=>{A.minP=+b.dataset.v;$$('#fl_tog button').forEach(x=>x.classList.toggle('fl-on',x===b));countUp($('minv'),ccFirstMin(),500,' ₺');react('jump');}));later(()=>react('nod'),900);},
+  strip(){const S=ccMin(),n=Math.min(S.hist.length,18);let paid=0;const run=()=>{if(!$('stripin'))return;paid=0;$('stripin').style.transform='none';for(let i=0;i<n;i++){const f=$('fm'+i);if(f)f.classList.remove('fl-in');}$('ipaid').textContent='0 ₺';$('stripend').classList.remove('fl-show');
+      for(let i=0;i<n;i++)later(()=>{const f=$('fm'+i);if(!f)return;f.classList.add('fl-in');paid+=S.hist[i].i;$('ipaid').textContent=fmt(paid)+' ₺';if(i>=3)$('stripin').style.transform=`translateX(-${(i-3)*80}px)`;if(i%3===0)react('no');},500+i*330);
+      later(()=>{$('ipaid').textContent=fmt(S.interest)+' ₺';$('stripend').classList.add('fl-show');react('no');},500+n*330+200);};run();every(run,500+n*330+4200);},
+  split(){later(()=>{countUp($('spA'),+$('spA').dataset.v,1200);countUp($('spB'),+$('spB').dataset.v,700);},600);later(()=>{$('vs').classList.add('fl-show');react('jump');},1100);},
+  notes(){for(let i=0;i<4;i++)later(()=>react('nod'),400+i*180);},
+  tf(p){$$('.fl-tfbtns button').forEach(b=>b.addEventListener('click',()=>{if(quizOK)return;const v=b.dataset.v==='1';const fb=$('fb'),c=$('tfcard');if(v===p.ans){quizOK=true;c.classList.add('fl-ok');$$('.fl-tfbtns button').forEach(x=>{if(x!==b)x.classList.add('fl-dim');});fb.className='fl-fb fl-ok';fb.textContent=p.ok;react('spin');updateNext();}else{c.classList.remove('fl-bad');void c.offsetWidth;c.classList.add('fl-bad');fb.className='fl-fb fl-bad';fb.textContent=p.no;react('no');}}));},
   ball(){later(()=>{snowify();placeMascot('gc',300);react('spin');$('mascot').style.zIndex='1';$('page').style.zIndex='2';},450);later(()=>{countUp($('bbN'),snow().months,700);react('jump');},1850);for(let i=0;i<5;i++)later(()=>react('nod'),2100+i*160);},
   race(){const base=snowBase(),N=snow().months,st=Math.max(90,Math.min(260,2800/base));const run=()=>{if(!$('rb0'))return;$('rb0').style.width='0%';$('rb1').style.width='0%';$('rm0').textContent='0 ay';$('rm1').textContent='0 ay';$('rwin').classList.remove('fl-show');
       for(let m=1;m<=base;m++)later(()=>{if(!$('rb0'))return;$('rb0').style.width=(m/base*100)+'%';$('rm0').textContent=m+' ay';if(m<=N){$('rb1').style.width=(m/N*100)+'%';$('rm1').textContent=m+' ay';}if(m===N){$('rwin').classList.add('fl-show');react('spin');}},400+m*st);};run();every(run,400+base*st+3600);},
@@ -14598,12 +14740,13 @@ const MIX=(a,b,t)=>{const A=parseInt(a.slice(1),16),B=parseInt(b.slice(1),16);co
 const msvg=()=>$('mascot').querySelector('svg');
 let curPlace=null;
 function placeMascot(pos,size){const m=$('mascot'),st=$('stage');const W=st.clientWidth-44,H=st.clientHeight;let x=0,y=0;curPlace=[pos,size];
+  if(pos==='at'){const el=document.querySelector(size);if(!el)return;const r=el.getBoundingClientRect(),sr=st.getBoundingClientRect();const sz=Math.round(r.width);m.style.width=m.style.height=sz+'px';m.style.transform=`translate(${Math.round(r.left-sr.left-22)}px,${Math.round(r.top-sr.top)}px)`;return;}
   switch(pos){case 'tl':x=0;y=4;break;case 'tr':x=W-size;y=4;break;case 'bl':x=0;y=H-size-10;break;case 'br':x=W-size;y=H-size-10;break;case 'tc':x=(W-size)/2;y=8;break;case 'mr':x=W-size;y=(H-size)/2-20;break;case 'ml':x=0;y=(H-size)/2;break;case 'gc':{const txt=st.querySelector('.fl-txt');const tb=txt?txt.getBoundingClientRect().bottom-st.getBoundingClientRect().top:0;x=(W-size)/2;y=tb+(H-tb)*0.47-size/2;break;}}
   m.style.width=m.style.height=size+'px';m.style.transform=`translate(${x}px,${y}px)`;
   const b=$('bub');if(b&&b._txt){b.className='fl-bub';b.style.left=b.style.right='auto';const cw=st.clientWidth;
     const lay=(L.pages[pi]||{}).L;
     if(lay==='tg'){const txt=st.querySelector('.fl-txt');const tb=txt?txt.getBoundingClientRect().bottom-st.getBoundingClientRect().top:y+size;b.classList.add('fl-tr');b.style.right='22px';b.style.top=Math.round(tb+6)+'px';}
-    else if(pos==='tc'||pos==='tr'||pos==='mr'){b.style.right=Math.round(cw-22-x+4)+'px';b.style.top=Math.round(y+size*.45-18)+'px';}
+    else if(pos==='tc'||pos==='tr'||pos==='mr'){b.style.right=Math.round(cw-22-x+4)+'px';b.style.top=Math.round(y+size*.45-18)+'px';if(b.offsetWidth>22+x-4){b.style.right='auto';b.style.left='0px';}}
     else if(pos[0]==='b'){b.classList.add('fl-tb');b.style.left=Math.round(22+x+size/2-b.offsetWidth/2)+'px';b.style.top=Math.round(y-30)+'px';}
     else{b.classList.add('fl-tl');b.style.left=Math.round(22+x+size+6)+'px';b.style.top=Math.round(y+size*.45-18)+'px';}}}
 function sayBubble(t){const b=$('bub');if(!b)return;b.classList.remove('fl-show');b._txt=t||'';b.textContent=t||'';}
@@ -14633,7 +14776,7 @@ function fitGiant(){const g=document.querySelector('#flOverlay .fl-res .fl-giant
 function countUp(el,to,dur,suf){const t0=performance.now();(function s(now){const k=Math.min((now-t0)/(dur||900),1),e=1-Math.pow(2,-10*k);el.textContent=fmt(to*e)+(suf||'');if(k<1)requestAnimationFrame(s);else{el.textContent=fmt(to)+(suf||'');el.classList.add('fl-pop');setTimeout(()=>el.classList.remove('fl-pop'),520);}})(t0);}
 function words(h){return (h||'').split('|').map((l,i)=>`<span class="fl-w" style="animation-delay:${.06+i*.09}s">${l.replace(/\[\[(.+?)\]\]/g,'<span class="fl-hl">$1</span>')}</span>`).join('<br>');}
 const DOODLE={arrow:'<svg viewBox="0 0 120 120"><path d="M18 18 C 62 -4, 96 34, 62 58 S 16 92, 72 104"/><path d="M52 94 L74 106 L66 84"/></svg>',star:'<svg viewBox="0 0 120 120"><path d="M60 8 L72 44 L110 46 L80 70 L92 108 L60 86 L28 108 L40 70 L10 46 L48 44 Z"/></svg>',flower:'<svg viewBox="0 0 120 120"><ellipse cx="60" cy="30" rx="16" ry="24"/><ellipse cx="86" cy="45" rx="16" ry="24" transform="rotate(60 86 45)"/><ellipse cx="86" cy="75" rx="16" ry="24" transform="rotate(120 86 75)"/><ellipse cx="60" cy="90" rx="16" ry="24"/><ellipse cx="34" cy="75" rx="16" ry="24" transform="rotate(60 34 75)"/><ellipse cx="34" cy="45" rx="16" ry="24" transform="rotate(120 34 45)"/></svg>',squig:'<svg viewBox="0 0 120 120"><path d="M10 70 C 30 20, 50 120, 70 60 S 100 30, 112 62"/></svg>',bolt:'<svg viewBox="0 0 120 120"><path d="M70 6 L28 66 L58 66 L44 114 L94 48 L62 48 Z"/></svg>'};
-function posterHTML(p){const stk=tx(p.stk)||[];return `<div class="fl-poster">${(p.doodles||[]).map((d,i)=>`<div class="fl-doodle ${d.k==='flower'?'fl-spin':''}" style="--x:${d.x};--y:${d.y};--s:${d.s}px;--c:${d.c};--d:${.5+i*.35}s">${DOODLE[d.k]}</div>`).join('')}${stk.map((s,i)=>`<span class="fl-stk" style="--x:${s.x};--y:${s.y};--r:${s.r}deg;--bg:${s.bg};--fg:${s.fg};--d:${.45+i*.14}s">${s.t}</span>`).join('')}<div class="fl-ph">${words(tx(p.h))}</div><div class="fl-sp"></div><div class="fl-pline">${words(tx(p.line)||'')}</div>${p.cta?`<button class="fl-cta fl-inv" id="fl_cta">${tx(p.ctaText)||'Planı kur →'}</button>`:''}</div>`;}
+function posterHTML(p){const stk=tx(p.stk)||[];return `<div class="fl-poster">${(p.doodles||[]).map((d,i)=>`<div class="fl-doodle ${d.k==='flower'?'fl-spin':''}" style="--x:${d.x};--y:${d.y};--s:${d.s}px;--c:${d.c};--d:${.5+i*.35}s">${DOODLE[d.k]}</div>`).join('')}${stk.map((s,i)=>`<span class="fl-stk" style="--x:${s.x};--y:${s.y};--r:${s.r}deg;--bg:${s.bg};--fg:${s.fg};--d:${.45+i*.14}s">${s.t}</span>`).join('')}<div class="fl-ph">${words(tx(p.h))}</div><div class="fl-sp"></div><div class="fl-pline">${words(tx(p.line)||'')}</div>${p.cta?`<button class="fl-cta ${p.ctaSolid?'':'fl-inv'}" id="fl_cta">${tx(p.ctaText)||'Planı kur →'}</button>`:''}</div>`;}
 function confetti(){const c=$('conf'),ctx=c.getContext('2d');const Wc=c.width=c.offsetWidth,Hc=c.height=c.offsetHeight;const cols=['#07120C','#fff','#FF6FB5','#5AA8FF','#FFE97A','#9B6BFF'];const P=Array.from({length:150},()=>({x:Wc/2+(Math.random()-.5)*60,y:Hc*.42,vx:(Math.random()-.5)*14,vy:-Math.random()*13-6,g:.32+Math.random()*.2,s:5+Math.random()*6,r:Math.random()*Math.PI,vr:(Math.random()-.5)*.3,c:cols[Math.floor(Math.random()*cols.length)],a:1}));const t0=performance.now();(function f(now){ctx.clearRect(0,0,Wc,Hc);let alive=false;P.forEach(p=>{p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.vx*=.985;p.r+=p.vr;if(now-t0>1400)p.a-=.03;if(p.a>0&&p.y<Hc+20){alive=true;ctx.save();ctx.globalAlpha=Math.max(0,p.a);ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);ctx.restore();}});if(alive)requestAnimationFrame(f);else ctx.clearRect(0,0,Wc,Hc);})(t0);}
 
 /* ---- sayfa render ---- */
@@ -14646,29 +14789,31 @@ function html(p){
     return `<div class="fl-res ${flip?'fl-flip':''}"><div class="fl-rtxt"><div class="fl-kick">${p.k}. parça · %${Math.round(b.p*100)}</div><div class="fl-h fl-xl">${words(b.nm)}</div><div class="fl-line">${words(b.line)}</div></div><div class="fl-stack">${BOX.map((x,i)=>`<div class="fl-seg ${i+1===p.k?'fl-cur':i+1<p.k?'fl-done':''}" style="--p:${x.p*100}">${i+1<p.k?'✓ '+x.nm:x.nm+' · %'+Math.round(x.p*100)}</div>`).join('')}</div><div class="fl-giant"><b><i>₺</i><span id="fl_giantNum">${fmt(A.inc*b.p)}</span></b></div></div>`;}
   const gfx=`<div class="fl-gfx ${GALIGN[p.g]||''}">${G[p.g]?G[p.g](p):''}</div>`;
   let extra='';
-  if(p.type==='ask')extra=G.input(p)+`<div class="fl-hint">${tx(p.line)}</div>`;
+  if(p.type==='ask')extra=p.g==='slider'?G.slider(p):G.input(p)+`<div class="fl-hint">${tx(p.line)}</div>`;
   else if(p.type==='quiz')extra=`<div class="fl-fb" id="fl_fb">Bir tanesine dokun.</div>`;
   else extra=`<div class="fl-line">${words(tx(p.line)||'')}</div>`;
   if(p.type==='ask')return txtHTML(p,extra);
+  if(p.type==='bigres'){const stk=tx(p.stk)||[];return `<div class="fl-bigres">${stk.map((s,i)=>`<span class="fl-stk" style="--x:${s.x};--y:${s.y};--r:${s.r}deg;--bg:${s.bg};--fg:${s.fg};--d:${1.1+i*.16}s">${s.t}</span>`).join('')}<div class="fl-kick">${tx(p.kick)||''}</div><div class="fl-hugen"><b id="fl_hugeN">0</b><i>ay</i></div><div class="fl-line">${words(tx(p.line)||'')}</div></div>`;}
   if(p.L==='tg')return txtHTML(p,extra)+gfx;
   return gfx+txtHTML(p,extra);}
 function after(p){
   if(p.type==='result'){fitGiant();const v=p.k?A.inc*BOX[p.k-1].p:p.val();later(()=>countUp($('giantNum'),v,900),350);later(()=>react('jump'),1250);
     if(!p.k){const segs=Array.from($$('.fl-seg'));const st=Math.max(90,Math.min(220,900/Math.max(1,segs.length)));segs.forEach((s,i)=>later(()=>s.classList.add('fl-cur'),420+i*st));}return;}
+  if(p.type==='bigres'){later(()=>{countUp($('hugeN'),p.val(),900);react('jump');},350);for(let i=0;i<4;i++)later(()=>react('nod'),1200+i*160);return;}
   if(p.cta){later(confetti,700);later(()=>react('spin'),900);if(p.show)later(()=>morphShow(p.show,950),1900);$('cta').addEventListener('click',()=>L.apply());return;}
   if(p.L==='poster')return;
   if(GA[p.g])GA[p.g](p);
 }
 function canAdvance(p){if(p.type==='ask')return p.zero?true:A[p.key||'inc']>0;if(p.type==='quiz')return quizOK;return true;}
 function updateNext(){const p=L.pages[pi];const ok=canAdvance(p);$('next').disabled=!ok;$('next').classList.toggle('fl-pulse',ok&&(p.type==='ask'||p.type==='quiz'));}
-function render(dir){clearTimers();const P=L.pages,p=P[pi];const onB=p.type==='result'||p.L==='poster'||!!p.block;const o=ov();sayBubble(tx(p.say));
+function render(dir){clearTimers();const P=L.pages,p=P[pi];const onB=p.type==='result'||p.L==='poster'||p.type==='bigres'||!!p.block;const o=ov();sayBubble(tx(p.say));
   const resC=p.type==='result'?(p.k?BOX[p.k-1].c:L.color):null;
   o.style.setProperty('--fl-block',resC||p.bg||L.color);
   o.style.setProperty('--fl-bink',p.ink||L.ink);o.style.setProperty('--fl-accent',p.accent||L.color);
   o.style.setProperty('--fl-hl',p.type==='result'?(p.ink||L.ink):(p.hl||p.accent||L.color));o.style.setProperty('--fl-hlfg',p.type==='result'?resC:(p.hlfg||L.hlfg));
   $('block').classList.toggle('fl-on',onB);o.classList.toggle('fl-on-color',onB);
   $('prog').innerHTML=P.map((_,i)=>`<i class="${i<=pi?'fl-on':''}"></i>`).join('');
-  {const ms=msvg();if(ms)ms.style.transform='';$('mascot').style.zIndex='';$('page').style.zIndex='';}setMascot(p.char,onB);placeMascot(p.m[0],p.m[1]);if(p.say)later(()=>{const b=$('bub');if(b){placeMascot(p.m[0],p.m[1]);b.classList.add('fl-show');react('nod');}},1400);
+  {const ms=msvg();if(ms)ms.style.transform='';$('mascot').style.zIndex='';$('page').style.zIndex='';}setMascot(p.char,onB);if(p.m[0]==='at')later(()=>placeMascot('at',p.m[1]),1150);else placeMascot(p.m[0],p.m[1]);if(p.say)later(()=>{const b=$('bub');if(b){placeMascot(p.m[0],p.m[1]);b.classList.add('fl-show');react('nod');}},1400);
   const pg=$('page');pg.className='fl-page fl-enter fl-L-'+p.L+(dir<0?' fl-rev':'');pg.innerHTML=html(p);after(p);
   $('back').style.visibility=pi===0?'hidden':'visible';$('next').textContent=pi===P.length-1?'✓':'→';updateNext();}
 function go(dir){if(busy)return;const P=L.pages,p=P[pi];if(dir>0&&!canAdvance(p))return;
@@ -14714,15 +14859,31 @@ function applyFund(){const T=fundT(),m=Math.round(A.save),N=fundN();if(!T||!m)re
 
 /* ---- Planı kur (ders 3): Kartopu zarfı (onaylı) ---- */
 function applyDebt(){if(A.debtsSrc!=='data'){if(typeof showToast==='function')showToast('Sabit sekmesine borç ekleyince kartopunu kurabilirsin');finish();return;}
-  const S=snow(),order=debtSorted().map(d=>d.name).join(' → '),m=Math.round(A.extra);
-  let ex=null;try{ex=(data.budgets||[]).find(b=>/kartopu/i.test(b.name||''))||null;}catch(e){}
-  const msg=`Kartopu planın:\n• Sıra: ${order}\n• ${m>0?`Kartopu zarfı ayda ${fmt(m)} ₺ (serbest bütçeden ayrılır, en küçük borca gider)`:'Ekstra ödeme yok; biten borcun taksiti sonrakine eklenir'}\n• Tahmini borçsuz: ${snowDate()} (${S.months} ay)`;
+  const S=snow(),sorted=debtSorted(),order=sorted.map(d=>d.name).join(' → '),m=Math.round(A.extra);
+  const sm=sorted[0];let d=null;try{d=(data.debts||[]).find(x=>x.id===sm.id)||null;}catch(e){}
+  if(!(m>0)||!d){if(typeof showToast==='function')showToast('✓ Kartopu sırası: '+order);finish();return;}
+  const rem=Math.max(0,((d.installments||0)-(d.paidCount||0))*(d.monthlyAmount||0));const newM=(d.monthlyAmount||0)+m;const newInst=Math.max(1,Math.ceil(rem/newM));
+  const msg=`Kartopu planın:\n• Sıra: ${order}\n• “${d.name}” taksiti ${fmt(d.monthlyAmount)} → ${fmt(newM)} ₺/ay (ekstra ${fmt(m)} ₺ eklendi)\n• Kalan taksit ${d.installments-d.paidCount} → ${newInst}\n• Tahmini borçsuz: ${snowDate()} (${S.months} ay)\nBu borç bitince ekstrayı sıradakine ekle.`;
   const doIt=()=>{try{
-      if(m>0){if(ex){ex.amount=m;}else{const maxOrder=(data.budgets||[]).reduce((x,b)=>Math.max(x,b.order??0),0);data.budgets.push({id:'bgt_'+uid(),name:'Kartopu',amount:m,period:'monthly',source:'free',catId:null,color:'#FF4B5C',created:today(),order:maxOrder+1});}}
-      save();if(typeof renderAll==='function')renderAll();if(typeof showToast==='function')showToast(m>0?'✓ Kartopu zarfı hazır — en küçük borca ekle':'✓ Kartopu sırası hazır');
+      d.totalAmount=Math.round((d.paidCount||0)*(d.monthlyAmount||0)+newInst*newM);d.monthlyAmount=newM;d.installments=(d.paidCount||0)+newInst;
+      save();if(typeof renderAll==='function')renderAll();if(typeof showToast==='function')showToast('✓ Kartopu başladı — '+d.name+' taksiti '+fmt(newM)+' ₺');
     }catch(e){console.warn('FL applyDebt',e);}
     finish();};
   confirmStyled(msg,doIt,'Kur','Borç Kartopu','#FF4B5C','#fff');}
+
+/* ---- Planı kur (ders 4): kart ödeme zarfı ---- */
+function applyCard(){const S=ccFix(A.pay),m=Math.round(A.pay),N=S.months;if(S.stuck||!m)return;
+  let cardName='';try{cardName=(data.cards||[]).length===1?data.cards[0].name:'';}catch(e){}
+  const nm='Kart kapatma'+(cardName?' · '+cardName:'');
+  let ex=null;try{ex=(data.debts||[]).find(x=>x.active&&/kart kapatma/i.test(x.name||''))||null;}catch(e){}
+  const msg=(ex?`Mevcut “${ex.name}” planın güncellenecek:`:`Sabit sekmesine taksitli plan eklenecek:`)+`\n• ${nm}: ayda ${fmt(m)} ₺ × ${N} taksit\n• Bitiş ${ccDate(N)}\n• Toplam faiz ${fmt(S.interest)} ₺ — asgariye göre ${fmt(Math.max(0,ccMin().interest-S.interest))} ₺ tasarruf\nHer ay ödeyince taksiti işaretle.`;
+  const doIt=()=>{try{
+      if(ex){ex.monthlyAmount=m;ex.installments=(ex.paidCount||0)+N;ex.totalAmount=Math.round((ex.paidCount||0)*m+N*m);}
+      else data.debts.push({id:uid(),name:nm,totalAmount:Math.round(m*N),installments:N,monthlyAmount:m,paidCount:0,active:true,paidMonths:[],startMonth:(typeof monthKey==='function'?monthKey():currentMonth)});
+      save();if(typeof renderAll==='function')renderAll();if(typeof showToast==='function')showToast(ex?'✓ Kart kapatma planı güncellendi':'✓ Kart kapatma planı Sabit sekmesinde — '+N+' taksit');
+    }catch(e){console.warn('FL applyCard',e);}
+    finish();};
+  confirmStyled(msg,doIt,ex?'Güncelle':'Kur','Kart kapatma planı','#FF6FB5','#1A0612');}
 
 /* ---- aç / kapat ---- */
 function showLib(on){$('lib').classList.toggle('fl-show',on);}
@@ -14734,6 +14895,28 @@ $('next').addEventListener('click',()=>go(1));$('back').addEventListener('click'
 let sx=0;$('stage').addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});$('stage').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>55)go(dx<0?1:-1);},{passive:true});
 window.addEventListener('resize',()=>{if(!ov().classList.contains('fl-show'))return;const p=L.pages[pi];if(curPlace)placeMascot(curPlace[0],curPlace[1]);else if(p&&p.m)placeMascot(p.m[0],p.m[1]);fitGiant();});
 document.addEventListener('DOMContentLoaded',renderEntry);setTimeout(renderEntry,0);
+/* ---- Onboarding: ders dili ---- */
+(function(){
+  const HL=['#19E68C','#5AA8FF','#B48CFF','#FF8A3D','#FF6FB5','#FFE97A','#FF4B5C','#19E68C','#5AA8FF','#B48CFF'];
+  const slides=Array.from(document.querySelectorAll('#onboarding .splash-slide'));if(!slides.length)return;
+  slides.forEach((sl,i)=>{sl.style.setProperty('--hl',HL[i%HL.length]);const t=sl.querySelector('.ob-title');if(!t||t.dataset.w)return;t.dataset.w='1';let k=0;const out=[];
+    Array.from(t.childNodes).forEach(n=>{if(n.nodeType===3){n.textContent.split(/(\s+)/).forEach(w=>{if(!w)return;if(/^\s+$/.test(w)){out.push(document.createTextNode(' '));return;}const sp=document.createElement('span');sp.className='ob-w';sp.style.setProperty('--d',(.08+k++*.07)+'s');sp.textContent=w;out.push(sp);});}
+      else if(n.nodeName==='BR'){out.push(n);}else{const sp=document.createElement('span');sp.className='ob-w';sp.style.setProperty('--d',(.08+k++*.07)+'s');sp.appendChild(n);out.push(sp);}});
+    t.innerHTML='';out.forEach(n=>t.appendChild(n));});
+  // ilk slayt: etiketler
+  const rings=slides[0]&&slides[0].querySelector('.ob-rings');
+  if(rings&&!rings.querySelector('.ob-stk')){[{t:'günlük limit ₺487',bg:'#19E68C',fg:'#04170D',x:'-8%',y:'6%',r:-9,d:.9},{t:'acil fon ✓',bg:'#5AA8FF',fg:'#000',x:'66%',y:'18%',r:7,d:1.05},{t:'seri 12 gün',bg:'#FFE97A',fg:'#000',x:'58%',y:'80%',r:-6,d:1.2},{t:'kira',bg:'#FF4B5C',fg:'#fff',x:'-4%',y:'72%',r:5,d:1.35}].forEach(k=>{const e=document.createElement('span');e.className='ob-stk';e.textContent=k.t;e.style.cssText=`--x:${k.x};--y:${k.y};--r:${k.r}deg;--bg:${k.bg};--fg:${k.fg};--d:${k.d}s`;rings.appendChild(e);});}
+  // ipuçları slaytı: maskot morph gösterisi
+  const host=document.getElementById('obFlMascot');let obM=null,obT=null,obI=0;const CAST=['ACEMI','DENGELI','BIRIKTIREN','YATIRIMCI','OZGUR','KIRILGAN','HEDEFCI'];
+  function flSlideOn(on){if(!host)return;if(on){if(!obM&&typeof VM!=='undefined'&&VM.spawn)obM=VM.spawn(host,'ACEMI');if(obM&&!obT){obT=setInterval(()=>{obI=(obI+1)%CAST.length;try{obM.setChar(CAST[obI]);}catch(e){}const sv=host.querySelector('svg');if(sv)sv.animate([{transform:'scale(1)'},{transform:'scale(1.18) rotate(-5deg)',offset:.4},{transform:'scale(1)'}],{duration:700,easing:'cubic-bezier(.34,1.56,.64,1)'});},1700);}}
+    else if(obT){clearInterval(obT);obT=null;}}
+  const idxOf=()=>slides.findIndex(s=>s.classList.contains('active'));
+  const tipsIdx=slides.findIndex(s=>s.querySelector('#obFlMascot'));
+  if(typeof goSplash==='function'){const og=goSplash;goSplash=function(i){og(i);flSlideOn(i===tipsIdx);};}
+  if(typeof finishOnboarding==='function'){const of=finishOnboarding;finishOnboarding=function(){flSlideOn(false);return of.apply(this,arguments);};}
+  flSlideOn(idxOf()===tipsIdx);
+})();
+
 window.FL={openLibrary,open,close,renderEntry,
   __open:id=>{ov().classList.add('fl-show');document.body.style.overflow='hidden';openLesson(id);},
   __goto:n=>{pi=Math.max(0,Math.min(L.pages.length-1,n));quizOK=false;render(1);},
