@@ -5,12 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V92: PERFORMANS — (1) renderAll görünmeyen tab'ı çizmiyor (2) geçmiş listesi 60'ar sayfalama (3) save() 300ms debounce + güvenli flush (4) Chart.js lazy load + font non-blocking (5) animasyonlar hızlandı + grafik signature guard. Tasarım ve özellikler birebir korundu. -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="VAULT">
 <meta name="theme-color" content="#0F0F11">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- V92: font non-blocking yükleme + preconnect (açılış hızı) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+<!-- V92: Chart.js artık lazy yükleniyor (Özet sekmesi açılınca) — bkz. _needChart() -->
 <script>
 // Splash swipe desteği
 (function() {
@@ -4063,7 +4068,8 @@ function load() {
 }
 
 let _saveFailWarned = false;
-function save() {
+function _saveNow() {
+  _saveTimer = null;
   try { localStorage.setItem(KEY, JSON.stringify(data)); }
   catch(e) {
     if (!_saveFailWarned) {
@@ -4071,6 +4077,62 @@ function save() {
       showToast(TOAST_WARN + ' Veriler kaydedilemiyor \u2014 cihaz depolaman dolu olabilir');
     }
   }
+}
+// V92: save() debounce \u2014 art arda gelen kay\u0131tlar\u0131 tek localStorage yaz\u0131m\u0131nda birle\u015ftirir.
+// data objesi her zaman g\u00fcncel; sadece diske yazma 300ms geciktirilir.
+let _saveTimer = null;
+let _resetting = false; // resetAll s\u0131ras\u0131nda flush'\u0131 engelle
+function save() {
+  if (_resetting) return;
+  if (_saveTimer) clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(_saveNow, 300);
+}
+function _flushSave() {
+  if (_resetting) return;
+  if (_saveTimer) { clearTimeout(_saveTimer); _saveNow(); }
+}
+window.addEventListener('beforeunload', _flushSave);
+document.addEventListener('visibilitychange', () => { if (document.hidden) _flushSave(); });
+window.addEventListener('pagehide', _flushSave);
+
+// V92: Chart.js lazy loader \u2014 grafik gereken ilk anda y\u00fcklenir, a\u00e7\u0131l\u0131\u015f\u0131 bloklamaz.
+let _chartLibLoading = false;
+let _chartFailToastShown = false;
+const _chartWaiters = [];
+function _needChart(cb) {
+  if (typeof Chart !== 'undefined') { if (cb) { try { cb(); } catch(e){} } return; }
+  if (cb) _chartWaiters.push(cb);
+  if (_chartLibLoading) return;
+  _chartLibLoading = true;
+  const s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';
+  s.onload = () => {
+    const w = _chartWaiters.splice(0);
+    w.forEach(f => { try { f(); } catch(e){} });
+  };
+  s.onerror = () => {
+    _chartLibLoading = false;
+    _chartWaiters.length = 0;
+    if (!_chartFailToastShown) {
+      _chartFailToastShown = true;
+      showToast(TOAST_WARN + ' Grafikler y\u00fcklenemedi \u2014 internet ba\u011flant\u0131n\u0131 kontrol et');
+    }
+  };
+  document.head.appendChild(s);
+}
+
+// V92: Özet grafikleri için ucuz veri imzası — değişmediyse destroy/rebuild atlanır
+let _lastChartSig = null;
+function _chartSig() {
+  let h = 7;
+  const txs = data.transactions || [];
+  for (let i = 0; i < txs.length; i++) {
+    const t = txs[i];
+    h = (h * 31 + ((t.ts || 0) % 1e9) + (t.amount || 0) * 13 + (t.type === 'income' ? 3 : t.type === 'cardpay' ? 5 : 7)) % 2147483647;
+  }
+  let ch = 0;
+  (data.categories || []).forEach(c => { ch += (c.name || '').length + (c.color || '').length; });
+  return h + '|' + txs.length + '|' + currentMonth + '|' + (typeof _donutMode !== 'undefined' ? _donutMode : '') + '|' + (typeof _donutMonth !== 'undefined' ? _donutMonth : '') + '|' + ch;
 }
 
 // =================== UTILS ===================
@@ -4354,7 +4416,9 @@ function switchTab(id) {
   if (id === 'ozet') {
     _donutMode = 'expense'; // tab açılınca gider moduna sıfırla
     _donutMonth = monthKey(); // ay seçiciyi bu aya sıfırla
+    _needChart(); // V92: Chart.js'i arka planda yüklemeye başla (lazy)
     renderOzetStats();
+    _lastChartSig = _chartSig(); // V92: bu giriş rebuild'i — sonraki renderAll aynı veriyle atlasın
     Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
     charts = {};
     requestAnimationFrame(() => {
@@ -5088,7 +5152,7 @@ let _carouselIndex = 0;
 let _carouselItems = [];
 const CAROUSEL_DURATION = 6000;
 
-function animateCount(el, fromVal, toVal, duration = 2500, keepColor = false) {
+function animateCount(el, fromVal, toVal, duration = 700, keepColor = false) { // V92: 2500→700ms
   if (!el) return;
   const startTime = performance.now();
   const fixedColor = keepColor ? el.style.color : null;
@@ -5116,7 +5180,7 @@ function animateCount(el, fromVal, toVal, duration = 2500, keepColor = false) {
 }
 
 // V77 — rengi ellemeden sadece sayıyı akıtan count-up (günlük limit, kalan, vb.)
-function countUpPlain(el, fromVal, toVal, duration = 900, suffix = '') {
+function countUpPlain(el, fromVal, toVal, duration = 600, suffix = '') { // V92: 900→600ms
   if (!el) return;
   const startTime = performance.now();
   function step(now) {
@@ -5144,7 +5208,7 @@ function renderMonthly() {
   // Bakiye değişince countup animasyonu
   if (balanceChanged) {
     const el = document.querySelector('.hero-balance');
-    animateCount(el, prevBalance, balance, 2500);
+    animateCount(el, prevBalance, balance, 700); // V92: 2500→700ms
   }
 
   // V77 — günlük limit & kalan para count-up (değişince, pozitif→pozitif)
@@ -5152,11 +5216,11 @@ function renderMonthly() {
   _lastDaily = Math.round(fb.daily); _lastRemain = Math.round(fb.remaining);
   if (_pd !== null && _pd !== _lastDaily && _pd >= 0 && _lastDaily >= 0) {
     const de = document.getElementById('heroDaily');
-    if (de) countUpPlain(de, _pd, _lastDaily, 900);
+    if (de) countUpPlain(de, _pd, _lastDaily, 600);
   }
   if (_pr !== null && _pr !== _lastRemain && _pr >= 0 && _lastRemain >= 0) {
     const re = document.getElementById('heroRemain');
-    if (re) countUpPlain(re, _pr, _lastRemain, 900);
+    if (re) countUpPlain(re, _pr, _lastRemain, 600);
   }
 
   renderFeedbackPill(fb);
@@ -5967,6 +6031,8 @@ function renderTxList(container, txs, limitTo5, prefix) {
   const sortedDates = Object.keys(grouped).sort().reverse();
 
   const MAX_ITEMS = 5;
+  // V92: geçmiş overlay'inde sınırsız render yerine sayfalama (60'ar kayıt)
+  const _txCap = limitTo5 ? MAX_ITEMS : (pfx === 'h_' ? _histLimit : Infinity);
   let shownCount = 0;
   let allDatesHtml = '';
 
@@ -5977,7 +6043,7 @@ function renderTxList(container, txs, limitTo5, prefix) {
     const totalStr = (dayTotal >= 0 ? '+' : '−') + fmtTL(Math.abs(dayTotal));
     let itemsHtml = '';
     for (const t of grouped[date]) {
-      if (limitTo5 && shownCount >= MAX_ITEMS) break;
+      if (shownCount >= _txCap) break;
       const cat = getCat(t.category);
       const isIncome = t.type === 'income';
       const isCardPay = t.type === 'cardpay'; // V69: ekstre ödemesi (transfer)
@@ -6020,7 +6086,21 @@ function renderTxList(container, txs, limitTo5, prefix) {
     </div>`;
   }
 
+  // V92: kalan kayıt varsa "Daha fazla göster" butonu ekle (geçmiş overlay)
+  if (!limitTo5 && pfx === 'h_' && txs.length > shownCount) {
+    _histArgs = { container, txs, prefix: pfx };
+    const kalan = txs.length - shownCount;
+    allDatesHtml += `<button onclick="_histShowMore()" style="display:block;width:100%;margin:14px 0 8px;padding:13px;border-radius:14px;background:var(--surface3,rgba(255,255,255,.05));border:1px solid var(--border,rgba(255,255,255,.08));color:var(--muted,#9b9aa3);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent">Daha fazla göster (${kalan} işlem daha)</button>`;
+  }
   container.innerHTML = allDatesHtml;
+}
+
+// V92: geçmiş sayfalama durumu
+let _histLimit = 60;
+let _histArgs = null;
+function _histShowMore() {
+  _histLimit += 100;
+  if (_histArgs) renderTxList(_histArgs.container, _histArgs.txs, false, _histArgs.prefix);
 }
 
 let expandedTx = null;
@@ -11442,7 +11522,7 @@ function renderDailyStats() {
 
   // Mini bar chart — Chart.js
   setTimeout(() => {
-    if (typeof Chart === 'undefined') return;
+    if (typeof Chart === 'undefined') { _needChart(renderDailyStats); return; } // V92: lazy
     const ctx = document.getElementById('dlMiniChart')?.getContext('2d');
     if (!ctx) return;
     if (charts.dlMini) { try { charts.dlMini.destroy(); } catch(e){} charts.dlMini = null; }
@@ -11717,7 +11797,7 @@ function renderDonut() {
     return;
   }
 
-  if (typeof Chart === 'undefined') return;
+  if (typeof Chart === 'undefined') { _needChart(renderDonut); return; } // V92: lazy
   const dCtx = document.getElementById('doughnutChart')?.getContext('2d');
   if (!dCtx) return;
 
@@ -11796,10 +11876,10 @@ function setupChartObservers() {
     x: { ticks: { color: '#6B6A72', font: { family: 'Montserrat', size: 11, weight: '600' }, maxRotation: 0 }, grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false } },
     y: { ticks: { color: '#6B6A72', font: { family: 'Montserrat', size: 11 }, callback: v => fmtNum(v) + '₺', maxTicksLimit: 5 }, grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false }, border: { dash: [3,3] } }
   };
-  const animConfig = { duration: 2200, easing: 'easeOutQuart' };
+  const animConfig = { duration: 900, easing: 'easeOutQuart' }; // V92: 2200→900ms
 
   observe('barChart', () => {
-    if (typeof Chart === 'undefined') return;
+    if (typeof Chart === 'undefined') { _needChart(setupChartObservers); return; } // V92: lazy
     const bCtx = document.getElementById('barChart')?.getContext('2d');
     if (!bCtx) return;
     charts.bar = new Chart(bCtx, {
@@ -11830,7 +11910,7 @@ function setupChartObservers() {
       const allUntil = data.transactions.filter(t => t.isGoalDeposit && monthKey(t.date) <= mk);
       return allUntil.reduce((s, t) => s + t.amount, 0);
     });
-    if (typeof Chart === 'undefined') return;
+    if (typeof Chart === 'undefined') { _needChart(setupChartObservers); return; } // V92: lazy
     const lCtx = document.getElementById('lineChart')?.getContext('2d');
     if (!lCtx) return;
     charts.line = new Chart(lCtx, {
@@ -12185,6 +12265,7 @@ function openHistory() {
   const titleEl = document.getElementById('historyTitle');
   const subEl = document.getElementById('historySubtitle');
   el.style.display = 'flex';
+  _histLimit = 60; // V92: her açılışta sayfalamayı sıfırla
   const all = data.transactions.slice().sort((a,b) => b.date.localeCompare(a.date) || (b.ts||0) - (a.ts||0));
   if (titleEl) titleEl.textContent = 'Tüm İşlemler';
   if (subEl) subEl.textContent = all.length + ' işlem';
@@ -12478,6 +12559,9 @@ function importData(input) {
 
 function resetAll() {
   showConfirm('Tüm işlemler, hedefler ve ayarlar kalıcı olarak silinecek. Bu işlem geri alınamaz.', () => {
+    // V92: bekleyen debounced save'i iptal et — silinen veri geri yazılmasın
+    _resetting = true;
+    if (_saveTimer) { clearTimeout(_saveTimer); _saveTimer = null; }
     try { localStorage.removeItem(KEY); } catch(e) {}
     location.reload();
   }, 'Sıfırla', 'Tüm Verileri Sıfırla', 'reset');
@@ -12573,7 +12657,8 @@ function renderAll() {
   updateAppLogo();
   populateCatSelects();
   _privSync();
-  renderMonthly();
+  // V92: Cüzdan sekmesi görünmüyorsa çizme — switchTab('aylik') girişte zaten renderMonthly() çağırıyor
+  if (currentTab === 'aylik') renderMonthly();
   if (currentTab === 'sabit') renderSabit();
   if (currentTab === 'ozet') {
     renderOzetStats();
@@ -12590,16 +12675,21 @@ function renderAll() {
       }
     }
     _updateDonutMonthLabel();
-    Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
-    charts = {};
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      ['barChart','doughnutChart','lineChart'].forEach(cid => {
-        const el = document.getElementById(cid);
-        if (el) { const f = document.createElement('canvas'); f.id = cid; el.parentNode.replaceChild(f, el); }
-      });
-      setupChartObservers();
-      renderYillik();
-    }));
+    // V92: veri değişmediyse grafikleri yıkıp yeniden kurma — signature kontrolü
+    const _csig = _chartSig();
+    if (_csig !== _lastChartSig || !Object.keys(charts).length) {
+      _lastChartSig = _csig;
+      Object.values(charts).forEach(ch => { try { ch.destroy(); } catch(e){} });
+      charts = {};
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        ['barChart','doughnutChart','lineChart'].forEach(cid => {
+          const el = document.getElementById(cid);
+          if (el) { const f = document.createElement('canvas'); f.id = cid; el.parentNode.replaceChild(f, el); }
+        });
+        setupChartObservers();
+        renderYillik();
+      }));
+    }
   }
   updateCollapseSummaries();
   if (currentTab === 'plan') renderPlan();
@@ -13259,7 +13349,7 @@ function renderStatsList() {
   }).join('');
 }
 function renderStatsChart() {
-  if (typeof Chart === 'undefined') return;
+  if (typeof Chart === 'undefined') { _needChart(renderStatsChart); return; } // V92: lazy
   const canvas = document.getElementById('statsChart');
   if (!canvas) return;
   canvas.width = canvas.parentElement.offsetWidth;
