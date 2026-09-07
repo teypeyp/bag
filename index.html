@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
-<!-- V92: PERFORMANS — (1) renderAll görünmeyen tab'ı çizmiyor (2) geçmiş listesi 60'ar sayfalama (3) save() 300ms debounce + güvenli flush (4) Chart.js lazy load + font non-blocking (5) animasyonlar hızlandı + grafik signature guard. Tasarım ve özellikler birebir korundu. -->
+<!-- V92: PERFORMANS — (1) renderAll görünmeyen tab'ı çizmiyor (2) geçmiş listesi 60'ar sayfalama (3) save() 300ms debounce + güvenli flush (4) Chart.js lazy load + font non-blocking (5) animasyonlar hızlandı + grafik signature guard (6) 3 günde bir yedekleme popup'ı (Şimdi Yedekle / 3 Gün Sonra Hatırlat). Tasarım ve özellikler birebir korundu. -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="VAULT">
@@ -3536,6 +3536,22 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     <div class="confirm-btns">
       <button class="confirm-btn-ok" id="confirmOkBtn" onclick="doConfirm()">Sil</button>
       <button class="confirm-btn-cancel" onclick="closeConfirm()">İptal</button>
+    </div>
+  </div>
+</div>
+
+<!-- V92: YEDEKLEME POPUP — 3 günde bir açılışta hatırlatır (confirm modal tasarım dili) -->
+<div class="confirm-modal" id="backupModal">
+  <div class="confirm-box">
+    <div class="confirm-handle"></div>
+    <div class="confirm-icon-wrap" style="background:rgba(45,184,102,.1);border-color:rgba(45,184,102,.25)">
+      <svg viewBox="0 0 24 24" style="stroke:var(--accent)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1"/><path d="M12 13l0 9"/><path d="M9 19l3 3l3 -3"/></svg>
+    </div>
+    <div class="confirm-title">Yedekleme Zamanı</div>
+    <div class="confirm-msg" id="backupPopMsg"></div>
+    <div class="confirm-btns">
+      <button class="confirm-btn-ok" onclick="_backupPopExport()" style="background:var(--accent);color:#fff;box-shadow:0 4px 20px rgba(45,184,102,.25)">Şimdi Yedekle</button>
+      <button class="confirm-btn-cancel" onclick="_backupPopLater()">3 Gün Sonra Hatırlat</button>
     </div>
   </div>
 </div>
@@ -12485,8 +12501,8 @@ function exportData() {
   showToast('<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 9l5 -5l5 5"/><path d="M12 4l0 12"/></svg> Yedeklendi!');
 }
 
-// V69.2: yedek hatırlatıcı
-const BACKUP_WARN_DAYS = 14;   // eşik
+// V69.2: yedek hatırlatıcı — V92: eşik 14→3 gün (popup ile birlikte)
+const BACKUP_WARN_DAYS = 3;    // eşik
 const BACKUP_SNOOZE_DAYS = 3;  // "sonra" ertelemesi
 function _daysBetween(aStr, bStr) {
   if (!aStr) return Infinity;
@@ -12514,6 +12530,39 @@ function dismissBackupBanner() {
   save();
   renderBackupBanner();
 }
+
+// ── V92: 3 günde bir yedekleme popup'ı ──
+let _backupPopShownThisSession = false;
+function maybeShowBackupPopup() {
+  if (_backupPopShownThisSession) return;
+  if (!data.onboarded) return;
+  if (!shouldShowBackupBanner()) return;
+  // Başka bir tam ekran akış açıksa (ay kapanışı, onboarding vb.) bu açılışta gösterme
+  const mcEl = document.getElementById('mcOverlay');
+  const obEl = document.getElementById('onboarding');
+  const busy = document.querySelector('.confirm-modal.show')
+    || (mcEl && mcEl.classList.contains('show'))
+    || (obEl && obEl.style.display === 'flex');
+  if (busy) return;
+  const days = backupDaysAgo();
+  const msgEl = document.getElementById('backupPopMsg');
+  if (msgEl) {
+    msgEl.textContent = !data.lastBackup
+      ? 'Verilerin hiç yedeklenmedi. Veriler yalnız bu cihazda saklanır — tarayıcı verisi silinirse geri getirilemez.'
+      : 'Son yedek ' + days + ' gün önce alındı. Düzenli yedek, veri kaybına karşı tek güvence.';
+  }
+  _backupPopShownThisSession = true;
+  const m = document.getElementById('backupModal');
+  if (m) m.classList.add('show');
+}
+function _closeBackupPop() {
+  const m = document.getElementById('backupModal');
+  if (!m) return;
+  m.classList.add('hiding');
+  setTimeout(() => m.classList.remove('show', 'hiding'), 220);
+}
+function _backupPopExport() { _closeBackupPop(); exportData(); }
+function _backupPopLater() { _closeBackupPop(); dismissBackupBanner(); }
 function renderBackupBanner() {
   const el = document.getElementById('backupBanner');
   if (!el) return;
@@ -12970,6 +13019,7 @@ function init() {
     renderAll();
     requestAnimationFrame(() => updatePillIndicator('aylik'));
     setTimeout(_maybeMonthClose, 900); // V89: yeni aya girildiyse kapanış seremonisi
+    setTimeout(maybeShowBackupPopup, 2200); // V92: 3 günde bir yedekleme hatırlatma popup'ı
   }
 }
 
