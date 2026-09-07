@@ -14099,44 +14099,142 @@ setInterval(checkMonthRollover, 60000);
 </style>
 <style id="vjStyle">
 /* ═══ V91 — Karakter Yolculuğu ═══ */
-#vjOverlay{position:fixed;inset:0;z-index:100000;display:none;background:#050505;color:#F2F1EB;font-family:'Montserrat',system-ui,sans-serif;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(env(safe-area-inset-top) + 16px) 20px 40px}
+#vjOverlay{position:fixed;inset:0;z-index:100000;display:none;background:#050505;color:#F2F1EB;font-family:'Montserrat',system-ui,sans-serif;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(env(safe-area-inset-top) + 16px) 20px 48px}
 #vjOverlay.vj-show{display:block}
 :where(#vjOverlay) *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+#vjOverlay .vm-halo{display:none}
 .vj-in{max-width:430px;margin:0 auto}
-.vj-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.vj-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .vj-top h1{font-size:11px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#8A8993}
-.vj-hero{position:relative;border-radius:22px;padding:22px 20px 20px;background:var(--g);overflow:hidden;display:flex;gap:14px;align-items:center;min-height:170px}
-.vj-hero .vj-hm{width:132px;height:132px;flex-shrink:0}.vj-hero .vj-hm svg{width:100%;height:100%;overflow:visible}#vjOverlay .vm-halo{display:none}
-.vj-hero .vj-hk{font-size:10.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;opacity:.75}
-.vj-hero .vj-hn{font-size:34px;font-weight:800;letter-spacing:-1.5px;line-height:1;margin-top:4px}
-.vj-hero .vj-ht{font-size:12.5px;font-weight:700;line-height:1.4;margin-top:8px;opacity:.9}
-.vj-pill{display:inline-block;margin-top:10px;font-size:11px;font-weight:800;letter-spacing:.6px;padding:7px 12px;border-radius:999px;background:rgba(0,0,0,.35);color:#fff}
-.vj-sect{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#8A8993;margin:22px 0 10px;display:flex;justify-content:space-between;align-items:center}
-.vj-sect b{color:#F2F1EB;letter-spacing:0;text-transform:none;font-size:12px}
-.vj-card{background:#121215;border:1px solid rgba(255,255,255,.07);border-radius:22px;padding:6px 6px}
-.vj-req{display:flex;align-items:center;gap:12px;padding:12px 12px;border-radius:16px}
-.vj-req+.vj-req{border-top:1px solid rgba(255,255,255,.05)}
-.vj-req i{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:14px;font-weight:800;flex-shrink:0;background:rgba(255,255,255,.08);color:#8A8993}
+.vj-close{width:38px;height:38px;border-radius:50%;border:none;background:rgba(255,255,255,.08);color:#F2F1EB;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit}
+/* hero */
+.vj-hero{position:relative;border-radius:22px;padding:22px 20px 18px;background:var(--g);overflow:hidden}
+.vj-hero .vj-hrow{display:flex;gap:14px;align-items:center}
+.vj-hero .vj-hm{width:120px;height:120px;flex-shrink:0;margin-left:-6px}.vj-hero .vj-hm svg{width:100%;height:100%;overflow:visible}
+.vj-hero .vj-hk{font-size:10.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;opacity:.7}
+.vj-hero .vj-hn{font-size:38px;font-weight:800;letter-spacing:-1.8px;line-height:1;margin-top:4px}
+.vj-hero .vj-ht{font-size:12.5px;font-weight:700;line-height:1.4;margin-top:8px;opacity:.85}
+.vj-ladder{display:flex;gap:5px;margin-top:18px;align-items:center}
+.vj-ladder i{flex:1;height:6px;border-radius:3px;background:rgba(0,0,0,.28)}
+.vj-ladder i.done{background:rgba(255,255,255,.55)}.vj-ladder i.cur{background:#fff;height:10px;box-shadow:0 0 14px rgba(255,255,255,.6)}
+.vj-ladder small{font-size:9.5px;font-weight:800;letter-spacing:1px;opacity:.7;text-transform:uppercase}
+/* sıradaki görev kartı */
+.vj-next{margin-top:14px;border-radius:22px;padding:18px 18px 16px;background:#111114;border:1px solid color-mix(in srgb,var(--c) 40%,transparent);position:relative;overflow:hidden}
+.vj-next::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--c)}
+.vj-nhead{display:flex;align-items:center;gap:12px}
+.vj-nhead .vj-nk{font-size:10.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--c)}
+.vj-nhead .vj-nn{font-size:26px;font-weight:800;letter-spacing:-1px;line-height:1.05;margin-top:2px}
+.vj-nhead .vj-nm{width:64px;height:64px;margin-left:auto;flex-shrink:0}.vj-nhead .vj-nm svg{width:100%;height:100%;overflow:visible}
+.vj-nprog{display:flex;align-items:baseline;gap:6px;margin-top:14px}
+.vj-nprog b{font-size:44px;font-weight:800;letter-spacing:-2.4px;line-height:1;color:var(--c)}.vj-nprog span{font-size:13px;font-weight:800;color:#8A8993}
+.vj-npbar{height:8px;border-radius:4px;background:rgba(255,255,255,.08);margin-top:10px;overflow:hidden}.vj-npbar i{display:block;height:100%;width:var(--w);border-radius:4px;background:var(--c);transition:width .9s cubic-bezier(.22,1,.36,1)}
+.vj-tk{font-size:10.5px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#8A8993;margin:18px 0 8px}
+.vj-task{display:flex;align-items:center;gap:12px;padding:12px 12px;border-radius:16px;background:rgba(255,255,255,.05);margin-bottom:8px}
+.vj-task i{width:30px;height:30px;border-radius:50%;background:rgba(255,75,92,.18);color:#FF8A94;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:14px;font-weight:800;flex-shrink:0}
+.vj-task .vj-rt{flex:1;min-width:0}.vj-task .vj-rn{font-size:14px;font-weight:800}.vj-task .vj-rs{font-size:11px;font-weight:700;color:#8A8993;margin-top:2px}
+.vj-task .vj-rv{font-size:14px;font-weight:800;color:#FF8A94;white-space:nowrap;font-variant-numeric:tabular-nums}
+.vj-bar{height:5px;border-radius:3px;background:rgba(255,255,255,.08);margin-top:7px;overflow:hidden}.vj-bar i{display:block;height:100%;width:var(--w);border-radius:3px;background:var(--bc,#19E68C);transition:width .8s cubic-bezier(.22,1,.36,1)}
+.vj-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.vj-chip{font-size:11px;font-weight:800;padding:6px 10px;border-radius:999px;background:rgba(25,230,140,.12);color:#19E68C;white-space:nowrap}
+.vj-allok{font-size:15px;font-weight:800;margin-top:14px;color:#19E68C}.vj-allok small{display:block;font-size:11.5px;font-weight:700;color:#8A8993;margin-top:4px}
+/* seviye ızgarası */
+.vj-sect{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#8A8993;margin:26px 0 12px;display:flex;justify-content:space-between;align-items:center}
+.vj-sect b{color:#8A8993;letter-spacing:0;text-transform:none;font-size:11px;font-weight:700}
+.vj-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.vj-lv{position:relative;aspect-ratio:1/1.25;border-radius:18px;background:#111114;border:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;transition:transform .15s;padding:6px 2px}
+.vj-lv:active{transform:scale(.95)}
+.vj-lv .vj-rm{width:40px;height:40px}.vj-lv .vj-rm svg{width:100%;height:100%;overflow:visible}
+.vj-lv .vj-ln{font-size:9.5px;font-weight:800;letter-spacing:-.1px;white-space:nowrap;color:#F2F1EB}
+.vj-lv .vj-lb{position:absolute;right:-4px;top:-4px;width:18px;height:18px;border-radius:50%;background:#19E68C;color:#04170D;font-size:10px;font-weight:800;display:none;align-items:center;justify-content:center;border:2px solid #050505}
+.vj-lv .vj-lt{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);font-size:7.5px;font-weight:800;letter-spacing:.8px;padding:3px 6px;border-radius:999px;display:none;white-space:nowrap}
+.vj-lv.lock{opacity:.45}.vj-lv.lock .vj-rm{filter:grayscale(.6)}
+.vj-lv.past .vj-lb{display:flex}.vj-lv.past{border-color:rgba(25,230,140,.35)}
+.vj-lv.cur{background:linear-gradient(160deg,color-mix(in srgb,var(--c) 45%,#111114),#111114);border-color:var(--c);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 30%,transparent),0 14px 30px -14px var(--c)}.vj-lv.cur .vj-lt{display:block;background:var(--c);color:#0a0a0a}
+.vj-lv.next{border-color:#fff}.vj-lv.next .vj-lt{display:block;background:#fff;color:#000}
+/* alt sayfa */
+.vj-sheet{position:fixed;left:0;right:0;bottom:0;z-index:100006;background:#121215;border-radius:24px 24px 0 0;padding:14px 20px calc(24px + env(safe-area-inset-bottom));max-width:430px;margin:0 auto;transform:translateY(105%);transition:transform .38s cubic-bezier(.22,1,.36,1);box-shadow:0 -20px 60px rgba(0,0,0,.6);max-height:82vh;overflow-y:auto;font-family:'Montserrat',system-ui,sans-serif;color:#F2F1EB}
+.vj-sheet.on{transform:none}
+.vj-dim{position:fixed;inset:0;z-index:100005;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .3s}.vj-dim.on{opacity:1;pointer-events:auto}
+.vj-sheet .vj-grab{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.18);margin:0 auto 14px}
+.vj-sh{display:flex;align-items:center;gap:14px}
+.vj-sh .vj-sm{width:76px;height:76px;flex-shrink:0}.vj-sh .vj-sm svg{width:100%;height:100%;overflow:visible}
+.vj-sh .vj-sk{font-size:10.5px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--c)}
+.vj-sh .vj-sn{font-size:28px;font-weight:800;letter-spacing:-1.2px;line-height:1;margin-top:2px}
+.vj-sh .vj-stg{font-size:12px;font-weight:700;color:#8A8993;line-height:1.4;margin-top:6px}
+.vj-how{margin-top:14px;font-size:12.5px;font-weight:700;line-height:1.45;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.05)}
+.vj-how b{color:var(--c)}
+.vj-ek{display:flex;justify-content:space-between;font-size:10.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#8A8993;margin:16px 0 4px}.vj-ek b{color:#F2F1EB;letter-spacing:0;text-transform:none;font-size:11px}
+.vj-req{display:flex;align-items:center;gap:10px;padding:10px 0}.vj-req+.vj-req{border-top:1px solid rgba(255,255,255,.06)}
+.vj-req i{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:12px;font-weight:800;flex-shrink:0;background:rgba(255,255,255,.08);color:#8A8993}
 .vj-req.ok i{background:#19E68C;color:#04170D}.vj-req.no i{background:rgba(255,75,92,.18);color:#FF8A94}
-.vj-req .vj-rt{flex:1;min-width:0}.vj-req .vj-rn{font-size:13.5px;font-weight:800}.vj-req .vj-rs{font-size:11px;font-weight:700;color:#8A8993;margin-top:2px}
-.vj-req .vj-rv{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;color:#F2F1EB}.vj-req.no .vj-rv{color:#FF8A94}
-.vj-bar{height:5px;border-radius:3px;background:rgba(255,255,255,.08);margin-top:6px;overflow:hidden}.vj-bar i{display:block;height:100%;width:var(--w);border-radius:3px;background:var(--c,#19E68C);transition:width .8s cubic-bezier(.22,1,.36,1)}
-.vj-list{display:flex;flex-direction:column;gap:8px}
-.vj-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:18px;background:#121215;border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:transform .15s,border-color .2s}
-.vj-row:active{transform:scale(.985)}
-.vj-row .vj-rm{width:44px;height:44px;flex-shrink:0}.vj-row .vj-rm svg{width:100%;height:100%;overflow:visible}
-.vj-row .vj-rx{flex:1;min-width:0}.vj-row .vj-rnm{font-size:14px;font-weight:800;letter-spacing:-.2px}.vj-row .vj-rsb{font-size:11px;font-weight:700;color:#8A8993;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.vj-row .vj-st{font-size:9.5px;font-weight:800;letter-spacing:.8px;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.08);color:#8A8993;white-space:nowrap}
-.vj-row.cur{border-color:var(--c);background:color-mix(in srgb,var(--c) 12%,#121215)}.vj-row.cur .vj-st{background:var(--c);color:#0a0a0a}
-.vj-row.past .vj-st{background:rgba(25,230,140,.14);color:#19E68C}.vj-row.next .vj-st{background:#fff;color:#000}
-.vj-row.sel{outline:2px solid #fff}
+.vj-req .vj-rt{flex:1;min-width:0}.vj-req .vj-rn{font-size:13px;font-weight:800}.vj-req .vj-rs{font-size:10.5px;font-weight:700;color:#8A8993;margin-top:1px}
+.vj-req .vj-rv{font-size:12.5px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}.vj-req.no .vj-rv{color:#FF8A94}
+.vj-done{margin-top:14px;font-size:13px;font-weight:800;color:#19E68C}
+/* plan girişi */
 .vj-entry{margin:0 0 14px;padding:12px 14px;border-radius:16px;border:1px dashed rgba(255,255,255,.18);background:rgba(255,255,255,.03);display:flex;align-items:center;gap:10px;cursor:pointer;font-family:'Montserrat',sans-serif}
 .vj-entry .vj-ei{width:34px;height:34px;flex-shrink:0}.vj-entry .vj-ei svg{width:100%;height:100%;overflow:visible}.vj-entry .vm-halo{display:none}
 .vj-entry .vj-et{flex:1;min-width:0}.vj-entry .vj-ek{font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#8A8993}.vj-entry .vj-ev{font-size:13px;font-weight:800;color:#F2F1EB;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vj-entry b{color:#F2F1EB}
-.vj-close{width:38px;height:38px;border-radius:50%;border:none;background:rgba(255,255,255,.08);color:#F2F1EB;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit}
 </style>
 <div id="vjOverlay"><div class="vj-in"><div class="vj-top"><h1>Karakter yolculuğu</h1><button class="vj-close" id="vjClose" aria-label="Kapat">✕</button></div><div id="vjBody"></div></div></div>
+<style id="rmStyle">
+/* ═══ V91 — Hatırlatıcılar ═══ */
+#rmOverlay{position:fixed;inset:0;z-index:100005;display:none;background:#050505;color:#F2F1EB;font-family:'Montserrat',system-ui,sans-serif;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(env(safe-area-inset-top) + 16px) 20px 48px}
+#rmOverlay.rm-show{display:block}
+:where(#rmOverlay) *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+.rm-in{max-width:430px;margin:0 auto}
+.rm-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.rm-top h1{font-size:11px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:#8A8993}
+.rm-close{width:38px;height:38px;border-radius:50%;border:none;background:rgba(255,255,255,.08);color:#F2F1EB;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit}
+/* sıradaki kartı */
+.rm-hero{position:relative;border-radius:22px;padding:20px 20px 18px;background:linear-gradient(160deg,color-mix(in srgb,var(--c) 42%,#0b0b0e),#0b0b0e 75%);border:1px solid color-mix(in srgb,var(--c) 40%,transparent);overflow:hidden}
+.rm-hero .rm-hk{font-size:10.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--c)}
+.rm-hero .rm-hrow{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:6px}
+.rm-hero .rm-hn{font-size:26px;font-weight:800;letter-spacing:-1.1px;line-height:1.05}
+.rm-hero .rm-hs{font-size:12.5px;font-weight:700;color:#B5B4BC;margin-top:6px}
+.rm-hero .rm-hd{text-align:right;flex-shrink:0}.rm-hero .rm-hd b{display:block;font-size:44px;font-weight:800;letter-spacing:-2.4px;line-height:.95;color:var(--c)}.rm-hero .rm-hd small{font-size:10.5px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#B5B4BC}
+.rm-hero .rm-hi{position:absolute;right:16px;top:14px;width:30px;height:30px;color:var(--c);opacity:.7}.rm-hero .rm-hi svg{width:100%;height:100%}
+.rm-hero.empty{background:#111114;border-color:rgba(255,255,255,.08)}
+/* bildirim satırı */
+.rm-perm{display:flex;align-items:center;gap:10px;margin-top:12px;padding:12px 14px;border-radius:16px;background:#111114;border:1px solid rgba(255,255,255,.07)}
+.rm-perm .rm-dot{width:10px;height:10px;border-radius:50%;background:#8A8993;flex-shrink:0}.rm-perm.on .rm-dot{background:#19E68C;box-shadow:0 0 10px #19E68C}.rm-perm.off .rm-dot{background:#FF4B5C}
+.rm-perm .rm-pt{flex:1;min-width:0;font-size:12.5px;font-weight:800}.rm-perm .rm-ps{font-size:10.5px;font-weight:700;color:#8A8993;margin-top:1px}
+.rm-btn{border:none;border-radius:999px;padding:9px 13px;font-family:inherit;font-size:11.5px;font-weight:800;cursor:pointer;background:#19E68C;color:#04170D;white-space:nowrap}
+.rm-btn.rm-ghost{background:rgba(255,255,255,.08);color:#F2F1EB}
+/* bölümler */
+.rm-sect{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#8A8993;margin:22px 0 10px;display:flex;justify-content:space-between;align-items:center}
+.rm-sect .rm-add{border:none;background:rgba(255,255,255,.08);color:#F2F1EB;font-family:inherit;font-size:11px;font-weight:800;padding:6px 11px;border-radius:999px;cursor:pointer;letter-spacing:0;text-transform:none}
+.rm-card{background:#111114;border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:4px 14px}
+.rm-ev{display:flex;align-items:center;gap:12px;padding:12px 0}
+.rm-ev+.rm-ev{border-top:1px solid rgba(255,255,255,.06)}
+.rm-ev i{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:color-mix(in srgb,var(--c) 16%,transparent);color:var(--c)}.rm-ev i svg{width:18px;height:18px}
+.rm-ev .rm-et{flex:1;min-width:0}.rm-ev .rm-en{font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rm-ev .rm-ed{font-size:11px;font-weight:700;color:#8A8993;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rm-ev .rm-dl{font-size:10.5px;font-weight:800;letter-spacing:.5px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.08);white-space:nowrap;min-width:64px;text-align:center}
+.rm-ev.soon .rm-dl{background:#FFE97A;color:#000}.rm-ev.today .rm-dl{background:#FF4B5C;color:#fff}
+.rm-ev .rm-x{border:none;background:none;color:#8A8993;font-size:16px;cursor:pointer;padding:4px 2px 4px 6px;font-family:inherit}
+.rm-empty{font-size:12.5px;font-weight:700;color:#8A8993;padding:14px 0}
+.rm-setrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0}.rm-setrow+.rm-setrow{border-top:1px solid rgba(255,255,255,.06)}
+.rm-setrow .rm-l{font-size:12.5px;font-weight:800}.rm-setrow .rm-s{font-size:10.5px;font-weight:700;color:#8A8993;margin-top:2px}
+.rm-chips{display:flex;gap:5px;flex-shrink:0}
+.rm-chip{border:2px solid rgba(255,255,255,.1);background:transparent;color:#F2F1EB;border-radius:999px;padding:7px 10px;font-family:inherit;font-size:11.5px;font-weight:800;cursor:pointer;min-width:38px}
+.rm-chip.on{background:#19E68C;border-color:#19E68C;color:#04170D}
+.rm-note{font-size:11px;font-weight:700;color:#8A8993;line-height:1.45;margin-top:14px}
+/* deneme ekleme sayfası */
+.rm-dim{position:fixed;inset:0;z-index:100007;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .3s}.rm-dim.on{opacity:1;pointer-events:auto}
+.rm-sheet{position:fixed;left:0;right:0;bottom:0;z-index:100008;background:#121215;border-radius:24px 24px 0 0;padding:14px 20px calc(24px + env(safe-area-inset-bottom));max-width:430px;margin:0 auto;transform:translateY(105%);transition:transform .38s cubic-bezier(.22,1,.36,1);box-shadow:0 -20px 60px rgba(0,0,0,.6);font-family:'Montserrat',system-ui,sans-serif;color:#F2F1EB}
+.rm-sheet.on{transform:none}
+.rm-sheet .rm-grab{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,.18);margin:0 auto 14px}
+.rm-sheet h2{font-size:22px;font-weight:800;letter-spacing:-.8px;margin-bottom:4px}
+.rm-sheet .rm-lead{font-size:12px;font-weight:700;color:#8A8993;line-height:1.45;margin-bottom:14px}
+.rm-form{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rm-form label{grid-column:1/3;font-size:10.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#8A8993;margin-top:4px}
+.rm-form input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 12px;color:#F2F1EB;font-family:inherit;font-size:14px;font-weight:700;outline:none;color-scheme:dark}
+.rm-form input:focus{border-color:#19E68C}.rm-form .rm-full{grid-column:1/3}
+.rm-form .rm-btn{padding:14px;font-size:14px;border-radius:14px;margin-top:6px}
+#rmBell{position:absolute;right:96px;top:50%;transform:translateY(-50%);margin-top:calc(env(safe-area-inset-top,0px)/2);width:30px;height:30px;border-radius:50%;background:var(--surface2,#17171B);border:1px solid var(--border,#2C2C35);color:var(--muted,#8A8993);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+#rmBell svg{width:15px;height:15px}#rmBell.has::after{content:'';position:absolute;right:-1px;top:-1px;width:9px;height:9px;border-radius:50%;background:#FF4B5C;border:2px solid #0A0A0D}
+</style>
+<div id="rmOverlay"><div class="rm-in"><div class="rm-top"><h1>Hatırlatıcılar</h1><button class="rm-close" id="rmClose" aria-label="Kapat">✕</button></div><div id="rmBody"></div></div></div>
 <style id="flStyle">
 #flOverlay{position:fixed;inset:0;z-index:100000;display:none;flex-direction:column;background:#050505;color:#F2F1EB;font-family:'Montserrat',system-ui,sans-serif;isolation:isolate;transition:color .45s;--fl-lesson:#19E68C;--fl-block:#19E68C;--fl-bink:#07120C;--fl-accent:#19E68C;--fl-hl:#19E68C;--fl-hlfg:#04170D;--fl-rc:22px;--fl-rb:4px;--fl-spring:cubic-bezier(.34,1.56,.64,1);--fl-out:cubic-bezier(.22,1,.36,1);padding-top:env(safe-area-inset-top)}
 #flOverlay.fl-show{display:flex;align-items:center;justify-content:center}
@@ -14758,7 +14856,7 @@ function renderHints(){const ds=doneSet();const put=(anchorId,hostId,show,id,txt
   put('debtList','flHintDebt',debts>0&&!ds.has('kartopu'),'kartopu','Borçları hangi sırayla kapatmalı? 2 dk’lık ders');
   put('cardList','flHintCard',card>0&&!ds.has('asgari'),'asgari','Asgari ödeme neden tuzak? 2 dk’lık ders');
   put('recList','flHintRec',subs>=2&&!ds.has('sizinti'),'sizinti','Abonelikler yılda ne tutuyor? 2 dk’lık ders');}
-function flHooks(){try{renderEntry();renderWeekTip();renderHints();renderVjEntry();if(typeof renderFeedbackPill==='function'&&typeof _carouselItems!=='undefined'&&Array.isArray(_carouselItems)&&_carouselItems.length&&!_carouselItems.some(i=>i.tip)){const fb=calcFreeBudget(currentMonth);if(fb&&fb.income)renderFeedbackPill(fb);}}catch(e){console.warn('FL hooks',e);}}
+function flHooks(){try{renderEntry();renderWeekTip();renderHints();renderVjEntry();renderRmEntry();rmBell();if(typeof renderFeedbackPill==='function'&&typeof _carouselItems!=='undefined'&&Array.isArray(_carouselItems)&&_carouselItems.length&&!_carouselItems.some(i=>i.tip)){const fb=calcFreeBudget(currentMonth);if(fb&&fb.income)renderFeedbackPill(fb);}}catch(e){console.warn('FL hooks',e);}}
 /* ---- ders 1: 5 Kutu Kuralı ---- */
 const PAGES1=[
   {L:'poster',bg:'#7C5CFF',ink:'#FFFFFF',hl:'#0a0a0a',hlfg:'#fff',char:'ACEMI',m:['br',176],h:'Maaş geldi.|Ay sonu|[[bitti.]]|Nereye|gitti?',line:'Çoğu kişi bilmiyor.|[[Bu derste düzelteceğiz.]]',
@@ -15038,7 +15136,7 @@ const G={
   stmt(){const gen=[['Market',450],['Taksi',120],['Kahve',85],['Eczane',210],['Benzin',900],['Restoran',640],['Kırtasiye',95]];const rows=[];A.subs.slice(0,5).forEach((x,i)=>{rows.push(gen[i%gen.length]);rows.push([x.name,x.amt,true]);});rows.push(gen[5],gen[6]);
     return `<div class="fl-stmt"><div class="fl-scan"></div><div class="fl-stmtin" id="fl_stmtin">${rows.map((r,i)=>`<div class="fl-srow2 ${r[2]?'fl-sub':''}" id="fl_st${i}"><span>${r[0]}</span><b>−${fmt(r[1])} ₺</b></div>`).join('')}</div><div class="fl-stmtsum"><span>ABONELİK</span><b id="fl_stmtsum">0 ₺</b></div></div>`;},
   apps(){return `<div style="width:100%"><div class="fl-apps">${A.subs.map((x,i)=>`<div class="fl-app ${A.cut.has(i)?'fl-xed':''}" data-i="${i}" style="--d:${.12+i*.08}s"><div class="fl-appic" style="--c:${x.c}">${x.ini}</div><div class="fl-appn">${x.name}</div><div class="fl-appa">${fmt(x.amt)} ₺/ay</div><i class="fl-appx">✗</i></div>`).join('')}</div><div class="fl-appsum"><span id="fl_cutn">${A.cut.size} iptal</span><b id="fl_cuty">${fmt(cutMonthly()*12)} ₺ / yıl</b></div></div>`;},
-  cal(p){const mn=MN[new Date().getMonth()];const M=(p&&p.marks)||[{d:1,cls:'fl-start'},{d:30,cls:'fl-pay',pill:`30. GÜN · ${fmt(A.subs&&A.subs[0]?A.subs[0].amt:229)} ₺ ÇEKİLDİ`,bg:'#FF4B5C',fg:'#fff'},{d:27,cls:'fl-rem',pill:'27. GÜN · HATIRLAT ✓',bg:'#FFE97A',fg:'#000',late:true}];return `<div class="fl-cal"><div class="fl-calh"><span>${mn}</span><span>${p&&p.marks?'kart takvimi':'ücretsiz deneme'}</span></div><div class="fl-calg">${Array.from({length:30},(_,i)=>`<i class="fl-cd" id="fl_cd${i+1}">${i+1}</i>`).join('')}</div><div class="fl-calnote">${M.filter(m=>m.pill).map((m,i)=>`<span class="fl-pill fl-rwin" id="fl_calp${i}" style="background:${m.bg};color:${m.fg}">${m.pill}</span>`).join('')}</div></div>`;},
+  cal(p){const mn=MN[new Date().getMonth()];const M=(p&&p.marks)||[{d:1,cls:'fl-start'},{d:30,cls:'fl-pay',pill:`30. GÜN · ${fmt(A.subs&&A.subs[0]?A.subs[0].amt:229)} ₺ ÇEKİLDİ`,bg:'#FF4B5C',fg:'#fff'},{d:27,cls:'fl-rem',pill:'27. GÜN · HATIRLAT ✓',bg:'#FFE97A',fg:'#000',late:true}];return `<div class="fl-cal"><div class="fl-calh"><span>${mn}</span><span>${p&&p.marks?'kart takvimi':'ücretsiz deneme'}</span></div><div class="fl-calg">${Array.from({length:30},(_,i)=>`<i class="fl-cd" id="fl_cd${i+1}">${i+1}</i>`).join('')}</div><div class="fl-calnote">${M.filter(m=>m.pill).map((m,i)=>`<span class="fl-pill fl-rwin" id="fl_calp${i}" style="background:${m.bg};color:${m.fg}">${m.pill}</span>`).join('')}</div>${p&&p.marks?'':`<button class="fl-cta" style="margin-top:16px;padding:14px;font-size:14px" onclick="FL.reminders(true)">Deneme hatırlatıcısı kur →</button>`}</div>`;},
   rota(){const S=A.subs.slice(0,3);const m0=new Date().getMonth();const tot=S.reduce((s,x)=>s+x.amt,0),one=Math.max(...S.map(x=>x.amt));return `<div style="width:100%"><div class="fl-rota">${S.map((x,i)=>`<div class="fl-rm" style="--d:${.15+i*.15}s"><b>${MN[(m0+i)%12].slice(0,3).toUpperCase()}</b><div class="fl-appic" style="--c:${x.c}">${x.ini}</div><span>${x.name}</span><em>${fmt(x.amt)} ₺</em></div>`).join('')}</div><div class="fl-rotasum">ayda <s>${fmt(tot)} ₺</s> yerine<b id="fl_rotab">${fmt(one)} ₺</b></div></div>`;},
   multi(p){return `<div style="width:100%"><div class="fl-multi">${p.opts.map((o,i)=>`<button class="fl-mopt" data-i="${i}" style="--c:${o.c};--d:${.15+i*.08}s"><i>${o.ini}</i><span>${o.t}</span></button>`).join('')}</div></div>`;},
   coupon(){const cut=A.subs.filter((x,i)=>A.cut.has(i)),keep=A.subs.filter((x,i)=>!A.cut.has(i));const y=cutMonthly()*12;return `<div style="width:100%;padding:0 6px"><div class="fl-coupon"><span class="fl-scis">✂</span><div class="fl-cpin"><div class="fl-cpk">Yıllık iade</div><div class="fl-cpn"><span id="fl_cpn">0</span><i>₺</i></div><div class="fl-cpl">${cut.length?`<b>İptal:</b> ${cut.map(x=>x.name).join(', ')}`:'<b>İptal:</b> yok'}</div><div class="fl-cpl">${keep.length?`<b>Kalan:</b> ${keep.map(x=>x.name).join(', ')} · ayda ${fmt(keep.reduce((s,x)=>s+x.amt,0))} ₺`:'<b>Kalan:</b> hiç abonelik yok'}</div></div></div></div>`;},
@@ -15352,19 +15450,34 @@ function vjReqs(target,m){const R=[];const base=()=>{R.push({n:'Yeterli veri',s:
   const emg=()=>R.push({n:'Acil fon hedefi',s:'Acil Fon dersiyle kurulur',v:m.emg?'var':'yok',ok:m.emg});
   switch(target){case 'DENGELI':base();marj(0.06);break;case 'BIRIKTIREN':base();goal();marj(0.12);break;case 'TUTUMLU':base();marj(0.15);R.push({n:'Değişken harcama',s:'gelirin en fazla %25’i',v:pc(m.varR),ok:m.varR<0.25});break;case 'HARCAYAN':base();marj(0.18);break;case 'HEDEFCI':base();goal();marj(0.10);R.push({n:'Düzenli yatırım',s:'son 3 ayın her birinde hedefe para',v:m.regular?'3/3 ay':'eksik',ok:m.regular});break;case 'YATIRIMCI':base();goal();emg();marj(0.22);break;case 'OZGUR':base();goal();emg();R.push({n:'Acil fon büyüklüğü',s:'6 aylık gideri karşılasın',v:m.emgM.toFixed(1).replace('.',',')+' ay',ok:m.emgM>=6,p:Math.min(1,m.emgM/6),c:'#B48CFF'});marj(0.30);break;case 'KIRILGAN':R.push({n:'Kırılgan',s:'ay sonu eksi, marj %6 altı ya da acil fon yok',v:'—',ok:true});break;case 'BORCLU':R.push({n:'Borçlu',s:'borç/gelir %28 ya da sabit+borç %60 üstü',v:'—',ok:true});break;default:R.push({n:'Acemi',s:'veri birikene kadar',v:'—',ok:true});}
   return R;}
-let vjBuilt=false,vjSel=null,vjMas={};
+let vjBuilt=false,vjMas={};
 function vjCur(){try{const fb=calcFreeBudget(currentMonth);const k=_planClassifyChar(fb).key;if(VJ_ORDER.includes(k))return k;}catch(e){}return (typeof data!=='undefined'&&data.mascotChar)||'ACEMI';}
-function vjOpen(sel){const o=document.getElementById('vjOverlay');if(!o)return;const cur=vjCur();vjSel=sel||VJ_NEXT[cur]||cur;const m=vjMetrics();const P=PLAN_CHARACTERS;const body=document.getElementById('vjBody');
-  if(!vjBuilt){body.innerHTML=`<div class="vj-hero" id="vjHero"><div class="vj-hm" id="vjHm"></div><div><div class="vj-hk">Şu anki karakterin</div><div class="vj-hn" id="vjHn"></div><div class="vj-ht" id="vjHt"></div><span class="vj-pill" id="vjHp"></span></div></div><div class="vj-sect" id="vjRsect"></div><div class="vj-card" id="vjReqs"></div><div class="vj-sect">Tüm karakterler <b>dokun, şartları gör</b></div><div class="vj-list" id="vjList">${VJ_ORDER.map(k=>`<div class="vj-row" data-k="${k}" style="--c:${P[k].accentColor}"><div class="vj-rm" id="vjM_${k}"></div><div class="vj-rx"><div class="vj-rnm">${P[k].name}</div><div class="vj-rsb">${VJ_HOW[k]}</div></div><span class="vj-st" id="vjS_${k}"></span></div>`).join('')}</div>`;
+function vjReqHTML(reqs){return reqs.map(r=>`<div class="vj-req ${r.ok?'ok':'no'}"><i>${r.ok?'✓':'✗'}</i><div class="vj-rt"><div class="vj-rn">${r.n}</div><div class="vj-rs">${r.s}</div></div><div class="vj-rv">${r.v}</div></div>`).join('');}
+function vjOpen(){const o=document.getElementById('vjOverlay');if(!o)return;const cur=vjCur();const m=vjMetrics();const P=PLAN_CHARACTERS;const body=document.getElementById('vjBody');const nx=VJ_NEXT[cur];
+  if(!vjBuilt){body.innerHTML=`<div class="vj-hero" id="vjHero"><div class="vj-hrow"><div class="vj-hm" id="vjHm"></div><div><div class="vj-hk">Şu anki karakterin</div><div class="vj-hn" id="vjHn"></div><div class="vj-ht" id="vjHt"></div></div></div><div class="vj-ladder" id="vjLad"></div></div>
+    <div class="vj-next" id="vjNext"></div>
+    <div class="vj-sect">10 karakter <b>dokun, şartları gör</b></div><div class="vj-grid" id="vjGrid">${VJ_ORDER.map(k=>`<div class="vj-lv" data-k="${k}" style="--c:${P[k].accentColor}"><div class="vj-rm" id="vjM_${k}"></div><div class="vj-ln">${P[k].name}</div><span class="vj-lb">✓</span><span class="vj-lt" id="vjS_${k}"></span></div>`).join('')}</div>
+    <div class="vj-dim" id="vjDim"></div><div class="vj-sheet" id="vjSheet"><div class="vj-grab"></div><div id="vjSheetBody"></div></div>`;
     try{vjMas.hero=VM.spawn(document.getElementById('vjHm'),cur);VJ_ORDER.forEach(k=>{vjMas[k]=VM.spawn(document.getElementById('vjM_'+k),k);});}catch(e){}
-    document.getElementById('vjClose').addEventListener('click',vjClose);document.querySelectorAll('#vjOverlay .vj-row').forEach(r=>r.addEventListener('click',()=>vjOpen(r.dataset.k)));vjBuilt=true;}
+    document.getElementById('vjClose').addEventListener('click',vjClose);document.querySelectorAll('#vjOverlay .vj-lv').forEach(r=>r.addEventListener('click',()=>vjSheet(r.dataset.k)));document.getElementById('vjDim').addEventListener('click',vjSheetClose);vjBuilt=true;}
   const cp=P[cur];document.getElementById('vjHero').style.setProperty('--g',cp.gradient);document.getElementById('vjHn').textContent=cp.name;document.getElementById('vjHt').textContent=cp.tagline;try{vjMas.hero&&vjMas.hero.setChar(cur);}catch(e){}
-  const nx=VJ_NEXT[cur];const nreq=nx?vjReqs(nx,m):[];const left=nreq.filter(r=>!r.ok).length;document.getElementById('vjHp').textContent=nx?(left?`${dat(P[nx].name)} ${left} kriter kaldı`:`${P[nx].name} için şartlar tamam — ay kapanışında güncellenir`):'En üst seviye — koru';
-  const T=P[vjSel];const reqs=vjReqs(vjSel,m);const l2=reqs.filter(r=>!r.ok).length;document.getElementById('vjRsect').innerHTML=`<span>${vjSel===cur?'Şu an buradasın':vjSel===nx?'Sıradaki':'Şartlar'}: ${T.name}</span><b>${vjSel===cur?'':(l2?l2+' kriter kaldı':'✓ hepsi tamam')}</b>`;
-  document.getElementById('vjReqs').innerHTML=reqs.map(r=>`<div class="vj-req ${r.ok?'ok':'no'}"><i>${r.ok?'✓':'✗'}</i><div class="vj-rt"><div class="vj-rn">${r.n}</div><div class="vj-rs">${r.s}</div>${(!r.ok&&r.p!=null)?`<div class="vj-bar"><i style="--w:${Math.round(r.p*100)}%;--c:${r.c||'#19E68C'}"></i></div>`:''}</div><div class="vj-rv">${r.v}</div></div>`).join('');
-  const ci=VJ_ORDER.indexOf(cur);VJ_ORDER.forEach((k,i)=>{const row=document.querySelector(`.vj-row[data-k="${k}"]`),st=document.getElementById('vjS_'+k);row.className='vj-row'+(k===cur?' cur':k===nx?' next':i<ci?' past':'')+(k===vjSel?' sel':'');st.textContent=k===cur?'SEN':k===nx?'SIRADAKİ':i<ci?'GEÇİLDİ':'';});
-  o.classList.add('vj-show');document.body.style.overflow='hidden';const hero=document.getElementById('vjHero');if(sel)hero.scrollIntoView&&0;else o.scrollTop=0;}
-function vjClose(){const o=document.getElementById('vjOverlay');if(o)o.classList.remove('vj-show');document.body.style.overflow='';}
+  const ci=VJ_ORDER.indexOf(cur);document.getElementById('vjLad').innerHTML='<small>Risk</small>'+VJ_ORDER.map((k,i)=>`<i class="${i<ci?'done':i===ci?'cur':''}"></i>`).join('')+'<small>Büyüme</small>';
+  const N=document.getElementById('vjNext');
+  if(nx){const np=P[nx];const reqs=vjReqs(nx,m);const todo=reqs.filter(r=>!r.ok),done=reqs.filter(r=>r.ok);N.style.setProperty('--c',np.accentColor);
+    N.innerHTML=`<div class="vj-nhead"><div><div class="vj-nk">Sıradaki</div><div class="vj-nn">${np.name}</div></div><div class="vj-nm" id="vjNm"></div></div><div class="vj-nprog"><b>${done.length}</b><span>/ ${reqs.length} şart tamam</span></div><div class="vj-npbar"><i style="--w:${Math.round(done.length/reqs.length*100)}%"></i></div>`+
+      (todo.length?`<div class="vj-tk">Yapılacak · ${todo.length}</div>`+todo.map(r=>`<div class="vj-task"><i>✗</i><div class="vj-rt"><div class="vj-rn">${r.n}</div><div class="vj-rs">${r.s}</div>${r.p!=null?`<div class="vj-bar"><i style="--w:${Math.round(r.p*100)}%;--bc:${np.accentColor}"></i></div>`:''}</div><div class="vj-rv">${r.v}</div></div>`).join(''):`<div class="vj-allok">Şartlar tamam ✓<small>Karakter ay kapanışında güncellenir.</small></div>`)+
+      (done.length&&todo.length?`<div class="vj-done">✓ ${done.length} şart tamam</div>`:'');
+    try{if(!vjMas.next)vjMas.next=VM.spawn(document.getElementById('vjNm'),nx);else{document.getElementById('vjNm').appendChild(vjMas.next.el.firstChild||document.createElement('span'));vjMas.next.setChar(nx,false);}}catch(e){}}
+  else{N.style.setProperty('--c',cp.accentColor);N.innerHTML=`<div class="vj-nhead"><div><div class="vj-nk">Zirve</div><div class="vj-nn">Özgür</div></div></div><div class="vj-allok">En üst seviyedesin ✓<small>Koru ve çeşitlendir. Karakter her ay yeniden değerlendirilir.</small></div>`;}
+  document.querySelectorAll('#vjOverlay .vj-lv').forEach((it,i)=>{const k=it.dataset.k;it.className='vj-lv'+(k===cur?' cur':k===nx?' next':i<ci?' past':' lock');document.getElementById('vjS_'+k).textContent=k===cur?'SEN':k===nx?'SIRADAKİ':'';});
+  o.classList.add('vj-show');document.body.style.overflow='hidden';o.scrollTop=0;}
+let vjSheetMas=null;
+function vjSheet(k){const P=PLAN_CHARACTERS,cp=P[k];const m=vjMetrics();const reqs=vjReqs(k,m);const left=reqs.filter(r=>!r.ok).length;const cur=vjCur();const body=document.getElementById('vjSheetBody');
+  body.innerHTML=`<div class="vj-sh" style="--c:${cp.accentColor}"><div class="vj-sm" id="vjSm"></div><div><div class="vj-sk">${k===cur?'Şu anki karakterin':VJ_ORDER.indexOf(k)<VJ_ORDER.indexOf(cur)?'Geçtin':'Karakter'}</div><div class="vj-sn">${cp.name}</div><div class="vj-stg">${cp.tagline}</div></div></div><div class="vj-how" style="--c:${cp.accentColor}"><b>Nasıl olunur?</b> ${VJ_HOW[k]}</div><div class="vj-ek"><span>Şartlar</span><b>${k===cur?'buradasın':(left?left+' kriter kaldı':'✓ hepsi tamam')}</b></div>${vjReqHTML(reqs)}`;
+  try{if(!vjSheetMas)vjSheetMas=VM.spawn(document.getElementById('vjSm'),k);else{document.getElementById('vjSm').appendChild(vjSheetMas.el.firstChild);vjSheetMas.setChar(k,false);}}catch(e){}
+  document.getElementById('vjDim').classList.add('on');document.getElementById('vjSheet').classList.add('on');}
+function vjSheetClose(){document.getElementById('vjDim').classList.remove('on');document.getElementById('vjSheet').classList.remove('on');}
+function vjClose(){vjSheetClose();const o=document.getElementById('vjOverlay');if(o)o.classList.remove('vj-show');document.body.style.overflow='';}
 let vjEntryMas=null;
 function renderVjEntry(){const card=document.getElementById('planCharCard');if(!card)return;let host=document.getElementById('vjEntryHost');if(!host){host=document.createElement('div');host.id='vjEntryHost';card.insertAdjacentElement('afterend',host);}
   const cur=vjCur(),nx=VJ_NEXT[cur],P=PLAN_CHARACTERS;const m=vjMetrics();const left=nx?vjReqs(nx,m).filter(r=>!r.ok).length:0;
@@ -15372,6 +15485,59 @@ function renderVjEntry(){const card=document.getElementById('planCharCard');if(!
   if(!host.firstChild){host.innerHTML=`<div class="vj-entry" onclick="FL.journey()"><div class="vj-ei" id="vjEntryM"></div><div class="vj-et"><div class="vj-ek">Karakter yolculuğu</div><div class="vj-ev" id="vjEntryT"></div></div><b>→</b></div>`;try{vjEntryMas=VM.spawn(document.getElementById('vjEntryM'),nx||cur);}catch(e){}}
   else{try{vjEntryMas&&vjEntryMas.setChar(nx||cur,false);}catch(e){}}
   document.getElementById('vjEntryT').textContent=txt;}
+
+/* ---- Hatırlatıcılar: kart son ödeme, taksit günü, deneme bitişi ---- */
+const RM_ICON={bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>',card:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18M7 15h3"/></svg>',debt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 2v4M16 2v4M4 10h16M9 15h2M13 15h2"/></svg>',trial:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'};
+function rmData(){if(typeof data==='undefined')return null;if(!data.reminders||typeof data.reminders!=='object')data.reminders={daysBefore:3,debtDay:5,trials:[],seen:{},toastSeen:{}};const r=data.reminders;if(!Array.isArray(r.trials))r.trials=[];if(!r.seen)r.seen={};if(!r.toastSeen)r.toastSeen={};if(!r.daysBefore)r.daysBefore=3;if(!r.debtDay)r.debtDay=5;return r;}
+const rmD=str=>new Date(str+'T00:00:00');const rmS=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+function rmNextDay(day){const t=rmD(today());let d=new Date(t.getFullYear(),t.getMonth(),Math.min(day,new Date(t.getFullYear(),t.getMonth()+1,0).getDate()));if(d<t)d=new Date(t.getFullYear(),t.getMonth()+1,Math.min(day,new Date(t.getFullYear(),t.getMonth()+2,0).getDate()));return d;}
+const rmDays=str=>Math.round((rmD(str)-rmD(today()))/86400000);
+const rmLbl=str=>{const d=rmD(str);return d.getDate()+' '+MN[d.getMonth()];};
+function rmEvents(){const R=rmData();if(!R)return [];const E=[];const mk=(typeof monthKey==='function')?monthKey():currentMonth;
+  try{(data.cards||[]).forEach(c=>{const t=typeof calcCardTotals==='function'?calcCardTotals(c):{toPay:0};const d=rmS(rmNextDay(c.dueDay||10));E.push({type:'card',id:c.id,date:d,title:`${c.name} son ödeme`,sub:t.toPay>0?fmt(Math.round(t.toPay))+' ₺ ekstre':'ekstre bekleniyor',c:'#FF6FB5',icon:'card'});});
+    (data.debts||[]).filter(x=>x.active&&(x.installments||0)>(x.paidCount||0)).forEach(x=>{const paid=(x.paidMonths||[]).includes(mk);const base=rmNextDay(R.debtDay);let d=base;if(paid&&rmS(base).slice(0,7)===mk){d=new Date(base.getFullYear(),base.getMonth()+1,Math.min(R.debtDay,28));}E.push({type:'debt',id:x.id,date:rmS(d),title:`${x.name} taksiti`,sub:fmt(x.monthlyAmount)+' ₺ · '+((x.paidCount||0)+1)+'/'+x.installments,c:'#FF4B5C',icon:'debt'});});
+    R.trials.forEach(t=>{if(!t.end)return;E.push({type:'trial',id:t.id,date:t.end,title:`${t.name} deneme bitiyor`,sub:t.amount?`sonra ayda ${fmt(t.amount)} ₺ — iptal et ya da devam`:'iptal et ya da devam',c:'#BF5AF2',icon:'trial'});});}catch(e){console.warn('FL rmEvents',e);}
+  E.forEach(e=>e.days=rmDays(e.date));return E.filter(e=>e.days>=-1).sort((a,b)=>a.days-b.days);}
+function rmPermState(){if(!('Notification' in window))return 'none';return Notification.permission;}
+function rmNotify(title,body,tag){try{if(rmPermState()!=='granted')return false;const o={body,tag,silent:false};if(navigator.serviceWorker&&navigator.serviceWorker.controller){navigator.serviceWorker.ready.then(r=>r.showNotification(title,o)).catch(()=>{try{new Notification(title,o);}catch(e){}});}else{new Notification(title,o);}return true;}catch(e){return false;}}
+function rmCheck(){const R=rmData();if(!R)return;const E=rmEvents();let changed=false;const td=today();
+  E.forEach(e=>{if(e.days<0||e.days>R.daysBefore)return;const key=e.type+':'+e.id+':'+e.date;const when=e.days===0?'bugün':e.days===1?'yarın':e.days+' gün sonra';
+    if(R.seen[key]!==td){const ok=rmNotify('⏰ '+e.title+' · '+when,e.sub,key);if(ok){R.seen[key]=td;changed=true;}}
+    if(e.days<=1&&R.toastSeen[key]!==td){R.toastSeen[key]=td;changed=true;if(typeof showToast==='function')setTimeout(()=>showToast('⏰ '+e.title+' — '+when),1200);}});
+  if(changed){try{save();}catch(e){}}rmBell();}
+function rmBell(){const hd=document.getElementById('appHeader');if(!hd)return;let b=document.getElementById('rmBell');if(!b){b=document.createElement('button');b.id='rmBell';b.setAttribute('aria-label','Hatırlatıcılar');b.innerHTML=RM_ICON.bell;b.onclick=rmOpen;hd.appendChild(b);}
+  const R=rmData();const due=R?rmEvents().some(e=>e.days>=0&&e.days<=R.daysBefore):false;b.classList.toggle('has',due);}
+function rmOpen(focusTrial){const o=document.getElementById('rmOverlay');const R=rmData();if(!o||!R)return;const st=rmPermState();const E=rmEvents();const up=E.filter(e=>e.days<=30);const nx=up.find(e=>e.days>=0)||null;
+  const dl=d=>d<0?'DÜN':d===0?'BUGÜN':d===1?'YARIN':d+' GÜN';
+  const permTxt=st==='granted'?['on','Bildirimler açık','uygulama açıkken sistem bildirimi gelir']:st==='denied'?['off','Bildirim izni reddedilmiş','tarayıcı ayarlarından aç; uygulama içinde yine uyarırım']:st==='none'?['','Bildirim desteklenmiyor','uygulama içinde uyarırım']:['','Bildirimler kapalı','son ödeme ve deneme bitişini sistem bildirimi olarak al'];
+  document.getElementById('rmBody').innerHTML=
+    (nx?`<div class="rm-hero" style="--c:${nx.c}"><div class="rm-hi">${RM_ICON[nx.icon]}</div><div class="rm-hk">Sıradaki</div><div class="rm-hrow"><div><div class="rm-hn">${nx.title}</div><div class="rm-hs">${rmLbl(nx.date)} · ${nx.sub}</div></div><div class="rm-hd"><b>${nx.days===0?'Bugün':nx.days===1?'Yarın':nx.days}</b>${nx.days>1?'<small>gün kaldı</small>':''}</div></div></div>`
+       :`<div class="rm-hero empty" style="--c:#19E68C"><div class="rm-hk">Sıradaki</div><div class="rm-hrow"><div><div class="rm-hn">30 gün içinde bir şey yok</div><div class="rm-hs">Kart ve taksitleri Sabit sekmesinden ekle, deneme bitişlerini buradan.</div></div></div></div>`)+
+    `<div class="rm-perm ${permTxt[0]}"><span class="rm-dot"></span><div><div class="rm-pt">${permTxt[1]}</div><div class="rm-ps">${permTxt[2]}</div></div>${st==='default'?'<button class="rm-btn" id="rmAsk">Aç</button>':st==='granted'?'<button class="rm-btn rm-ghost" id="rmTest">Dene</button>':''}</div>
+    <div class="rm-sect"><span>Yaklaşanlar · 30 gün</span><b style="color:#8A8993;letter-spacing:0;text-transform:none;font-size:11px;font-weight:700">${up.length} kayıt</b></div><div class="rm-card">${up.length?up.map(e=>`<div class="rm-ev ${e.days<=0?'today':e.days<=R.daysBefore?'soon':''}" style="--c:${e.c}"><i>${RM_ICON[e.icon]}</i><div class="rm-et"><div class="rm-en">${e.title}</div><div class="rm-ed">${rmLbl(e.date)} · ${e.sub}</div></div><span class="rm-dl">${dl(e.days)}</span>${e.type==='trial'?`<button class="rm-x" data-del="${e.id}" aria-label="Sil">✕</button>`:''}</div>`).join(''):'<div class="rm-empty">Henüz yaklaşan yok.</div>'}</div>
+    <div class="rm-sect"><span>Ücretsiz denemeler</span><button class="rm-add" id="rmAddBtn">+ Ekle</button></div><div class="rm-card">${R.trials.length?R.trials.slice().sort((a,b)=>a.end<b.end?-1:1).map(t=>`<div class="rm-ev ${rmDays(t.end)<=0?'today':rmDays(t.end)<=R.daysBefore?'soon':''}" style="--c:#BF5AF2"><i>${RM_ICON.trial}</i><div class="rm-et"><div class="rm-en">${t.name}</div><div class="rm-ed">${rmLbl(t.end)} bitiyor${t.amount?' · sonra ayda '+fmt(t.amount)+' ₺':''}</div></div><span class="rm-dl">${dl(rmDays(t.end))}</span><button class="rm-x" data-del="${t.id}" aria-label="Sil">✕</button></div>`).join(''):'<div class="rm-empty">Deneme eklemedin. Bitişten önce haber vereyim: iptal et ya da bilerek devam et.</div>'}</div>
+    <div class="rm-sect"><span>Ayarlar</span></div><div class="rm-card"><div class="rm-setrow"><div><div class="rm-l">Kaç gün önce?</div><div class="rm-s">son ödeme ve deneme bitişi</div></div><div class="rm-chips">${[1,3,7].map(n=>`<button class="rm-chip ${R.daysBefore===n?'on':''}" data-db="${n}">${n}</button>`).join('')}</div></div><div class="rm-setrow"><div><div class="rm-l">Taksit günü</div><div class="rm-s">ayın hangi günü hatırlatayım</div></div><div class="rm-chips">${[1,5,10,15].map(n=>`<button class="rm-chip ${R.debtDay===n?'on':''}" data-dd="${n}">${n}</button>`).join('')}</div></div></div>
+    <div class="rm-note">Web uygulaması telefonu kendiliğinden uyandıramaz; bildirimler uygulama açıkken ve açılışta gelir. Ana ekrana eklersen daha düzenli olur.</div>
+    <div class="rm-dim" id="rmDim"></div><div class="rm-sheet" id="rmSheet"><div class="rm-grab"></div><h2>Ücretsiz deneme</h2><div class="rm-lead">Bitişten ${R.daysBefore} gün önce hatırlatırım: iptal et ya da bilerek devam et.</div><div class="rm-form"><label>Hangi servis?</label><input id="rmTn" class="rm-full" placeholder="Netflix, Spotify…" maxlength="30"><label>Bitiş tarihi</label><input id="rmTd" type="date" min="${today()}"><input id="rmTa" inputmode="numeric" placeholder="sonra ayda ₺"><button class="rm-btn rm-full" id="rmTadd">Hatırlatıcı kur</button></div></div>`;
+  const $r=id=>document.getElementById(id);
+  if($r('rmAsk'))$r('rmAsk').onclick=()=>{try{Notification.requestPermission().then(()=>{rmOpen();rmCheck();});}catch(e){}};
+  if($r('rmTest'))$r('rmTest').onclick=()=>{rmNotify('⏰ VAULT hatırlatıcı','Bildirimler çalışıyor.','test');if(typeof showToast==='function')showToast('Bildirim gönderildi');};
+  document.querySelectorAll('#rmOverlay [data-db]').forEach(b=>b.onclick=()=>{R.daysBefore=+b.dataset.db;save();rmOpen();});
+  document.querySelectorAll('#rmOverlay [data-dd]').forEach(b=>b.onclick=()=>{R.debtDay=+b.dataset.dd;save();rmOpen();});
+  document.querySelectorAll('#rmOverlay [data-del]').forEach(b=>b.onclick=()=>{R.trials=R.trials.filter(t=>t.id!==b.dataset.del);save();rmOpen();rmBell();});
+  const openSheet=()=>{$r('rmDim').classList.add('on');$r('rmSheet').classList.add('on');setTimeout(()=>$r('rmTn').focus(),350);};const closeSheet=()=>{$r('rmDim').classList.remove('on');$r('rmSheet').classList.remove('on');};
+  $r('rmAddBtn').onclick=openSheet;$r('rmDim').onclick=closeSheet;
+  $r('rmTadd').onclick=()=>{const n=$r('rmTn').value.trim(),d=$r('rmTd').value,a=num($r('rmTa').value);if(!n||!d){if(typeof showToast==='function')showToast('İsim ve bitiş tarihi gerekli');return;}R.trials.push({id:uid(),name:n,end:d,amount:a||0});save();if(typeof showToast==='function')showToast('✓ '+n+' için hatırlatıcı kuruldu');rmOpen();rmBell();};
+  document.getElementById('rmClose').onclick=rmClose;o.classList.add('rm-show');document.body.style.overflow='hidden';o.scrollTop=0;if(focusTrial)setTimeout(openSheet,250);}
+function rmClose(){const o=document.getElementById('rmOverlay');if(o)o.classList.remove('rm-show');if(!document.getElementById('flOverlay').classList.contains('fl-show'))document.body.style.overflow='';}
+function renderRmEntry(){const t=document.querySelector('#tab-ayarlar .settings-row-title');let anchor=null;document.querySelectorAll('#tab-ayarlar .settings-row-title').forEach(x=>{if(/Kategori Yönetimi/.test(x.textContent))anchor=x.closest('.settings-group');});if(!anchor)return;let host=document.getElementById('rmEntryHost');if(!host){host=document.createElement('div');host.id='rmEntryHost';anchor.insertAdjacentElement('afterend',host);}
+  const R=rmData();const E=R?rmEvents().filter(e=>e.days>=0&&e.days<=30):[];const st=rmPermState();
+  host.innerHTML=`<div class="settings-group" style="margin-top:12px"><div class="settings-row tappable rm-set" onclick="FL.reminders()"><div class="settings-row-left"><div class="settings-row-title">Hatırlatıcılar</div><div class="settings-row-sub">${E.length?E.length+' yaklaşan · ':''}${st==='granted'?'bildirim açık':'bildirimleri aç'}</div></div><span class="settings-chevron">›</span></div></div>`;}
+let rmTimer=null;
+function rmInit(){try{rmBell();renderRmEntry();rmCheck();if(!rmTimer)rmTimer=setInterval(rmCheck,60000);}catch(e){console.warn('FL rm',e);}}
+/* ---- PWA: manifest + (varsa) service worker ---- */
+(function(){try{if(!document.querySelector('link[rel="manifest"]')){const man={name:'VAULT',short_name:'VAULT',start_url:'.',display:'standalone',background_color:'#0A0A0D',theme_color:'#0A0A0D',icons:[{src:'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="110" fill="#0A0A0D"/><text x="256" y="330" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="260" fill="#2DB866">V</text></svg>'),sizes:'512x512',type:'image/svg+xml',purpose:'any'}]};const l=document.createElement('link');l.rel='manifest';l.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(man));document.head.appendChild(l);}
+  if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)){fetch('sw.js',{method:'HEAD'}).then(r=>{if(r.ok)navigator.serviceWorker.register('sw.js').catch(()=>{});}).catch(()=>{});}}catch(e){}})();
 
 /* ---- aç / kapat ---- */
 function showLib(on){$('lib').classList.toggle('fl-show',on);}
@@ -15382,7 +15548,7 @@ function open(){openLibrary();}
 $('next').addEventListener('click',()=>go(1));$('back').addEventListener('click',()=>go(-1));$('close').addEventListener('click',close);
 let sx=0;$('stage').addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});$('stage').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>55)go(dx<0?1:-1);},{passive:true});
 window.addEventListener('resize',()=>{if(!ov().classList.contains('fl-show'))return;const p=L.pages[pi];if(curPlace)placeMascot(curPlace[0],curPlace[1]);else if(p&&p.m)placeMascot(p.m[0],p.m[1]);fitGiant();});
-document.addEventListener('DOMContentLoaded',flHooks);setTimeout(flHooks,0);
+document.addEventListener('DOMContentLoaded',flHooks);setTimeout(flHooks,0);setTimeout(rmInit,1500);
 if(typeof renderAll==='function'){const _ra=renderAll;renderAll=function(){const r=_ra.apply(this,arguments);flHooks();return r;};}
 if(typeof switchTab==='function'){const _st=switchTab;switchTab=function(){const r=_st.apply(this,arguments);setTimeout(flHooks,0);return r;};}
 /* ---- Onboarding: ders dili ---- */
@@ -15407,7 +15573,7 @@ if(typeof switchTab==='function'){const _st=switchTab;switchTab=function(){const
   flSlideOn(idxOf()===tipsIdx);
 })();
 
-window.FL={openLibrary,open,close,renderEntry,journey:vjOpen,openLesson:id=>{ov().classList.add('fl-show');document.body.style.overflow='hidden';renderLib();openLesson(id);},
+window.FL={openLibrary,open,close,renderEntry,journey:vjOpen,reminders:rmOpen,openLesson:id=>{ov().classList.add('fl-show');document.body.style.overflow='hidden';renderLib();openLesson(id);},
   __open:id=>{ov().classList.add('fl-show');document.body.style.overflow='hidden';openLesson(id);},
   __goto:n=>{pi=Math.max(0,Math.min(L.pages.length-1,n));quizOK=false;render(1);},
   __setInc:v=>{A.inc=v;},__set:(k,v)=>{A[k]=v;},__A:()=>A};
