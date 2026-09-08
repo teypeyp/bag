@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
-<!-- V92: PERFORMANS — (1) renderAll görünmeyen tab'ı çizmiyor (2) geçmiş listesi 60'ar sayfalama (3) save() 300ms debounce + güvenli flush (4) Chart.js lazy load + font non-blocking (5) animasyonlar hızlandı + grafik signature guard (6) 3 günde bir yedekleme popup'ı (Şimdi Yedekle / 3 Gün Sonra Hatırlat). Tasarım ve özellikler birebir korundu. -->
+<!-- V92: PERFORMANS — (1) renderAll görünmeyen tab'ı çizmiyor (2) geçmiş listesi 60'ar sayfalama (3) save() 300ms debounce + güvenli flush (4) Chart.js lazy load + font non-blocking (5) animasyonlar hızlandı + grafik signature guard (6) 3 günde bir yedekleme popup'ı (Şimdi Yedekle / 3 Gün Sonra Hatırlat) (7) gizlilik gözü header'dan varlık kartının sağ üstüne taşındı. Tasarım ve özellikler birebir korundu. -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="VAULT">
@@ -832,6 +832,9 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   transition:background .8s ease;
 }
 .hero-top{padding:22px 20px 18px;position:relative;overflow:hidden;z-index:2;display:flex;align-items:flex-start;justify-content:space-between}
+/* V92: gizlilik gözü header yerine varlık kartında */
+.hero-eye{position:absolute;top:16px;right:16px;z-index:3;width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:50%;color:var(--muted);cursor:pointer;padding:0;transition:color .2s,border-color .2s;-webkit-tap-highlight-color:transparent}
+.hero-eye.on{color:var(--warning);border-color:rgba(255,214,10,.4)}
 .hero-label{font-size:10px;font-weight:800;color:rgba(45,184,102,.55);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;text-shadow:0 0 12px rgba(45,184,102,.3)}
 .hero-balance{font-size:46px;font-weight:900;letter-spacing:-2.5px;line-height:1;margin-bottom:10px;text-shadow:0 2px 20px rgba(0,0,0,.4)}
 
@@ -2749,7 +2752,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 <!-- HEADER -->
 <div class="app-header" id="appHeader">
   <div class="app-logo" onclick="switchTab('aylik')" style="cursor:pointer" id="appLogo">Vault</div>
-  <button class="priv-eye" id="privEye" onclick="togglePrivacy()" aria-label="Tutarları gizle/göster"></button>
+  <!-- V92: gizlilik gözü varlık kartına taşındı (renderWalletHero) -->
 </div>
 
 <!-- NAV FADE MASK -->
@@ -5305,6 +5308,7 @@ function renderWalletHero(balance, fb) {
     <div class="wallet-hero-combined" id="heroRing">
       <div class="wallet-hero-inner">
         <div class="hero-top" style="padding-bottom:28px">
+          ${(() => { const on = !!data.hideAmounts; const ic = on ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"/><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87"/><path d="M3 3l18 18"/></svg>' : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg>'; return `<button class="hero-eye${on?' on':''}" id="privEye" onclick="event.stopPropagation();togglePrivacy()" aria-label="Tutarları gizle/göster">${ic}</button>`; })()}
           <div style="width:100%">
             <div class="hero-label">Toplam Varlığın</div>
             <div class="hero-balance" style="color:${balColor}">${fmtTL(balance)}</div>
