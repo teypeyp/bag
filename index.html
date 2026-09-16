@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V92.5: Dün / Bugün sırası değişti -->
+<!-- V92.4: işlem sayfası Tarih satırına Bugün/Dün hızlı seçimi -->
+<!-- V92.3: cüzdan chip'i çerçevesi/ikonu cüzdanın kendi renginde (pasif %45, seçili tam) -->
+<!-- V92.2: cüzdan chip'i ikon hizası (kart chip'iyle eşitlendi) -->
+<!-- V92.1: header — zil kaldırıldı, gizlilik gözü karttan header'a alındı -->
 <!-- V92: PERFORMANS — (1) renderAll görünmeyen tab'ı çizmiyor (2) geçmiş listesi 60'ar sayfalama (3) save() 300ms debounce + güvenli flush (4) Chart.js lazy load + font non-blocking (5) animasyonlar hızlandı + grafik signature guard (6) 3 günde bir yedekleme popup'ı (Şimdi Yedekle / 3 Gün Sonra Hatırlat) (7) gizlilik gözü header'dan varlık kartının sağ üstüne taşındı. Tasarım ve özellikler birebir korundu. -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -286,6 +291,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .tx-opt-icon{width:32px;height:32px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .tx-opt-label{font-size:13px;font-weight:700;color:var(--muted);flex:1}
 .tx-opt-value{font-size:13px;font-weight:700;color:var(--text)}
+/* V92.4: hızlı tarih chip'leri */
+.tx-dq{display:flex;gap:5px}
+.tx-dq-btn{padding:6px 11px;border:1.5px solid var(--border);border-radius:14px;background:var(--surface2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.tx-dq-btn.active{background:var(--accent-dim);border-color:rgba(45,184,102,.4);color:var(--accent)}
 .tx-opt-desc-input{width:100%;background:none;border:none;outline:none;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--text);padding:0}
 .tx-opt-desc-input::placeholder{color:var(--muted)}
 
@@ -2385,8 +2394,11 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .ef-order-pos{font-size:12px;font-weight:800;color:var(--muted)}
 /* tx sheet bütçe etiketi */
 .tx-budget-chips{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px 0}
-.tx-budget-chip{padding:8px 13px;border:1.5px solid var(--border);border-radius:20px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;cursor:pointer;background:var(--surface2);color:var(--muted);transition:all .15s}
-.tx-budget-chip.active{background:rgba(191,90,242,.12);border-color:rgba(191,90,242,.4);color:var(--purple)}
+.tx-budget-chip{padding:8px 13px;border:1.5px solid var(--border);border-radius:20px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;cursor:pointer;background:var(--surface2);color:var(--muted);transition:all .15s;display:flex;align-items:center;gap:6px} /* V92.2: kart chip'iyle aynı hizalama */
+.tx-budget-chip svg{flex-shrink:0}
+.tx-budget-chip{--wc:#BF5AF2;border-color:color-mix(in srgb,var(--wc) 45%,transparent)} /* V92.3: çerçeve cüzdan renginde */
+.tx-budget-chip svg{color:var(--wc)}
+.tx-budget-chip.active{background:color-mix(in srgb,var(--wc) 14%,transparent);border-color:var(--wc);color:var(--wc)}
 .tx-budget-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:12px 16px 0}
 
 /* V70: abonelik denetimi */
@@ -2752,7 +2764,8 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 <!-- HEADER -->
 <div class="app-header" id="appHeader">
   <div class="app-logo" onclick="switchTab('aylik')" style="cursor:pointer" id="appLogo">Vault</div>
-  <!-- V92: gizlilik gözü varlık kartına taşındı (renderWalletHero) -->
+  <!-- V92.1: gizlilik gözü header'a geri alındı, zil ana sayfadan kaldırıldı (Ayarlar > Hatırlatıcılar'da kalır) -->
+  <button class="priv-eye" id="privEye" onclick="togglePrivacy()" aria-label="Tutarları gizle/göster"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg></button>
 </div>
 
 <!-- NAV FADE MASK -->
@@ -3375,7 +3388,12 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg>
         </div>
         <span class="tx-opt-label">Tarih</span>
-        <span class="tx-opt-value" id="txSheetDateLabel">Bugün</span>
+        <!-- V92.4: hızlı tarih — Bugün / Dün; başka gün seçilince etiket görünür -->
+        <div class="tx-dq" id="txDateQuick">
+          <button type="button" class="tx-dq-btn" id="txDqYest" onclick="event.stopPropagation();_txQuickDate(1)">Dün</button>
+          <button type="button" class="tx-dq-btn active" id="txDqToday" onclick="event.stopPropagation();_txQuickDate(0)">Bugün</button>
+        </div>
+        <span class="tx-opt-value" id="txSheetDateLabel" style="display:none">Bugün</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="var(--muted)" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6"/></svg>
       </div>
       <!-- Kaynak: nakit/kart + cüzdanlar tek satırda (kart tanımlı ya da serbest cüzdan varsa) -->
@@ -5308,7 +5326,6 @@ function renderWalletHero(balance, fb) {
     <div class="wallet-hero-combined" id="heroRing">
       <div class="wallet-hero-inner">
         <div class="hero-top" style="padding-bottom:28px">
-          ${(() => { const on = !!data.hideAmounts; const ic = on ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"/><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87"/><path d="M3 3l18 18"/></svg>' : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg>'; return `<button class="hero-eye${on?' on':''}" id="privEye" onclick="event.stopPropagation();togglePrivacy()" aria-label="Tutarları gizle/göster">${ic}</button>`; })()}
           <div style="width:100%">
             <div class="hero-label">Toplam Varlığın</div>
             <div class="hero-balance" style="color:${balColor}">${fmtTL(balance)}</div>
@@ -6548,6 +6565,7 @@ function openTxSheet(type) {
   // Date label
   const dateLabel = document.getElementById('txSheetDateLabel');
   if (dateLabel) dateLabel.textContent = 'Bugün';
+  _txDateSync(); // V92.4
 
   // Her iki tip için de kategori seçimiyle başla
   _buildSheetCatGrid();
@@ -6599,6 +6617,22 @@ function txSheetSelectCat(catId) {
   }
 }
 
+
+// V92.4: hızlı tarih (Bugün / Dün) — chip durumu ve etiketi tek yerden eşitle
+function _txDateSync() {
+  const d = _sheetDateStr || today();
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  const isT = d === today(), isY = d === localDateStr(y);
+  const bt = document.getElementById('txDqToday'), by = document.getElementById('txDqYest'), lbl = document.getElementById('txSheetDateLabel');
+  if (bt) bt.classList.toggle('active', isT);
+  if (by) by.classList.toggle('active', isY);
+  if (lbl) { lbl.textContent = fmtDate(d); lbl.style.display = (isT || isY) ? 'none' : ''; }
+}
+function _txQuickDate(daysAgo) {
+  const d = new Date(); d.setDate(d.getDate() - daysAgo);
+  _sheetDateStr = localDateStr(d); _dpSelected = _sheetDateStr;
+  _txDateSync();
+}
 
 function txSheetBackToStep1() {
   _buildSheetCatGrid();
@@ -7129,7 +7163,7 @@ function submitCardPay() {
 
 // ── Harcama sheet'i: ödeme yöntemi ──
 let _sheetPayMethod = 'cash', _sheetCardId = null, _sheetInst = 1;
-const WALLET_CHIP_ICON = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-9a2 2 0 0 0 -2 -2h-2"/><path d="M18 12a1 1 0 0 0 0 4h1v-4z"/><path d="M6 7v-1a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v1"/></svg>';
+const WALLET_CHIP_ICON = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-9a2 2 0 0 0 -2 -2h-2"/><path d="M18 12a1 1 0 0 0 0 4h1v-4z"/><path d="M6 7v-1a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v1"/></svg>';
 function _renderTxPayChips() {
   const wrap = document.getElementById('txPayWrap');
   if (!wrap) return;
@@ -7148,7 +7182,7 @@ function _renderTxPayChips() {
   }
   // Cüzdanlar (serbest) — kartın hemen yanında
   html += freeW.map(b =>
-    '<button class="tx-budget-chip' + (_sheetBudgetId === b.id ? ' active' : '') + '" onclick="_setSheetBudget(\'' + b.id + '\')">' + WALLET_CHIP_ICON + esc(b.name) + '</button>'
+    '<button class="tx-budget-chip' + (_sheetBudgetId === b.id ? ' active' : '') + '" style="--wc:' + budgetColor(b) + '" onclick="_setSheetBudget(\'' + b.id + '\')">' + WALLET_CHIP_ICON + esc(b.name) + '</button>' // V92.3: çerçeve cüzdan renginde
   ).join('');
   chips.innerHTML = html;
   const instWrap = document.getElementById('txInstChips');
@@ -12943,6 +12977,7 @@ function dpSelectDay(dateStr) {
     _sheetDateStr = dateStr;
     const sheetDateLabel = document.getElementById('txSheetDateLabel');
     if (sheetDateLabel) sheetDateLabel.textContent = fmtDate(dateStr);
+    _txDateSync(); // V92.4
   }
   closeDatePicker();
 }
@@ -15649,8 +15684,7 @@ function rmCheck(){const R=rmData();if(!R)return;const E=rmEvents();let changed=
     if(R.seen[key]!==td){const ok=rmNotify('⏰ '+e.title+' · '+when,e.sub,key);if(ok){R.seen[key]=td;changed=true;}}
     if(e.days<=1&&R.toastSeen[key]!==td){R.toastSeen[key]=td;changed=true;if(typeof showToast==='function')setTimeout(()=>showToast('⏰ '+e.title+' — '+when),1200);}});
   if(changed){try{save();}catch(e){}}rmBell();}
-function rmBell(){const hd=document.getElementById('appHeader');if(!hd)return;let b=document.getElementById('rmBell');if(!b){b=document.createElement('button');b.id='rmBell';b.setAttribute('aria-label','Hatırlatıcılar');b.innerHTML=RM_ICON.bell;b.onclick=rmOpen;hd.appendChild(b);}
-  const R=rmData();const due=R?rmEvents().some(e=>e.days>=0&&e.days<=R.daysBefore):false;b.classList.toggle('has',due);}
+function rmBell(){/* V92.1: header zili kaldırıldı — hatırlatıcılar Ayarlar'dan (renderRmEntry) açılır */const b=document.getElementById('rmBell');if(b)b.remove();}
 function rmOpen(focusTrial){const o=document.getElementById('rmOverlay');const R=rmData();if(!o||!R)return;const st=rmPermState();const E=rmEvents();const up=E.filter(e=>e.days<=30);const nx=up.find(e=>e.days>=0)||null;
   const dl=d=>d<0?'DÜN':d===0?'BUGÜN':d===1?'YARIN':d+' GÜN';
   const permTxt=st==='granted'?['on','Bildirimler açık','uygulama açıkken sistem bildirimi gelir']:st==='denied'?['off','Bildirim izni reddedilmiş','tarayıcı ayarlarından aç; uygulama içinde yine uyarırım']:st==='none'?['','Bildirim desteklenmiyor','uygulama içinde uyarırım']:['','Bildirimler kapalı','son ödeme ve deneme bitişini sistem bildirimi olarak al'];
