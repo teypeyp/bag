@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V93.5: Bu Ay Dağılım halkasında "Diğer" kategorisi kalanlar kovasıyla birleşti — tek Diğer -->
 <!-- V93.4: Toplam Varlığın'a dokununca baloncuk: bekleyen sabit gider / taksit / hedef, birikim hedefi, cüzdanlarda ayrılan, limitten kalan -->
 <!-- V93.3: gün baloncuğunda "serbest" → "limitten" -->
 <!-- V93.2: Günlük Limit Analizi grafiğinde güne dokununca küçük baloncuk: serbest harcama, cüzdan kırılımı, o günün limiti -->
@@ -11953,8 +11954,11 @@ function renderDonut() {
   // V90 Fix#6: "toplam" ve yüzdeler tüm kategoriler üzerinden; ilk 6 dilim + kalanlar "Diğer" olarak toplanır
   const _allCats = Object.entries(bycat).sort((a,b) => b[1]-a[1]);
   const total = _allCats.reduce((s,[,v]) => s+v, 0);
-  const _restSum = _allCats.slice(6).reduce((s,[,v]) => s+v, 0);
-  const slices = _allCats.slice(0, 6).map(([id, v]) => ({ name: getCat(id).name, color: getCat(id).color, v }));
+  // V93.5: gerçek "Diğer" kategorisi hiçbir zaman ayrı dilim olmaz — her zaman kalanlarla aynı kovaya girer (iki "Diğer" çıkmasın)
+  const _isOther = ([id]) => id === 'diger' || getCat(id).name === 'Diğer';
+  const _named = _allCats.filter(c => !_isOther(c));
+  const _restSum = _named.slice(6).reduce((s,[,v]) => s+v, 0) + _allCats.filter(_isOther).reduce((s,[,v]) => s+v, 0);
+  const slices = _named.slice(0, 6).map(([id, v]) => ({ name: getCat(id).name, color: getCat(id).color, v }));
   if (_restSum > 0) slices.push({ name: 'Diğer', color: '#6E6D78', v: _restSum });
 
   const doughnutSub = document.getElementById('doughnutTotal');
