@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V94.9: (1) Kalan para / günlük limit cepteki parayı aşamaz — takip dışı çıkışlar (kart ekstresi ödemesi, geçen ay açığı) artık limite yansır; döküm satırında 'Hesabındaki paraya göre' farkı. (2) Günlük limit tek kaynak: dayLimitFor — ana sayfa, takvim/seri, Günlük Limit Analizi ve Bu Ay grafiği aynı sayıyı kullanır; her günün limiti kaydedilir (data.dayLimitLog), sonradan eklenen sabit gider geçmiş günleri değiştirmez; gelir gelmeden limit çizilmez; grafikte cüzdan harcaması hariç. (3) Taksit ödemeleri listede borç adıyla görünür. -->
+<!-- V94.8: Ekstre — çift sayım koruması: sabit gider / taksit / düzenli gelir tutarı eşleşen satırlar o ayın ödemesi olarak işlenir; kredi kartı ödemesi, kendi hesabına transfer, nakit çekim, iade, elle girilmiş olabilecekler önizleme açılınca tek tek sorulur; geri alma ödendi işaretlerini de geri alır. -->
 <!-- V94.7: V94.6 karakter kartı animasyonları geri alındı (V94.5 tabanı) -->
 <!-- V94.5: Plan > Karakter kartındaki "Bu yapıda neden bu karakter?" metni Karakter yolculuğu ekranının hero'suna taşındı -->
 <!-- V94.4: Ay karnesi popup'ında "gelecek ay odağın" seçimi ve Plan'daki odak etiketi kaldırıldı; karne sadece özet + Tamam. Eski data.monthFocus kaydı okunmuyor. -->
@@ -4573,35 +4575,62 @@ function _isFreeVarTx(t) {
   return t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit && !budgetForTx(t);
 }
 
+// ═══ V94.9: günlük limit — tek kaynak ═══
+// Bugün: calcFreeBudget (ana sayfayla aynı). Geçmiş gün: o gün kaydedilen değer (sonradan eklenen sabit gider geçmişi değiştirmez);
+// kayıt yoksa o güne kadarki veriyle yeniden hesap. Ay içinde gelir yoksa limit yok (null).
+function _fixedTotalsFor(mk) {
+  const recTotal = data.recurring.filter(r => r.active || (r.paidMonths || []).includes(mk))
+    .reduce((s, r) => s + ((r.paidMonths || []).includes(mk) && r.payHistory && r.payHistory[mk] != null ? r.payHistory[mk] : r.amount), 0);
+  const debtTotal = data.debts.filter(d => (d.active || (d.paidMonths || []).includes(mk)) && (!d.startMonth || d.startMonth <= mk)).reduce((s, d) => s + d.monthlyAmount, 0);
+  const goalTotal = data.savingsGoals.filter(g => { if (!g.monthly) return false; const dep = (g.deposits || []).reduce((a, d) => a + (d.amount || 0), 0); return !(g.target > 0 && dep >= g.target && !(g.paidMonths || []).includes(mk)); }).reduce((s, g) => s + g.monthly, 0);
+  return { recTotal, debtTotal, goalTotal, savTarget: data.monthlyTargets[mk] || 0 };
+}
+function _dayLimitCalc(dateStr) {
+  const mk = monthKey(dateStr);
+  const until = data.transactions.filter(t => t.date <= dateStr && monthKey(t.date) === mk);
+  const income = until.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+  if (!income) return null;
+  const F = _fixedTotalsFor(mk);
+  const available = income - F.recTotal - F.debtTotal - F.goalTotal - F.savTarget - _budgetChargeUntil(mk, dateStr);
+  const daySpent = until.filter(t => t.date === dateStr && _isFreeVarTx(t)).reduce((s, t) => s + t.amount, 0);
+  const pastVar = Math.max(0, until.filter(_isFreeVarTx).reduce((s, t) => s + t.amount, 0) - daySpent);
+  const d = +dateStr.slice(8, 10), left = Math.max(1, daysInMonth(mk) - d + 1);
+  const ov = (data.dailyOverride || {})[mk] || 0;
+  return ov > 0 ? ov : (available - pastVar) / left;
+}
+function dayLimitFor(dateStr) {
+  const td = today();
+  if (dateStr > td) return null;
+  if (dateStr === td) { const fb = calcFreeBudget(monthKey(td)); return fb.income > 0 ? Math.max(0, fb.daily) : null; }
+  const log = data.dayLimitLog || {};
+  if (log[dateStr] != null) return log[dateStr];
+  const v = _dayLimitCalc(dateStr); return v == null ? null : Math.max(0, v);
+}
+function _snapshotDayLimit() {
+  try {
+    const td = today(), fb = calcFreeBudget(monthKey(td)); if (!(fb.income > 0)) return;
+    data.dayLimitLog = data.dayLimitLog || {};
+    // ilk çalışmada: geçen ayın başından dünlere kadar mevcut veriyle bir kez hesapla ve dondur
+    if (!data.dayLimitLogInit) {
+      const t = new Date(td + 'T00:00:00'), st = new Date(t.getFullYear(), t.getMonth() - 1, 1);
+      for (let d = new Date(st); d < t; d.setDate(d.getDate() + 1)) { const ds = localDateStr(d); if (data.dayLimitLog[ds] == null) { const v0 = _dayLimitCalc(ds); if (v0 != null) data.dayLimitLog[ds] = Math.max(0, Math.round(v0)); } }
+      data.dayLimitLogInit = true;
+    }
+    const v = Math.max(0, Math.round(fb.daily));
+    if (data.dayLimitLog[td] === v) return;
+    data.dayLimitLog[td] = v;
+    const ks = Object.keys(data.dayLimitLog).sort(); if (ks.length > 150) ks.slice(0, ks.length - 150).forEach(k => delete data.dayLimitLog[k]);
+    save();
+  } catch (e) {}
+}
+
 function getDayInfo(dateStr) {
   const todayStr = today();
   if (dateStr > todayStr) return { status: 'future', spent: 0, limit: 0 };
   if (data.streak.frozenDays.includes(dateStr)) return { status: 'frozen', spent: 0, limit: 0 };
-
-  const mk = monthKey(dateStr);
-  const txsUntilDay = data.transactions.filter(t => t.date <= dateStr && monthKey(t.date) === mk);
-  const incomeUntil = txsUntilDay.filter(t => t.type === 'income').reduce((s,t) => s + t.amount, 0);
-
-  if (!incomeUntil) return { status: 'empty', spent: 0, limit: 0 };
-
-  const dayTxs = data.transactions.filter(t => t.date === dateStr && _isFreeVarTx(t)); // V93.1: cüzdan harcaması güne sayılmaz
-  const daySpent = dayTxs.reduce((s,t) => s + t.amount, 0);
-
-  const [,,d] = dateStr.split('-').map(Number);
-  const dim = daysInMonth(mk);
-  const daysLeftThatDay = Math.max(1, dim - d + 1);
-
-  const recTotal = data.recurring.filter(r => r.active).reduce((s,r) => s + r.amount, 0);
-  const debtTotal = data.debts.filter(dd => (dd.active || (dd.paidMonths||[]).includes(mk)) && (!dd.startMonth || dd.startMonth <= mk)).reduce((s,dd) => s + dd.monthlyAmount, 0);
-  const goalTotal = data.savingsGoals.filter(g => g.monthly).reduce((s,g) => s + g.monthly, 0);
-  const savTarget = data.monthlyTargets[mk] || 0;
-  const available = incomeUntil - recTotal - debtTotal - goalTotal - savTarget - _budgetChargeUntil(mk, dateStr); // V93.1: cüzdan rezervi düşer
-
-  const varSpentUntil = txsUntilDay.filter(_isFreeVarTx).reduce((s,t) => s + t.amount, 0); // V93.1: sadece serbest harcama
-  const pastVarSpent = Math.max(0, varSpentUntil - daySpent);
-  const dailyAllowance = daysLeftThatDay > 0 ? (available - pastVarSpent) / daysLeftThatDay : 0;
-  const limit = Math.max(0, dailyAllowance);
-
+  const limit = dayLimitFor(dateStr); // V94.9: tek kaynak
+  if (limit == null) return { status: 'empty', spent: 0, limit: 0 };
+  const daySpent = data.transactions.filter(t => t.date === dateStr && _isFreeVarTx(t)).reduce((s,t) => s + t.amount, 0);
   if (!daySpent) return { status: 'green', spent: 0, limit };
   return { status: daySpent <= limit ? 'green' : 'red', spent: daySpent, limit };
 }
@@ -5223,7 +5252,16 @@ function calcFreeBudget(mk) {
       : 0;
   }
 
-  const available = (income - recTotal - debtTotal - goalTotal - savTarget) - budgetCharge;
+  let available = (income - recTotal - debtTotal - goalTotal - savTarget) - budgetCharge;
+  // V94.9: cepteki paradan fazlası harcanabilir gösterilmez. Takip dışı çıkışlar (kart ekstresi ödemesi, geçen aydan devreden açık)
+  // hesaptan düşmüş ama bütçeye girmemiş olabilir → kalan para = min(bütçe, bakiye − ödenmemiş sabitler − birikim hedefi − cüzdanlarda kalan)
+  let capGap = 0;
+  if (isCurrentMonth) {
+    const unpaidNow = Math.max(0, (recTotal + debtTotal + goalTotal) - paidFixed);
+    let walletLeft = 0; (data.budgets || []).forEach(b => { walletLeft += Math.max(0, (b.amount || 0) - budgetSpent(b)); });
+    const capAvail = (calcBalance() - unpaidNow - savTarget - walletLeft) + varSpent;
+    if (available > capAvail) { capGap = available - capAvail; available = capAvail; }
+  }
   const remaining = available - varSpent;
   const unpaidFixed = Math.max(0, (recTotal + debtTotal + goalTotal) - paidFixed);
 
@@ -5239,7 +5277,7 @@ function calcFreeBudget(mk) {
   const todayRemaining = daily - todayVarSpent;
   const baseDaily = available > 0 ? available / dim : 0;
 
-  return { income, expense, savTarget, recTotal, debtTotal, goalTotal, paidFixed, varSpent, available, remaining, unpaidFixed, daysLeft, daily, baseDaily, todayVarSpent, todayRemaining, budgetCharge };
+  return { capGap, income, expense, savTarget, recTotal, debtTotal, goalTotal, paidFixed, varSpent, available, remaining, unpaidFixed, daysLeft, daily, baseDaily, todayVarSpent, todayRemaining, budgetCharge };
 }
 
 // =================== RENDER MONTHLY ===================
@@ -6196,7 +6234,7 @@ function renderTxList(container, txs, limitTo5, prefix) {
       const iconBg  = isCardPay ? 'rgba(255,255,255,.07)' : isIncome ? 'rgba(45,184,102,.18)' : 'rgba(231,76,60,.15)';
       const iconStroke = isCardPay ? '#6E6D78' : isIncome ? '#2DB866' : '#e74c3c';
       const domId = pfx + t.id;
-      const catName = isCardPay ? (t.desc || 'Ekstre Ödemesi') : cat.name;
+      const catName = isCardPay ? (t.desc || 'Ekstre Ödemesi') : (t.isDebt && t.desc) ? t.desc : cat.name; // V94.9: taksitler borç adıyla
       const hasDesc = !isCardPay && t.desc && t.desc !== catName;
       const rawIcon = isCardPay ? CC_ICON : (_iconSvgById(cat.id) || _iconSvgById(cat.emoji) || CAT_ICONS.diger);
       const iconHtml = rawIcon
@@ -7344,37 +7382,23 @@ function renderDailyLimit() {
   for (let d = 1; d <= dim; d++) {
     const dateStr = y + '-' + String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0');
     spent.push(d <= todayD
-      ? data.transactions.filter(t => t.date === dateStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit).reduce((s,t) => s+t.amount, 0)
+      ? data.transactions.filter(t => t.date === dateStr && _isFreeVarTx(t)).reduce((s,t) => s+t.amount, 0) // V94.9: cüzdan harcaması hariç
       : null);
 
     if (d > todayD) {
       // Gelecek günler: bugünkü dinamik limiti göster (sabit)
-      limits.push(Math.max(0, todayDynLimit));
+      limits.push(fb.income > 0 ? Math.max(0, todayDynLimit) : null);
       continue;
     }
 
-    // Geçmiş günler: o günün basit limitini hesapla (o günün harcaması hariç)
-    const txsUntil = data.transactions.filter(t => t.date <= dateStr && monthKey(t.date) === mk);
-    const incomeUntil = txsUntil.filter(t => t.type === 'income').reduce((s,t) => s+t.amount, 0);
-    if (!incomeUntil) { limits.push(fb.baseDaily); continue; }
-    const expUntil = txsUntil.filter(t => t.type === 'expense').reduce((s,t) => s+t.amount, 0);
-    const recTotal = data.recurring.filter(r=>r.active).reduce((s,r)=>s+r.amount,0);
-    const debtTotal = data.debts.filter(dd=>(dd.active||(dd.paidMonths||[]).includes(mk))&&(!dd.startMonth||dd.startMonth<=mk)).reduce((s,dd)=>s+dd.monthlyAmount,0);
-    const goalTotal = data.savingsGoals.filter(g=>g.monthly).reduce((s,g)=>s+g.monthly,0);
-    const savTarget = data.monthlyTargets[mk]||0;
-    const available = incomeUntil - recTotal - debtTotal - goalTotal - savTarget;
-    const paidFixed = txsUntil.filter(t=>t.isRecurring||t.isDebt||t.isGoalDeposit).reduce((s,t)=>s+t.amount,0);
-    const varSpentUntil = Math.max(0, expUntil - paidFixed);
-    const daySpentVal = spent[d-1] || 0;
-    const pastVar = Math.max(0, varSpentUntil - daySpentVal); // o günün harcaması hariç
-    const dLeft = Math.max(1, dim - d + 1);
-    limits.push(Math.max(0, (available - pastVar) / dLeft));
+    // V94.9: geçmiş günler tek kaynaktan (kayıtlı değer); gelir yoksa çizgi yok
+    limits.push(dayLimitFor(dateStr));
   }
 
   const svgW = 320, svgH = 100;
   const padL = 10, padR = 10, padT = 12, padB = 22;
   const spentVals = spent.filter(v => v !== null);
-  const maxVal = Math.max(...spentVals, ...limits, 1);
+  const maxVal = Math.max(...spentVals, ...limits.filter(v => v != null), 1);
   const toX = i => padL + (i / (dim - 1)) * (svgW - padL - padR);
   const toY = v => padT + (1 - Math.min(v, maxVal) / maxVal) * (svgH - padT - padB);
 
@@ -7396,9 +7420,12 @@ function renderDailyLimit() {
   }
 
   // Limit çizgisi (smooth, tüm ay)
-  function limitSpline(lts) {
-    let d = `M ${toX(0)} ${toY(lts[0])}`;
-    for (let i = 0; i < lts.length - 1; i++) {
+  function limitSpline(lts0) {
+    // V94.9: gelir gelmeden önceki günler (null) çizilmez
+    const s0 = lts0.findIndex(v => v != null); if (s0 < 0) return '';
+    const lts = lts0.map(v => v == null ? 0 : v);
+    let d = `M ${toX(s0)} ${toY(lts[s0])}`;
+    for (let i = s0; i < lts.length - 1; i++) {
       const cp1x = toX(i) + (toX(i+1) - toX(Math.max(i-1,0))) / 6;
       const cp1y = toY(lts[i]) + (toY(lts[i+1]) - toY(lts[Math.max(i-1,0)])) / 6;
       const cp2x = toX(i+1) - (toX(Math.min(i+2,lts.length-1)) - toX(i)) / 6;
@@ -7494,6 +7521,7 @@ function renderDailyLimit() {
           ${fb.goalTotal > 0 ? row('Birikim hedefleri', '−' + fmtTL(fb.goalTotal), 'rgba(255,255,255,.6)') : ''}
           ${fb.savTarget > 0 ? row('Tasarruf hedefi', '−' + fmtTL(fb.savTarget), 'rgba(255,255,255,.6)') : ''}
           ${fb.varSpent > 0 ? row('Diğer harcamalar', '−' + fmtTL(fb.varSpent), 'rgba(255,255,255,.6)') : ''}
+          ${fb.capGap > 0 ? row('Hesabındaki paraya göre', '−' + fmtTL(Math.round(fb.capGap)), '#FFD60A') : ''}
           <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 20px 12px;border-top:1px solid rgba(255,255,255,.07);margin-top:4px">
             <span style="font-size:13px;font-weight:800;color:rgba(255,255,255,.8)">Kalan para</span>
             <span style="font-size:16px;font-weight:900;color:${remColor}">${fmtTL(Math.round(fb.remaining))}</span>
@@ -11525,7 +11553,7 @@ function renderOzetStats() {
 let _dlBubbleIdx = -1;
 function _dlBubbleHide() { const b = document.getElementById('dlBubble'); if (b) b.classList.remove('show'); _dlBubbleIdx = -1; }
 function _dlBubbleShow(chart, idx, bars) {
-  const b = document.getElementById('dlBubble'), wrap = document.getElementById('dlChartWrap');
+  const b = document.getElementById('dlBubble'), wrap = document.getElementById('dlsChartWrap');
   if (!b || !wrap) return;
   if (_dlBubbleIdx === idx) { _dlBubbleHide(); return; } // aynı güne ikinci dokunuş kapatır
   const bar = bars[idx]; if (!bar || bar.status === 'future') { _dlBubbleHide(); return; }
@@ -11541,7 +11569,7 @@ function _dlBubbleShow(chart, idx, bars) {
   b.style.setProperty('--ax', Math.round(el.x - left) + 'px');
   b.classList.add('show'); _dlBubbleIdx = idx;
 }
-document.addEventListener('click', e => { if (_dlBubbleIdx >= 0 && !e.target.closest('#dlChartWrap')) _dlBubbleHide(); }, true);
+document.addEventListener('click', e => { if (_dlBubbleIdx >= 0 && !e.target.closest('#dlsChartWrap')) _dlBubbleHide(); }, true);
 
 function renderDailyStats() {
   const el = document.getElementById('dailyStatsCard');
@@ -11574,20 +11602,9 @@ function renderDailyStats() {
     const dayTxs = data.transactions.filter(t => t.date === dateStr && _isFreeVarTx(t)); // V93.1: cüzdan harcaması hariç
     const daySpent = dayTxs.reduce((s,t) => s + t.amount, 0);
 
-    // O günün limiti: önceki günlerin harcaması baz alınır, o günün harcaması dahil değil
-    const txsUntil = data.transactions.filter(t => t.date <= dateStr && monthKey(t.date) === mk);
-    const incomeUntil = txsUntil.filter(t => t.type==='income').reduce((s,t) => s+t.amount, 0);
-    if (!incomeUntil) { dayBars.push({ d, dateStr, daySpent: 0, limit: baseDaily, status: 'empty', wallets: [] }); emptyDays++; continue; }
-
-    const recTotal = data.recurring.filter(r=>r.active).reduce((s,r)=>s+r.amount,0);
-    const debtTotal = data.debts.filter(dd=>(dd.active||(dd.paidMonths||[]).includes(mk))&&(!dd.startMonth||dd.startMonth<=mk)).reduce((s,dd)=>s+dd.monthlyAmount,0);
-    const goalTotal = data.savingsGoals.filter(g=>g.monthly).reduce((s,g)=>s+g.monthly,0);
-    const savTarget = data.monthlyTargets[mk]||0;
-    const available = incomeUntil - recTotal - debtTotal - goalTotal - savTarget - _budgetChargeUntil(mk, dateStr); // V93.1: cüzdan rezervi düşer
-    const varUntil = txsUntil.filter(_isFreeVarTx).reduce((s,t)=>s+t.amount,0); // V93.1: sadece serbest harcama
-    const pastVar = Math.max(0, varUntil - daySpent); // o günün harcaması hariç
-    const dLeft = Math.max(1, dim - d + 1);
-    const dayLimit = (available - pastVar) / dLeft;
+    // V94.9: o günün limiti tek kaynaktan (kayıtlı değer / yeniden hesap)
+    const dayLimit = dayLimitFor(dateStr);
+    if (dayLimit == null) { dayBars.push({ d, dateStr, daySpent: 0, limit: 0, status: 'empty', wallets: [] }); emptyDays++; continue; }
 
     const status = daySpent === 0 ? 'empty' : daySpent <= Math.max(0, dayLimit) ? 'green' : 'red';
     // V93.2: gün baloncuğu için cüzdan kırılımı
@@ -11640,7 +11657,7 @@ function renderDailyStats() {
       </div>
 
       <!-- Mini bar chart -->
-      <div id="dlChartWrap" style="position:relative;margin-bottom:18px;height:60px">
+      <div id="dlsChartWrap" style="position:relative;margin-bottom:18px;height:60px"><!-- V94.9: id çakışması giderildi (Bu Ay grafiği de dlChartWrap kullanıyor) -->
         <canvas id="dlMiniChart"></canvas>
         <div id="dlBubble" class="dl-bubble"></div>
       </div>
@@ -12890,6 +12907,7 @@ function renderAll() {
   populateCatSelects();
   _privSync();
   try { bsRenderUndoRow(); } catch(e) {} // V94.2
+  _snapshotDayLimit(); // V94.9: bugünün limitini kaydet — geçmiş günler sonradan değişmesin
   // V92: Cüzdan sekmesi görünmüyorsa çizme — switchTab('aylik') girişte zaten renderMonthly() çağırıyor
   if (currentTab === 'aylik') renderMonthly();
   if (currentTab === 'sabit') renderSabit();
@@ -14554,6 +14572,18 @@ setInterval(checkMonthRollover, 60000);
 .bs-catchip{display:inline-flex;align-items:center;gap:7px;padding:9px 13px;border-radius:999px;border:1.5px solid rgba(255,255,255,.1);background:transparent;color:#F2F1EB;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer}
 .bs-catchip i{width:8px;height:8px;border-radius:50%}
 .bs-catchip.on{border-color:var(--accent);background:rgba(45,184,102,.12);color:var(--accent)}
+/* V94.8: soru akışı */
+.bs-qtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;min-height:20px}
+.bs-qprog{font-size:11px;font-weight:800;letter-spacing:1px;color:#8A8993}
+.bs-qlater{border:none;background:none;color:#8A8993;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;padding:4px 0}
+.bs-qrow{display:flex;align-items:center;gap:12px;background:#1B1B20;border-radius:14px;padding:12px 14px;margin-bottom:16px}
+#bsQ h2{font-size:18px;letter-spacing:-.4px;margin:0 0 6px}
+.bs-qs{font-size:13px;font-weight:600;color:#B5B4BC;line-height:1.5;margin:0 0 18px}
+.bs-qbtns{display:flex;flex-direction:column;gap:8px}
+.bs-qbtn{width:100%;padding:14px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:#1B1B20;color:#F2F1EB;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer}
+.bs-qbtn.prim{background:var(--accent);border-color:var(--accent);color:#04170D}
+.bs-qbtn.ghost{background:none;border-color:transparent;color:#8A8993}
+.bs-s .bs-link{color:var(--accent)}
 /* geçmişte "ekstreden geldi" işareti */
 .tx-bank-mark{display:inline-flex;vertical-align:middle;margin-left:5px;opacity:.45}
 .tx-bank-mark svg{width:11px;height:11px}
@@ -14575,11 +14605,12 @@ setInterval(checkMonthRollover, 60000);
   <div class="bs-stats">
     <div class="bs-stat"><b id="bsStSel">0</b><span>seçili</span></div>
     <div class="bs-stat"><b id="bsStDup" style="color:#8A8993">0</b><span>zaten kayıtlı</span></div>
-    <div class="bs-stat"><b id="bsStChk" style="color:#FFD60A">0</b><span>kontrol et</span></div>
+    <div class="bs-stat" onclick="_bsQStart()" style="cursor:pointer"><b id="bsStChk" style="color:#FFD60A">0</b><span>kontrol et ›</span></div>
   </div>
   <div class="bs-list" id="bsList"></div>
   <div class="bs-cta"><button id="bsGo" onclick="bsImport()">İçeri al</button></div>
   <div class="bs-dim" id="bsDim" onclick="_bsCatClose()"></div>
+  <div class="bs-sheet" id="bsQ"><div class="bs-grab"></div><div class="bs-qtop"><span class="bs-qprog" id="bsQProg"></span><button class="bs-qlater" onclick="_bsQClose()">Sonra bak</button></div><div class="bs-qrow" id="bsQRow"></div><h2 id="bsQT"></h2><p class="bs-qs" id="bsQS"></p><div class="bs-qbtns" id="bsQB"></div></div>
   <div class="bs-sheet" id="bsSheet"><div class="bs-grab"></div><h2>Kategori</h2><div class="bs-lead" id="bsSheetLead"></div><div class="bs-cats" id="bsCats"></div></div>
 </div>
 <input type="file" id="bsFile" style="display:none" accept=".xls,.xlsx,.csv" onchange="bsFileChosen(this)">
@@ -14661,6 +14692,9 @@ function _bsParse(aoa) {
   }
   if (hi < 0) return { rows: [] };
   const head = aoa.slice(0, hi).flat().map(x => String(x)).join(' ');
+  // V94.8: hesap sahibinin adı — kendi hesabına transferleri ayırt etmek için
+  let holder = '';
+  for (let i = 0; i < hi; i++) { const r = aoa[i] || []; const k = r.findIndex(c => /^ad ?soyad/.test(_bsNorm(c))); if (k >= 0) { holder = String(r.slice(k + 1).find(c => String(c).trim()) || '').trim(); break; } }
   const bank = /garanti/i.test(head) ? 'Garanti' : /akbank/i.test(head) ? 'Akbank' : /yap[ıi] ?kredi/i.test(head) ? 'Yapı Kredi' : /i[şs] ?bankas/i.test(head) ? 'İş Bankası' : /ziraat/i.test(head) ? 'Ziraat' : /enpara/i.test(head) ? 'Enpara' : 'Banka';
   const rows = [];
   for (let i = hi + 1; i < aoa.length; i++) {
@@ -14679,9 +14713,53 @@ function _bsParse(aoa) {
     rows.push(row);
   }
   rows.sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : 0);
+  _bsQualify(rows, holder);
   const days = [...new Set(rows.map(r => r.date))].sort();
   return { bank, rows, days, a: 0, b: days.length - 1 };
 }
+// ── V94.8: şüpheli satırları sınıflandır — sabit gider / taksit / düzenli gelir eşleşmesi, transfer, nakit, iade, elle girilmiş ──
+function _bsTok(s) { return _bsNorm(s).replace(/[^a-z0-9 ]+/g, ' ').split(' ').filter(w => w.length >= 3 && !['taksit', 'taksiti', 'odeme', 'aylik', 'kredi'].includes(w)); }
+function _bsNear(a, b, pct) { return Math.abs(a - b) <= Math.max(1, b * pct); }
+function _bsQualify(rows, holder) {
+  const hn = _bsTok(holder).filter(w => w.length >= 4);
+  const used = new Set(); const prefs = data.importPrefs || {};
+  // eskiden yeniye: her kalem her ay bir kez eşleşsin
+  [...rows].sort((a, b) => a.date < b.date ? -1 : 1).forEach(r => {
+    if (r.exists) return;
+    const mk = monthKey(r.date), raw = _bsNorm(r.raw), tag = _bsNorm(r.tag);
+    const kw = (name) => { const t = _bsTok(name); return t.length && t.some(w => raw.includes(w)); };
+    const pick = (list, amtOf, nameOf, kind) => {
+      let best = null, bd = 1e9;
+      list.forEach(x => {
+        const a = amtOf(x); if (!a || used.has(kind + x.id + mk)) return;
+        const exact = _bsNear(r.amount, a, .01), named = kw(nameOf(x)) && (_bsNear(r.amount, a, x.variable ? .6 : .15));
+        if (!exact && !named) return;
+        const d = Math.abs(r.amount - a) / a; if (d < bd) { bd = d; best = x; }
+      });
+      if (best) used.add(kind + best.id + mk);
+      return best;
+    };
+    let q = null;
+    if (r.type === 'expense') {
+      const rec = pick((data.recurring || []).filter(x => x.active !== false), x => x.amount, x => x.desc, 'r');
+      const debt = rec ? null : pick((data.debts || []).filter(x => x.active || (x.paidMonths || []).includes(mk)), x => x.monthlyAmount, x => x.name, 'd');
+      if (rec) q = { kind: (rec.paidMonths || []).includes(mk) ? 'paid' : 'rec', id: rec.id, name: rec.desc };
+      else if (debt) q = { kind: (debt.paidMonths || []).includes(mk) ? 'paid' : 'debt', id: debt.id, name: debt.name };
+      else if (/kredi kart|kart odeme|kart borc|kk odeme/.test(raw) || /kredi karti/.test(tag)) q = { kind: 'transfer' };
+      else if (hn.length && hn.every(w => raw.includes(w))) q = { kind: 'transfer', own: true };
+      else if (tag.includes('para cekme') || /\batm\b|p\.?cekme/.test(raw)) q = prefs.atm ? null : { kind: 'cash' };
+      if (!q && tag.includes('para cekme') && prefs.atm) r.sel = prefs.atm === 'count';
+    } else {
+      const inc = pick((data.recurringIncome || []).filter(x => x.active !== false), x => x.amount, x => x.desc, 'i');
+      if (inc) q = { kind: (inc.paidMonths || []).includes(mk) ? 'paid' : 'inc', id: inc.id, name: inc.desc };
+      else if (hn.length && hn.every(w => raw.includes(w))) q = { kind: 'transfer', own: true };
+      else if (r.refund) q = { kind: 'refund' };
+    }
+    if (!q && r.manual) q = { kind: 'manual' };
+    if (q) { q.done = false; r.q = q; r.sel = false; }
+  });
+}
+function _bsLinkLabel(r) { return r.link ? (r.link.kind === 'rec' ? 'Sabit gider · ' : r.link.kind === 'debt' ? 'Taksit · ' : 'Düzenli gelir · ') + r.link.name : ''; }
 const BS_RULES = [
   [/yemekpay|uber ?eats|getir ?yemek|yemeksepeti|trendyol ?yemek|kebap|pide|restoran|restaurant|cafe|kafe|coffee|kahve|pasta|burger|pizza|d[öo]ner|lokanta|b[üu]fe|starbucks|gida|gıda|bakery|f[ıi]r[ıi]n/i, 'yemek'],
   [/getir\b|market|migros|\bbim\b|a101|\bşok\b|\bsok\b|carrefour|macro|hakmar|file ?market|gratis|watsons/i, 'market'],
@@ -14724,6 +14802,7 @@ function _bsOpen() {
   document.getElementById('bsTicks').innerHTML = idx.map(i => '<span>' + tick(i) + '</span>').join('');
   _bsRender();
   o.classList.add('bs-show'); document.body.style.overflow = 'hidden'; o.scrollTop = 0;
+  setTimeout(_bsQStart, 450); // V94.8: şüpheli satırları tek tek sor
 }
 function rmShort(ds) { const d = new Date(ds + 'T00:00:00'); return d.getDate() + ' ' + MONTH_NAMES[d.getMonth()].slice(0,3); }
 function _bsRange() {
@@ -14737,22 +14816,66 @@ function _bsRender() {
   document.getElementById('bsTo').textContent = rmShort(_bs.days[_bs.b]);
   const fill = document.getElementById('bsFill'); fill.style.left = (_bs.a / n * 100) + '%'; fill.style.right = (100 - _bs.b / n * 100) + '%';
   const vis = _bsVisible();
-  const sel = vis.filter(r => r.sel).length, dup = vis.filter(r => r.exists).length, chk = vis.filter(r => !r.exists && (r.manual || r.refund)).length;
+  const sel = vis.filter(r => r.sel).length, dup = vis.filter(r => r.exists).length, chk = vis.filter(r => r.q && !r.q.done).length;
   document.getElementById('bsStSel').textContent = sel; document.getElementById('bsStDup').textContent = dup; document.getElementById('bsStChk').textContent = chk;
   const go = document.getElementById('bsGo'); go.textContent = sel ? sel + ' işlemi içeri al' : 'İşlem seç'; go.disabled = !sel;
   const hide = !!data.hideAmounts;
   document.getElementById('bsList').innerHTML = vis.length ? vis.map(r => {
     const i = _bs.rows.indexOf(r), c = getCat(r.cat);
-    const note = r.exists ? '' : r.manual ? 'Aynı gün aynı tutarda elle girilmiş bir işlem var' : r.refund ? 'İade / geri ödeme — gelir sayılsın mı?' : '';
+    const ask = r.q && !r.q.done;
     return `<div class="bs-row${r.exists ? ' dim' : ''}" onclick="_bsToggle(${i})">
       <div class="bs-cb${r.sel ? ' on' : ''}">${r.sel ? '✓' : ''}</div>
       <div class="bs-t"><div class="bs-n">${esc(r.desc)}</div>
-        <div class="bs-s">${rmShort(r.date)}<i style="background:${c.color}"></i><span class="bs-cat" onclick="event.stopPropagation();_bsCatOpen(${i})">${esc(c.name)}</span>${r.exists ? '<span style="color:#8A8993">· zaten kayıtlı</span>' : ''}${note ? `<span class="bs-note" onclick="event.stopPropagation();showToast('${note.replace(/'/g, '’')}')">!</span>` : ''}</div></div>
+        <div class="bs-s">${rmShort(r.date)}${r.link ? `<i style="background:var(--accent)"></i><span class="bs-cat bs-link" onclick="event.stopPropagation();_bsAsk(${i})">${esc(_bsLinkLabel(r))}</span>` : `<i style="background:${c.color}"></i><span class="bs-cat" onclick="event.stopPropagation();_bsCatOpen(${i})">${esc(c.name)}</span>`}${r.exists ? '<span style="color:#8A8993">· zaten kayıtlı</span>' : ''}${ask ? `<span class="bs-note" onclick="event.stopPropagation();_bsAsk(${i})">!</span>` : ''}</div></div>
       <div class="bs-a${r.type === 'income' ? ' in' : ''}">${r.type === 'income' ? '+' : '−'}${hide ? '••••' : fmtTL(r.amount)}</div>
     </div>`;
   }).join('') : '<div class="bs-empty">Bu aralıkta işlem yok</div>';
 }
-function _bsToggle(i) { const r = _bs.rows[i]; if (!r || r.exists) return; r.sel = !r.sel; _bsRender(); }
+function _bsToggle(i) { const r = _bs.rows[i]; if (!r || r.exists) return; if (r.q && !r.q.done) { _bsAsk(i); return; } r.sel = !r.sel; _bsRender(); }
+
+// ── V94.8: tek tek soru akışı ──
+let _bsQi = -1, _bsQueue = [];
+function _bsQText(r) {
+  const q = r.q, amt = fmtTL(r.amount), nm = esc(q.name || '');
+  switch (q.kind) {
+    case 'rec':  return { t: nm + ' ödemesi mi?', s: 'Tutar sabit giderin ' + nm + ' ile eşleşiyor. Öyleyse ayrı bir gider olarak değil, bu ayın ' + nm + ' ödemesi olarak işaretlenir; günlük limitten iki kez düşmez.', b: [['link', nm + ' ödemesi olarak işaretle', 1], ['plain', 'Hayır, normal gider'], ['skip', 'Alma']] };
+    case 'debt': return { t: nm + ' taksiti mi?', s: 'Tutar ' + nm + ' taksitiyle eşleşiyor. Öyleyse o ayın taksiti ödendi olarak işaretlenir, ayrı gider sayılmaz.', b: [['link', 'Taksit olarak işaretle', 1], ['plain', 'Hayır, normal gider'], ['skip', 'Alma']] };
+    case 'inc':  return { t: nm + ' geliri mi?', s: 'Tutar düzenli gelirin ' + nm + ' ile eşleşiyor. Öyleyse o ay alındı olarak işaretlenir, gelir iki kez sayılmaz.', b: [['link', nm + ' olarak işaretle', 1], ['plain', 'Hayır, ayrı gelir'], ['skip', 'Alma']] };
+    case 'paid': return { t: nm + ' zaten ödenmiş görünüyor', s: 'Bu ay için ' + nm + ' uygulamada ödendi olarak işaretli. Bu satır aynı ödemeyse almana gerek yok.', b: [['skip', 'Aynı ödeme, alma', 1], ['plain', 'Ayrı bir ödeme, ekle']] };
+    case 'transfer': return q.own
+      ? { t: 'Kendi hesabına transfer mi?', s: 'Açıklamada senin adın geçiyor. Kendi hesapların arasındaki para hareketi gelir ya da gider değildir.', b: [['skip', 'Evet, transfer · alma', 1], ['plain', 'Hayır, ' + (r.type === 'income' ? 'gelir' : 'gider') + ' olarak ekle']] }
+      : { t: 'Kredi kartı ödemesi mi?', s: 'Kart borcu ödemesi yeni bir harcama değildir; harcamaların kendisi kartta zaten sayılır. Almazsan çift sayım olmaz.', b: [['skip', 'Evet, alma', 1], ['plain', 'Hayır, gider olarak ekle']] };
+    case 'cash': return { t: 'Nakit çekim', s: 'Nakit harcamalarını uygulamaya tek tek giriyorsan bu çekimi alma, yoksa iki kez sayılır. Girmiyorsan çekimi gider saymak daha doğru. Cevabın sonraki ekstreler için de hatırlanır.', b: [['skip', 'Nakit harcamalarımı giriyorum · alma', 1], ['plain', 'Girmiyorum · gider say']] };
+    case 'refund': return { t: 'İade mi?', s: 'Bir alışverişin geri ödemesi gibi görünüyor. Gelir olarak eklersen harcamayı dengeler.', b: [['plain', 'Gelir olarak ekle', 1], ['skip', 'Alma']] };
+    case 'manual': return { t: 'Bunu elle girmiş olabilirsin', s: 'Aynı gün aynı tutarda (' + amt + ') elle girdiğin bir işlem var. Aynıysa almana gerek yok.', b: [['skip', 'Aynı işlem, alma', 1], ['plain', 'Farklı, ekle']] };
+  }
+  return { t: '', s: '', b: [] };
+}
+function _bsQStart() {
+  _bsQueue = _bsVisible().filter(r => r.q && !r.q.done).map(r => _bs.rows.indexOf(r));
+  if (_bsQueue.length) { _bsQi = 0; _bsQShow(); }
+}
+function _bsAsk(i) { const r = _bs.rows[i]; if (!r || !r.q) return; if (r.q.done) { r.q.done = false; r.link = null; r.sel = false; } _bsQueue = [i]; _bsQi = 0; _bsQShow(); }
+function _bsQShow() {
+  const i = _bsQueue[_bsQi], r = _bs.rows[i]; if (!r) { _bsQClose(); return; }
+  const T = _bsQText(r), hide = !!data.hideAmounts;
+  document.getElementById('bsQProg').textContent = _bsQueue.length > 1 ? (_bsQi + 1) + ' / ' + _bsQueue.length : '';
+  document.getElementById('bsQRow').innerHTML = `<div class="bs-t"><div class="bs-n">${esc(r.desc)}</div><div class="bs-s">${rmShort(r.date)}</div></div><div class="bs-a${r.type === 'income' ? ' in' : ''}">${r.type === 'income' ? '+' : '−'}${hide ? '••••' : fmtTL(r.amount)}</div>`;
+  document.getElementById('bsQT').innerHTML = T.t; document.getElementById('bsQS').innerHTML = T.s;
+  document.getElementById('bsQB').innerHTML = T.b.map(([a, l, prim]) => `<button class="bs-qbtn${prim ? ' prim' : a === 'skip' && !prim ? ' ghost' : ''}" onclick="_bsQAnswer('${a}')">${l}</button>`).join('');
+  document.getElementById('bsDim').classList.add('on'); document.getElementById('bsQ').classList.add('on');
+}
+function _bsQAnswer(a) {
+  const r = _bs.rows[_bsQueue[_bsQi]]; if (!r) return;
+  r.q.done = true; r.link = null;
+  if (a === 'link') { r.link = { kind: r.q.kind, id: r.q.id, name: r.q.name }; r.sel = true; }
+  else if (a === 'plain') r.sel = true;
+  else r.sel = false;
+  if (r.q.kind === 'cash') { data.importPrefs = data.importPrefs || {}; data.importPrefs.atm = a === 'plain' ? 'count' : 'skip'; }
+  _bsQi++; _bsRender();
+  if (_bsQi < _bsQueue.length) _bsQShow(); else _bsQClose();
+}
+function _bsQClose() { document.getElementById('bsQ').classList.remove('on'); if (!document.getElementById('bsSheet').classList.contains('on')) document.getElementById('bsDim').classList.remove('on'); _bsQi = -1; }
 function _bsCatOpen(i) {
   const r = _bs.rows[i]; if (!r || r.exists) return; _bsCatRow = r;
   document.getElementById('bsSheetLead').textContent = r.desc + ' · ' + (r.type === 'income' ? '+' : '−') + fmtTL(r.amount);
@@ -14765,7 +14888,7 @@ function _bsCatPick(id) {
   if (_bsCatRow) { const k = _bsKey(_bsCatRow.desc); _bs.rows.forEach(x => { if (x !== _bsCatRow && !x.catUser && x.type === _bsCatRow.type && _bsKey(x.desc) === k) x.cat = id; }); }
   _bsCatClose(); _bsRender();
 }
-function _bsCatClose() { document.getElementById('bsDim').classList.remove('on'); document.getElementById('bsSheet').classList.remove('on'); _bsCatRow = null; }
+function _bsCatClose() { document.getElementById('bsDim').classList.remove('on'); document.getElementById('bsSheet').classList.remove('on'); _bsCatRow = null; if (_bsQi >= 0) _bsQClose(); }
 function bsClose() { _bsCatClose(); document.getElementById('bsOverlay').classList.remove('bs-show'); document.body.style.overflow = ''; }
 function bsImport() {
   const rows = _bsVisible().filter(r => r.sel); if (!rows.length) return;
@@ -14773,7 +14896,18 @@ function bsImport() {
   data.importLog = data.importLog || [];
   const batch = 'bs_' + uid(); // V94.2: parti — geri alma için
   rows.forEach(r => {
-    data.transactions.push({ id: uid(), type: r.type, desc: r.desc, amount: r.amount, date: r.date, category: r.cat, budgetId: null, bankRef: r.ref || null, source: 'bank', importBatch: batch, ts: Date.now() });
+    const base = { id: uid(), amount: r.amount, date: r.date, budgetId: null, bankRef: r.ref || null, source: 'bank', importBatch: batch, ts: Date.now() };
+    const mk = monthKey(r.date), L = r.link;
+    if (L && L.kind === 'rec') { const x = data.recurring.find(z => z.id === L.id);
+      if (x) { x.paidMonths = x.paidMonths || []; if (!x.paidMonths.includes(mk)) x.paidMonths.push(mk); x.payHistory = x.payHistory || {}; x.payHistory[mk] = r.amount;
+        data.transactions.push(Object.assign(base, { type: 'expense', desc: x.desc, category: x.category, recurringId: x.id, isRecurring: true })); return; } }
+    if (L && L.kind === 'debt') { const x = data.debts.find(z => z.id === L.id);
+      if (x) { x.paidMonths = x.paidMonths || []; if (!x.paidMonths.includes(mk)) { x.paidMonths.push(mk); x.paidCount = (x.paidCount || 0) + 1; if (x.paidCount >= x.installments) x.active = false; }
+        data.transactions.push(Object.assign(base, { type: 'expense', desc: x.name + ' taksit', category: 'diger', debtId: x.id, isDebt: true })); return; } }
+    if (L && L.kind === 'inc') { const x = (data.recurringIncome || []).find(z => z.id === L.id);
+      if (x) { x.paidMonths = x.paidMonths || []; if (!x.paidMonths.includes(mk)) x.paidMonths.push(mk);
+        data.transactions.push(Object.assign(base, { type: 'income', desc: x.desc, category: x.category, recurringIncomeId: x.id, isRecurringIncome: true })); return; } }
+    data.transactions.push(Object.assign(base, { type: r.type, desc: r.desc, category: r.cat }));
     if (r.catUser) data.importCatMemory[_bsKey(r.desc)] = r.cat;
   });
   data.importLog.push({ id: batch, at: today(), bank: _bs.bank, count: rows.length, from: _bs.days[_bs.a], to: _bs.days[_bs.b] });
@@ -14801,6 +14935,12 @@ function bsUndo(batch) {
   if (!n) { showToast('Geri alınacak işlem kalmamış'); return; }
   const meta = (data.importLog || []).find(l => l.id === batch);
   showConfirm(n + ' işlem silinecek' + (meta ? ' (' + meta.bank + ' · ' + fmtDate(meta.at) + ')' : '') + '. Elle girdiklerine dokunulmaz; aynı ekstreyi sonra yeniden yükleyebilirsin.', () => {
+    data.transactions.filter(pick).forEach(tx => { // V94.8: ödeme eşleşmelerini de geri al (deleteTx ile aynı kurallar)
+      const mk = monthKey(tx.date);
+      if (tx.isRecurring && tx.recurringId) { const x = data.recurring.find(z => z.id === tx.recurringId); if (x) { x.paidMonths = (x.paidMonths || []).filter(m => m !== mk); if (x.payHistory) delete x.payHistory[mk]; } }
+      if (tx.isDebt && tx.debtId) { const x = data.debts.find(z => z.id === tx.debtId); if (x) { x.paidMonths = (x.paidMonths || []).filter(m => m !== mk); x.paidCount = Math.max(0, (x.paidCount || 0) - 1); x.active = true; } }
+      if (tx.isRecurringIncome && tx.recurringIncomeId) { const x = (data.recurringIncome || []).find(z => z.id === tx.recurringIncomeId); if (x) x.paidMonths = (x.paidMonths || []).filter(m => m !== mk); }
+    });
     data.transactions = data.transactions.filter(t => !pick(t));
     if (meta) data.importLog = data.importLog.filter(l => l.id !== batch);
     save(); renderAll();
