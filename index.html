@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V95: Düzenli gelir parça parça alınabilir — "Alındı" tutar sorar (varsayılan kalan), kart "X geldi · Y bekleniyor" gösterir, toplam tutunca o ay tamamlanır; ana sayfada Kalan Para altında "+Y bekleniyor"; günlük limit yalnız gelen parayla hesaplanır. -->
 <!-- V94.9: (1) Kalan para / günlük limit cepteki parayı aşamaz — takip dışı çıkışlar (kart ekstresi ödemesi, geçen ay açığı) artık limite yansır; döküm satırında 'Hesabındaki paraya göre' farkı. (2) Günlük limit tek kaynak: dayLimitFor — ana sayfa, takvim/seri, Günlük Limit Analizi ve Bu Ay grafiği aynı sayıyı kullanır; her günün limiti kaydedilir (data.dayLimitLog), sonradan eklenen sabit gider geçmiş günleri değiştirmez; gelir gelmeden limit çizilmez; grafikte cüzdan harcaması hariç. (3) Taksit ödemeleri listede borç adıyla görünür. -->
 <!-- V94.8: Ekstre — çift sayım koruması: sabit gider / taksit / düzenli gelir tutarı eşleşen satırlar o ayın ödemesi olarak işlenir; kredi kartı ödemesi, kendi hesabına transfer, nakit çekim, iade, elle girilmiş olabilecekler önizleme açılınca tek tek sorulur; geri alma ödendi işaretlerini de geri alır. -->
 <!-- V94.7: V94.6 karakter kartı animasyonları geri alındı (V94.5 tabanı) -->
@@ -5435,15 +5436,18 @@ function renderWalletHero(balance, fb) {
     heroBg = 'rgba(45,184,102,.04)';
   }
 
-  const dailyColor = fb.daily < 0 ? 'var(--danger)' : fb.daily < 150 ? 'var(--warning)' : 'var(--accent)';
-  const remColor   = fb.remaining >= 0 ? 'var(--accent)' : 'var(--danger)';
+  // V95: maaşın kalanı bekleniyor ve açığı kapatıyorsa limit eksi değil "bekliyor" gösterilir
+  const _incWait = _incExpected(monthKey());
+  const _waiting = fb.daily < 0 && _incWait > 0 && fb.remaining + _incWait >= 0;
+  const dailyColor = _waiting ? 'var(--muted)' : fb.daily < 0 ? 'var(--danger)' : fb.daily < 150 ? 'var(--warning)' : 'var(--accent)';
+  const remColor   = _waiting ? 'var(--muted)' : fb.remaining >= 0 ? 'var(--accent)' : 'var(--danger)';
   const todaySpent = fb.todayVarSpent;
   const spentRatio = fb.daily > 0 ? todaySpent / fb.daily : 0;
   const spentColor = todaySpent <= 0
     ? 'var(--muted)'
     : todaySpent > fb.daily ? 'var(--danger)'
     : spentRatio > 0.75 ? 'var(--warning)' : 'var(--accent)';
-  const spentLabel = todaySpent <= 0
+  const spentLabel = _waiting ? 'maaşın kalanı gelince açılır' : todaySpent <= 0
     ? 'henüz harcama yok'
     : todaySpent > fb.daily
       ? `${fmtTL(Math.round(todaySpent))} harcandı — limiti aştın`
@@ -5454,13 +5458,13 @@ function renderWalletHero(balance, fb) {
     <div style="display:flex;justify-content:space-between;align-items:flex-start">
       <div onclick="openDailyLimitSheet()" style="cursor:pointer;-webkit-tap-highlight-color:transparent">
         <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Günlük Limit</div>
-        <div id="heroDaily" style="font-size:36px;font-weight:900;letter-spacing:-1.5px;line-height:1;color:${dailyColor}">${fb.daily < 0 ? '−' : ''}${fmtTL(Math.abs(Math.round(fb.daily)))}</div>
+        <div id="heroDaily" style="font-size:36px;font-weight:900;letter-spacing:-1.5px;line-height:1;color:${dailyColor}">${_waiting ? fmtTL(0) : (fb.daily < 0 ? '−' : '') + fmtTL(Math.abs(Math.round(fb.daily)))}</div>
         <div style="margin-top:6px;font-size:11px;font-weight:600;color:${spentColor}">${spentLabel}</div>
       </div>
       <div style="text-align:right;flex-shrink:0">
         <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Kalan Para</div>
         <div id="heroRemain" style="font-size:22px;font-weight:900;letter-spacing:-1px;line-height:1;color:${remColor}">${fmtTL(Math.round(fb.remaining))}</div>
-        <div style="font-size:11px;color:var(--muted);font-weight:600;margin-top:4px">${fb.daysLeft} gün kaldı</div>
+        <div style="font-size:11px;color:var(--muted);font-weight:600;margin-top:4px">${fb.daysLeft} gün kaldı</div>${(() => { const ex = _incExpected(monthKey()); return ex > 0 ? `<div style="font-size:11px;color:var(--accent);font-weight:700;margin-top:3px;opacity:.85">+${fmtTL(Math.round(ex))} bekleniyor</div>` : ''; })()}
       </div>
     </div>` : '';
 
@@ -7667,16 +7671,17 @@ function renderIncomeList() {
   el.innerHTML = items.map(r => {
     const received = isPaidThisMonth(r, mk);
     const cat = getCat(r.category);
+    const got = received ? 0 : _incReceived(r, mk), partial = got > 0; // V95
     return `<div class="rec-item ${received?'paid-item':''}" id="incitem_${r.id}" onclick="toggleItemExpand('incitem_${r.id}')">
       <div style="flex:1;display:flex;align-items:center;gap:12px">
         <div class="rec-icon" style="background:${received?'rgba(45,184,102,.12)':'var(--surface3)'}; transition:background .2s" onclick="event.stopPropagation();toggleRecIncome('${r.id}')">${catIconSvg(cat,20)}</div>
         <div class="rec-info" style="flex:1;min-width:0;pointer-events:none">
           <div class="rec-name" style="opacity:${received?'0.5':'1'};text-decoration:${received?'line-through':'none'}">${esc(r.desc)}</div>
-          <div class="rec-meta">${esc(cat.name)} · ${fmtTL(r.amount)}/ay</div>
+          <div class="rec-meta">${partial ? `<span style="color:var(--accent)">${fmtTL(got)} geldi</span> · ${fmtTL(r.amount - got)} bekleniyor` : `${esc(cat.name)} · ${fmtTL(r.amount)}/ay`}</div>
         </div>
         <div class="rec-status" onclick="event.stopPropagation();toggleRecIncome('${r.id}')">
           <div class="rec-status-badge ${received?'paid':'unpaid'}" style="${received?'':'background:rgba(45,184,102,.1);color:var(--accent);border:1px solid rgba(45,184,102,.3)'}">${received?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> Alındı':'Al'}</div>
-          <div class="rec-status-amount" style="color:${received?'var(--accent)':'var(--text)'}">${fmtTL(r.amount)}</div>
+          <div class="rec-status-amount" style="color:${received||partial?'var(--accent)':'var(--text)'}">${partial ? fmtTL(got) + '<span style="color:var(--muted);font-weight:700"> / ' + fmtTL(r.amount) + '</span>' : fmtTL(r.amount)}</div>
         </div>
       </div>
       <div class="item-actions-row"><div class="item-actions-inner">
@@ -7687,6 +7692,9 @@ function renderIncomeList() {
   }).join('');
 }
 
+// V95: düzenli gelir parça parça alınabilir — bu ay gelen toplam
+function _incReceived(r, mk) { return data.transactions.filter(t => t.recurringIncomeId === r.id && monthKey(t.date) === mk).reduce((s, t) => s + t.amount, 0); }
+function _incExpected(mk) { return (data.recurringIncome || []).filter(r => r.active && !(r.paidMonths || []).includes(mk)).reduce((s, r) => s + Math.max(0, r.amount - _incReceived(r, mk)), 0); }
 function toggleRecIncome(id) {
   const mk = currentMonth;
   const r = (data.recurringIncome || []).find(r => r.id === id);
@@ -7696,13 +7704,10 @@ function toggleRecIncome(id) {
     r.paidMonths = r.paidMonths.filter(m => m !== mk);
     data.transactions = data.transactions.filter(t => !(t.recurringIncomeId === id && monthKey(t.date) === mk));
     showToast('↩ ' + esc(r.desc) + ' geliri geri alındı');
-  } else {
-    r.paidMonths.push(mk);
-    data.transactions = data.transactions.filter(t => !(t.recurringIncomeId === id && monthKey(t.date) === mk));
-    data.transactions.push({ id: uid(), type: 'income', desc: r.desc, amount: r.amount, date: today(), category: r.category, recurringIncomeId: id, isRecurringIncome: true, ts: Date.now() });
-    showToast(TOAST_OK + ' ' + esc(r.desc) + ' alındı olarak kaydedildi');
+    save(); renderAll();
+    return;
   }
-  save(); renderAll();
+  openIncAmtSheet(id); // V95: ne kadar geldiğini sor
 }
 
 function deleteRecIncome(id) {
@@ -11192,7 +11197,8 @@ function updateCollapseSummaries() {
     const active = (data.recurringIncome || []).filter(r => r.active);
     const total = active.reduce((s,r) => s + r.amount, 0);
     const received = active.filter(r => isPaidThisMonth(r, mk)).length;
-    incEl.textContent = active.length ? `${received}/${active.length} alındı · ${fmtTL(total)}/ay` : 'Henüz gelir yok';
+    const _got = active.reduce((a, r) => a + ((r.paidMonths || []).includes(mk) ? r.amount : _incReceived(r, mk)), 0); // V95: kısmi gelir
+    incEl.textContent = active.length ? (_got > 0 && _got < total ? `${fmtTL(_got)} / ${fmtTL(total)} geldi` : `${received}/${active.length} alındı · ${fmtTL(total)}/ay`) : 'Henüz gelir yok';
   }
   const recEl = document.getElementById('recSummary');
   if (recEl) {
@@ -13459,11 +13465,13 @@ function addGoalNew() {
 }
 
 // =================== VARIABLE AMOUNT ===================
-let _varAmtRecId = null;
+let _varAmtRecId = null, _varAmtMode = 'exp'; // V95: 'exp' değişken gider · 'inc' düzenli gelir
 function openVarAmtSheet(recId) {
   const r = data.recurring.find(r => r.id === recId);
   if (!r) return;
-  _varAmtRecId = recId;
+  _varAmtRecId = recId; _varAmtMode = 'exp';
+  const _btn = document.getElementById('varAmtBtn'); if (_btn) _btn.textContent = 'Öde';
+  const _und = document.getElementById('varAmtUndo'); if (_und) _und.hidden = true;
   document.getElementById('varAmtTitle').textContent = r.desc;
   document.getElementById('varAmtSub').textContent = 'Tahmini tutar: ' + fmtTL(r.amount);
   document.getElementById('varAmtHint').textContent = 'Boş bırakırsan ' + fmtTL(r.amount) + ' kullanılır.';
@@ -13472,12 +13480,47 @@ function openVarAmtSheet(recId) {
   document.body.style.overflow = 'hidden';
   setTimeout(() => document.getElementById('varAmtInput')?.focus(), 300);
 }
+function openIncAmtSheet(id) {
+  const r = (data.recurringIncome || []).find(r => r.id === id); if (!r) return;
+  const mk = currentMonth, got = _incReceived(r, mk), left = Math.max(0, r.amount - got);
+  _varAmtRecId = id; _varAmtMode = 'inc';
+  document.getElementById('varAmtTitle').textContent = r.desc + ' · ne kadar geldi?';
+  document.getElementById('varAmtSub').textContent = got > 0 ? ('Gelen ' + fmtTL(got) + ' / ' + fmtTL(r.amount) + ' · kalan ' + fmtTL(left)) : ('Beklenen: ' + fmtTL(r.amount));
+  document.getElementById('varAmtHint').textContent = 'Bir kısmı geldiyse sadece geleni yaz; kalanı geldiğinde tekrar eklersin.';
+  const inp = document.getElementById('varAmtInput'); inp.value = left ? fmtNum(Math.round(left)) : '';
+  document.getElementById('varAmtBtn').textContent = 'Kaydet';
+  const und = document.getElementById('varAmtUndo'); und.hidden = !(got > 0);
+  document.getElementById('varAmtSheetOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => { inp.focus(); inp.select && inp.select(); }, 300);
+}
+function undoIncMonth() {
+  const r = (data.recurringIncome || []).find(r => r.id === _varAmtRecId); if (!r) return;
+  const mk = currentMonth;
+  r.paidMonths = (r.paidMonths || []).filter(m => m !== mk);
+  data.transactions = data.transactions.filter(t => !(t.recurringIncomeId === r.id && monthKey(t.date) === mk));
+  save(); closeVarAmtSheet(); renderAll();
+  showToast('↩ ' + esc(r.desc) + ' bu ay için geri alındı');
+}
 function closeVarAmtSheet() {
   document.getElementById('varAmtSheetOverlay').classList.remove('show');
   document.body.style.overflow = '';
   _varAmtRecId = null;
 }
 function confirmVarAmt() {
+  if (_varAmtMode === 'inc') { // V95: düzenli gelir — kısmi alma
+    const r = (data.recurringIncome || []).find(r => r.id === _varAmtRecId); if (!r) return;
+    const mk = currentMonth, got = _incReceived(r, mk), left = Math.max(0, r.amount - got);
+    const v = parseNum(document.getElementById('varAmtInput').value), amt = v > 0 ? v : left;
+    if (!(amt > 0)) { closeVarAmtSheet(); return; }
+    if (!r.paidMonths) r.paidMonths = [];
+    data.transactions.push({ id: uid(), type: 'income', desc: r.desc, amount: amt, date: today(), category: r.category, recurringIncomeId: r.id, isRecurringIncome: true, ts: Date.now() });
+    const tot = got + amt, rest = Math.max(0, r.amount - tot);
+    if (rest < 1 && !r.paidMonths.includes(mk)) r.paidMonths.push(mk);
+    save(); closeVarAmtSheet(); renderAll();
+    showToast(TOAST_OK + ' ' + fmtTL(amt) + ' alındı' + (rest >= 1 ? ' · ' + fmtTL(rest) + ' bekleniyor' : ' · ' + esc(r.desc) + ' tamamlandı'));
+    return;
+  }
   const r = data.recurring.find(r => r.id === _varAmtRecId);
   if (!r) return;
   const mk = currentMonth;
@@ -14246,7 +14289,8 @@ setInterval(checkMonthRollover, 60000);
         <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:16px;font-weight:800;color:var(--muted)">&#8378;</span>
       </div>
       <div style="font-size:11px;color:var(--muted);margin-bottom:16px" id="varAmtHint"></div>
-      <button class="btn btn-primary btn-full" onclick="confirmVarAmt()">Öde</button>
+      <button class="btn btn-primary btn-full" id="varAmtBtn" onclick="confirmVarAmt()">Öde</button>
+      <button id="varAmtUndo" hidden onclick="undoIncMonth()" style="display:block;width:100%;margin-top:10px;padding:10px;border:none;background:none;color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">Bu ayki girişleri geri al</button>
     </div>
   </div>
 </div>
@@ -14905,8 +14949,10 @@ function bsImport() {
       if (x) { x.paidMonths = x.paidMonths || []; if (!x.paidMonths.includes(mk)) { x.paidMonths.push(mk); x.paidCount = (x.paidCount || 0) + 1; if (x.paidCount >= x.installments) x.active = false; }
         data.transactions.push(Object.assign(base, { type: 'expense', desc: x.name + ' taksit', category: 'diger', debtId: x.id, isDebt: true })); return; } }
     if (L && L.kind === 'inc') { const x = (data.recurringIncome || []).find(z => z.id === L.id);
-      if (x) { x.paidMonths = x.paidMonths || []; if (!x.paidMonths.includes(mk)) x.paidMonths.push(mk);
-        data.transactions.push(Object.assign(base, { type: 'income', desc: x.desc, category: x.category, recurringIncomeId: x.id, isRecurringIncome: true })); return; } }
+      if (x) { x.paidMonths = x.paidMonths || [];
+        data.transactions.push(Object.assign(base, { type: 'income', desc: x.desc, category: x.category, recurringIncomeId: x.id, isRecurringIncome: true }));
+        if (!x.paidMonths.includes(mk) && _incReceived(x, mk) >= x.amount - 0.5) x.paidMonths.push(mk); // V95: parça parça gelirse toplam tutunca tamam
+        return; } }
     data.transactions.push(Object.assign(base, { type: r.type, desc: r.desc, category: r.cat }));
     if (r.catUser) data.importCatMemory[_bsKey(r.desc)] = r.cat;
   });
