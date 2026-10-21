@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V95.1: Ekstra taksit — o ayın taksiti ödenmiş borçlarda "Ekstra öde" düğmesi; ödeme serbest paradan düşer (günün harcaması sayılmaz), tam taksit tutarı kalan taksiti bir azaltır, artan ön ödeme olarak bekler; pencere limit ve bitiş tarihine etkisini önceden gösterir; silince geri alınır. -->
 <!-- V95: Düzenli gelir parça parça alınabilir — "Alındı" tutar sorar (varsayılan kalan), kart "X geldi · Y bekleniyor" gösterir, toplam tutunca o ay tamamlanır; ana sayfada Kalan Para altında "+Y bekleniyor"; günlük limit yalnız gelen parayla hesaplanır. -->
 <!-- V94.9: (1) Kalan para / günlük limit cepteki parayı aşamaz — takip dışı çıkışlar (kart ekstresi ödemesi, geçen ay açığı) artık limite yansır; döküm satırında 'Hesabındaki paraya göre' farkı. (2) Günlük limit tek kaynak: dayLimitFor — ana sayfa, takvim/seri, Günlük Limit Analizi ve Bu Ay grafiği aynı sayıyı kullanır; her günün limiti kaydedilir (data.dayLimitLog), sonradan eklenen sabit gider geçmiş günleri değiştirmez; gelir gelmeden limit çizilmez; grafikte cüzdan harcaması hariç. (3) Taksit ödemeleri listede borç adıyla görünür. -->
 <!-- V94.8: Ekstre — çift sayım koruması: sabit gider / taksit / düzenli gelir tutarı eşleşen satırlar o ayın ödemesi olarak işlenir; kredi kartı ödemesi, kendi hesabına transfer, nakit çekim, iade, elle girilmiş olabilecekler önizleme açılınca tek tek sorulur; geri alma ödendi işaretlerini de geri alır. -->
@@ -4573,7 +4574,7 @@ function _budgetChargeUntil(mk, dateStr) {
 }
 // V93.1: serbest (cüzdansız, sabit/borç/hedef dışı) gider mi?
 function _isFreeVarTx(t) {
-  return t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit && !budgetForTx(t);
+  return t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isDebtExtra && !t.isGoalDeposit && !budgetForTx(t);
 }
 
 // ═══ V94.9: günlük limit — tek kaynak ═══
@@ -4592,7 +4593,8 @@ function _dayLimitCalc(dateStr) {
   const income = until.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
   if (!income) return null;
   const F = _fixedTotalsFor(mk);
-  const available = income - F.recTotal - F.debtTotal - F.goalTotal - F.savTarget - _budgetChargeUntil(mk, dateStr);
+  const available = income - F.recTotal - F.debtTotal - F.goalTotal - F.savTarget - _budgetChargeUntil(mk, dateStr)
+    - until.filter(t => t.isDebtExtra).reduce((s, t) => s + t.amount, 0); // V95.1
   const daySpent = until.filter(t => t.date === dateStr && _isFreeVarTx(t)).reduce((s, t) => s + t.amount, 0);
   const pastVar = Math.max(0, until.filter(_isFreeVarTx).reduce((s, t) => s + t.amount, 0) - daySpent);
   const d = +dateStr.slice(8, 10), left = Math.max(1, daysInMonth(mk) - d + 1);
@@ -5221,6 +5223,7 @@ function calcFreeBudget(mk) {
 
   const paidFixed = txs.filter(t => t.isRecurring || t.isDebt || t.isGoalDeposit)
     .reduce((s, t) => s + t.amount, 0);
+  const debtExtra = txs.filter(t => t.isDebtExtra).reduce((s, t) => s + t.amount, 0); // V95.1: ekstra taksit
 
   const isCurrentMonth = mk === monthKey();
   const todayStr = today();
@@ -5233,7 +5236,7 @@ function calcFreeBudget(mk) {
     const attrTM = {};
     let freeVar = 0, freeToday = 0;
     txs.forEach(t => {
-      if (t.type !== 'expense' || t.isRecurring || t.isDebt || t.isGoalDeposit) return;
+      if (t.type !== 'expense' || t.isRecurring || t.isDebt || t.isDebtExtra || t.isGoalDeposit) return;
       const b = budgetForTx(t);
       if (b) { attrTM[b.id] = (attrTM[b.id] || 0) + t.amount; }
       else { freeVar += t.amount; if (t.date === todayStr) freeToday += t.amount; }
@@ -5246,14 +5249,14 @@ function calcFreeBudget(mk) {
     varSpent = freeVar;
     todayVarSpent = freeToday;
   } else {
-    varSpent = Math.max(0, expense - paidFixed);
+    varSpent = Math.max(0, expense - paidFixed - debtExtra);
     todayVarSpent = isCurrentMonth
-      ? txs.filter(t => t.date === todayStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+      ? txs.filter(t => t.date === todayStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isDebtExtra && !t.isGoalDeposit)
           .reduce((s, t) => s + t.amount, 0)
       : 0;
   }
 
-  let available = (income - recTotal - debtTotal - goalTotal - savTarget) - budgetCharge;
+  let available = (income - recTotal - debtTotal - goalTotal - savTarget) - budgetCharge - debtExtra; // V95.1
   // V94.9: cepteki paradan fazlası harcanabilir gösterilmez. Takip dışı çıkışlar (kart ekstresi ödemesi, geçen aydan devreden açık)
   // hesaptan düşmüş ama bütçeye girmemiş olabilir → kalan para = min(bütçe, bakiye − ödenmemiş sabitler − birikim hedefi − cüzdanlarda kalan)
   let capGap = 0;
@@ -5528,7 +5531,7 @@ let _heroIdx = 0;
 const WALLET_COLORS = ['#2DB866','#0A84FF','#BF5AF2','#F97316','#FBBF24','#EC4899','#34D399','#8B5CF6','#FF453A','#5AC8FA'];
 function _pickWalletColor() { return WALLET_COLORS[(data.budgets || []).length % WALLET_COLORS.length]; }
 function budgetForTx(t) {
-  if (!t || t.type !== 'expense' || t.isRecurring || t.isDebt || t.isGoalDeposit) return null;
+  if (!t || t.type !== 'expense' || t.isRecurring || t.isDebt || t.isDebtExtra || t.isGoalDeposit) return null;
   if (t.budgetId) { const fb = (data.budgets || []).find(b => b.id === t.budgetId); if (fb) return fb; }
   return null;
 }
@@ -5941,7 +5944,7 @@ function buildCarouselItems(fb) {
     const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
     const ydStr = localDateStr(yesterday);
     const ydSpent = data.transactions
-      .filter(t => t.date === ydStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+      .filter(t => t.date === ydStr && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isDebtExtra && !t.isGoalDeposit)
       .reduce((s,t) => s + t.amount, 0);
     const betterThanYesterday = ydSpent > 0 && fb.todayVarSpent < ydSpent * 0.8;
 
@@ -6238,7 +6241,7 @@ function renderTxList(container, txs, limitTo5, prefix) {
       const iconBg  = isCardPay ? 'rgba(255,255,255,.07)' : isIncome ? 'rgba(45,184,102,.18)' : 'rgba(231,76,60,.15)';
       const iconStroke = isCardPay ? '#6E6D78' : isIncome ? '#2DB866' : '#e74c3c';
       const domId = pfx + t.id;
-      const catName = isCardPay ? (t.desc || 'Ekstre Ödemesi') : (t.isDebt && t.desc) ? t.desc : cat.name; // V94.9: taksitler borç adıyla
+      const catName = isCardPay ? (t.desc || 'Ekstre Ödemesi') : ((t.isDebt || t.isDebtExtra) && t.desc) ? t.desc : cat.name; // V94.9: taksitler borç adıyla
       const hasDesc = !isCardPay && t.desc && t.desc !== catName;
       const rawIcon = isCardPay ? CC_ICON : (_iconSvgById(cat.id) || _iconSvgById(cat.emoji) || CAT_ICONS.diger);
       const iconHtml = rawIcon
@@ -6449,7 +6452,7 @@ function openEditTx(id) {
   }
   _editTxId = id;
   _editTxCat = tx.category;
-  const isFixed = tx.isRecurring || tx.isDebt || tx.isGoalDeposit;
+  const isFixed = tx.isRecurring || tx.isDebt || tx.isDebtExtra || tx.isGoalDeposit;
 
   document.getElementById('editTxDesc').value = tx.desc;
   document.getElementById('editTxAmount').value = fmtTL(tx.amount).replace('₺','');
@@ -6535,7 +6538,7 @@ function closeTxEdit() {
 function saveTxEdit() {
   const tx = data.transactions.find(t => t.id === _editTxId);
   if (!tx) return;
-  const isFixed = tx.isRecurring || tx.isDebt || tx.isGoalDeposit;
+  const isFixed = tx.isRecurring || tx.isDebt || tx.isDebtExtra || tx.isGoalDeposit;
   const desc = document.getElementById('editTxDesc').value.trim();
   const amount = isFixed ? tx.amount : parseNum(document.getElementById('editTxAmount').value);
   const date = document.getElementById('editTxDate').value;
@@ -6603,6 +6606,7 @@ function deleteTx(id, pfx) {
   const domId = (pfx || '') + id;
   if (expandedTx === domId) expandedTx = null;
   data.transactions = data.transactions.filter(t=>t.id!==id);
+  if (tx.isDebtExtra && tx.debtId) { const d = data.debts.find(x => x.id === tx.debtId); if (d) _debtRecalcExtra(d); } // V95.1
   save(); renderAll();
   // Refresh history overlay list if open
   const histOverlay = document.getElementById('historyOverlay');
@@ -7977,7 +7981,7 @@ function renderDebtList() {
 >${borcIconSvg(20)}</div>
         <div class="rec-info" style="flex:1;min-width:0;pointer-events:none">
           <div class="rec-name" style="opacity:${(paid||done)?'0.5':'1'};text-decoration:${paid||done?'line-through':'none'}">${esc(d.name)}</div>
-          <div class="rec-meta">${d.paidCount}/${d.installments} taksit · ${fmtTL(d.monthlyAmount)}/ay</div>
+          <div class="rec-meta">${d.paidCount}/${d.installments} taksit · ${fmtTL(d.monthlyAmount)}/ay${d.extraCredit > 0 ? ` · <span style="color:var(--accent)">+${fmtTL(Math.round(d.extraCredit))} ön ödeme</span>` : ''}</div>
           <div style="height:3px;background:var(--surface3);border-radius:2px;margin-top:6px;overflow:hidden">
             <div style="width:${pct}%;height:100%;background:${done?'var(--accent)':paid?'var(--accent)':'rgba(255,69,58,.5)'};border-radius:2px;transition:width .5s ease"></div>
           </div>
@@ -7992,6 +7996,7 @@ function renderDebtList() {
       </div>
       <div class="item-actions-row"><div class="item-actions-inner">
         <button class="icon-action-btn stats" onclick="event.stopPropagation();openStatsPage('debt','${d.id}')"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20v-8a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v8"/><path d="M10 20v-12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12"/><path d="M17 20v-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M3 20h18"/></svg>İstatistik</button>
+        ${paid && !done && !future ? `<button class="icon-action-btn stats" style="flex:1.6;white-space:nowrap;border-color:rgba(255,69,58,.28);background:rgba(255,69,58,.07);color:#FF6B60" onclick="event.stopPropagation();openDebtExtraSheet('${d.id}')"><svg viewBox="0 0 24 24" width="13" height="13" style="stroke:#FF6B60"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Ekstra öde</button>` : ''}
         ${!done ? `<button class="icon-action-btn edit-sm" onclick="event.stopPropagation();startEditDebt('${d.id}')"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Düzenle</button>` : ''}
         <button class="icon-action-btn danger-sm" onclick="event.stopPropagation();deleteDebt('${d.id}')"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Sil</button>
       </div></div>
@@ -8045,6 +8050,68 @@ function togglePaidDebt(id) {
     }
   }
   save(); renderAll();
+}
+
+// ═══ V95.1: ekstra taksit ═══
+// Ekstra ödemeler toplanır; her tam taksit tutarı kalan taksit sayısını bir azaltır, artanı "ön ödeme" olarak bekler.
+function _debtRecalcExtra(d) {
+  const sum = data.transactions.filter(t => t.isDebtExtra && t.debtId === d.id).reduce((s, t) => s + t.amount, 0);
+  const regular = (d.paidCount || 0) - (d.extraInst || 0);
+  const room = Math.max(0, (d.installments || 0) - regular);
+  const inst = d.monthlyAmount > 0 ? Math.min(room, Math.floor((sum + 0.5) / d.monthlyAmount)) : 0;
+  d.extraInst = inst; d.extraCredit = Math.max(0, sum - inst * d.monthlyAmount);
+  d.paidCount = regular + inst;
+  d.active = d.paidCount < (d.installments || 0);
+}
+function _mkLabelShort(mk) { const [y, m] = mk.split('-').map(Number); return MONTH_NAMES[m - 1] + ' ' + y; }
+function _dxEndMk(d, extraAmt) {
+  const mk = monthKey(), credit = (d.extraCredit || 0) + (extraAmt || 0);
+  const adv = d.monthlyAmount > 0 ? Math.floor((credit + 0.5) / d.monthlyAmount) : 0;
+  const left = Math.max(0, (d.installments || 0) - (d.paidCount || 0) - adv);
+  return { left, end: left > 0 ? addMonthsToMk(mk, left) : null };
+}
+function openDebtExtraSheet(id) {
+  const d = data.debts.find(x => x.id === id); if (!d) return;
+  _varAmtRecId = id; _varAmtMode = 'debtx';
+  const left = Math.max(0, d.installments - d.paidCount);
+  document.getElementById('varAmtTitle').textContent = d.name + ' · ekstra taksit';
+  document.getElementById('varAmtSub').textContent = 'Bu ayki taksit ödendi · ' + left + ' taksit kaldı' + (d.extraCredit > 0 ? ' · ' + fmtTL(Math.round(d.extraCredit)) + ' ön ödeme var' : '');
+  const inp = document.getElementById('varAmtInput');
+  inp.value = fmtNum(Math.round(Math.max(0, d.monthlyAmount - (d.extraCredit || 0))));
+  inp.oninput = () => { fmtInput(inp); _dxPreview(); };
+  document.getElementById('varAmtBtn').textContent = 'Öde';
+  document.getElementById('varAmtUndo').hidden = true;
+  _dxPreview();
+  document.getElementById('varAmtSheetOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => { inp.focus(); inp.select && inp.select(); }, 300);
+}
+function _dxOwed(d) { return Math.max(0, ((d.installments || 0) - (d.paidCount || 0)) * (d.monthlyAmount || 0) - (d.extraCredit || 0)); }
+function _dxPreview() {
+  const d = data.debts.find(x => x.id === _varAmtRecId); if (!d) return;
+  let amt = parseNum(document.getElementById('varAmtInput').value) || 0, owed = _dxOwed(d);
+  if (amt > owed) amt = owed;
+  const fb = calcFreeBudget(monthKey()), ov = (data.dailyOverride || {})[monthKey()] > 0;
+  const now = Math.round(fb.daily), after = ov ? now : Math.round(fb.daily - amt / Math.max(1, fb.daysLeft));
+  const e0 = _dxEndMk(d, 0), e1 = _dxEndMk(d, amt);
+  const endTxt = e1.left === 0 ? '<b style="color:var(--accent)">bu ödemeyle bitiyor</b>' : (e1.end !== e0.end ? `<span style="color:var(--muted)">${_mkLabelShort(e0.end)}</span> → <b style="color:var(--accent)">${_mkLabelShort(e1.end)}</b>` : `<b style="color:var(--text)">${_mkLabelShort(e1.end)}</b> <span style="color:var(--muted)">· kalan borç azalır</span>`);
+  const line = (l, r) => `<div style="display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:700"><span style="color:var(--muted)">${l}</span><span style="text-align:right">${r}</span></div>`;
+  document.getElementById('varAmtHint').innerHTML = `<div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+    ${line('Günlük limit', `<span style="color:var(--muted)">${fmtTL(now)}</span> → <b style="color:${after < 0 ? 'var(--danger)' : 'var(--text)'}">${after < 0 ? '−' : ''}${fmtTL(Math.abs(after))}</b>`)}
+    ${line('Borç bitişi', endTxt)}
+    <div style="font-size:11px;color:var(--muted);margin-top:2px">Serbest paranden çıkar; bugünü kırmızıya boyamaz.</div></div>`;
+}
+function _confirmDebtExtra() {
+  const d = data.debts.find(x => x.id === _varAmtRecId); if (!d) return;
+  let amt = parseNum(document.getElementById('varAmtInput').value);
+  if (!(amt > 0)) { closeVarAmtSheet(); return; }
+  const owed = _dxOwed(d); if (owed <= 0) { closeVarAmtSheet(); return; }
+  amt = Math.min(amt, owed); // kalan borçtan fazlası ödenmez
+  data.transactions.push({ id: uid(), type: 'expense', desc: d.name + ' · ekstra taksit', amount: amt, date: today(), category: 'diger', debtId: d.id, isDebtExtra: true, ts: Date.now() });
+  _debtRecalcExtra(d);
+  save(); closeVarAmtSheet(); renderAll();
+  if (!d.active) showToast(TOAST_OK + ' ' + esc(d.name) + ' tamamen kapandı');
+  else { const e = _dxEndMk(d, 0); showToast(TOAST_OK + ' ' + fmtTL(amt) + ' ekstra ödendi · ' + e.left + ' taksit kaldı'); }
 }
 
 let _editDebtId = null;
@@ -8622,7 +8689,7 @@ function calcWishProjection(wish, fb) {
   const daysLeft = Math.max(1, dim - todayD);
   const pastTxs = data.transactions.filter(t =>
     monthKey(t.date) === mk && t.type === 'expense' &&
-    !t.isRecurring && !t.isDebt && !t.isGoalDeposit && t.date !== today()
+    !t.isRecurring && !t.isDebt && !t.isDebtExtra && !t.isGoalDeposit && t.date !== today()
   );
   const pastDays = Math.max(1, todayD - 1);
   const avgPastDaily = pastTxs.reduce((s,t) => s+t.amount, 0) / pastDays;
@@ -9200,7 +9267,7 @@ function addMonthsToMk(mk, n) {
 function _mkLabel(mk) { const [y, m] = mk.split('-').map(Number); return MONTH_NAMES[m-1] + ' ' + y; }
 function _catMonthTotal(mk, catId) {
   return data.transactions
-    .filter(t => monthKey(t.date) === mk && t.type === 'expense' && t.category === catId && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+    .filter(t => monthKey(t.date) === mk && t.type === 'expense' && t.category === catId && !t.isRecurring && !t.isDebt && !t.isDebtExtra && !t.isGoalDeposit)
     .reduce((s, t) => s + t.amount, 0);
 }
 
@@ -9241,7 +9308,7 @@ function _adviceCtx() {
   const prevMks = [prevMonthKey(1), prevMonthKey(2), prevMonthKey(3)];
   const catAvgSum = {}, catCnt = {}, prevVar = [];
   prevMks.forEach(pmk => {
-    const txs = data.transactions.filter(t => monthKey(t.date) === pmk && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit);
+    const txs = data.transactions.filter(t => monthKey(t.date) === pmk && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isDebtExtra && !t.isGoalDeposit);
     if (txs.length) {
       prevVar.push(txs.reduce((s, t) => s + t.amount, 0));
       const by = {};
@@ -9276,7 +9343,7 @@ function _buildAdviceCards(ctx) {
     const baseMks = [prevMonthKey(2), prevMonthKey(3), prevMonthKey(4)];
     const catsLast = {};
     data.transactions
-      .filter(t => monthKey(t.date) === pm1 && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+      .filter(t => monthKey(t.date) === pm1 && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isDebtExtra && !t.isGoalDeposit)
       .forEach(t => { catsLast[t.category] = (catsLast[t.category] || 0) + t.amount; });
     let bestImp = null;
     Object.entries(catsLast).forEach(([id, lastAmt]) => {
@@ -9397,7 +9464,7 @@ function _buildAdviceCards(ctx) {
   {
     const by = {};
     data.transactions
-      .filter(t => monthKey(t.date) === mk && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+      .filter(t => monthKey(t.date) === mk && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isDebtExtra && !t.isGoalDeposit)
       .forEach(t => { by[t.category] = (by[t.category] || 0) + t.amount; });
     let best = null;
     Object.entries(by).forEach(([id, amt]) => {
@@ -9539,7 +9606,7 @@ function renderMonthlyReportCard() {
 
   const by = {};
   data.transactions
-    .filter(t => monthKey(t.date) === pm && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+    .filter(t => monthKey(t.date) === pm && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isDebtExtra && !t.isGoalDeposit)
     .forEach(t => { by[t.category] = (by[t.category] || 0) + t.amount; });
   const top = Object.entries(by).sort((a, b) => b[1] - a[1])[0];
 
@@ -10529,7 +10596,7 @@ function _planLeaks() {
   const cs = c.getFullYear() + '-' + String(c.getMonth()+1).padStart(2,'0') + '-' + String(c.getDate()).padStart(2,'0');
   const by = {};
   (data.transactions||[]).forEach(t => {
-    if (t.type !== 'expense' || t.isRecurring || t.isDebt || t.isGoalDeposit || t.type === 'cardpay') return;
+    if (t.type !== 'expense' || t.isRecurring || t.isDebt || t.isDebtExtra || t.isGoalDeposit || t.type === 'cardpay') return;
     if (!t.date || t.date < cs) return;
     const nm = (t.desc||'').trim();
     const key = nm.toLocaleLowerCase('tr') || ('cat:' + (t.category||''));
@@ -11447,7 +11514,7 @@ function _hIcon(paths, c, sw) { return '<svg width="19" height="19" viewBox="0 0
 function renderHabits() {
   const sec = document.getElementById('habitsSection');
   if (!sec) return;
-  const vex = data.transactions.filter(t => t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit);
+  const vex = data.transactions.filter(t => t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isDebtExtra && !t.isGoalDeposit);
   const dates = vex.map(t => t.date).sort();
   const span = dates.length ? Math.round((new Date(dates[dates.length-1]+'T00:00:00') - new Date(dates[0]+'T00:00:00')) / 86400000) : 0;
   if (vex.length < 12 || span < 14) { sec.style.display = 'none'; return; }  // yeterli veri yoksa gizli
@@ -12177,7 +12244,7 @@ function renderYillik() {
     const mk = viewYear + '-' + String(m).padStart(2,'0');
     const { income, expense, txs } = calcMonthData(mk);
     // Borç ödemeleri bu ayda
-    const debtPaid = txs.filter(t => t.isDebt).reduce((s,t) => s + t.amount, 0);
+    const debtPaid = txs.filter(t => t.isDebt || t.isDebtExtra).reduce((s,t) => s + t.amount, 0); // V95.1: ekstra taksit de borç ödemesi
     // Birikim yatırımları bu ayda
     const savDeposit = txs.filter(t => t.isGoalDeposit).reduce((s,t) => s + t.amount, 0);
     // V90 Fix#9: sabit (recurring) giderler de "değişken"e sızmasın
@@ -12332,7 +12399,7 @@ function renderYillik() {
     if (!hasData) {
       catsEl.style.display = 'none';
     } else {
-      const yearTxs = data.transactions.filter(t => t.date && t.date.startsWith(String(viewYear)) && t.type === 'expense' && !t.isGoalDeposit && !t.isDebt);
+      const yearTxs = data.transactions.filter(t => t.date && t.date.startsWith(String(viewYear)) && t.type === 'expense' && !t.isGoalDeposit && !t.isDebt && !t.isDebtExtra);
       const byCat = {};
       yearTxs.forEach(t => { byCat[t.category] = (byCat[t.category]||0) + t.amount; });
       const sorted = Object.entries(byCat).sort((a,b) => b[1]-a[1]).slice(0,5);
@@ -13255,7 +13322,7 @@ function _maybeMonthClose() {
     const kal = income - expense;
     const regrets = txs.filter(t => t.type === 'expense' && t.worth === -1).reduce((s, t) => s + t.amount, 0);
     const by = {};
-    txs.filter(t => t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+    txs.filter(t => t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isDebtExtra && !t.isGoalDeposit)
        .forEach(t => { by[t.category] = (by[t.category] || 0) + t.amount; });
     const top = Object.entries(by).sort((a, b) => b[1] - a[1])[0];
 
@@ -13470,6 +13537,7 @@ function openVarAmtSheet(recId) {
   const r = data.recurring.find(r => r.id === recId);
   if (!r) return;
   _varAmtRecId = recId; _varAmtMode = 'exp';
+  { const _i = document.getElementById('varAmtInput'); _i.oninput = () => fmtInput(_i); }
   const _btn = document.getElementById('varAmtBtn'); if (_btn) _btn.textContent = 'Öde';
   const _und = document.getElementById('varAmtUndo'); if (_und) _und.hidden = true;
   document.getElementById('varAmtTitle').textContent = r.desc;
@@ -13484,6 +13552,7 @@ function openIncAmtSheet(id) {
   const r = (data.recurringIncome || []).find(r => r.id === id); if (!r) return;
   const mk = currentMonth, got = _incReceived(r, mk), left = Math.max(0, r.amount - got);
   _varAmtRecId = id; _varAmtMode = 'inc';
+  { const _i = document.getElementById('varAmtInput'); _i.oninput = () => fmtInput(_i); }
   document.getElementById('varAmtTitle').textContent = r.desc + ' · ne kadar geldi?';
   document.getElementById('varAmtSub').textContent = got > 0 ? ('Gelen ' + fmtTL(got) + ' / ' + fmtTL(r.amount) + ' · kalan ' + fmtTL(left)) : ('Beklenen: ' + fmtTL(r.amount));
   document.getElementById('varAmtHint').textContent = 'Bir kısmı geldiyse sadece geleni yaz; kalanı geldiğinde tekrar eklersin.';
@@ -13508,6 +13577,7 @@ function closeVarAmtSheet() {
   _varAmtRecId = null;
 }
 function confirmVarAmt() {
+  if (_varAmtMode === 'debtx') { _confirmDebtExtra(); return; } // V95.1
   if (_varAmtMode === 'inc') { // V95: düzenli gelir — kısmi alma
     const r = (data.recurringIncome || []).find(r => r.id === _varAmtRecId); if (!r) return;
     const mk = currentMonth, got = _incReceived(r, mk), left = Math.max(0, r.amount - got);
@@ -13817,7 +13887,7 @@ function openDailyLimitSheet() {
   const prevDim = daysInMonth(prevMk);
   // V90 Fix#8: "günde ort." sadece DEĞİŞKEN giderden (renderDailyStats ile aynı filtre) — kira/borç/birikim hariç
   const prevVarExp = data.transactions
-    .filter(t => monthKey(t.date) === prevMk && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isGoalDeposit)
+    .filter(t => monthKey(t.date) === prevMk && t.type === 'expense' && !t.isRecurring && !t.isDebt && !t.isDebtExtra && !t.isGoalDeposit)
     .reduce((s, t) => s + t.amount, 0);
   const prevAvg = prevVarExp > 0 ? Math.round(prevVarExp / prevDim) : 0;
 
@@ -14290,7 +14360,7 @@ setInterval(checkMonthRollover, 60000);
       </div>
       <div style="font-size:11px;color:var(--muted);margin-bottom:16px" id="varAmtHint"></div>
       <button class="btn btn-primary btn-full" id="varAmtBtn" onclick="confirmVarAmt()">Öde</button>
-      <button id="varAmtUndo" hidden onclick="undoIncMonth()" style="display:block;width:100%;margin-top:10px;padding:10px;border:none;background:none;color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">Bu ayki girişleri geri al</button>
+      <button id="varAmtUndo" hidden onclick="undoIncMonth()" style="width:100%;margin-top:10px;padding:10px;border:none;background:none;color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">Bu ayki girişleri geri al</button>
     </div>
   </div>
 </div>
