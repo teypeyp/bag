@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V95.2: Borcu kapat — Ekstra öde penceresinde "Ekstra taksit | Borcu kapat" seçimi; kapamada bankaya ödenen tutar girilir, borç kapanır, kalan borç ile fark "erken kapama indirimi" olarak gösterilir; bu ayın taksiti ödenmemişse ayrımı serbest kalır; kapama işlemi silinince borç eski haline döner. Düğme artık her aktif borçta. -->
 <!-- V95.1: Ekstra taksit — o ayın taksiti ödenmiş borçlarda "Ekstra öde" düğmesi; ödeme serbest paradan düşer (günün harcaması sayılmaz), tam taksit tutarı kalan taksiti bir azaltır, artan ön ödeme olarak bekler; pencere limit ve bitiş tarihine etkisini önceden gösterir; silince geri alınır. -->
 <!-- V95: Düzenli gelir parça parça alınabilir — "Alındı" tutar sorar (varsayılan kalan), kart "X geldi · Y bekleniyor" gösterir, toplam tutunca o ay tamamlanır; ana sayfada Kalan Para altında "+Y bekleniyor"; günlük limit yalnız gelen parayla hesaplanır. -->
 <!-- V94.9: (1) Kalan para / günlük limit cepteki parayı aşamaz — takip dışı çıkışlar (kart ekstresi ödemesi, geçen ay açığı) artık limite yansır; döküm satırında 'Hesabındaki paraya göre' farkı. (2) Günlük limit tek kaynak: dayLimitFor — ana sayfa, takvim/seri, Günlük Limit Analizi ve Bu Ay grafiği aynı sayıyı kullanır; her günün limiti kaydedilir (data.dayLimitLog), sonradan eklenen sabit gider geçmiş günleri değiştirmez; gelir gelmeden limit çizilmez; grafikte cüzdan harcaması hariç. (3) Taksit ödemeleri listede borç adıyla görünür. -->
@@ -6606,7 +6607,7 @@ function deleteTx(id, pfx) {
   const domId = (pfx || '') + id;
   if (expandedTx === domId) expandedTx = null;
   data.transactions = data.transactions.filter(t=>t.id!==id);
-  if (tx.isDebtExtra && tx.debtId) { const d = data.debts.find(x => x.id === tx.debtId); if (d) _debtRecalcExtra(d); } // V95.1
+  if (tx.isDebtExtra && tx.debtId) { const d = data.debts.find(x => x.id === tx.debtId); if (d) _debtRecalcExtra(d); } // V95.1 · V95.2: kapama silinirse borç geri açılır
   save(); renderAll();
   // Refresh history overlay list if open
   const histOverlay = document.getElementById('historyOverlay');
@@ -7986,7 +7987,7 @@ function renderDebtList() {
             <div style="width:${pct}%;height:100%;background:${done?'var(--accent)':paid?'var(--accent)':'rgba(255,69,58,.5)'};border-radius:2px;transition:width .5s ease"></div>
           </div>
           ${future?`<div style="font-size:10px;color:var(--warning);margin-top:3px;font-weight:800;display:flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--warning)" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.5 7h11"/><path d="M6.5 17h11"/><path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"/><path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"/></svg> ${d.startMonth} ayında başlıyor</div>`:''}
-          ${done?`<div style="font-size:10px;color:var(--accent);margin-top:3px;font-weight:800"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> Tamamlandı</div>`:''}
+          ${done?`<div style="font-size:10px;color:var(--accent);margin-top:3px;font-weight:800"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> ${d.closedEarly ? 'Erken kapandı' + (d.closedEarly.discount > 0 ? ' · ' + fmtTL(d.closedEarly.discount) + ' indirim' : '') : 'Tamamlandı'}</div>`:''}
         </div>
         <div class="rec-status" style="cursor:${future||done?'default':'pointer'}" onclick="event.stopPropagation();${!future&&!done?`togglePaidDebt('${d.id}')`:''}"
 >
@@ -7996,7 +7997,7 @@ function renderDebtList() {
       </div>
       <div class="item-actions-row"><div class="item-actions-inner">
         <button class="icon-action-btn stats" onclick="event.stopPropagation();openStatsPage('debt','${d.id}')"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20v-8a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v8"/><path d="M10 20v-12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12"/><path d="M17 20v-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M3 20h18"/></svg>İstatistik</button>
-        ${paid && !done && !future ? `<button class="icon-action-btn stats" style="flex:1.6;white-space:nowrap;border-color:rgba(255,69,58,.28);background:rgba(255,69,58,.07);color:#FF6B60" onclick="event.stopPropagation();openDebtExtraSheet('${d.id}')"><svg viewBox="0 0 24 24" width="13" height="13" style="stroke:#FF6B60"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Ekstra öde</button>` : ''}
+        ${!done && !future ? `<button class="icon-action-btn stats" style="flex:1.6;white-space:nowrap;border-color:rgba(255,69,58,.28);background:rgba(255,69,58,.07);color:#FF6B60" onclick="event.stopPropagation();openDebtExtraSheet('${d.id}')"><svg viewBox="0 0 24 24" width="13" height="13" style="stroke:#FF6B60"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Ekstra öde</button>` : ''}
         ${!done ? `<button class="icon-action-btn edit-sm" onclick="event.stopPropagation();startEditDebt('${d.id}')"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Düzenle</button>` : ''}
         <button class="icon-action-btn danger-sm" onclick="event.stopPropagation();deleteDebt('${d.id}')"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Sil</button>
       </div></div>
@@ -8055,13 +8056,22 @@ function togglePaidDebt(id) {
 // ═══ V95.1: ekstra taksit ═══
 // Ekstra ödemeler toplanır; her tam taksit tutarı kalan taksit sayısını bir azaltır, artanı "ön ödeme" olarak bekler.
 function _debtRecalcExtra(d) {
-  const sum = data.transactions.filter(t => t.isDebtExtra && t.debtId === d.id).reduce((s, t) => s + t.amount, 0);
-  const regular = (d.paidCount || 0) - (d.extraInst || 0);
+  // V95.2: erken kapatılmış borçta taksit defteri closedEarly.prev'de tutulur (kapama silinince geri döner)
+  if (d.closedEarly && !data.transactions.some(t => t.id === d.closedEarly.txId)) _debtUndoClose(d);
+  const st = d.closedEarly ? d.closedEarly.prev : d;
+  const sum = data.transactions.filter(t => t.isDebtExtra && !t.isDebtClose && t.debtId === d.id).reduce((s, t) => s + t.amount, 0);
+  const regular = (st.paidCount || 0) - (st.extraInst || 0);
   const room = Math.max(0, (d.installments || 0) - regular);
   const inst = d.monthlyAmount > 0 ? Math.min(room, Math.floor((sum + 0.5) / d.monthlyAmount)) : 0;
-  d.extraInst = inst; d.extraCredit = Math.max(0, sum - inst * d.monthlyAmount);
-  d.paidCount = regular + inst;
-  d.active = d.paidCount < (d.installments || 0);
+  st.extraInst = inst; st.extraCredit = Math.max(0, sum - inst * d.monthlyAmount);
+  st.paidCount = regular + inst;
+  if (d.closedEarly) { d.paidCount = d.installments || 0; d.extraCredit = 0; d.active = false; }
+  else d.active = d.paidCount < (d.installments || 0);
+}
+function _debtUndoClose(d) {
+  const p = d.closedEarly && d.closedEarly.prev; if (!p) { delete d.closedEarly; return; }
+  d.paidCount = p.paidCount; d.extraInst = p.extraInst; d.extraCredit = p.extraCredit; d.active = true;
+  delete d.closedEarly;
 }
 function _mkLabelShort(mk) { const [y, m] = mk.split('-').map(Number); return MONTH_NAMES[m - 1] + ' ' + y; }
 function _dxEndMk(d, extraAmt) {
@@ -8070,21 +8080,43 @@ function _dxEndMk(d, extraAmt) {
   const left = Math.max(0, (d.installments || 0) - (d.paidCount || 0) - adv);
   return { left, end: left > 0 ? addMonthsToMk(mk, left) : null };
 }
+let _dxKind = 'extra'; // V95.2: 'extra' | 'close'
 function openDebtExtraSheet(id) {
   const d = data.debts.find(x => x.id === id); if (!d) return;
   _varAmtRecId = id; _varAmtMode = 'debtx';
-  const left = Math.max(0, d.installments - d.paidCount);
-  document.getElementById('varAmtTitle').textContent = d.name + ' · ekstra taksit';
-  document.getElementById('varAmtSub').textContent = 'Bu ayki taksit ödendi · ' + left + ' taksit kaldı' + (d.extraCredit > 0 ? ' · ' + fmtTL(Math.round(d.extraCredit)) + ' ön ödeme var' : '');
-  const inp = document.getElementById('varAmtInput');
-  inp.value = fmtNum(Math.round(Math.max(0, d.monthlyAmount - (d.extraCredit || 0))));
-  inp.oninput = () => { fmtInput(inp); _dxPreview(); };
-  document.getElementById('varAmtBtn').textContent = 'Öde';
+  _dxSetKind(isPaidThisMonth(d, monthKey()) ? 'extra' : 'close');
+  document.getElementById('dxSeg').style.display = 'flex';
   document.getElementById('varAmtUndo').hidden = true;
-  _dxPreview();
   document.getElementById('varAmtSheetOverlay').classList.add('show');
   document.body.style.overflow = 'hidden';
-  setTimeout(() => { inp.focus(); inp.select && inp.select(); }, 300);
+  setTimeout(() => { const inp = document.getElementById('varAmtInput'); inp.focus(); inp.select && inp.select(); }, 300);
+}
+function _dxSetKind(k) {
+  const d = data.debts.find(x => x.id === _varAmtRecId); if (!d) return;
+  const paid = isPaidThisMonth(d, monthKey());
+  if (k === 'extra' && !paid) k = 'close';
+  _dxKind = k;
+  const left = Math.max(0, d.installments - d.paidCount), owed = Math.round(_dxOwed(d));
+  document.querySelectorAll('#dxSeg button').forEach(b => {
+    const on = b.dataset.k === k, dis = b.dataset.k === 'extra' && !paid;
+    b.style.background = on ? 'var(--surface3)' : 'transparent';
+    b.style.color = on ? 'var(--text)' : 'var(--muted)';
+    b.style.opacity = dis ? '.4' : '1';
+  });
+  document.getElementById('varAmtTitle').textContent = d.name + (k === 'close' ? ' · borcu kapat' : ' · ekstra taksit');
+  document.getElementById('varAmtSub').textContent = k === 'close'
+    ? 'Kalan borç ' + fmtTL(owed) + ' · bankaya ödediğin tutarı yaz'
+    : 'Bu ayki taksit ödendi · ' + left + ' taksit kaldı' + (d.extraCredit > 0 ? ' · ' + fmtTL(Math.round(d.extraCredit)) + ' ön ödeme var' : '');
+  const inp = document.getElementById('varAmtInput');
+  inp.value = fmtNum(k === 'close' ? owed : Math.round(Math.max(0, d.monthlyAmount - (d.extraCredit || 0))));
+  inp.oninput = () => { fmtInput(inp); _dxPreview(); };
+  document.getElementById('varAmtBtn').textContent = k === 'close' ? 'Kapat' : 'Öde';
+  _dxPreview();
+}
+function _dxSegTap(k) {
+  const d = data.debts.find(x => x.id === _varAmtRecId); if (!d) return;
+  if (k === 'extra' && !isPaidThisMonth(d, monthKey())) { showToast(TOAST_WARN + ' Önce bu ayın taksitini öde'); return; }
+  _dxSetKind(k);
 }
 function _dxOwed(d) { return Math.max(0, ((d.installments || 0) - (d.paidCount || 0)) * (d.monthlyAmount || 0) - (d.extraCredit || 0)); }
 function _dxPreview() {
@@ -8092,10 +8124,23 @@ function _dxPreview() {
   let amt = parseNum(document.getElementById('varAmtInput').value) || 0, owed = _dxOwed(d);
   if (amt > owed) amt = owed;
   const fb = calcFreeBudget(monthKey()), ov = (data.dailyOverride || {})[monthKey()] > 0;
-  const now = Math.round(fb.daily), after = ov ? now : Math.round(fb.daily - amt / Math.max(1, fb.daysLeft));
+  const now = Math.round(fb.daily);
+  const line = (l, r) => `<div style="display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:700"><span style="color:var(--muted)">${l}</span><span style="text-align:right">${r}</span></div>`;
+  if (_dxKind === 'close') {
+    // bu ayın taksiti ödenmemişse ayrılmış taksit serbest kalır
+    const freed = isPaidThisMonth(d, monthKey()) || (d.startMonth && d.startMonth > monthKey()) ? 0 : d.monthlyAmount;
+    const after = ov ? now : Math.round(fb.daily - (amt - freed) / Math.max(1, fb.daysLeft));
+    const disc = Math.max(0, Math.round(owed - amt));
+    document.getElementById('varAmtHint').innerHTML = `<div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+    ${line('Kalan borç', `<span style="color:var(--muted)">${fmtTL(Math.round(owed))}</span> → <b style="color:var(--accent)">kapanıyor</b>`)}
+    ${line('Erken kapama indirimi', disc > 0 ? `<b style="color:var(--accent)">${fmtTL(disc)}</b>` : `<span style="color:var(--muted)">yok</span>`)}
+    ${line('Günlük limit', `<span style="color:var(--muted)">${fmtTL(now)}</span> → <b style="color:${after < 0 ? 'var(--danger)' : 'var(--text)'}">${after < 0 ? '−' : ''}${fmtTL(Math.abs(after))}</b>`)}
+    <div style="font-size:11px;color:var(--muted);margin-top:2px">Serbest paranden çıkar; sonraki aylarda taksit ayrılmaz.</div></div>`;
+    return;
+  }
+  const after = ov ? now : Math.round(fb.daily - amt / Math.max(1, fb.daysLeft));
   const e0 = _dxEndMk(d, 0), e1 = _dxEndMk(d, amt);
   const endTxt = e1.left === 0 ? '<b style="color:var(--accent)">bu ödemeyle bitiyor</b>' : (e1.end !== e0.end ? `<span style="color:var(--muted)">${_mkLabelShort(e0.end)}</span> → <b style="color:var(--accent)">${_mkLabelShort(e1.end)}</b>` : `<b style="color:var(--text)">${_mkLabelShort(e1.end)}</b> <span style="color:var(--muted)">· kalan borç azalır</span>`);
-  const line = (l, r) => `<div style="display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:700"><span style="color:var(--muted)">${l}</span><span style="text-align:right">${r}</span></div>`;
   document.getElementById('varAmtHint').innerHTML = `<div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
     ${line('Günlük limit', `<span style="color:var(--muted)">${fmtTL(now)}</span> → <b style="color:${after < 0 ? 'var(--danger)' : 'var(--text)'}">${after < 0 ? '−' : ''}${fmtTL(Math.abs(after))}</b>`)}
     ${line('Borç bitişi', endTxt)}
@@ -8107,6 +8152,15 @@ function _confirmDebtExtra() {
   if (!(amt > 0)) { closeVarAmtSheet(); return; }
   const owed = _dxOwed(d); if (owed <= 0) { closeVarAmtSheet(); return; }
   amt = Math.min(amt, owed); // kalan borçtan fazlası ödenmez
+  if (_dxKind === 'close') {
+    const txId = uid();
+    data.transactions.push({ id: txId, type: 'expense', desc: d.name + ' · erken kapama', amount: amt, date: today(), category: 'diger', debtId: d.id, isDebtExtra: true, isDebtClose: true, ts: Date.now() });
+    d.closedEarly = { txId, mk: monthKey(), owed: Math.round(owed), paid: amt, discount: Math.max(0, Math.round(owed - amt)), prev: { paidCount: d.paidCount, extraInst: d.extraInst || 0, extraCredit: d.extraCredit || 0 } };
+    _debtRecalcExtra(d);
+    save(); closeVarAmtSheet(); renderAll();
+    showToast(TOAST_OK + ' ' + esc(d.name) + ' kapandı' + (d.closedEarly.discount > 0 ? ' · ' + fmtTL(d.closedEarly.discount) + ' indirim' : ''));
+    return;
+  }
   data.transactions.push({ id: uid(), type: 'expense', desc: d.name + ' · ekstra taksit', amount: amt, date: today(), category: 'diger', debtId: d.id, isDebtExtra: true, ts: Date.now() });
   _debtRecalcExtra(d);
   save(); closeVarAmtSheet(); renderAll();
@@ -13573,6 +13627,7 @@ function undoIncMonth() {
 }
 function closeVarAmtSheet() {
   document.getElementById('varAmtSheetOverlay').classList.remove('show');
+  const _sg = document.getElementById('dxSeg'); if (_sg) _sg.style.display = 'none'; // V95.2
   document.body.style.overflow = '';
   _varAmtRecId = null;
 }
@@ -14354,6 +14409,10 @@ setInterval(checkMonthRollover, 60000);
       <button class="add-sheet-close" onclick="closeVarAmtSheet()">&#215;</button>
     </div>
     <div style="padding:0 20px 8px">
+      <div id="dxSeg" style="display:none;gap:4px;padding:3px;margin-bottom:10px;background:var(--surface2);border:1px solid var(--border);border-radius:12px">
+        <button type="button" data-k="extra" onclick="_dxSegTap('extra')" style="flex:1;padding:8px 0;border:none;border-radius:9px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer">Ekstra taksit</button>
+        <button type="button" data-k="close" onclick="_dxSegTap('close')" style="flex:1;padding:8px 0;border:none;border-radius:9px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer">Borcu kapat</button>
+      </div>
       <div style="position:relative;margin-bottom:8px">
         <input type="text" id="varAmtInput" class="form-input" placeholder="0" oninput="fmtInput(this)" inputmode="numeric" style="font-size:28px;font-weight:900;letter-spacing:-1px;padding-right:36px">
         <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:16px;font-weight:800;color:var(--muted)">&#8378;</span>
