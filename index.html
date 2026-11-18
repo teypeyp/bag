@@ -5,6 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V97.4: Aylık Plan grafiği — harcama çizgisinin limit çizgisinin üstünde kalan kısmı (ve altındaki dolgu) artık kırmızı; bugün limit aşıldıysa uçtaki nokta da kırmızı. -->
+<!-- V97.3: Günlük Limit Analizi (Aylık Plan) — çubuk rengi artık gerçek harcamaya göre: limiti aşan her gün kırmızı, koruma kullanılmış olsa bile. Korunan günün üstünde küçük mavi nokta var. Halka ve alttaki gün sayıları da gerçek duruma göre; korunan gün sayısı ayrıca yazıyor. -->
+<!-- V97.2: "Paran nereye gidiyor" kartının zemini siyahtı, sayfadaki diğer kartlar gibi gri (surface) yapıldı; köşe yuvarlaklığı ve gölge de onlarla aynı. -->
+<!-- V97.1: "Alışkanlıkların" bölümü Özet'ten Finansal Analiz (Plan) sayfasına taşındı: Karne'den sonra "07 · Alışkanlıkların". Simülasyon 08 oldu. -->
+<!-- V97: Kazanımlar şeridi küçük bir rozete dönüştü: Özet'te Toplam Varlığın kartının sağ üst köşesinde kupa + "açılan / toplam". Dokununca aynı Kazanımlar sayfası açılır. -->
+<!-- V96.9: Özet sırası — Kalan kutularından sonra önce seri kartı, sonra "Paran nereye gidiyor", hemen altında Finansal Analiz kutusu (Plan'ın kapısı). -->
+<!-- V96.8: "Paran nereye gidiyor" kartı — "her 100₺'nin 11₺'si" anlatımı anlaşılmadı, düz yüzdeye çevrildi ("Gelirinin %11'i cebinde kalıyor", satırlarda %35 gibi; %1'den küçükse "<%1"). Şeridin ilk ve son parçasında iç köşe yuvarlaklığı kayboluyordu (turuncu ve yeşil parça köşeli duruyordu), düzeltildi. -->
+<!-- V96.7: Aylık Plan'daki grafik kartında "Detaylar"a dokununca artık Günlük Limit Analizi açılıyor (döküm V96.6'da Özet'e taşındı): limite uyum yüzdesi, gün gün çubuklar (limit çizgisine göre yeşil/kırmızı), bugünkü limit ve nasıl hesaplandığı, bu gidişle ay sonunda kalacak para, kaç gün limitin altında/üstünde. Ortalama / en çok / en az seri kartında olduğu için tekrar edilmedi. -->
+<!-- V96.6: Özet'e "Paran nereye gidiyor" kartı (Kalan kutularının altında): gelirin her 100₺'si nereye gidiyor — tek renkli şerit + kalem kalem liste + kalan para. Aylık Plan'daki dökümün aynısı, ama eksik kalemler (cüzdanlara ayrılan para, ekstra borç ödemesi) eklendi; satırlar artık Kalan'a tam toplanıyor. -->
+<!-- V96.5: Plan › Baskı Analizi kartına dokununca detay alttan açılan sayfada: rakam + sınır çubuğu, kalem kalem döküm (en çok yer tutan sabit giderler / borçlar ve bitiş ayı / paranın nereye gittiği / acil fon hesabı), "Ne yapmalı" ve acil fonda doğrudan hedef oluşturma düğmesi. Eski gri detay kutusu kaldırıldı. Yol Haritası'nın harcama ortalaması Plan'ın tipik harcamasıyla aynı ağırlıklı hesaba bağlandı. -->
+<!-- V96.4: Plan › Baskı Analizi — dört madde Özet'ten kaldırılan büyük rakamlı kartların görünüşüyle (büyük rakam, başlık, kısa cümle; renk duruma göre: iyi yeşil, dikkat sarı, yüksek kırmızı) ikişerli gösteriliyor. Karta dokununca ayrıntısı altında açılır: çubuk ve sağlıklı sınır, açıklama, "Ne yapmalı". Acil fon hedefi Yol Haritası ile aynı tanımı kullanıyor (3 aylık toplam masraf). -->
+<!-- V96.3: Özet'teki "Finansal Tavsiyeler" kartları kaldırıldı — aynı bilgiler Plan sayfasında (Baskı Analizi, Yol Haritası) daha ayrıntılı duruyor. "Finansal Analiz" kutusu (Plan'ın kapısı) yerinde. -->
+<!-- V96.2: Seri kartı eski tasarımına döndü (büyük rakam, üç kutu, haftalık takvim). Takvimin altına aynı tarzda ikinci kutu sırası eklendi: günlük ortalama, en çok ve en az harcanan gün; altında geçen ayın aynı günlerine göre fark. Kalkanların üstünde "Koruma hakkı · x/y" yazıyor. Günlük Limit Analizi kartı kaldırılmış olarak kalıyor. -->
+<!-- V96.1: Özet — "Seri" kartı ve "Günlük Limit Analizi" tek kartta birleşti: üstte seri ve ayın yüzdesi, gün gün kutucuklar (güne dokununca limit, harcama, cüzdan harcaması), altında günlük ortalama, geçen aya göre fark, en çok/en az harcanan gün, koruma hakları. Günlük Limit Analizi kartı kaldırıldı. "freeze/streak" sözcükleri "koruma/seri" oldu. -->
 <!-- V96: Karşılaştır ekranı — Özet > Aylık Kalan Para kartından açılır. İki biten ayı ya da bir ayı son 3 ayın ortalamasıyla ("normalime göre") kıyaslar: tek cümle sonuç, farkı yaratan kalemler (gelir, serbest harcama, borç, sabitler, birikim), tek seferlik ödeme notu, kategori kategori çift çubuk. Rakamlar yalnızca o ayın işlemlerinden hesaplanır. -->
 <!-- V95.9: "Değdi / Değmedi" işaretleme özelliği kaldırıldı (düzenleme penceresindeki düğmeler, listedeki işaret, karnedeki satırlar). -->
 <!-- V95.8: Özet düzeltmeleri — Yıllık'ta kapalı ayların altından sızan satır giderildi; seri kartı ve Günlük Limit Analizi aynı limit uyumu tanımını kullanıyor; Yıllık'ta çift "Birikime yatırılan" kutusunun biri "Sabit Giderler (aylık ort.)" oldu; "taksit kapandı" → "borç kapandı"; kategori adları kesilmiyor; tepedeki satır "Ay başında X → şimdi Y". -->
@@ -489,12 +503,15 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .streak-count.dead{background:linear-gradient(135deg,#444,#2a2a2a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .streak-meta{font-size:11px;font-weight:700;color:rgba(255,214,10,.45);margin-top:2px}
 .streak-meta.dead{color:var(--muted)}
-.streak-best{font-size:10px;font-weight:800;color:rgba(255,149,0,.5);text-align:right;flex-shrink:0;align-self:flex-start;line-height:1.4}
 
+.streak-best{font-size:10px;font-weight:800;color:rgba(255,149,0,.5);text-align:right;flex-shrink:0;align-self:flex-start;line-height:1.4}
 .streak-stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 16px 12px;position:relative;z-index:1}
-.streak-stat-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:9px 10px;text-align:center}
-.streak-stat-val{font-size:14px;font-weight:900;color:var(--text);line-height:1}
-.streak-stat-lbl{font-size:9px;font-weight:700;color:var(--muted);margin-top:3px;letter-spacing:.3px}
+.streak-stat-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:9px 6px;text-align:center;min-width:0}
+.streak-stat-val{font-size:14px;font-weight:900;color:var(--text);line-height:1;white-space:nowrap}
+.streak-stat-lbl{font-size:9px;font-weight:700;color:var(--muted);margin-top:3px;letter-spacing:.3px;white-space:nowrap}
+.streak-legend{display:flex;justify-content:space-between;gap:10px;margin-top:9px;font-size:10px;font-weight:700;color:var(--muted)}
+.streak-legend b{color:rgba(233,232,240,.9);font-weight:800}
+.freeze-count{font-size:8.5px;font-weight:800;color:var(--muted);letter-spacing:.6px;margin-bottom:5px;white-space:nowrap}
 
 .streak-dots-wrap{padding:0 16px 10px;position:relative;z-index:1}
 .streak-month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
@@ -515,8 +532,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .day-dot.red{background:rgba(255,69,58,.1);border:1.5px solid rgba(255,69,58,.22);color:var(--danger)}
 .day-dot.frozen{background:rgba(10,132,255,.1);border:1.5px solid rgba(10,132,255,.28);color:var(--blue)}
 .day-dot.empty{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);color:rgba(255,255,255,.15)}
-.day-dot.future{background:transparent;border:1.5px dashed rgba(255,255,255,.07);color:transparent}
 .day-dot.blank{background:transparent;border:none}
+.day-dot.future{background:transparent;border:1.5px dashed rgba(255,255,255,.07);color:transparent}
 .day-dot-pop{animation:dayDotPop .3s cubic-bezier(.34,1.56,.64,1) both}
 
 .streak-freeze-row{
@@ -525,8 +542,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   border-top:1px solid rgba(255,149,0,.1);
   position:relative;z-index:1;
 }
-.freeze-shields{display:flex;gap:6px}
-.freeze-shield{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+.freeze-shields{display:flex;gap:5px;align-items:center;min-width:0}
+.freeze-shield{width:26px;height:26px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .freeze-shield.active{background:rgba(10,132,255,.14);border:1.5px solid rgba(10,132,255,.35)}
 .freeze-shield.used{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);filter:grayscale(1);opacity:.25}
 .freeze-btn{
@@ -534,6 +551,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   background:rgba(10,132,255,.12);
   cursor:pointer;transition:all .15s;
   display:flex;align-items:center;justify-content:center;gap:4px;
+  white-space:nowrap;flex-shrink:0;
 }
 .freeze-btn:active{transform:scale(.9);background:rgba(10,132,255,.25)}
 .freeze-btn:disabled{opacity:.2;cursor:default;pointer-events:none}
@@ -701,6 +719,55 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .ozet-stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 10px;text-align:center}
 .ozet-stat-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
 .ozet-stat-val{font-size:16px;font-weight:800;letter-spacing:-.3px}
+.dla{padding:16px 20px 14px;border-top:1px solid rgba(255,255,255,.06)}
+.dla-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.dla-title{font-size:15px;font-weight:900;letter-spacing:-.3px;color:var(--text)}
+.dla-sub{font-size:11.5px;font-weight:600;color:rgba(255,255,255,.45);margin-top:3px}
+.dla-ring{position:relative;width:56px;height:56px;flex-shrink:0}
+.dla-ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;letter-spacing:-.5px}
+.dla-chart{position:relative;display:flex;align-items:flex-end;gap:3px}
+.dla-b{flex:1;border-radius:3px 3px 1px 1px;transform:scaleY(0);transform-origin:bottom;animation:dlaUp .5s cubic-bezier(.3,.9,.3,1) forwards}
+.dla-b.grn{background:#2DB866}.dla-b.red{background:#FF453A}
+.dla-b.fut{height:3px;background:rgba(255,255,255,.08);animation:none;transform:none}
+.dla-b.frz{position:relative}
+.dla-b.frz::after{content:'';position:absolute;left:50%;top:-9px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#0A84FF}
+.dla-frz{font-size:11px;font-weight:600;color:rgba(255,255,255,.5);margin-top:8px}
+.dla-frz i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#0A84FF;margin-right:6px}
+.dla-b.now{box-shadow:0 0 0 2px rgba(255,255,255,.35)}
+@keyframes dlaUp{to{transform:scaleY(1)}}
+.dla-line{position:absolute;left:0;right:0;border-top:1px dashed rgba(255,255,255,.3);pointer-events:none;z-index:1}
+.dla-line span{position:absolute;right:0;top:-13px;font-size:8.5px;font-weight:800;color:rgba(255,255,255,.4);letter-spacing:.5px;text-transform:uppercase}
+.dla-axis{display:flex;justify-content:space-between;font-size:8.5px;font-weight:700;color:rgba(255,255,255,.25);margin:5px 0 14px}
+.dla-boxes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.dla-box{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px 12px 11px}
+.dla-box-l{font-size:9.5px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
+.dla-box-v{font-size:19px;font-weight:900;letter-spacing:-.5px}
+.dla-box-s{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.38);margin-top:4px}
+.dla-legend{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:rgba(255,255,255,.7)}
+.dla-legend i{display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:6px}
+.dla-link{display:flex;justify-content:space-between;width:100%;margin-top:14px;padding:11px 0 0;border:none;border-top:1px solid rgba(255,255,255,.06);background:none;color:rgba(255,255,255,.4);font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer}
+.mf-card{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 18px 6px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.mf-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 90% 70% at 85% -10%,var(--mfc,rgba(45,184,102,.08)) 0%,transparent 60%)}
+.mf-in{position:relative}
+.mf-over{font-size:10px;font-weight:800;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px}
+.mf-hero{display:flex;align-items:flex-end;gap:10px;margin-bottom:16px}
+.mf-big{font-size:52px;font-weight:900;letter-spacing:-3px;line-height:.9}
+.mf-hero-t{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.55);line-height:1.4;padding-bottom:3px}
+.mf-hero-t b{color:var(--text);font-weight:800}
+.mf-bar{display:flex;gap:3px;height:14px;margin-bottom:6px}
+.mf-seg{height:100%;border-radius:5px;min-width:5px;transform:scaleX(0);transform-origin:left;animation:mfGrow .7s cubic-bezier(.3,.9,.3,1) forwards}
+.mf-seg:first-child{border-radius:7px 5px 5px 7px}.mf-seg:last-child{border-radius:5px 7px 7px 5px}.mf-seg:only-child{border-radius:7px}
+@keyframes mfGrow{to{transform:scaleX(1)}}
+.mf-scale{display:flex;justify-content:space-between;font-size:9px;font-weight:700;color:rgba(255,255,255,.22);margin-bottom:10px}
+.mf-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.mf-dot{width:8px;height:8px;border-radius:3px;flex-shrink:0}
+.mf-l{flex:1;font-size:13px;font-weight:600;color:rgba(255,255,255,.78)}
+.mf-p{font-size:12px;font-weight:700;color:rgba(255,255,255,.32);font-variant-numeric:tabular-nums}
+.mf-v{font-size:13px;font-weight:800;color:var(--text);min-width:78px;text-align:right;font-variant-numeric:tabular-nums}
+.mf-foot{display:flex;justify-content:space-between;align-items:center;padding:13px 0 8px}
+.mf-foot span{font-size:13px;font-weight:800;color:rgba(255,255,255,.85)}
+.mf-foot b{font-size:20px;font-weight:900;letter-spacing:-.5px}
+.mf-note{font-size:10.5px;font-weight:500;color:rgba(255,255,255,.3);line-height:1.5;padding:0 0 10px}
 .ozet-stat-card.highlight{background:linear-gradient(135deg,rgba(45,184,102,.08),rgba(45,184,102,.03));border-color:rgba(45,184,102,.25)}
 
 /* CHARTS */
@@ -942,142 +1009,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .icon-action-btn:active{transform:scale(.9)}
 .icon-action-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .icon-action-btn.danger{border-color:rgba(255,69,58,.25);background:rgba(255,69,58,.08);color:var(--danger)}
-
-/* ===== FINANCIAL ADVICE — SWIPE CARDS ===== */
-@keyframes adviceCardIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-
-.advice-section-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:10px;
-}
-.advice-section-label{
-  font-size:11px;font-weight:800;color:var(--muted);
-  text-transform:uppercase;letter-spacing:1.2px;
-}
-
-/* Swipe viewport — 2 kart tam, 3. peek */
-.advice-scroll{
-  display:flex;gap:10px;
-  overflow-x:auto;
-  -webkit-overflow-scrolling:touch;
-  scroll-snap-type:x mandatory;
-  scrollbar-width:none;
-  padding-bottom:4px;
-  padding-right:22px;
-}
-.advice-scroll::-webkit-scrollbar{display:none}
-
-/* Swipeable kart — 2 kart tam sığsın, 3. hafif peek */
-.advice-big-card{
-  flex-shrink:0;
-  /* (100% - 1×gap 10px - peek 22px) / 2 */
-  width:calc(50% - 21px);
-  min-height:196px;
-  border-radius:var(--radius);
-  overflow:hidden;
-  position:relative;
-  scroll-snap-align:start;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  animation:adviceCardIn .4s cubic-bezier(.34,1.1,.64,1) both;
-  /* glass ortak */
-  backdrop-filter:blur(28px) saturate(160%);
-  -webkit-backdrop-filter:blur(28px) saturate(160%);
-  box-shadow:0 12px 40px rgba(0,0,0,.45), 0 1px 0 0 rgba(255,255,255,.06) inset;
-}
-.advice-big-card:active{opacity:.88}
-
-/* good — yeşil tintli glass */
-.advice-big-card.good{
-  background:
-    radial-gradient(ellipse 90% 70% at 10% 10%, rgba(45,184,102,.22) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 90% 90%, rgba(45,184,102,.08) 0%, transparent 55%),
-    linear-gradient(160deg,rgba(8,26,14,.88) 0%,rgba(6,14,10,.93) 100%);
-  border:1px solid rgba(45,184,102,.22);
-  box-shadow:0 12px 40px rgba(0,0,0,.45), 0 1px 0 0 rgba(45,184,102,.2) inset;
-}
-/* warn — sarı tintli glass */
-.advice-big-card.warn{
-  background:
-    radial-gradient(ellipse 90% 70% at 10% 10%, rgba(255,214,10,.2) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 90% 90%, rgba(255,149,0,.08) 0%, transparent 55%),
-    linear-gradient(160deg,rgba(26,20,0,.88) 0%,rgba(16,12,0,.93) 100%);
-  border:1px solid rgba(255,214,10,.2);
-  box-shadow:0 12px 40px rgba(0,0,0,.45), 0 1px 0 0 rgba(255,214,10,.18) inset;
-}
-/* bad — kırmızı tintli glass */
-.advice-big-card.bad{
-  background:
-    radial-gradient(ellipse 90% 70% at 10% 10%, rgba(255,69,58,.22) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 90% 90%, rgba(255,69,58,.07) 0%, transparent 55%),
-    linear-gradient(160deg,rgba(26,6,4,.88) 0%,rgba(14,4,3,.93) 100%);
-  border:1px solid rgba(255,69,58,.2);
-  box-shadow:0 12px 40px rgba(0,0,0,.45), 0 1px 0 0 rgba(255,69,58,.18) inset;
-}
-
-/* İç içerik */
-.advice-big-inner{
-  position:relative;z-index:1;
-  padding:16px 14px 14px;
-  display:flex;flex-direction:column;
-  height:100%;min-height:196px;
-}
-
-/* Büyük değer — rakam ya da ikon */
-.advice-big-value{
-  flex:1;
-  display:flex;align-items:center;
-  margin-bottom:10px;
-}
-.advice-big-num{
-  font-size:48px;font-weight:900;letter-spacing:-3px;line-height:1;
-}
-.advice-big-card.good .advice-big-num{color:#2DB866}
-.advice-big-card.warn .advice-big-num{color:#FFD60A}
-.advice-big-card.bad  .advice-big-num{color:#FF453A}
-
-/* Küçük rakam (₺ gibi uzun değerler için) */
-.advice-big-num.sm{
-  font-size:32px;letter-spacing:-1.5px;
-}
-
-/* ikon modunda — büyük circle */
-.advice-big-icon-wrap{
-  display:flex;align-items:center;justify-content:flex-start;
-}
-.advice-big-icon-wrap svg{width:38px;height:38px}
-.advice-big-card.good .advice-big-icon-wrap svg{stroke:#2DB866}
-.advice-big-card.warn .advice-big-icon-wrap svg{stroke:#FFD60A}
-.advice-big-card.bad  .advice-big-icon-wrap svg{stroke:#FF453A}
-
-/* Alt metin */
-.advice-big-label{
-  font-size:11.5px;font-weight:800;letter-spacing:-.1px;
-  margin-bottom:4px;line-height:1.3;
-}
-.advice-big-card.good .advice-big-label{color:rgba(45,184,102,.9)}
-.advice-big-card.warn .advice-big-label{color:rgba(255,214,10,.9)}
-.advice-big-card.bad  .advice-big-label{color:rgba(255,100,80,.95)}
-
-.advice-big-sub{
-  font-size:11px;font-weight:500;color:rgba(255,255,255,.5);
-  line-height:1.55;
-}
-
-/* Nokta indikatörler */
-.advice-dots{
-  display:flex;justify-content:center;gap:5px;
-  margin-top:10px;
-}
-.advice-dot{
-  width:5px;height:5px;border-radius:99px;
-  background:var(--border);
-  transition:all .25s cubic-bezier(.4,0,.2,1);
-}
-.advice-dot.active{
-  width:16px;background:var(--muted);
-}
-
 
 /* ===== PLAN VERTICAL — PREMIUM ===== */
 /* ===========================
@@ -1524,7 +1455,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .plan-trend-chip.neu { color:var(--muted); background:rgba(255,255,255,.05); }
 .plan-bar-track { position:relative; }
 .plan-bar-tick { position:absolute; top:-3px; bottom:-3px; width:2px; border-radius:2px; background:rgba(255,255,255,.45); }
-.plan-bar-legend { font-size:10px; font-weight:500; color:var(--muted); opacity:.8; margin-bottom:16px; letter-spacing:-.01em; }
 .plan-char-map-btn { display:block; width:100%; margin-top:12px; padding:11px 14px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:12px; color:var(--text); font-family:inherit; font-size:13px; font-weight:700; letter-spacing:-.01em; cursor:pointer; text-align:center; transition:transform .15s var(--spring), background .2s; -webkit-tap-highlight-color:transparent; }
 .plan-char-map-btn:active { transform:scale(.97); background:rgba(255,255,255,.1); }
 
@@ -1538,7 +1468,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .ph-headline { margin-top:20px; }
 .ph-metrics { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:16px; position:relative; z-index:1; }
 /* Baskı sürücü kartları */
-.drv-grid { display:flex; flex-direction:column; gap:10px; margin-top:4px; }
 .drv-card { background:var(--surface2); border:1px solid var(--border); border-radius:16px; padding:14px 15px 13px; position:relative; overflow:hidden; }
 .drv-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:7px; gap:8px; }
 .drv-label { font-size:12.5px; font-weight:700; color:var(--text); letter-spacing:-.01em; }
@@ -1547,6 +1476,119 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .drv-track { position:relative; height:5px; border-radius:99px; background:rgba(255,255,255,.08); margin-bottom:11px; }
 .drv-fill { height:100%; border-radius:99px; }
 .drv-track .plan-bar-tick { top:-3px; bottom:-3px; }
+.drv-track.has-th { margin-bottom:24px; }
+.drv-th { position:absolute; top:9px; transform:translateX(-50%); font-size:9px; font-weight:700; color:var(--muted); white-space:nowrap; letter-spacing:.02em; }
+.drv-act { margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,.06); font-size:12.5px; line-height:1.6; color:rgba(233,232,240,.78); }
+.drv-act b { font-weight:800; color:var(--text); }
+/* Swipeable kart — 2 kart tam sığsın, 3. hafif peek */
+.advice-big-card{
+  flex-shrink:0;
+  /* (100% - 1×gap 10px - peek 22px) / 2 */
+  width:calc(50% - 21px);
+  min-height:196px;
+  border-radius:var(--radius);
+  overflow:hidden;
+  position:relative;
+  scroll-snap-align:start;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  animation:adviceCardIn .4s cubic-bezier(.34,1.1,.64,1) both;
+  /* glass ortak */
+  backdrop-filter:blur(28px) saturate(160%);
+  -webkit-backdrop-filter:blur(28px) saturate(160%);
+  box-shadow:0 12px 40px rgba(0,0,0,.45), 0 1px 0 0 rgba(255,255,255,.06) inset;
+}
+.advice-big-card:active{opacity:.88}
+
+/* good — yeşil tintli glass */
+.advice-big-card.good{
+  background:
+    radial-gradient(ellipse 90% 70% at 10% 10%, rgba(45,184,102,.22) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 90% 90%, rgba(45,184,102,.08) 0%, transparent 55%),
+    linear-gradient(160deg,rgba(8,26,14,.88) 0%,rgba(6,14,10,.93) 100%);
+  border:1px solid rgba(45,184,102,.22);
+  box-shadow:0 12px 40px rgba(0,0,0,.45), 0 1px 0 0 rgba(45,184,102,.2) inset;
+}
+/* warn — sarı tintli glass */
+.advice-big-card.warn{
+  background:
+    radial-gradient(ellipse 90% 70% at 10% 10%, rgba(255,214,10,.2) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 90% 90%, rgba(255,149,0,.08) 0%, transparent 55%),
+    linear-gradient(160deg,rgba(26,20,0,.88) 0%,rgba(16,12,0,.93) 100%);
+  border:1px solid rgba(255,214,10,.2);
+  box-shadow:0 12px 40px rgba(0,0,0,.45), 0 1px 0 0 rgba(255,214,10,.18) inset;
+}
+/* bad — kırmızı tintli glass */
+.advice-big-card.bad{
+  background:
+    radial-gradient(ellipse 90% 70% at 10% 10%, rgba(255,69,58,.22) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 90% 90%, rgba(255,69,58,.07) 0%, transparent 55%),
+    linear-gradient(160deg,rgba(26,6,4,.88) 0%,rgba(14,4,3,.93) 100%);
+  border:1px solid rgba(255,69,58,.2);
+  box-shadow:0 12px 40px rgba(0,0,0,.45), 0 1px 0 0 rgba(255,69,58,.18) inset;
+}
+
+/* İç içerik */
+.advice-big-inner{
+  position:relative;z-index:1;
+  padding:16px 14px 14px;
+  display:flex;flex-direction:column;
+  height:100%;min-height:196px;
+}
+
+/* Büyük değer — rakam ya da ikon */
+.advice-big-value{
+  flex:1;
+  display:flex;align-items:center;
+  margin-bottom:10px;
+}
+.advice-big-num{
+  font-size:48px;font-weight:900;letter-spacing:-3px;line-height:1;
+}
+.advice-big-card.good .advice-big-num{color:#2DB866}
+.advice-big-card.warn .advice-big-num{color:#FFD60A}
+.advice-big-card.bad  .advice-big-num{color:#FF453A}
+
+/* Küçük rakam (₺ gibi uzun değerler için) */
+.advice-big-num.sm{
+  font-size:32px;letter-spacing:-1.5px;
+}
+
+/* Alt metin */
+.advice-big-label{
+  font-size:11.5px;font-weight:800;letter-spacing:-.1px;
+  margin-bottom:4px;line-height:1.3;
+}
+.advice-big-card.good .advice-big-label{color:rgba(45,184,102,.9)}
+.advice-big-card.warn .advice-big-label{color:rgba(255,214,10,.9)}
+.advice-big-card.bad  .advice-big-label{color:rgba(255,100,80,.95)}
+
+.advice-big-sub{
+  font-size:11px;font-weight:500;color:rgba(255,255,255,.5);
+  line-height:1.55;
+}
+
+.advice-more{font-size:10px;font-weight:800;margin-top:8px;opacity:.75}
+.advice-more span{display:inline-block;transition:transform .2s}
+.advice-big-card.good .advice-more{color:#2DB866}.advice-big-card.warn .advice-more{color:#FFD60A}.advice-big-card.bad .advice-more{color:#FF6B60}
+.drv-more-head{font-size:14px;font-weight:600;color:var(--text);line-height:1.5;margin:12px 0 14px}
+.drv-more-head b{font-weight:800}
+.drv-more-title{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.drv-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.drv-row-l{font-size:13.5px;font-weight:600;color:var(--text)}
+.drv-row-s{font-size:11px;font-weight:500;color:var(--muted);margin-top:2px}
+.drv-row-v{font-size:14px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums;white-space:nowrap}
+.drv-row.tot{border-bottom:none;border-top:1px solid rgba(255,255,255,.14);margin-top:-1px}
+.drv-row.tot .drv-row-l,.drv-row.tot .drv-row-v{font-weight:800}
+.drv-more .drv-act{border-top:none;background:rgba(255,255,255,.05);border-radius:12px;padding:11px 13px;margin-top:10px}
+.drv-btn{width:100%;margin-top:12px;padding:13px;border:none;border-radius:13px;background:var(--accent);color:#04130a;font-size:14px;font-weight:800;font-family:inherit;cursor:pointer}
+.drv-sh-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.drv-sh-top .drv-num{font-size:44px;font-weight:900;margin-bottom:0}
+.advice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 14px}
+.advice-grid .advice-big-card{width:auto;min-height:0}
+.advice-grid .advice-big-inner{min-height:176px}
+.advice-big-num.sm{font-size:24px;letter-spacing:-1px}
+@keyframes adviceCardIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 .drv-detail { font-size:12.5px; font-weight:400; color:var(--muted); line-height:1.65; letter-spacing:-.01em; }
 /* Yol haritası: satır → görev kartı */
 #planStepsList .plan-step-row { background:var(--surface2); border:1px solid var(--border); border-top:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:10px; position:relative; overflow:hidden; }
@@ -1572,7 +1614,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .sc-cp-note { color:rgba(233,232,240,.7); }
 .plan-break-head { color:rgba(233,232,240,.62); }
 .plan-break-foot { color:rgba(233,232,240,.5); opacity:1; }
-.plan-bar-legend { color:rgba(233,232,240,.55); opacity:1; }
 .sc-q-hint { color:rgba(233,232,240,.6); }
 .plan-goal-card-frac { color:rgba(233,232,240,.65); }
 .report-row-label { color:rgba(233,232,240,.65); }
@@ -2246,18 +2287,9 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .bgt-back{background:none;border:none;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;padding:0}
 
 /* ── V76: Kazanımlar (başarımlar) ── */
-.ach-strip-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
-.ach-strip-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.ach-strip-t{font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
-.ach-strip-c{font-size:12px;font-weight:800;color:var(--muted)}
-.ach-strip-c b{color:var(--accent)}
-.ach-strip-all{font-size:11px;font-weight:700;color:var(--accent);cursor:pointer;background:none;border:none;font-family:'Montserrat',sans-serif}
-.ach-strip-row{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
-.ach-strip-row::-webkit-scrollbar{display:none}
-.ach-mini{flex:0 0 auto;width:56px;text-align:center;cursor:pointer}
-.ach-mini-ic{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:5px}
-.ach-mini.locked{opacity:.5}
-.ach-mini-nm{font-size:8.5px;font-weight:800;line-height:1.15;color:var(--muted);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ach-pill{position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:5px;padding:6px 10px 6px 8px;border-radius:99px;border:1px solid rgba(255,214,10,.28);background:rgba(255,214,10,.09);font-family:inherit;font-size:11.5px;font-weight:800;color:#FFD60A;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ach-pill b{font-weight:900}.ach-pill span{color:rgba(255,214,10,.55);font-weight:700}
+.ach-pill:active{transform:scale(.95)}
 
 /* tam ızgara sheet */
 .ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
@@ -2311,7 +2343,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 @keyframes achFu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── V75: Alışkanlıkların (davranış içgörüleri) ── */
-.habits-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:24px 0 12px}
 .wk-card{background:var(--surface2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:18px;margin-bottom:12px}
 .wk-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px}
 .wk-title{font-size:14px;font-weight:800}
@@ -3072,6 +3103,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <!-- V69.2: Yedek hatırlatıcı bandı -->
   <div id="backupBanner"></div>
   <div class="ozet-hero">
+    <div id="achStrip"></div><!-- V97: kazanımlar rozeti -->
     <div class="ozet-hero-label">Toplam Varlığın</div>
     <div class="ozet-hero-balance" id="ozetBalance">—</div>
     <div class="ozet-hero-sub" id="ozetBalanceSub"></div>
@@ -3081,10 +3113,10 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <!-- STREAK CARD -->
   <div id="streakCardWrap"></div>
 
-  <!-- V76: KAZANIMLAR ŞERİDİ -->
-  <div id="achStrip"></div>
+  <!-- V96.6: PARAN NEREYE GİDİYOR -->
+  <div id="moneyFlowCard"></div>
 
-  <!-- Finansal Tavsiyeler + Analiz Preview -->
+  <!-- Finansal Analiz kutusu (Plan'ın kapısı) -->
   <div id="financialAdviceBox"></div>
 
   <!-- Harcama / Gelir Dağılımı Donut -->
@@ -3105,16 +3137,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     </div>
     <div class="chart-wrap" style="height:200px"><canvas id="doughnutChart"></canvas></div>
     <div id="doughnutLegend" style="margin-top:14px"></div>
-  </div>
-
-  <!-- V75: ALIŞKANLIKLARIN (davranış içgörüleri) -->
-  <div id="habitsSection" style="display:none">
-    <div class="habits-label">Alışkanlıkların</div>
-    <div class="wk-card">
-      <div class="wk-head"><span class="wk-title">Haftanın günlerine göre</span><span class="wk-sub" id="wkSub"></span></div>
-      <div class="wk-bars" id="wkBars"></div>
-    </div>
-    <div id="habitsList"></div>
   </div>
 
   <!-- Aylık Kalan Geçmişi -->
@@ -3152,7 +3174,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <div id="wishSummaryCard"></div>
 
   <!-- GÜNLÜK LİMİT İSTATİSTİKLERİ -->
-  <div id="dailyStatsCard"></div>
 
   <!-- Yıllık Özet -->
   <div class="card" style="padding:18px 18px 20px">
@@ -3231,6 +3252,16 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     <div id="monthlyReportBox"></div>
   </div>
 
+  <!-- V75 / V97.1: ALIŞKANLIKLARIN (davranış içgörüleri) — Özet'ten buraya taşındı -->
+  <div class="plan-section-block" id="habitsSection" style="display:none">
+    <div class="plan-section-label">07 · Alışkanlıkların</div>
+    <div class="wk-card">
+      <div class="wk-head"><span class="wk-title">Haftanın günlerine göre</span><span class="wk-sub" id="wkSub"></span></div>
+      <div class="wk-bars" id="wkBars"></div>
+    </div>
+    <div id="habitsList"></div>
+  </div>
+
   <!-- V73: BÜTÇE DURUMU -->
   <div class="plan-section-block" id="planBudgetBlock" style="display:none">
     <div class="plan-section-label">Cüzdan Durumu</div>
@@ -3245,7 +3276,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 
   <!-- 5. SİMÜLASYON — V79: oyun alanı (presetler + kokpit + projeksiyon eğrisi) -->
   <div class="plan-section-block">
-    <div class="plan-section-label">07 · Simülasyon</div>
+    <div class="plan-section-label">08 · Simülasyon</div>
     <div class="sc-presets" id="planScenPresets"></div>
     <div id="planScenResult"></div>
     <div style="background:var(--surface2);border-radius:var(--radius);overflow:hidden;margin-top:10px">
@@ -3520,6 +3551,12 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     <div class="achc-desc" id="achcDesc"></div>
     <button class="achc-btn" id="achcBtn" onclick="closeAchCeleb()">Harika!</button>
   </div>
+</div>
+<div class="add-sheet-overlay" id="drvSheetOv" onclick="if(event.target===this)closeDrvSheet()"></div>
+<div class="add-sheet" id="drvSheet">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header"><span class="add-sheet-title" id="drvSheetTitle"></span><button class="add-sheet-close" onclick="closeDrvSheet()">&times;</button></div>
+  <div class="add-sheet-body" id="drvSheetBody" style="max-height:72vh;overflow-y:auto"></div>
 </div>
 <div class="add-sheet-overlay" id="achSheetOv" onclick="if(event.target===this)closeAchSheet()"></div>
 <div class="add-sheet" id="achSheet">
@@ -4796,15 +4833,15 @@ function calcStreakData() {
   return { days, prevDays, prevMk, streak, score, greenDays, totalPastDays, freezesLeft, milestone, monthBadge, dim, todayD, monthlySavings };
 }
 function useFreeze() {
-  if ((data.streak.freezesUsed || 0) >= (data.streak.freezeTotal || 2)) { showToast(TOAST_SHIELD + ' Bu ay freeze hakkın kalmadı'); return; }
+  if ((data.streak.freezesUsed || 0) >= (data.streak.freezeTotal || 2)) { showToast(TOAST_SHIELD + ' Bu ay koruma hakkın kalmadı'); return; }
   const todayStr = today();
-  if (data.streak.frozenDays.includes(todayStr)) { showToast(TOAST_SHIELD + ' Bugün zaten donduruldu'); return; }
+  if (data.streak.frozenDays.includes(todayStr)) { showToast(TOAST_SHIELD + ' Bugün zaten korundu'); return; }
   const todayStatus = getDayStatus(todayStr);
-  if (todayStatus !== 'red') { showToast('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 3l-9 11h8l-1 7l9 -11h-8l1 -7z"/></svg> Bugün limit aşımı yok, freeze gerekmez!'); return; }
+  if (todayStatus !== 'red') { showToast('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 3l-9 11h8l-1 7l9 -11h-8l1 -7z"/></svg> Bugün limiti aşmadın, korumaya gerek yok'); return; }
   data.streak.frozenDays.push(todayStr);
   data.streak.freezesUsed = (data.streak.freezesUsed || 0) + 1;
   save();
-  showToast(TOAST_SHIELD + ' Bugün donduruldu — streak korundu!');
+  showToast(TOAST_SHIELD + ' Bugün korundu — serin bozulmadı');
   renderOzetStats();
   _streakRenderGrid();
 }
@@ -4839,7 +4876,7 @@ function _streakPopIfGrew(sd, scWrap) {
 }
 
 function renderStreakCard(sd) {
-  const { days, streak, score, greenDays, totalPastDays, freezesLeft, milestone, monthBadge, dim, todayD } = sd;
+  const { streak, freezesLeft, milestone, monthBadge } = sd;
   const isDead = streak === 0;
   const mk = currentMonth;
   const hasIncome = calcMonthData(mk).income > 0;
@@ -4851,9 +4888,6 @@ function renderStreakCard(sd) {
       : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg>';
     return `<div class="freeze-shield ${used?'used':'active'}">${svg}</div>`;
   }).join('');
-
-  const streakColor = isDead ? 'var(--muted)' : '#FF9500';
-  const scoreColor  = score >= 80 ? 'var(--accent)' : score >= 50 ? 'var(--warning)' : 'var(--danger)';
 
   const milestoneHtml = milestone ? `
     <div class="streak-milestone">
@@ -4879,8 +4913,6 @@ function renderStreakCard(sd) {
     ? '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#888" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2-2.96 0-7-1-8c0 3.038-1.773 4.741-3 6c-1.226 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.532-1.056-3.94-2-5c-1.786 3-2.791 3-4 2z"/></svg>'
     : '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF9500" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12c2-2.96 0-7-1-8c0 3.038-1.773 4.741-3 6c-1.226 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.532-1.056-3.94-2-5c-1.786 3-2.791 3-4 2z"/></svg>';
 
-  const DAY_HEADS = ['Pt','Sa','Ça','Pe','Cu','Ct','Pz'].map(d=>`<div class="streak-day-head">${d}</div>`).join('');
-
   return `
   <div class="streak-card" id="streakCard">
     <div class="streak-header">
@@ -4891,16 +4923,16 @@ function renderStreakCard(sd) {
       <div class="streak-main">
         <div class="streak-count${isDead?' dead':''}">${streak}</div>
         <div class="streak-meta${isDead?' dead':''}">
-          ${hasIncome ? 'günlük seri' : 'streak henüz başlamadı'}
+          ${hasIncome ? 'günlük seri' : (streak > 0 ? 'serin sürüyor · gelirini girince günler sayılır' : 'seri henüz başlamadı')}
         </div>
       </div>
       <div class="streak-best">EN UZUN<br>${data.streak.best || 0} GÜN</div>
     </div>
 
     <div class="streak-stat-row">
-      <div class="streak-stat-box"><div class="streak-stat-val" style="color:${streakColor}">${streak}</div><div class="streak-stat-lbl">aktif seri</div></div>
-      <div class="streak-stat-box"><div class="streak-stat-val" style="color:${scoreColor}">%${score}</div><div class="streak-stat-lbl">bu ay skoru</div></div>
-      <div class="streak-stat-box"><div class="streak-stat-val">${greenDays}/${totalPastDays}</div><div class="streak-stat-lbl">yeşil gün</div></div>
+      <div class="streak-stat-box"><div class="streak-stat-val" style="color:${isDead ? 'var(--muted)' : '#FF9500'}">${streak}</div><div class="streak-stat-lbl">aktif seri</div></div>
+      <div class="streak-stat-box"><div class="streak-stat-val" id="streakPctVal"></div><div class="streak-stat-lbl" id="streakPctLbl"></div></div>
+      <div class="streak-stat-box"><div class="streak-stat-val" id="streakGreenVal"></div><div class="streak-stat-lbl">yeşil gün</div></div>
     </div>
 
     ${noIncomeHint}${milestoneHtml}${monthBadgeHtml}
@@ -4915,9 +4947,15 @@ function renderStreakCard(sd) {
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"/></svg>
         </button>
       </div>
-      <div class="streak-days-header">${DAY_HEADS}</div>
+      <div class="streak-days-header">${['Pt','Sa','Ça','Pe','Cu','Ct','Pz'].map(d=>`<div class="streak-day-head">${d}</div>`).join('')}</div>
       <div class="streak-days-grid" id="streakDotGrid"></div>
     </div>
+    <div class="streak-stat-row" id="streakFacts">
+      <div class="streak-stat-box"><div class="streak-stat-val" id="streakAvgVal"></div><div class="streak-stat-lbl">günlük ort.</div></div>
+      <div class="streak-stat-box"><div class="streak-stat-val" id="streakMaxVal" style="color:#FF6B60"></div><div class="streak-stat-lbl" id="streakMaxLbl">en çok</div></div>
+      <div class="streak-stat-box"><div class="streak-stat-val" id="streakMinVal" style="color:var(--accent)"></div><div class="streak-stat-lbl" id="streakMinLbl">en az</div></div>
+    </div>
+    <div class="streak-legend" id="streakCmp" style="margin:-4px 16px 12px;justify-content:center;position:relative;z-index:1"></div>
 
     <div id="streakDayPopup" style="display:none;margin:0 16px 8px;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;position:relative;z-index:2">
       <div id="sdpDate" style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:7px"></div>
@@ -4936,10 +4974,11 @@ function renderStreakCard(sd) {
         <span id="sdpLeft" style="font-size:9px;font-weight:700"></span>
         <span id="sdpRight" style="font-size:9px;font-weight:700;color:var(--muted)"></span>
       </div>
+      <div id="sdpWallets" style="display:none;margin-top:7px;padding-top:6px;border-top:1px solid rgba(255,255,255,.07);font-size:10.5px;font-weight:700;color:var(--muted)"></div>
     </div>
 
     <div class="streak-freeze-row">
-      <div class="freeze-shields">${shieldsHtml}</div>
+      <div><div class="freeze-count">KORUMA HAKKI · ${Math.max(0, freezesLeft)}/${data.streak.freezeTotal || 2}</div><div class="freeze-shields">${shieldsHtml}</div></div>
       <button class="freeze-btn" onclick="useFreeze()" ${freezesLeft<=0?'disabled':''}>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg>
         <span style="font-size:10px;font-weight:800;color:#0A84FF">Bugünü koru</span>
@@ -5006,13 +5045,11 @@ function _streakRenderGrid() {
 
   const mk = viewMk;
   const dim = daysInMonth(mk);
-  const firstDow = new Date(_streakViewY, _streakViewM, 1).getDay();
-  const offset = (firstDow + 6) % 7;
-
   const iconCheck = '<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10-10"/></svg>';
   const iconX     = '<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6l-12 12M6 6l12 12"/></svg>';
   const iconSnow  = '<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l0 18M3 12l18 0M12 3l3 3M12 3l-3 3M12 21l3-3M12 21l-3-3M3 12l3-3M3 12l3 3M21 12l-3 3M21 12l-3-3"/></svg>';
 
+  const offset = (new Date(_streakViewY, _streakViewM, 1).getDay() + 6) % 7;
   let html = Array.from({length: offset}, () => '<div class="day-dot blank"></div>').join('');
 
   for (let d = 1; d <= dim; d++) {
@@ -5029,6 +5066,47 @@ function _streakRenderGrid() {
   }
 
   grid.innerHTML = html;
+  _streakRenderFacts(mk, isCurrentMonth);
+}
+
+// V96.1: seri kartının sağ üstündeki yüzde ve alttaki özet satırları — görüntülenen aya göre
+// (eski "Günlük Limit Analizi" kartının bilgileri buraya taşındı)
+function _streakMonthStats(mk, isCurrent) {
+  const dim = daysInMonth(mk), last = isCurrent ? Math.min(new Date().getDate(), dim) : dim;
+  let green = 0, red = 0, total = 0, max = 0, maxD = '', min = Infinity, minD = '';
+  for (let d = 1; d <= last; d++) {
+    const ds = mk + '-' + String(d).padStart(2, '0'), st = getDayInfo(ds).status;
+    if (st === 'green' || st === 'frozen') green++; else if (st === 'red') red++; else continue;
+    const sp = data.transactions.filter(t => t.date === ds && _isFreeVarTx(t)).reduce((a, t) => a + t.amount, 0);
+    total += sp;
+    if (sp > max) { max = sp; maxD = ds; }
+    if (sp > 0 && sp < min) { min = sp; minD = ds; }
+  }
+  const n = green + red;
+  return { green, red, n, pct: n > 0 ? Math.round(green / n * 100) : null, avg: last > 0 ? Math.round(total / last) : 0, last, max, maxD, min: min === Infinity ? 0 : min, minD };
+}
+function _streakRenderFacts(mk, isCurrent) {
+  const st = _streakMonthStats(mk, isCurrent), $ = id => document.getElementById(id);
+  const hide = !!data.hideAmounts, f = v => hide ? '••••' : fmtTL(Math.round(v));
+  const dLbl = ds => +ds.slice(8, 10) + ' ' + MONTH_NAMES[+ds.slice(5, 7) - 1].slice(0, 3);
+  const mName = MONTH_NAMES[+mk.slice(5, 7) - 1];
+  const pv = $('streakPctVal');
+  if (pv) { pv.textContent = st.pct === null ? '—' : '%' + st.pct; pv.style.color = st.pct === null ? 'var(--muted)' : st.pct >= 70 ? 'var(--accent)' : st.pct >= 40 ? 'var(--warning)' : 'var(--danger)'; }
+  if ($('streakPctLbl')) $('streakPctLbl').textContent = isCurrent ? 'bu ay skoru' : mName.toLowerCase() + ' skoru';
+  if ($('streakGreenVal')) $('streakGreenVal').textContent = st.n > 0 ? st.green + '/' + st.n : '—';
+  if ($('streakAvgVal')) $('streakAvgVal').textContent = st.n > 0 ? f(st.avg) : '—';
+  // geçen ayın aynı günlerine göre günlük ortalama farkı (yalnız içinde bulunulan ayda)
+  let cmp = '';
+  if (isCurrent && st.n > 0) {
+    const pmk = addMonthsToMk(mk, -1), nD = Math.min(st.last, daysInMonth(pmk));
+    const pTot = data.transactions.filter(t => monthKey(t.date) === pmk && +t.date.slice(8, 10) <= nD && _isFreeVarTx(t)).reduce((a, t) => a + t.amount, 0);
+    const pAvg = nD > 0 ? Math.round(pTot / nD) : 0, diff = st.avg - pAvg;
+    if (pAvg > 0 && diff !== 0) cmp = { up: diff > 0, txt: (diff > 0 ? '↑ ' : '↓ ') + f(Math.abs(diff)) };
+  }
+  const fx = $('streakFacts'); if (fx) fx.style.display = st.n > 0 ? '' : 'none';
+  if ($('streakCmp')) { $('streakCmp').style.display = cmp ? '' : 'none'; $('streakCmp').innerHTML = cmp ? `<span>Günlük ortalaman geçen ayın aynı günlerine göre <b style="color:${cmp.up ? 'var(--danger)' : 'var(--accent)'}">${cmp.txt}</b></span>` : ''; }
+  if ($('streakMaxVal')) { $('streakMaxVal').textContent = st.max > 0 ? f(st.max) : '—'; $('streakMaxLbl').textContent = st.max > 0 ? 'en çok · ' + dLbl(st.maxD) : 'en çok'; }
+  if ($('streakMinVal')) { $('streakMinVal').textContent = st.minD ? f(st.min) : '—'; $('streakMinLbl').textContent = st.minD ? 'en az · ' + dLbl(st.minD) : 'en az'; }
 }
 
 function showDayPopup(el, dateStr, spent, limit) {
@@ -5050,6 +5128,9 @@ function showDayPopup(el, dateStr, spent, limit) {
   const dow = DOW_TR[new Date(dy, dm-1, dd).getDay()];
   document.getElementById('sdpDate').textContent = dd + ' ' + MONTH_NAMES[dm-1] + ' · ' + dow;
 
+  // V96.1: korunan günde de o günün gerçek limiti ve harcaması gösterilir
+  const frozenDay = data.streak.frozenDays.includes(dateStr);
+  if (frozenDay) { limit = Math.round(dayLimitFor(dateStr) || 0); spent = Math.round(data.transactions.filter(t => t.date === dateStr && _isFreeVarTx(t)).reduce((a, t) => a + t.amount, 0)); }
   const isOver = limit > 0 && spent > limit;
   const ratio = limit > 0 ? Math.min(100, Math.round(spent/limit*100)) : 0;
   const color = isOver ? 'var(--danger)' : ratio > 80 ? 'var(--warning)' : 'var(--accent)';
@@ -5070,7 +5151,12 @@ function showDayPopup(el, dateStr, spent, limit) {
     document.getElementById('sdpLeft').textContent = 'Harcama yok';
     document.getElementById('sdpLeft').style.color = 'var(--muted)';
   }
-  document.getElementById('sdpRight').textContent = limit > 0 && spent > 0 ? '%' + ratio + ' kullanıldı' : '';
+  document.getElementById('sdpRight').textContent = frozenDay ? 'korundu' : (limit > 0 && spent > 0 ? '%' + ratio + ' kullanıldı' : '');
+  // cüzdanlardan yapılan harcama (limitten sayılmaz, ayrıca gösterilir)
+  const wMap = {};
+  data.transactions.forEach(t => { if (t.date !== dateStr) return; const bt = budgetForTx(t); if (!bt) return; wMap[bt.name] = (wMap[bt.name] || 0) + t.amount; });
+  const wEl = document.getElementById('sdpWallets'), wKeys = Object.keys(wMap);
+  if (wEl) { wEl.style.display = wKeys.length ? 'block' : 'none'; wEl.textContent = wKeys.map(k => k + ' cüzdanından ' + (data.hideAmounts ? '••••' : fmtTL(Math.round(wMap[k])))).join(' · '); }
 
   popup.style.display = 'block';
 }
@@ -7431,7 +7517,6 @@ function renderDailyLimit() {
 
   const isNeg = fb.daily < 0;
   const dailyColor = isNeg ? '#FF453A' : fb.daily < 150 ? '#FFD60A' : '#2DB866';
-  const remColor = fb.remaining >= 0 ? '#2DB866' : '#FF453A';
   const lc = '#2DB866';
 
   const dim = daysInMonth(mk);
@@ -7505,13 +7590,11 @@ function renderDailyLimit() {
   const lx = toX(lastIdx), ly = toY(spent[lastIdx] || 0);
   const spentFill = spentPath ? spentPath + ` L ${lx} ${svgH-padB} L ${toX(0)} ${svgH-padB} Z` : '';
 
+  // V97.4: limit çizgisinin üstünde kalan bölge — harcama çizgisinin bu bölgeye düşen kısmı kırmızı çizilir
+  const _s0 = limits.findIndex(v => v != null);
+  const overClip = (limitPath && _s0 >= 0) ? limitPath + ` L ${toX(dim-1)} -80 L ${toX(_s0)} -80 Z` : '';
+  const _tl = limits[lastIdx], todayOver = _tl != null && (spent[lastIdx] || 0) > Math.max(0, _tl);
   const xTicks = [0, Math.round(dim/4), Math.round(dim/2), Math.round(3*dim/4), dim-1];
-
-  const row = (label, val, col) =>
-    `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 20px;border-bottom:1px solid rgba(255,255,255,.04)">
-      <div style="display:flex;align-items:center;gap:7px"><div style="width:5px;height:5px;border-radius:50%;background:${col};flex-shrink:0"></div><span style="font-size:12px;font-weight:600;color:rgba(255,255,255,.45)">${label}</span></div>
-      <span style="font-size:12px;font-weight:800;color:${col}">${val}</span>
-    </div>`;
 
   el.innerHTML = `
     <div style="position:relative;overflow:hidden;background:#0A0A0D;border-radius:24px;box-shadow:0 2px 8px rgba(0,0,0,.15);border:1px solid var(--border)">
@@ -7549,14 +7632,22 @@ function renderDailyLimit() {
               <stop offset="0%" stop-color="${lc}" stop-opacity="0.3"/>
               <stop offset="100%" stop-color="${lc}" stop-opacity="0.02"/>
             </linearGradient>
+            <linearGradient id="dlgR" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FF453A" stop-opacity="0.38"/>
+              <stop offset="100%" stop-color="#FF453A" stop-opacity="0.10"/>
+            </linearGradient>
+            ${overClip ? `<clipPath id="dlOverClip"><path d="${overClip}"/></clipPath>` : ''}
           </defs>
           <!-- Limit spline çizgisi -->
           <path d="${limitPath}" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="1.2" stroke-dasharray="5,4"/>
           <!-- Harcama fill + çizgi -->
           ${spentFill ? `<path d="${spentFill}" fill="url(#dlg)" opacity="0" style="animation:fadeIn .8s cubic-bezier(.4,0,.2,1) .1s forwards"/>` : ''}
           ${spentPath ? `<path id="dlSpentLine" d="${spentPath}" fill="none" stroke="${lc}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>` : ''}
+          <!-- V97.4: limitin üstünde kalan kısım kırmızı -->
+          ${overClip && spentFill ? `<path d="${spentFill}" fill="url(#dlgR)" clip-path="url(#dlOverClip)" opacity="0" style="animation:fadeIn .8s cubic-bezier(.4,0,.2,1) 1.2s forwards"/>` : ''}
+          ${overClip && spentPath ? `<path id="dlSpentLineR" d="${spentPath}" fill="none" stroke="#FF453A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" clip-path="url(#dlOverClip)" opacity="0"/>` : ''}
           <!-- Bugün noktası -->
-          <circle id="dlDot" r="4.5" fill="${lc}" stroke="#0A0A0D" stroke-width="2" cx="0" cy="0" opacity="0"/>
+          <circle id="dlDot" r="4.5" fill="${todayOver ? '#FF453A' : lc}" stroke="#0A0A0D" stroke-width="2" cx="0" cy="0" opacity="0"/>
           <!-- X ekseni -->
           ${[...new Set(xTicks)].map(i => `<text x="${toX(i)}" y="${svgH-5}" text-anchor="middle" font-size="8" font-family="Montserrat,sans-serif" font-weight="700" fill="rgba(255,255,255,.28)">${i+1}</text>`).join('')}
           <!-- Hover araçları -->
@@ -7578,19 +7669,7 @@ function renderDailyLimit() {
 
       <!-- Collapsible breakdown -->
       <div id="dlBreakdownWrap" style="overflow:hidden;max-height:0;transition:max-height .32s cubic-bezier(.4,0,.2,1)">
-        <div style="border-top:1px solid rgba(255,255,255,.06);padding:4px 0">
-          ${row('Gelir', '+' + fmtTL(fb.income), '#2DB866')}
-          ${fb.recTotal > 0 ? row('Sabit giderler', '−' + fmtTL(fb.recTotal), '#F97316') : ''}
-          ${fb.debtTotal > 0 ? row('Borçlar', '−' + fmtTL(fb.debtTotal), '#FF453A') : ''}
-          ${fb.goalTotal > 0 ? row('Birikim hedefleri', '−' + fmtTL(fb.goalTotal), 'rgba(255,255,255,.6)') : ''}
-          ${fb.savTarget > 0 ? row('Tasarruf hedefi', '−' + fmtTL(fb.savTarget), 'rgba(255,255,255,.6)') : ''}
-          ${fb.varSpent > 0 ? row('Diğer harcamalar', '−' + fmtTL(fb.varSpent), 'rgba(255,255,255,.6)') : ''}
-          ${fb.capGap > 0 ? row('Hesabındaki paraya göre', '−' + fmtTL(Math.round(fb.capGap)), '#FFD60A') : ''}
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 20px 12px;border-top:1px solid rgba(255,255,255,.07);margin-top:4px">
-            <span style="font-size:13px;font-weight:800;color:rgba(255,255,255,.8)">Kalan para</span>
-            <span style="font-size:16px;font-weight:900;color:${remColor}">${fmtTL(Math.round(fb.remaining))}</span>
-          </div>
-        </div>
+        ${_dlAnalysisHtml(mk, fb)}
       </div>
     </div>`;
 
@@ -7608,6 +7687,8 @@ function renderDailyLimit() {
       line.style.strokeDasharray = len;
       line.style.strokeDashoffset = len;
       line.setAttribute('opacity', '1');
+      const lineR = document.getElementById('dlSpentLineR'); // V97.4: kırmızı kısım aynı anda çizilir
+      if (lineR) { lineR.style.transition = 'none'; lineR.style.strokeDasharray = len; lineR.style.strokeDashoffset = len; lineR.setAttribute('opacity', '1'); }
       if (dot) dot.setAttribute('opacity', '1');
 
       const dur = 1800;
@@ -7626,6 +7707,7 @@ function renderDailyLimit() {
 
         // Çizgi: drawn kadar göster
         line.style.strokeDashoffset = len - drawn;
+        if (lineR) lineR.style.strokeDashoffset = len - drawn;
 
         // Dot: çizilen kısmın tam ucu
         if (dot) {
@@ -7661,7 +7743,7 @@ function renderDailyLimit() {
 
       hl.setAttribute('x1', cx); hl.setAttribute('x2', cx); hl.setAttribute('opacity', '1');
       hd.setAttribute('cx', cx); hd.setAttribute('cy', cy); hd.setAttribute('opacity', '1');
-      hd.setAttribute('fill', isFuture ? 'rgba(255,255,255,.4)' : lc);
+      hd.setAttribute('fill', isFuture ? 'rgba(255,255,255,.4)' : (limitVal != null && spentVal > Math.max(0, limitVal) ? '#FF453A' : lc));
 
       ttD.textContent = `${i+1} ${MONTH_NAMES[m-1]}`;
       const ttL = document.getElementById('dlTTL');
@@ -7692,6 +7774,52 @@ function renderDailyLimit() {
     svg.addEventListener('touchmove', e => { e.preventDefault(); onMove(e.touches[0].clientX); }, { passive: false });
     svg.addEventListener('touchend', onLeave);
   });
+}
+// V96.7: Günlük Limit Analizi — Aylık Plan grafik kartının "Detaylar" bölümü
+function _dlAnalysisHtml(mk, fb) {
+  const isCur = mk === monthKey(), dim = daysInMonth(mk), last = isCur ? Math.min(new Date().getDate(), dim) : dim;
+  const st = _streakMonthStats(mk, isCur);
+  const H = 64, LIM = 0.4; // çubuk yüksekliği; limit çizgisi alttan %40'ta (çubuk = o günün harcaması ÷ o günün limiti)
+  let bars = '', under = 0, over = 0, froz = 0;
+  for (let d = 1; d <= dim; d++) {
+    const ds = mk + '-' + String(d).padStart(2, '0');
+    if (d > last) { bars += '<i class="dla-b fut"></i>'; continue; }
+    const info = getDayInfo(ds).status, lim = dayLimitFor(ds);
+    const sp = data.transactions.filter(t => t.date === ds && _isFreeVarTx(t)).reduce((a, t) => a + t.amount, 0);
+    if (lim == null || (info !== 'green' && info !== 'red' && info !== 'frozen')) { bars += '<i class="dla-b fut"></i>'; continue; }
+    const ratio = lim > 0 ? sp / lim : (sp > 0 ? 2.5 : 0);
+    const h = Math.max(3, Math.round(Math.min(ratio, 2.5) * LIM * H));
+    // V97.3: renk gerçek harcamaya göre — koruma seriyi kurtarır ama limit yine aşılmıştır
+    const isOver = sp > Math.max(0, lim);
+    if (isOver) over++; else under++;
+    if (info === 'frozen' && isOver) froz++;
+    bars += `<i class="dla-b ${isOver ? 'red' : 'grn'}${info === 'frozen' && isOver ? ' frz' : ''}${d === last && isCur ? ' now' : ''}" style="height:${h}px;animation-delay:${d * 18}ms"></i>`;
+  }
+  const pc = under + over > 0 ? Math.round(under / (under + over) * 100) : null, pcCol = pc == null ? 'var(--muted)' : pc >= 70 ? '#2DB866' : pc >= 40 ? '#FFD60A' : '#FF453A';
+  const C = 2 * Math.PI * 22;
+  let boxes = '';
+  if (isCur && fb.income > 0) {
+    const ov = (data.dailyOverride || {})[mk] > 0;
+    const budgetLeft = Math.round(fb.available - (fb.varSpent - fb.todayVarSpent));
+    const how = ov ? 'sen belirledin' : fmtTL(budgetLeft) + ' ÷ ' + fb.daysLeft + ' gün';
+    const proj = Math.round(fb.remaining - st.avg * (dim - last));
+    boxes = `<div class="dla-boxes">
+      <div class="dla-box"><div class="dla-box-l">Bugünkü limit</div><div class="dla-box-v" style="color:${fb.daily >= 0 ? '#2DB866' : '#FF453A'}">${fmtTL(Math.round(Math.max(0, fb.daily)))}</div><div class="dla-box-s">${how}</div></div>
+      <div class="dla-box"><div class="dla-box-l">Bu gidişle ay sonu</div><div class="dla-box-v" style="color:${proj >= 0 ? 'var(--text)' : '#FF453A'}">${fmtTL(proj)}</div><div class="dla-box-s">${dim - last > 0 ? 'günde ' + fmtTL(st.avg) + ' harcarsan' : 'ayın son günü'}</div></div>
+    </div>`;
+  }
+  return `<div class="dla">
+    <div class="dla-head">
+      <div><div class="dla-title">Günlük Limit Analizi</div><div class="dla-sub">${under + over > 0 ? 'Bu ay limitine ne kadar uydun' : 'Henüz sayılan gün yok'}</div></div>
+      <div class="dla-ring"><svg width="56" height="56" viewBox="0 0 56 56" style="transform:rotate(-90deg)"><circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="7"/><circle cx="28" cy="28" r="22" fill="none" stroke="${pcCol}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - (pc || 0) / 100)}"/></svg><b style="color:${pcCol}">${pc == null ? '—' : '%' + pc}</b></div>
+    </div>
+    <div class="dla-chart" style="height:${H}px"><div class="dla-line" style="bottom:${Math.round(LIM * H)}px"><span>limit</span></div>${bars}</div>
+    <div class="dla-axis"><span>1</span><span>${Math.round(dim / 2)}</span><span>${dim}</span></div>
+    ${boxes}
+    <div class="dla-legend"><span><i style="background:#2DB866"></i>${under} gün limitin altında</span><span><i style="background:#FF453A"></i>${over} gün üstünde</span></div>
+    ${froz > 0 ? `<div class="dla-frz"><i></i>${froz} günde koruma kullandın: limit aşıldı ama serin bozulmadı</div>` : ''}
+    <button class="dla-link" onclick="switchTab('ozet')">Paranın dökümü Özet\u0027te <span>→</span></button>
+  </div>`;
 }
 function dlToggleBreakdown() {
   const wrap = document.getElementById('dlBreakdownWrap');
@@ -9289,51 +9417,103 @@ function _planCalcCore(fb, sc) {
   if (fixedRatio > 0.35) drivers.push({
     label: 'Sabit gider yükü', short: 'Sabit yük',
     pct: Math.round(fixedRatio*100),
-    detail: 'Kira, abonelik ve taksitler ayda ' + fmtTL(Math.round(adjRec + fb.debtTotal)) + ' — gelirinin ' + pct(Math.round(fixedRatio*100)) + '. '
-      + (fixedRatio > 0.45
-        ? 'Sınır %45\u0027in üstündesin: en hızlı kazanım, tek büyük kalemi küçültmek.'
-        : 'Sınır %45\u0027in altındasın — bu dengeyi koru.'),
+    detail: 'Kira, abonelik ve taksitlere ayda ' + fmtTL(Math.round(adjRec + fb.debtTotal)) + ' gidiyor: gelirinin ' + pct(Math.round(fixedRatio*100)) + '.',
+    act: fixedRatio > 0.45 ? 'Sağlıklı sınır %45, üstündesin. En hızlı yol en büyük kalemi küçültmek.' : 'Sağlıklı sınır %45, altındasın. Böyle kalsın.',
+    st: fixedRatio > 0.60 ? 'bad' : fixedRatio > 0.45 ? 'warn' : 'ok',
+    brief: 'Ayda ' + fmtTL(Math.round(adjRec + fb.debtTotal)) + ' sabit gider. Sağlıklı sınır %45, ' + (fixedRatio > 0.45 ? 'üstündesin: en büyük kalemi küçült.' : 'altındasın.'),
     level: fixedRatio > 0.60 ? 'high' : 'mid',
     barPct: Math.min(100, Math.round(fixedRatio*100)),
     barColor: fixedRatio > 0.60 ? 'var(--danger)' : 'var(--warning)',
     th: 45, thLabel: 'sınır %45',
+    more: (() => {
+      const it = data.recurring.filter(r => r.active).map(r => ({ l: esc(r.desc), v: r.amount }))
+        .concat(_actD.map(d => ({ l: esc(d.name), s: 'taksit', v: d.monthlyAmount }))).sort((a, b) => b.v - a.v);
+      const top = it.slice(0, 4), rest = it.slice(4), restSum = rest.reduce((a, x) => a + x.v, 0);
+      const rows = top.map(x => ({ l: x.l, s: (x.s ? x.s + ' · ' : '') + 'gelirinin ' + pct(Math.round(x.v / Math.max(1, adjIncome) * 100)), v: fmtTL(Math.round(x.v)) }));
+      if (rest.length) rows.push({ l: 'Diğer ' + rest.length + ' kalem', v: fmtTL(Math.round(restSum)) });
+      const gap = Math.round(adjRec + fb.debtTotal - adjIncome * 0.45);
+      return { title: 'En çok yer tutanlar', rows,
+        head: gap > 0 ? 'Sınırın altına inmek için ayda <b>' + fmtTL(gap) + '</b> azaltman gerek.' : 'Sınırın <b>' + fmtTL(-gap) + '</b> altındasın.' };
+    })(),
   });
   if (debtRatio > 0.08) drivers.push({
     label: 'Borç & taksit yükü', short: 'Borç',
     pct: Math.round(debtRatio*100),
-    detail: 'Taksitler ayda ' + fmtTL(Math.round(fb.debtTotal)) + ' bağlıyor (gelirin ' + pct(Math.round(debtRatio*100)) + '). '
-      + (_smD
-        ? 'En küçüğü "' + esc(_smD.name) + '" — ' + fmtTL(Math.round((_smD.installments-_smD.paidCount)*_smD.monthlyAmount)) + ' kaldı; kapanınca ayda ' + fmtTL(_smD.monthlyAmount) + ' serbest.'
+    detail: 'Taksitlere ayda ' + fmtTL(Math.round(fb.debtTotal)) + ' gidiyor: gelirinin ' + pct(Math.round(debtRatio*100)) + '.',
+    act: (_smD
+        ? 'En küçük borcun "' + esc(_smD.name) + '": ' + fmtTL(Math.round((_smD.installments-_smD.paidCount)*_smD.monthlyAmount)) + ' kaldı. Kapanınca ayda ' + fmtTL(_smD.monthlyAmount) + ' boşa çıkar.'
         : 'Her kapanan taksit bu oranı kalıcı düşürür.'),
+    st: debtRatio > 0.30 ? 'bad' : debtRatio > 0.20 ? 'warn' : 'ok',
+    brief: 'Ayda ' + fmtTL(Math.round(fb.debtTotal)) + ' taksit. Sağlıklı sınır %20, ' + (debtRatio > 0.20 ? 'üstündesin.' : 'altındasın.') + (_smD ? ' Önce "' + esc(_smD.name) + '": ' + fmtTL(Math.round((_smD.installments-_smD.paidCount)*_smD.monthlyAmount)) + ' kaldı.' : ''),
     level: debtRatio > 0.30 ? 'high' : 'mid',
     barPct: Math.min(100, Math.round(debtRatio*100*2)),
     barColor: debtRatio > 0.30 ? 'var(--danger)' : 'var(--warning)',
     th: 40, thLabel: 'sınır %20',
+    more: (() => {
+      const ds = _actD.map(d => { const left = Math.max(0, d.installments - d.paidCount); return { d, left, rem: left * d.monthlyAmount }; }).sort((a, b) => a.rem - b.rem);
+      const rows = ds.map(x => ({ l: esc(x.d.name), s: x.left + ' taksit kaldı · son: ' + _mkLabel(addMonthsToMk(monthKey(), Math.max(0, x.left - 1))), v: fmtTL(Math.round(x.rem)) }));
+      const sum = ds.reduce((a, x) => a + x.rem, 0);
+      return { title: 'Borçların (küçükten büyüğe)', rows, total: { l: 'Toplam kalan', v: fmtTL(Math.round(sum)) },
+        head: 'Hepsi bitince ayda <b>' + fmtTL(Math.round(fb.debtTotal)) + '</b> boşa çıkar.' };
+    })(),
   });
   if (adjRemain < 0) drivers.push({
     label: 'Ay sonu açığı',
     pct: 0,
-    detail: 'Giderler geliri ayda ' + fmtTL(Math.abs(Math.round(adjRemain))) + ' aşıyor. İlk hamle değişken harcamalar: günde '
-      + fmtTL(Math.ceil(Math.abs(adjRemain)/30)) + ' kısmak ayı sıfıra getirir.',
+    detail: 'Giderlerin gelirini ayda ' + fmtTL(Math.abs(Math.round(adjRemain))) + ' aşıyor.',
+    act: 'Günlük harcamadan ' + fmtTL(Math.ceil(Math.abs(adjRemain)/30)) + ' kısmak ayı sıfıra getirir.', st: 'bad',
+    big: fmtTL(Math.abs(Math.round(adjRemain))), brief: 'Giderlerin gelirini aşıyor. Günde ' + fmtTL(Math.ceil(Math.abs(adjRemain)/30)) + ' kısarsan ay sıfıra gelir.',
     level: 'high', barPct: 100, barColor: 'var(--danger)',
+    more: (() => {
+      const rows = [{ l: 'Gelir', v: fmtTL(Math.round(adjIncome)) }, { l: 'Sabit gider', v: '−' + fmtTL(Math.round(adjRec)) }];
+      if (fb.debtTotal > 0) rows.push({ l: 'Taksit', v: '−' + fmtTL(Math.round(fb.debtTotal)) });
+      if (fb.goalTotal + fb.savTarget > 0) rows.push({ l: 'Birikim', v: '−' + fmtTL(Math.round(fb.goalTotal + fb.savTarget)) });
+      rows.push({ l: 'Günlük harcama', s: 'son ayların ortalaması', v: '−' + fmtTL(Math.round(adjVar)) });
+      const need = Math.round(adjIncome * 0.12 - adjRemain);
+      return { title: 'Paran nereye gidiyor', rows, total: { l: 'Ay sonunda kalan', v: (adjRemain < 0 ? '−' : '') + fmtTL(Math.abs(Math.round(adjRemain))) },
+        head: adjRemain < 0 ? 'Ayı sıfıra getirmek için <b>' + fmtTL(Math.abs(Math.round(adjRemain))) + '</b> kısman gerek.' : 'Sağlıklı seviye için ayda <b>' + fmtTL(Math.max(0, need)) + '</b> daha kalmalı.' };
+    })(),
   });
   if (savRatio < 0.05 && adjRemain >= 0) drivers.push({
     label: 'Ay sonunda az kalıyor', short: 'Birikim',
     pct: Math.round(savRatio*100),
-    detail: 'Ay sonunda gelirin sadece ' + pct(Math.round(savRatio*100)) + ' (' + fmtTL(Math.round(savPot)) + ') kalıyor; hedef %12. '
-      + 'Beklenmedik tek gider dengeyi bozmasın diye önce küçük bir tampon kur.',
+    detail: 'Ay sonunda gelirinin ' + pct(Math.round(savRatio*100)) + ' (' + fmtTL(Math.round(savPot)) + ') kalıyor. Sağlıklı olan en az %12.',
+    act: 'Beklenmedik bir gider dengeni bozmasın diye önce küçük bir yedek para biriktir.', st: 'warn',
+    brief: 'Ay sonunda ' + fmtTL(Math.round(savPot)) + ' kalıyor. Sağlıklı olan gelirinin en az %12\u0027si.',
     level: 'mid', barPct: Math.max(5, Math.round(savRatio*100*4)), barColor: 'var(--warning)',
     th: 48, thLabel: 'hedef %12',
+    more: (() => {
+      const rows = [{ l: 'Gelir', v: fmtTL(Math.round(adjIncome)) }, { l: 'Sabit gider', v: '−' + fmtTL(Math.round(adjRec)) }];
+      if (fb.debtTotal > 0) rows.push({ l: 'Taksit', v: '−' + fmtTL(Math.round(fb.debtTotal)) });
+      if (fb.goalTotal + fb.savTarget > 0) rows.push({ l: 'Birikim', v: '−' + fmtTL(Math.round(fb.goalTotal + fb.savTarget)) });
+      rows.push({ l: 'Günlük harcama', s: 'son ayların ortalaması', v: '−' + fmtTL(Math.round(adjVar)) });
+      const need = Math.round(adjIncome * 0.12 - adjRemain);
+      return { title: 'Paran nereye gidiyor', rows, total: { l: 'Ay sonunda kalan', v: (adjRemain < 0 ? '−' : '') + fmtTL(Math.abs(Math.round(adjRemain))) },
+        head: adjRemain < 0 ? 'Ayı sıfıra getirmek için <b>' + fmtTL(Math.abs(Math.round(adjRemain))) + '</b> kısman gerek.' : 'Sağlıklı seviye için ayda <b>' + fmtTL(Math.max(0, need)) + '</b> daha kalmalı.' };
+    })(),
   });
   const noEmergency = !data.savingsGoals.some(g => isEmergencyGoal(g)); // V90 Fix#4
   if (noEmergency) {
-    const _efT = Math.round((adjRec + fb.debtTotal) * 3);
+    // V96.4: hedef tutar Yol Haritası'ndaki "Acil fon oluştur" adımıyla aynı tanım (sabit gider + taksit + ortalama harcama, 3 ay)
+    const _efC = _adviceCtx();
+    const _efT = Math.round((_efC.fb.recTotal + _efC.fb.debtTotal + _efC.avgVar3) * 3);
+    const _efM = _efC.structCap > 200 ? Math.max(200, Math.min(Math.ceil(_efT / 6), Math.round(_efC.structCap * 0.5))) : Math.max(100, Math.ceil(_efT / 24));
     drivers.push({
-      label: 'Acil fon eksikliği',
+      label: 'Acil fonun yok',
       pct: 0,
-      detail: 'Acil fon görünmüyor. Hedef: 3 aylık sabit gider = ' + fmtTL(_efT)
-        + (savPot > 0 ? ' — ay sonunda kalanla (' + fmtTL(Math.round(savPot)) + '/ay) yaklaşık ' + Math.max(1, Math.ceil(_efT/savPot)) + ' ayda dolar.' : '.'),
+      detail: 'Beklenmedik giderler için ayrılmış paran yok. Hedef 3 aylık yaşam masrafın: ' + fmtTL(_efT) + '.',
+      act: 'Ayda ' + fmtTL(_efM) + ' ayırırsan ' + Math.max(1, Math.ceil(_efT / _efM)) + ' ayda dolar.', st: 'warn',
+      big: fmtTL(_efT), brief: '3 aylık masrafın kadar yedek paran olmalı. Ayda ' + fmtTL(_efM) + ' ile ' + Math.max(1, Math.ceil(_efT / _efM)) + ' ayda dolar.',
       level: 'mid', barPct: 0, barColor: 'var(--muted)',
+      more: (() => {
+        const m1 = Math.round(_efC.fb.recTotal + _efC.fb.debtTotal + _efC.avgVar3);
+        const rows = [{ l: 'Sabit gider', v: fmtTL(Math.round(_efC.fb.recTotal)) }];
+        if (_efC.fb.debtTotal > 0) rows.push({ l: 'Taksit', v: fmtTL(Math.round(_efC.fb.debtTotal)) });
+        rows.push({ l: 'Günlük harcama', s: 'son ayların ortalaması', v: fmtTL(Math.round(_efC.avgVar3)) });
+        return { title: 'Bir ayın sana maliyeti', rows, total: { l: '1 ay', v: fmtTL(m1) },
+          head: '3 ay × ' + fmtTL(m1) + ' = <b>' + fmtTL(_efT) + '</b>',
+          btn: { label: 'Acil fon hedefi oluştur', js: 'adviceCreateEmergency(' + _efT + ',' + _efM + ')' } };
+      })(),
     });
   }
 
@@ -9433,7 +9613,9 @@ function _adviceCtx() {
   });
   const catAvg = {};
   Object.keys(catAvgSum).forEach(id => { catAvg[id] = catAvgSum[id] / catCnt[id]; });
-  const avgVar3 = prevVar.length ? prevVar.reduce((a, b) => a + b, 0) / prevVar.length : fb.varSpent;
+  // V96.5: Plan'daki "tipik harcama" ile aynı ağırlıklı ortalama (son ay %50, önceki %30, eski %20) — iki ayrı ortalama iki ayrı rakam veriyordu
+  const _w3 = [0.5, 0.3, 0.2]; let _sv3 = 0, _sw3 = 0; prevVar.forEach((p, i) => { _sv3 += p * _w3[i]; _sw3 += _w3[i]; });
+  const avgVar3 = prevVar.length ? _sv3 / _sw3 : fb.varSpent;
   const activeDebts = data.debts.filter(d => d.active);
   const monthlyDebtLoad = activeDebts.reduce((s, d) => s + d.monthlyAmount, 0);
   const structCap = Math.max(0, Math.round(fb.income - fb.recTotal - fb.debtTotal - avgVar3));
@@ -9826,6 +10008,7 @@ function renderPlan() {
   _renderPlanSteps();
   _renderPlanGoalDetail(fb, core);
   renderMonthlyReportCard();
+  renderHabits(); // V75 · V97.1: artık Plan sayfasında
   renderBudgetStatus(); // V73
   renderSubAudit(fb); // V70
   _updatePlanImpact(fb, core);
@@ -10134,39 +10317,60 @@ function _renderPlanRiskDetail(core) {
     return;
   }
 
-  const lvlLabel = { high:'Yüksek', mid:'Orta', low:'' };
-  const lvlBg    = { high:'rgba(255,69,58,.14)', mid:'rgba(255,214,10,.11)', low:'transparent' };
-  const lvlColor = { high:'var(--danger)', mid:'var(--warning)', low:'var(--muted)' };
-
-  // Bar'lar — kutu yok, düz liste
-  const visDrivers = core.drivers.filter(d => d.barPct > 0);
-  // V82: her sürücü kendi görsel kartında — büyük sayı + bar + eşik çentiği
-
-  const driverHtml = core.drivers.map((d, i) => {
-    const num = d.pct > 0 ? '%' + d.pct : (d.level === 'high' ? '!' : '');
-    const numColor = d.barColor && d.barColor !== 'var(--muted)' ? d.barColor : 'rgba(255,255,255,.35)';
-    return `
-    <div class="drv-card" style="animation:planBlockIn .3s ease ${i*50}ms both">
-      <div class="drv-head">
-        <div class="drv-label">${d.label}</div>
-        ${d.level !== 'low' ? `<span class="drv-badge" style="background:${lvlBg[d.level]};color:${lvlColor[d.level]}">${lvlLabel[d.level]}</span>` : ''}
-      </div>
-      ${num ? `<div class="drv-num" style="color:${numColor}">${num}</div>` : ''}
-      ${d.barPct > 0 ? `<div class="drv-track">
-        <div class="drv-fill" style="width:${d.barPct}%;background:${d.barColor}"></div>
-        ${d.th ? `<div class="plan-bar-tick" style="left:${d.th}%"></div>` : ''}
-      </div>` : ''}
-      <div class="drv-detail">${d.detail}</div>
+  const stLabel = { ok:'İyi', warn:'Dikkat', bad:'Yüksek' };
+  const stColor = { ok:'var(--accent)', warn:'var(--warning)', bad:'var(--danger)' };
+  const stBg    = { ok:'rgba(45,184,102,.13)', warn:'rgba(255,214,10,.11)', bad:'rgba(255,69,58,.14)' };
+  const drvMore = (d) => {
+    const m = d.more || {};
+    return `<div class="drv-more">
+      ${m.head ? `<div class="drv-more-head">${m.head}</div>` : ''}
+      ${m.title ? `<div class="drv-more-title">${m.title}</div>` : ''}
+      ${(m.rows || []).map(r => `<div class="drv-row"><div><div class="drv-row-l">${r.l}</div>${r.s ? `<div class="drv-row-s">${r.s}</div>` : ''}</div><div class="drv-row-v">${r.v}</div></div>`).join('')}
+      ${m.total ? `<div class="drv-row tot"><div class="drv-row-l">${m.total.l}</div><div class="drv-row-v">${m.total.v}</div></div>` : ''}
+      ${d.act ? `<div class="drv-act"><b>Ne yapmalı:</b> ${d.act}</div>` : ''}
+      ${m.btn ? `<button class="drv-btn" onclick="event.stopPropagation();closeDrvSheet();${m.btn.js}">${m.btn.label}</button>` : ''}
     </div>`;
+  };
+  const drvCard = (d, i) => {
+    const st = d.st || 'warn', c = stColor[st];
+    const num = d.pct > 0 ? '%' + d.pct : (d.big || '');
+    return `<div class="drv-sh-top">
+        <div class="drv-num" style="color:${c}">${num}</div>
+        <span class="drv-badge" style="background:${stBg[st]};color:${c}">${stLabel[st]}</span>
+      </div>
+      ${d.barPct > 0 ? `<div class="drv-track${d.th ? ' has-th' : ''}">
+        <div class="drv-fill" style="width:${d.barPct}%;background:${c}"></div>
+        ${d.th ? `<div class="plan-bar-tick" style="left:${d.th}%"></div><div class="drv-th" style="left:${d.th}%">${d.thLabel}</div>` : ''}
+      </div>` : ''}
+      <div class="drv-detail">${d.detail}</div>` + drvMore(d);
+  };
+  // V96.4: Özet'teki eski tavsiye kartlarının görünüşü — büyük rakam, başlık, kısa cümle; renk duruma göre
+  const _cls = { ok:'good', warn:'warn', bad:'bad' };
+  const driverHtmlC = core.drivers.map((d, i) => {
+    const big = d.pct > 0 ? '%' + d.pct : (d.big || '');
+    return `<div class="advice-big-card ${_cls[d.st || 'warn']}" id="drvC_${i}" style="animation-delay:${i*70}ms" onclick="_drvToggle(${i})">
+      <div class="advice-big-inner">
+        <div class="advice-big-value"><div class="advice-big-num${d.pct > 0 ? '' : ' sm'}">${big}</div></div>
+        <div><div class="advice-big-label">${d.label}</div><div class="advice-big-sub">${d.brief || d.detail}</div><div class="advice-more">Detay <span>›</span></div></div>
+      </div></div>`;
   }).join('');
-  const legend = core.drivers.some(d => d.th)
-    ? `<div class="plan-bar-legend" style="margin-top:8px">| çentik = sağlıklı sınır ${core.drivers.filter(d=>d.thLabel).map(d=>`· ${(d.short||d.label).toLocaleLowerCase('tr')} ${d.thLabel.replace('sınır ','').replace('hedef ','')}`).join(' ')}</div>` : '';
+  _drvCards = core.drivers.map(drvCard); _drvTitles = core.drivers.map(d => d.label); // dokununca açılan ayrıntı kartları
+  const legend = `<div class="advice-grid">${driverHtmlC}</div>`;
 
   // Aksiyonlar tek yerde yaşar — "04 · Yol Haritası". Burada tekrar edilmez.
-  el.innerHTML = `<div class="drv-grid">${driverHtml}</div>` + legend + _snowballCardHtml() + _leakCardHtml();
+  el.innerHTML = legend + _snowballCardHtml() + _leakCardHtml();
   _snowRender();
 }
 
+
+// V96.5: Baskı Analizi kartına dokununca ayrıntısı alttan açılan sayfada: rakam, sınır, kalem kalem döküm, ne yapmalı
+let _drvCards = [], _drvTitles = [];
+function _drvToggle(i) {
+  document.getElementById('drvSheetTitle').textContent = _drvTitles[i] || '';
+  document.getElementById('drvSheetBody').innerHTML = _drvCards[i] || '';
+  document.getElementById('drvSheetOv').classList.add('show'); document.getElementById('drvSheet').classList.add('show');
+}
+function closeDrvSheet() { document.getElementById('drvSheetOv').classList.remove('show'); document.getElementById('drvSheet').classList.remove('show'); }
 
 // ── 4. Hedef & Zaman — big number tasarım dili ───────────────────────────────
 function _renderPlanGoalDetail(fb, core) {
@@ -11242,51 +11446,11 @@ function planScenReset() {
 }
 
 // ── Analiz preview card — Özet sayfasında ────────────────────────────────────
+// V96.3: Özet'teki tavsiye kartları kaldırıldı (aynı bilgiler Plan > Baskı Analizi ve Yol Haritası'nda, daha ayrıntılı).
+// Bu kutu Plan sayfasının kapısıdır: "Finansal Analiz" önizlemesi.
 function renderFinancialAdvice() {
-  const mk = monthKey();
-  const fb = calcFreeBudget(mk);
-  const activeDebts = data.debts.filter(d => d.active);
-  const totalDebt = activeDebts.reduce((s,d) => s + ((d.installments - d.paidCount) * d.monthlyAmount), 0);
-  const monthlyDebtLoad = activeDebts.reduce((s,d) => s + d.monthlyAmount, 0);
-  const debtToIncomeRatio = fb.income > 0 ? monthlyDebtLoad / fb.income : 0;
-
-  // Her tip için: cls, bigValue (rakam string ya da null), bigIcon (svg ya da null), title, sub
-  const tips = [];
-
-  const iconHeart = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>`;
-  const iconRocket = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 13a8 8 0 0 1 7 7a6 6 0 0 0 3 -5a9 9 0 0 0 6 -8a3 3 0 0 0 -3 -3a9 9 0 0 0 -8 6a6 6 0 0 0 -5 3"/><path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3"/><path d="M15 9m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>`;
-  const iconStop  = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M5.7 5.7l12.6 12.6"/></svg>`;
-
-  if (totalDebt === 0 && !activeDebts.length) {
-    tips.push({ cls:'good', bigValue:null, bigIcon:iconHeart, title:'Borçsuz yaşıyorsun', sub:'Finansal özgürlüğün en sağlam temeli bu. Şimdi biriktir.' });
-  } else {
-    const debtPct = Math.round(debtToIncomeRatio * 100);
-    if (debtToIncomeRatio > 0.4) {
-      tips.push({ cls:'bad',  bigValue:'%'+debtPct, bigIcon:null, title:'Gelirin borca gidiyor', sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit. Gelirine oranı kritik — ekstra ödemeyi önceliklendir.` });
-    } else if (debtToIncomeRatio > 0.2) {
-      tips.push({ cls:'warn', bigValue:'%'+debtPct, bigIcon:null, title:'Gelirin borca gidiyor', sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit. Şimdilik kontrol altında — yeni borç ekleme.` });
-    } else {
-      tips.push({ cls:'good', bigValue:'%'+debtPct, bigIcon:null, title:'Borç oranın sağlıklı', sub:`Aylık ${fmtTL(monthlyDebtLoad)} taksit — gelire göre dengeli. Taksiplere sadık kal.` });
-    }
-    if (activeDebts.length > 1) {
-      const smallest = [...activeDebts].sort((a,b)=>((a.installments-a.paidCount)*a.monthlyAmount)-((b.installments-b.paidCount)*b.monthlyAmount))[0];
-      const left = (smallest.installments - smallest.paidCount) * smallest.monthlyAmount;
-      const monthsLeft = smallest.installments - smallest.paidCount;
-      // Kalan tutarı bigValue olarak göster (₺ ile, sm class için isBig:false)
-      tips.push({ cls:'warn', bigValue: fmtTL(Math.round(left)), bigValueSm: true, bigIcon:null, title:`Küçük borcu önce bitir`, sub:`"${esc(smallest.name)}" — ${monthsLeft} ay kaldı. Bitince o taksiti diğerine ekle.` });
-    }
-    const hasEmergencyFund = data.savingsGoals.some(g => g.name.toLowerCase().includes('acil') || g.name.toLowerCase().includes('fon'));
-    if (!hasEmergencyFund) {
-      tips.push({ cls:'warn', bigValue:null, bigIcon:iconRocket, title:'Acil fon yok', sub:'Borç öderken bile 3 aylık masrafın kadar bir fon olmalı. Küçük başla, düzenli ekle.' });
-    }
-    if (debtToIncomeRatio > 0.3) {
-      tips.push({ cls:'bad', bigValue:null, bigIcon:iconStop, title:'Yeni borç alma', sub:'Mevcut borçlar kapanana kadar yeni kredi ve kredi kartı başvurusunu durdur.' });
-    }
-  }
-
   const target = document.getElementById('financialAdviceBox');
   if (!target) return;
-  if (!tips.length) { target.innerHTML = ''; return; }
 
   // Analiz preview
   const fb2 = calcFreeBudget(currentMonth);
@@ -11305,7 +11469,7 @@ function renderFinancialAdvice() {
     else if (core2.savRatio > 0.10)   headline2 = `Yapı <em>dengeli.</em>`;
     else                               headline2 = `Esneklik <em>hâlâ dar.</em>`;
     previewHtml = `
-      <div class="plan-preview-card" onclick="switchTab('plan')" style="margin-top:10px">
+      <div class="plan-preview-card" onclick="switchTab('plan')" style="margin-top:0">
         <div class="plan-preview-gradient" style="--prev-grad:${rlGrad2}">
           <div class="plan-preview-overline">
             <span class="plan-preview-overline-dot" style="background:${rlColor2}"></span>
@@ -11321,47 +11485,7 @@ function renderFinancialAdvice() {
       </div>`;
   }
 
-  // Kartları oluştur
-  const cardsHtml = tips.map((t, i) => {
-    const numClass = t.bigValueSm ? 'advice-big-num sm' : 'advice-big-num';
-    const valueBlock = t.bigValue
-      ? `<div class="${numClass}">${t.bigValue}</div>`
-      : `<div class="advice-big-icon-wrap">${t.bigIcon}</div>`;
-    return `
-      <div class="advice-big-card ${t.cls}" style="animation-delay:${i*70}ms">
-        <div class="advice-big-inner">
-          <div class="advice-big-value">${valueBlock}</div>
-          <div>
-            <div class="advice-big-label">${t.title}</div>
-            <div class="advice-big-sub">${t.sub}</div>
-          </div>
-        </div>
-      </div>`;
-  }).join('');
-
-  const dotsHtml = tips.length > 1
-    ? `<div class="advice-dots">${tips.map((_,i) => `<div class="advice-dot${i===0?' active':''}"></div>`).join('')}</div>`
-    : '';
-
-  target.innerHTML = `
-    <div style="margin-bottom:16px">
-      <div class="advice-section-header">
-        <div class="advice-section-label">Finansal Tavsiyeler</div>
-      </div>
-      <div class="advice-scroll" id="adviceScroll">${cardsHtml}</div>
-      ${dotsHtml}
-      ${previewHtml}
-    </div>`;
-
-  // Scroll → dot senkronizasyonu
-  const scroll = document.getElementById('adviceScroll');
-  const dots = target.querySelectorAll('.advice-dot');
-  if (scroll && dots.length > 1) {
-    scroll.addEventListener('scroll', () => {
-      const idx = Math.round(scroll.scrollLeft / scroll.clientWidth);
-      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-    }, { passive: true });
-  }
+  target.innerHTML = previewHtml ? `<div style="margin-bottom:16px">${previewHtml}</div>` : '';
 }
 
 
@@ -11558,24 +11682,7 @@ function renderAchStrip() {
   const el = document.getElementById('achStrip'); if (!el) return;
   if (!Array.isArray(data.achievements)) data.achievements = [];
   const unlocked = _achUnlockedSet();
-  // sıralama: açık olanlar önce, sonra kilitli — şeritte ilk ~8
-  const ordered = ACH.slice().sort((a,b)=>{ const ua=unlocked.has(a.id)?0:1, ub=unlocked.has(b.id)?0:1; return ua-ub; });
-  const show = ordered.slice(0, 8);
-  el.innerHTML = `
-    <div class="ach-strip-card">
-      <div class="ach-strip-head">
-        <span class="ach-strip-t">${achSvg('trophy','#FFD60A',18,1.7)} Kazanımlar</span>
-        <div style="display:flex;align-items:center;gap:12px">
-          <span class="ach-strip-c"><b>${unlocked.size}</b> / ${ACH.length}</span>
-          <button class="ach-strip-all" onclick="openAchSheet()">Tümü</button>
-        </div>
-      </div>
-      <div class="ach-strip-row">
-        ${show.map(a=>{ const on=unlocked.has(a.id); return `<div class="ach-mini ${on?'unlocked':'locked'}" onclick="openAchSheet()">
-          <div class="ach-mini-ic" style="background:${on?a.c+'22':'var(--surface3)'}">${achSvg(a.ic,on?a.c:'#3a3a42',24)}</div>
-          <div class="ach-mini-nm">${esc(a.nm)}</div></div>`; }).join('')}
-      </div>
-    </div>`;
+  el.innerHTML = `<button class="ach-pill" onclick="openAchSheet()" aria-label="Kazanımlar">${achSvg('trophy','#FFD60A',14,1.9)}<b>${unlocked.size}</b><span>/ ${ACH.length}</span></button>`;
 }
 function renderAchGrid() {
   const g = document.getElementById('achGrid'); if (!g) return;
@@ -11684,9 +11791,42 @@ function renderHabits() {
         <div class="ins-t">${c.t}</div><div class="ins-s">${c.s}</div></div></div>`).join('');
 }
 
+// V96.6: Paran nereye gidiyor — gelirin yüzde kaçı hangi kaleme gidiyor (Aylık Plan dökümüyle aynı hesap: calcFreeBudget)
+function renderMoneyFlow(fb) {
+  const el = document.getElementById('moneyFlowCard'); if (!el) return;
+  if (!fb || !fb.income) { el.innerHTML = ''; return; }
+  const debtExtra = Math.max(0, Math.round(fb.income - fb.recTotal - fb.debtTotal - fb.goalTotal - fb.savTarget - (fb.budgetCharge || 0) - (fb.capGap || 0) - fb.available));
+  const items = [
+    { l: 'Sabit giderler',  v: fb.recTotal, c: '#F97316' },
+    { l: 'Borç taksitleri', v: fb.debtTotal + debtExtra, c: '#FF453A' },
+    { l: 'Birikim',         v: fb.goalTotal + fb.savTarget, c: '#5AA9FF' },
+    { l: 'Cüzdanlar',       v: fb.budgetCharge || 0, c: '#B18CFF' },
+    { l: 'Günlük harcamalar', v: fb.varSpent, c: '#8E8D99' },
+    { l: 'Hesabındaki paraya göre', v: fb.capGap || 0, c: '#FFD60A' },
+  ].filter(x => x.v >= 1);
+  const rem = Math.round(fb.remaining), out = items.reduce((a, x) => a + x.v, 0);
+  const segs = items.concat(rem > 0 ? [{ l: 'Kalan', v: rem, c: '#2DB866', rem: 1 }] : []);
+  // yüzdeler — toplamı tam 100 etsin diye en büyük kalan yöntemi (açık varsa giderler 100'ü aşar, yuvarlama yeter)
+  const base = fb.income;
+  segs.forEach(x => { x.raw = x.v / base * 100; x.p = Math.floor(x.raw); });
+  if (rem >= 0) { let left = 100 - segs.reduce((a, x) => a + x.p, 0); [...segs].sort((a, b) => (b.raw - b.p) - (a.raw - a.p)).forEach(x => { if (left > 0) { x.p++; left--; } }); }
+  else segs.forEach(x => { x.p = Math.round(x.raw); });
+  const tot = segs.reduce((a, x) => a + x.v, 0) || 1;
+  const ok = rem >= 0, col = ok ? '#2DB866' : '#FF453A';
+  const keep = ok ? (segs.find(x => x.rem) || { p: 0 }).p : Math.round(out / base * 100);
+  el.innerHTML = `<div class="mf-card" style="--mfc:${ok ? 'rgba(45,184,102,.08)' : 'rgba(255,69,58,.09)'}"><div class="mf-glow"></div><div class="mf-in">
+    <div class="mf-over">Bu ay · Paran nereye gidiyor</div>
+    <div class="mf-hero"><div class="mf-big" style="color:${col}">%${keep}</div>
+      <div class="mf-hero-t">${ok ? 'Gelirinin bu kadarı<br><b>cebinde kalıyor</b>' : 'Gelirinin bu kadarı çıkıyor:<br><b>kazandığından fazla</b>'}</div></div>
+    <div class="mf-bar">${segs.map((x, i) => `<div class="mf-seg" style="flex:${Math.max(x.v / tot * 100, 1.5)} 0 0;background:${x.c};animation-delay:${i * 90}ms"></div>`).join('')}</div>
+    <div class="mf-scale"><span>0</span><span>${ok ? 'gelirin: ' + fmtTL(Math.round(base)) : 'çıkan: ' + fmtTL(Math.round(out))}</span></div>
+    ${items.map(x => `<div class="mf-row"><i class="mf-dot" style="background:${x.c}"></i><span class="mf-l">${x.l}</span><span class="mf-p">${x.p < 1 ? '<%1' : '%' + x.p}</span><span class="mf-v">−${fmtTL(Math.round(x.v))}</span></div>`).join('')}
+    <div class="mf-foot"><span>Kalan para</span><b style="color:${col}">${fmtTL(rem)}</b></div>
+    <div class="mf-note">Bu ay henüz ödemediğin sabit gider ve taksitler de düşülmüş halidir.</div>
+  </div></div>`;
+}
 function renderOzetStats() {
   renderAchStrip(); // V76
-  renderHabits(); // V75
   renderBackupBanner(); // V69.2
   const mk = currentMonth;
   const balance = calcBalance();
@@ -11721,6 +11861,8 @@ function renderOzetStats() {
       <div class="ozet-stat-card highlight"><div class="ozet-stat-label">Birikim</div><div class="ozet-stat-val" style="color:${totalSaved > 0 ? 'var(--accent)' : 'var(--muted)'}">${totalSaved > 0 ? fmtTL(totalSaved) : '—'}</div></div>`;
   }
 
+  renderMoneyFlow(fb); // V96.6
+
   // Streak card - her zaman göster
   const scWrap = document.getElementById('streakCardWrap');
   if (scWrap) {
@@ -11730,265 +11872,12 @@ function renderOzetStats() {
   }
 
   renderFinancialAdvice();
-  renderDailyStats();
   renderDebtSummaryCard();
   renderWishSummaryCard();
   renderMonthlyRemaining();
   _updateDonutMonthLabel();
 }
 
-// V93.2: Günlük Limit Analizi — gün baloncuğu
-let _dlBubbleIdx = -1;
-function _dlBubbleHide() { const b = document.getElementById('dlBubble'); if (b) b.classList.remove('show'); _dlBubbleIdx = -1; }
-function _dlBubbleShow(chart, idx, bars) {
-  const b = document.getElementById('dlBubble'), wrap = document.getElementById('dlsChartWrap');
-  if (!b || !wrap) return;
-  if (_dlBubbleIdx === idx) { _dlBubbleHide(); return; } // aynı güne ikinci dokunuş kapatır
-  const bar = bars[idx]; if (!bar || bar.status === 'future') { _dlBubbleHide(); return; }
-  const el = chart.getDatasetMeta(0).data[idx]; if (!el) return;
-  const hide = !!data.hideAmounts, f = v => hide ? '••••' : fmtTL(Math.round(v));
-  const wal = (bar.wallets || []).map(w => `<div class="dl-bl"><i style="background:${w.color}"></i><span>${esc(w.name)}</span><b>${f(w.amt)}</b></div>`).join('');
-  const lim = bar.status === 'empty' ? '' : `<div class="dl-bl dl-lim"><span>limit</span><b>${f(Math.max(0, bar.limit))}</b></div>`;
-  b.innerHTML = `<div class="dl-bh">${fmtDate(bar.dateStr)}</div>
-    <div class="dl-bl"><i class="${bar.status === 'red' ? 'red' : 'grn'}"></i><span>limitten</span><b>${f(bar.daySpent)}</b></div>${wal}${lim}`;
-  const W = wrap.clientWidth, bw = 150;
-  let left = Math.round(el.x - bw / 2); left = Math.max(0, Math.min(W - bw, left));
-  b.style.left = left + 'px'; b.style.width = bw + 'px';
-  b.style.setProperty('--ax', Math.round(el.x - left) + 'px');
-  b.classList.add('show'); _dlBubbleIdx = idx;
-}
-document.addEventListener('click', e => { if (_dlBubbleIdx >= 0 && !e.target.closest('#dlsChartWrap')) _dlBubbleHide(); }, true);
-
-function renderDailyStats() {
-  const el = document.getElementById('dailyStatsCard');
-  if (!el) return;
-  const mk = currentMonth;
-  const fb = calcFreeBudget(mk);
-  if (!fb.income) { el.innerHTML = ''; return; }
-
-  const dim = daysInMonth(mk);
-  const todayD = new Date().getDate();
-  const baseDaily = fb.baseDaily;
-
-  // Geçen ay
-  const [y, m] = mk.split('-').map(Number);
-  const prevMk = m === 1 ? `${y-1}-12` : `${y}-${String(m-1).padStart(2,'0')}`;
-  const prevDim = daysInMonth(prevMk);
-  const prevTxs = data.transactions.filter(t => monthKey(t.date) === prevMk && _isFreeVarTx(t)); // V93.1
-  // V95.7: adil kıyas — geçen ayın aynı gününe kadarki günlük ortalama
-  const _cmpN = Math.min(todayD, prevDim);
-  const prevVarSpent = prevTxs.filter(t => +t.date.slice(8,10) <= _cmpN).reduce((s,t) => s + t.amount, 0);
-  const prevAvgDaily = _cmpN > 0 ? Math.round(prevVarSpent / _cmpN) : 0;
-
-  // Her gün için veri topla
-  let greenDays = 0, redDays = 0, emptyDays = 0;
-  let maxSpent = 0, maxSpentDate = '';
-  let minSpent = Infinity, minSpentDate = '';
-  let totalVarSpent = 0;
-  const dayBars = [];
-
-  for (let d = 1; d <= Math.min(todayD, dim); d++) {
-    const dateStr = `${mk.slice(0,7)}-${String(d).padStart(2,'0')}`;
-    const dayTxs = data.transactions.filter(t => t.date === dateStr && _isFreeVarTx(t)); // V93.1: cüzdan harcaması hariç
-    const daySpent = dayTxs.reduce((s,t) => s + t.amount, 0);
-
-    // V94.9: o günün limiti tek kaynaktan (kayıtlı değer / yeniden hesap)
-    const dayLimit = dayLimitFor(dateStr);
-    if (dayLimit == null) { dayBars.push({ d, dateStr, daySpent: 0, limit: 0, status: 'empty', wallets: [] }); emptyDays++; continue; }
-
-    // V95.8: seri kartıyla aynı tanım — harcamasız ya da korunan gün limitin altında sayılır
-    const status = (daySpent <= Math.max(0, dayLimit) || data.streak.frozenDays.includes(dateStr)) ? 'green' : 'red';
-    // V93.2: gün baloncuğu için cüzdan kırılımı
-    const wMap = {};
-    data.transactions.forEach(t => { if (t.date !== dateStr) return; const bt = budgetForTx(t); if (!bt) return; if (!wMap[bt.id]) wMap[bt.id] = { name: bt.name, color: budgetColor(bt), amt: 0 }; wMap[bt.id].amt += t.amount; });
-    dayBars.push({ d, dateStr, daySpent, limit: dayLimit, status, wallets: Object.values(wMap) });
-
-    totalVarSpent += daySpent;
-    if (status === 'green') greenDays++;
-    else if (status === 'red') redDays++;
-    else emptyDays++;
-
-    if (daySpent > maxSpent) { maxSpent = daySpent; maxSpentDate = dateStr; }
-    if (daySpent > 0 && daySpent < minSpent) { minSpent = daySpent; minSpentDate = dateStr; }
-  }
-
-  const _avgDays = Math.min(todayD, dim); // V90 Fix#7: pay bugünü de içerdiği için payda = sayılan gün sayısı (off-by-one giderildi)
-  const avgDaily = _avgDays > 0 ? Math.round(totalVarSpent / _avgDays) : 0;
-  const scorePct = (todayD - emptyDays) > 0 ? Math.round((greenDays / (todayD - emptyDays)) * 100) : 0;
-  const scoreColor = scorePct >= 70 ? 'var(--accent)' : scorePct >= 40 ? 'var(--warning)' : 'var(--danger)';
-
-  const vsLastMonth = prevAvgDaily > 0 ? avgDaily - prevAvgDaily : null;
-  const vsColor = vsLastMonth === null ? 'var(--muted)' : vsLastMonth <= 0 ? 'var(--accent)' : 'var(--danger)';
-
-  // Mini bar chart — Chart.js ile
-  el.innerHTML = `
-    <div class="card" style="padding:20px;margin-bottom:12px;overflow:hidden;position:relative">
-
-      <!-- Başlık -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
-        <div>
-          <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px">Bu Ay</div>
-          <div style="font-size:17px;font-weight:900;letter-spacing:-.3px;color:var(--text)">Günlük Limit Analizi</div>
-        </div>
-        <!-- Circular ring score -->
-        <div style="position:relative;width:64px;height:64px;flex-shrink:0">
-          <svg width="64" height="64" viewBox="0 0 64 64" style="transform:rotate(-90deg)">
-            <circle cx="32" cy="32" r="24" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="8"/>
-            <circle id="dlScoreRing" cx="32" cy="32" r="24" fill="none"
-              stroke="${scoreColor}" stroke-width="8"
-              stroke-linecap="round"
-              stroke-dasharray="${2*Math.PI*24}"
-              stroke-dashoffset="${2*Math.PI*24}"
-              style="transition:stroke-dashoffset 2s cubic-bezier(.4,0,.2,1)"/>
-          </svg>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
-            <div style="font-size:15px;font-weight:900;color:${scoreColor};letter-spacing:-.5px">%${scorePct}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mini bar chart -->
-      <div id="dlsChartWrap" style="position:relative;margin-bottom:18px;height:60px"><!-- V94.9: id çakışması giderildi (Bu Ay grafiği de dlChartWrap kullanıyor) -->
-        <canvas id="dlMiniChart"></canvas>
-        <div id="dlBubble" class="dl-bubble"></div>
-      </div>
-
-      <!-- 2-col stat satırları -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
-
-        <div style="background:var(--surface2);border-radius:12px;padding:12px 14px">
-          <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Günlük Limit</div>
-          <div style="font-size:20px;font-weight:900;letter-spacing:-.5px;color:${Math.round(fb.daily)<0?'var(--danger)':Math.round(fb.daily)<150?'var(--warning)':'var(--accent)'}">${fmtTL(Math.round(fb.daily))}</div>
-          <div style="font-size:11px;color:var(--muted);font-weight:600;margin-top:3px">bugün için</div>
-        </div>
-
-        <div style="background:var(--surface2);border-radius:12px;padding:12px 14px">
-          <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Ort. Harcama</div>
-          <div style="font-size:20px;font-weight:900;letter-spacing:-.5px;color:var(--text)">${fmtTL(avgDaily)}</div>
-          <div style="font-size:11px;font-weight:700;margin-top:3px;color:${vsColor}">
-            ${vsLastMonth === null ? '—' : (vsLastMonth > 0 ? '↑ ' : '↓ ') + fmtTL(Math.abs(vsLastMonth)) + ' geçen ayın aynı gününe göre'}
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Yeşil/kırmızı gün çubuğu -->
-      <div style="background:var(--surface2);border-radius:12px;padding:12px 14px;margin-bottom:14px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <span style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Limit Uyumu</span>
-          <span style="font-size:11px;font-weight:800;color:var(--muted)">${todayD - emptyDays} gün</span>
-        </div>
-        <div id="luSegWrap" style="display:flex;gap:3px;height:6px;border-radius:4px;overflow:visible;margin-bottom:8px;position:relative">
-          ${(() => {
-            const active = dayBars.filter(b=>b.status!=='empty'&&b.status!=='future');
-            const total = active.length;
-            return active.map((b, i) => {
-              const delay = Math.round((i / total) * 800);
-              return `<div class="lu-seg" style="flex:1;background:${b.status==='green'?'var(--accent)':'var(--danger)'};border-radius:1px;transform:scaleX(0);transform-origin:left;transition:transform .7s cubic-bezier(.4,0,.2,1) ${delay}ms"></div>`;
-            }).join('');
-          })()}
-        </div>
-        <div style="display:flex;justify-content:space-between">
-          <span style="font-size:11px;font-weight:700;color:var(--accent);display:inline-flex;align-items:center;gap:4px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> ${greenDays} gün limitin altında</span>
-          <span style="font-size:11px;font-weight:700;color:${redDays>0?'var(--danger)':'var(--muted)'};display:inline-flex;align-items:center;gap:4px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg> ${redDays} gün üstünde</span>
-        </div>
-      </div>
-
-      <!-- En çok / en az -->
-      <div style="display:flex;flex-direction:column;gap:0;border-top:1px solid var(--border);padding-top:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(44,44,53,.2)">
-          <span style="font-size:12px;font-weight:600;color:var(--muted)">En çok harcama</span>
-          <div style="display:flex;align-items:baseline;gap:6px">
-            <span style="font-size:13px;font-weight:800;color:var(--danger)">${fmtTL(Math.round(maxSpent))}</span>
-            <span style="font-size:11px;color:var(--muted)">${maxSpentDate ? fmtDate(maxSpentDate) : '—'}</span>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0">
-          <span style="font-size:12px;font-weight:600;color:var(--muted)">En az harcama</span>
-          <div style="display:flex;align-items:baseline;gap:6px">
-            <span style="font-size:13px;font-weight:800;color:var(--accent)">${minSpent<Infinity?fmtTL(Math.round(minSpent)):'—'}</span>
-            <span style="font-size:11px;color:var(--muted)">${minSpentDate?fmtDate(minSpentDate):''}</span>
-          </div>
-        </div>
-      </div>
-
-    </div>`;
-
-  // Mini bar chart — Chart.js
-  setTimeout(() => {
-    if (typeof Chart === 'undefined') { _needChart(renderDailyStats); return; } // V92: lazy
-    const ctx = document.getElementById('dlMiniChart')?.getContext('2d');
-    if (!ctx) return;
-    if (charts.dlMini) { try { charts.dlMini.destroy(); } catch(e){} charts.dlMini = null; }
-    charts.dlMini = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: dayBars.map(b => b.d),
-        datasets: [
-          {
-            data: dayBars.map(b => b.daySpent),
-            backgroundColor: dayBars.map(b => b.status === 'green' ? 'rgba(45,184,102,.75)' : b.status === 'red' ? 'rgba(255,69,58,.75)' : 'rgba(255,255,255,.06)'),
-            borderRadius: 3,
-            borderSkipped: false,
-            barPercentage: 0.85,
-          },
-          {
-            data: dayBars.map(b => b.limit),
-            type: 'line',
-            borderColor: 'rgba(255,255,255,.18)',
-            borderWidth: 1.5,
-            borderDash: [4, 3],
-            pointRadius: 0,
-            fill: false,
-            tension: 0,
-          }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        animation: { duration: 2000, easing: 'easeOutQuart' },
-        plugins: { legend: { display: false }, tooltip: { enabled: false } },
-        // V93.2: çubuğa dokununca küçük baloncuk — o günün serbest harcaması, cüzdan kırılımı, limit
-        onClick: (evt, els, chart) => {
-          const pts = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: false, axis: 'x' }, true);
-          if (!pts.length) { _dlBubbleHide(); return; }
-          _dlBubbleShow(chart, pts[0].index, dayBars);
-        },
-        scales: {
-          x: { display: false },
-          y: { display: false, min: 0 }
-        }
-      }
-    });
-    _dlBubbleHide();
-  }, 80);
-
-
-  // Ring + limit uyumu bar animasyonu — render sonrası tetikle
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        // Ring animasyonu
-        const ring = document.getElementById('dlScoreRing');
-        if (ring) {
-          const circ = 2 * Math.PI * 24;
-          const target = circ * (1 - scorePct / 100);
-          const startOffset = circ * (1 - Math.max(0, scorePct - 15) / 100);
-          ring.style.strokeDashoffset = startOffset;
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              ring.style.strokeDashoffset = target;
-            });
-          });
-        }
-        // Limit uyumu bar animasyonu
-        document.querySelectorAll('#luSegWrap .lu-seg').forEach(seg => {
-          seg.style.transform = 'scaleX(1)';
-        });
-      }, 120);
-    });
-  });
-}
 
 function renderDebtSummaryCard() {
   const el = document.getElementById('debtSummaryCard');
