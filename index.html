@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V97.5: Kazanımlar rozeti Toplam Varlığın kartından seri kartının sağ üst köşesine taşındı ("EN UZUN x GÜN" yazısının yerine). En uzun seri, aynı kartta üstteki rakamı tekrar eden "aktif seri" kutusunun yerine geçti ("en uzun seri"). -->
 <!-- V97.4: Aylık Plan grafiği — harcama çizgisinin limit çizgisinin üstünde kalan kısmı (ve altındaki dolgu) artık kırmızı; bugün limit aşıldıysa uçtaki nokta da kırmızı. -->
 <!-- V97.3: Günlük Limit Analizi (Aylık Plan) — çubuk rengi artık gerçek harcamaya göre: limiti aşan her gün kırmızı, koruma kullanılmış olsa bile. Korunan günün üstünde küçük mavi nokta var. Halka ve alttaki gün sayıları da gerçek duruma göre; korunan gün sayısı ayrıca yazıyor. -->
 <!-- V97.2: "Paran nereye gidiyor" kartının zemini siyahtı, sayfadaki diğer kartlar gibi gri (surface) yapıldı; köşe yuvarlaklığı ve gölge de onlarla aynı. -->
@@ -504,7 +505,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .streak-meta{font-size:11px;font-weight:700;color:rgba(255,214,10,.45);margin-top:2px}
 .streak-meta.dead{color:var(--muted)}
 
-.streak-best{font-size:10px;font-weight:800;color:rgba(255,149,0,.5);text-align:right;flex-shrink:0;align-self:flex-start;line-height:1.4}
+.streak-ach{flex-shrink:0;align-self:flex-start}
 .streak-stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 16px 12px;position:relative;z-index:1}
 .streak-stat-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:9px 6px;text-align:center;min-width:0}
 .streak-stat-val{font-size:14px;font-weight:900;color:var(--text);line-height:1;white-space:nowrap}
@@ -2287,7 +2288,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .bgt-back{background:none;border:none;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;padding:0}
 
 /* ── V76: Kazanımlar (başarımlar) ── */
-.ach-pill{position:absolute;top:12px;right:12px;z-index:2;display:inline-flex;align-items:center;gap:5px;padding:6px 10px 6px 8px;border-radius:99px;border:1px solid rgba(255,214,10,.28);background:rgba(255,214,10,.09);font-family:inherit;font-size:11.5px;font-weight:800;color:#FFD60A;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ach-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 10px 6px 8px;border-radius:99px;border:1px solid rgba(255,214,10,.28);background:rgba(255,214,10,.09);font-family:inherit;font-size:11.5px;font-weight:800;color:#FFD60A;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .ach-pill b{font-weight:900}.ach-pill span{color:rgba(255,214,10,.55);font-weight:700}
 .ach-pill:active{transform:scale(.95)}
 
@@ -3103,7 +3104,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <!-- V69.2: Yedek hatırlatıcı bandı -->
   <div id="backupBanner"></div>
   <div class="ozet-hero">
-    <div id="achStrip"></div><!-- V97: kazanımlar rozeti -->
     <div class="ozet-hero-label">Toplam Varlığın</div>
     <div class="ozet-hero-balance" id="ozetBalance">—</div>
     <div class="ozet-hero-sub" id="ozetBalanceSub"></div>
@@ -4926,11 +4926,11 @@ function renderStreakCard(sd) {
           ${hasIncome ? 'günlük seri' : (streak > 0 ? 'serin sürüyor · gelirini girince günler sayılır' : 'seri henüz başlamadı')}
         </div>
       </div>
-      <div class="streak-best">EN UZUN<br>${data.streak.best || 0} GÜN</div>
+      <div id="achStrip" class="streak-ach"></div>
     </div>
 
     <div class="streak-stat-row">
-      <div class="streak-stat-box"><div class="streak-stat-val" style="color:${isDead ? 'var(--muted)' : '#FF9500'}">${streak}</div><div class="streak-stat-lbl">aktif seri</div></div>
+      <div class="streak-stat-box"><div class="streak-stat-val" style="color:#FF9500">${data.streak.best || 0}</div><div class="streak-stat-lbl">en uzun seri</div></div>
       <div class="streak-stat-box"><div class="streak-stat-val" id="streakPctVal"></div><div class="streak-stat-lbl" id="streakPctLbl"></div></div>
       <div class="streak-stat-box"><div class="streak-stat-val" id="streakGreenVal"></div><div class="streak-stat-lbl">yeşil gün</div></div>
     </div>
@@ -11826,7 +11826,6 @@ function renderMoneyFlow(fb) {
   </div></div>`;
 }
 function renderOzetStats() {
-  renderAchStrip(); // V76
   renderBackupBanner(); // V69.2
   const mk = currentMonth;
   const balance = calcBalance();
@@ -11868,6 +11867,7 @@ function renderOzetStats() {
   if (scWrap) {
     const sd = calcStreakData();
     scWrap.innerHTML = renderStreakCard(sd);
+    renderAchStrip(); // V76 · V97.5: rozet artık seri kartının içinde, kart çizildikten sonra doldurulur
     requestAnimationFrame(() => { _streakInitView(); _streakPopIfGrew(sd, scWrap); });
   }
 
