@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V97.6: Claude bağlantısı (1. adım) — Hesap sayfasında "Claude Anahtarı" satırı: anahtar girilir, bu cihazda ayrı saklanır (yedek/dışa aktarma dosyasına girmez), "Bağlantıyı dene" ile Claude'a küçük bir deneme isteği atılır ve sonuç sade Türkçe gösterilir. Henüz hiçbir bütçe verisi gönderilmiyor. -->
 <!-- V97.5: Kazanımlar rozeti Toplam Varlığın kartından seri kartının sağ üst köşesine taşındı ("EN UZUN x GÜN" yazısının yerine). En uzun seri, aynı kartta üstteki rakamı tekrar eden "aktif seri" kutusunun yerine geçti ("en uzun seri"). -->
 <!-- V97.4: Aylık Plan grafiği — harcama çizgisinin limit çizgisinin üstünde kalan kısmı (ve altındaki dolgu) artık kırmızı; bugün limit aşıldıysa uçtaki nokta da kırmızı. -->
 <!-- V97.3: Günlük Limit Analizi (Aylık Plan) — çubuk rengi artık gerçek harcamaya göre: limiti aşan her gün kırmızı, koruma kullanılmış olsa bile. Korunan günün üstünde küçük mavi nokta var. Halka ve alttaki gün sayıları da gerçek duruma göre; korunan gün sayısı ayrıca yazıyor. -->
@@ -747,6 +748,18 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .dla-legend{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:rgba(255,255,255,.7)}
 .dla-legend i{display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:6px}
 .dla-link{display:flex;justify-content:space-between;width:100%;margin-top:14px;padding:11px 0 0;border:none;border-top:1px solid rgba(255,255,255,.06);background:none;color:rgba(255,255,255,.4);font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer}
+.ai-note{font-size:12px;font-weight:500;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.ai-input{width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px;color:var(--text);font-family:inherit;font-size:14px;font-weight:700;outline:none}
+.ai-input:focus{border-color:rgba(45,184,102,.5)}
+.ai-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.ai-btn{padding:13px;border-radius:13px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;font-size:13.5px;font-weight:800;cursor:pointer}
+.ai-btn.pri{background:var(--accent);border-color:var(--accent);color:#04130a}
+.ai-btn:disabled{opacity:.5}
+.ai-res{margin-top:12px;font-size:13px;font-weight:600;line-height:1.55;border-radius:12px}
+.ai-res.ok{padding:12px 14px;background:rgba(45,184,102,.1);color:#2DB866}
+.ai-res.err{padding:12px 14px;background:rgba(255,69,58,.1);color:#FF6B60}
+.ai-res.wait{padding:12px 14px;background:rgba(255,255,255,.05);color:var(--muted)}
+.ai-del{width:100%;margin-top:14px;padding:12px;border:none;background:none;color:var(--danger);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
 .mf-card{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 18px 6px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .mf-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 90% 70% at 85% -10%,var(--mfc,rgba(45,184,102,.08)) 0%,transparent 60%)}
 .mf-in{position:relative}
@@ -3332,6 +3345,18 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       </div>
     </div>
 
+    <!-- V97.6: Claude -->
+    <div class="settings-section-label">Claude</div>
+    <div class="settings-group">
+      <div class="settings-row tappable" onclick="openAiSheet()">
+        <div class="settings-row-left">
+          <div class="settings-row-title">Claude Anahtarı</div>
+          <div class="settings-row-sub" id="aiKeySub">Girilmedi</div>
+        </div>
+        <span class="settings-chevron">›</span>
+      </div>
+    </div>
+
     <!-- Veri -->
     <div class="settings-group">
       <div class="settings-row tappable" onclick="exportData()">
@@ -3557,6 +3582,23 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <div class="add-sheet-handle"></div>
   <div class="add-sheet-header"><span class="add-sheet-title" id="drvSheetTitle"></span><button class="add-sheet-close" onclick="closeDrvSheet()">&times;</button></div>
   <div class="add-sheet-body" id="drvSheetBody" style="max-height:72vh;overflow-y:auto"></div>
+</div>
+<!-- V97.6: Claude anahtarı sayfası -->
+<div class="add-sheet-overlay" id="aiSheetOv" onclick="if(event.target===this)closeAiSheet()"></div>
+<div class="add-sheet" id="aiSheet">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header"><span class="add-sheet-title">Claude Anahtarı</span><button class="add-sheet-close" onclick="closeAiSheet()">&times;</button></div>
+  <div class="add-sheet-body">
+    <div class="ai-note">Anahtar sadece bu cihazda durur. Yedek dosyasına girmez. Şu an Claude'a hiçbir bütçe verin gönderilmiyor; bu sayfa sadece bağlantıyı kurar.</div>
+    <input type="password" id="aiKeyInput" class="ai-input" placeholder="sk-ant-..." autocomplete="off" autocapitalize="off" spellcheck="false">
+    <div class="ai-btns">
+      <button class="ai-btn pri" onclick="aiSaveKey()">Kaydet</button>
+      <button class="ai-btn" id="aiTestBtn" onclick="aiTest()">Bağlantıyı dene</button>
+    </div>
+    <div class="ai-res" id="aiRes"></div>
+    <button class="ai-del" id="aiDelBtn" onclick="aiDeleteKey()" style="display:none">Anahtarı sil</button>
+    <div style="height:8px"></div>
+  </div>
 </div>
 <div class="add-sheet-overlay" id="achSheetOv" onclick="if(event.target===this)closeAchSheet()"></div>
 <div class="add-sheet" id="achSheet">
@@ -11825,7 +11867,74 @@ function renderMoneyFlow(fb) {
     <div class="mf-note">Bu ay henüz ödemediğin sabit gider ve taksitler de düşülmüş halidir.</div>
   </div></div>`;
 }
+// ═══ V97.6: CLAUDE BAĞLANTISI ═══
+// Anahtar ana veriden (KEY) ayrı saklanır: dışa aktarma / yedek dosyasına girmesin, "tüm veriyi sil" ile karışmasın.
+const AI_KEY = 'vault_ai_key', AI_MODEL = 'claude-haiku-5-5', AI_URL = 'https://api.anthropic.com/v1/messages';
+function aiKeyGet() { try { return localStorage.getItem(AI_KEY) || ''; } catch (e) { return ''; } }
+function aiKeyRenderSub() {
+  const el = document.getElementById('aiKeySub'); if (!el) return;
+  const k = aiKeyGet(); el.textContent = k ? 'Kayıtlı · …' + k.slice(-4) : 'Girilmedi';
+}
+function _aiRes(cls, msg) { const r = document.getElementById('aiRes'); if (r) { r.className = 'ai-res' + (cls ? ' ' + cls : ''); r.textContent = msg || ''; } }
+function openAiSheet() {
+  const k = aiKeyGet(), inp = document.getElementById('aiKeyInput');
+  inp.value = ''; inp.placeholder = k ? 'Kayıtlı (…' + k.slice(-4) + ') · değiştirmek için yenisini yaz' : 'sk-ant-...';
+  document.getElementById('aiDelBtn').style.display = k ? '' : 'none';
+  _aiRes('', '');
+  document.getElementById('aiSheetOv').classList.add('show'); document.getElementById('aiSheet').classList.add('show');
+}
+function closeAiSheet() { document.getElementById('aiSheetOv').classList.remove('show'); document.getElementById('aiSheet').classList.remove('show'); }
+function aiSaveKey() {
+  const v = (document.getElementById('aiKeyInput').value || '').trim();
+  if (!v) { _aiRes('err', aiKeyGet() ? 'Yeni bir anahtar yazmadın; kayıtlı olan duruyor.' : 'Önce anahtarı yapıştır.'); return false; }
+  if (!/^sk-ant-/.test(v)) { _aiRes('err', 'Bu bir Claude anahtarına benzemiyor. Anahtar "sk-ant-" ile başlar.'); return false; }
+  try { localStorage.setItem(AI_KEY, v); } catch (e) { _aiRes('err', 'Anahtar kaydedilemedi (cihaz depolaması dolu olabilir).'); return false; }
+  document.getElementById('aiKeyInput').value = '';
+  document.getElementById('aiKeyInput').placeholder = 'Kayıtlı (…' + v.slice(-4) + ') · değiştirmek için yenisini yaz';
+  document.getElementById('aiDelBtn').style.display = '';
+  aiKeyRenderSub(); _aiRes('ok', 'Anahtar kaydedildi. Şimdi "Bağlantıyı dene"ye bas.');
+  return true;
+}
+function aiDeleteKey(_ok) {
+  if (!_ok) { showConfirm('Kayıtlı Claude anahtarı bu cihazdan silinsin mi?', () => aiDeleteKey(true), 'Sil', 'Anahtar silinsin mi?', 'reset'); return; }
+  try { localStorage.removeItem(AI_KEY); } catch (e) {}
+  aiKeyRenderSub(); document.getElementById('aiDelBtn').style.display = 'none';
+  document.getElementById('aiKeyInput').placeholder = 'sk-ant-...'; _aiRes('', '');
+}
+// Claude'a tek istek: { ok:true, text } ya da { ok:false, msg } (msg sade Türkçe). Diğer adımlar (haftalık yorum) bunu kullanacak.
+async function aiAsk(system, userText, maxTokens) {
+  const key = aiKeyGet(); if (!key) return { ok: false, msg: 'Önce Hesap sayfasından Claude anahtarını gir.' };
+  let res;
+  try {
+    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 30000);
+    res = await fetch(AI_URL, { method: 'POST', signal: ctl.signal,
+      headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2026-10-21', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify(Object.assign({ model: AI_MODEL, max_tokens: maxTokens || 300, messages: [{ role: 'user', content: userText }] }, system ? { system } : {})) });
+    clearTimeout(tm);
+  } catch (e) {
+    return { ok: false, msg: e && e.name === 'AbortError' ? 'Claude 30 saniyede cevap vermedi. Biraz sonra tekrar dene.' : 'Claude\u0027a ulaşılamadı. İnternet bağlantını kontrol et.' };
+  }
+  let j = null; try { j = await res.json(); } catch (e) {}
+  if (res.ok && j && Array.isArray(j.content)) return { ok: true, text: j.content.filter(c => c.type === 'text').map(c => c.text).join('').trim() };
+  const em = (j && j.error && j.error.message) || '';
+  if (res.status === 401) return { ok: false, msg: 'Anahtar kabul edilmedi. Yanlış kopyalanmış ya da silinmiş olabilir.' };
+  if (res.status === 403) return { ok: false, msg: 'Bu anahtarın izni yok. Claude hesabındaki anahtar ayarlarına bak.' };
+  if (res.status === 400 && /credit|balance|billing/i.test(em)) return { ok: false, msg: 'Claude hesabında bakiye yok. Hesabına kredi yüklemen gerekiyor.' };
+  if (res.status === 404) return { ok: false, msg: 'Claude modeli bulunamadı (' + AI_MODEL + ').' };
+  if (res.status === 429) return { ok: false, msg: 'Çok sık istek atıldı ya da limit doldu. Biraz sonra tekrar dene.' };
+  if (res.status >= 500) return { ok: false, msg: 'Claude şu an cevap veremiyor. Biraz sonra tekrar dene.' };
+  return { ok: false, msg: 'Claude hata verdi (' + res.status + ')' + (em ? ': ' + em : '.') };
+}
+async function aiTest() {
+  if ((document.getElementById('aiKeyInput').value || '').trim() && !aiSaveKey()) return;
+  if (!aiKeyGet()) { _aiRes('err', 'Önce anahtarı yapıştırıp kaydet.'); return; }
+  const b = document.getElementById('aiTestBtn'); b.disabled = true; _aiRes('wait', 'Deneniyor…');
+  const r = await aiAsk('', 'Sadece şu iki kelimeyi yaz: Bağlantı tamam', 20);
+  b.disabled = false;
+  _aiRes(r.ok ? 'ok' : 'err', r.ok ? 'Bağlantı çalışıyor. Claude\u0027un cevabı: "' + r.text + '"' : r.msg);
+}
 function renderOzetStats() {
+  aiKeyRenderSub(); // V97.6
   renderBackupBanner(); // V69.2
   const mk = currentMonth;
   const balance = calcBalance();
