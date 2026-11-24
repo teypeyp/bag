@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V98.3: "Claude'a ne gidiyor?" artık kod dökümü göstermiyor; gidenleri sade bir liste olarak sayıyor (kaç haftalık / aylık kayıt, kaç sabit gider, borç, hedef, cüzdan, kaç işlem ve açıklamaların gidip gitmediği). -->
 <!-- V98.2: Kartın adı "Haftalık Mektup" yerine "Haftalık Değerlendirme"; düğme "Değerlendir". Ekrandaki bütün "mektup" sözleri kaldırıldı. İçerik ve dil aynı. -->
 <!-- V98.1: Haftalık Mektup artık "geçen hafta en az 3 kayıt" şartına takılmıyor. Son 8 haftada ya da son 4 ayda herhangi bir kayıt varsa mektup yazılır; geçen hafta boşsa Claude genel resme ve bu aya ağırlık verir. Kart, Claude'a kaç haftalık ve kaç aylık veri gittiğini de gösterir. -->
 <!-- V98: Haftalık Analiz → Haftalık Mektup. Numaralı bulgular ve rapor dili kaldırıldı. Claude artık kısa, sıcak, düz yazıyla bir mektup yazıyor: önce genel resim (aylara bakarak yön, iyi giden şey), sonra bu ayın hikâyesi (para neden böyle dağılıyor, asıl ferahlama nerede), geçen haftadan tek not (nedeniyle, teklif olarak) ve bir soru. Elindeki veriyle konuşuyor; "daha fazla veri lazım" demiyor. Bir önceki mektubu hatırlayıp devam ediyor. -->
@@ -765,7 +766,10 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .aiw-btn{width:100%;margin-top:14px;padding:13px;border:none;border-radius:13px;background:#B18CFF;color:#140a2a;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer}
 .aiw-btn:disabled{opacity:.55}
 .aiw-link{display:inline-block;margin-top:12px;padding:0;border:none;background:none;color:rgba(255,255,255,.4);font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-.aiw-sent{display:none;margin-top:10px;padding:12px;border-radius:12px;background:rgba(255,255,255,.04);font-size:11px;line-height:1.6;color:rgba(255,255,255,.6);white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,monospace;max-height:260px;overflow:auto}
+.aiw-sent{display:none;margin-top:10px;padding:14px;border-radius:12px;background:rgba(255,255,255,.04)}
+.aiw-sent-t{font-size:10px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:6px}
+.aiw-sent-li{position:relative;padding:4px 0 4px 14px;font-size:12.5px;font-weight:500;line-height:1.5;color:rgba(255,255,255,.75)}
+.aiw-sent-li::before{content:'';position:absolute;left:2px;top:11px;width:4px;height:4px;border-radius:50%;background:#B18CFF}
 .aiw-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;font-size:10.5px;font-weight:600;color:rgba(255,255,255,.3);line-height:1.5}
 .aiw-foot button{border:none;background:none;color:rgba(255,255,255,.45);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
 .aiw-letter{margin-top:2px}
@@ -12072,6 +12076,23 @@ function aiWeekSummary() {
   obj.gecen_hafta_kayit_durumu = w1.islem_sayisi >= 3 ? 'yeterli' : (w1.islem_sayisi === 0 ? 'geçen hafta hiç harcama kaydı yok' : 'geçen hafta çok az kayıt var');
   return { key: w1.bs, label: w1.hafta, enough: totalTx >= 3 || aylar.length > 0, obj, info: { weeks: dataWeeks.length, months: aylar.length, lastWeekTx: w1.islem_sayisi } };
 }
+// V98.3: Claude'a gidenlerin sade dökümü (kod değil, liste)
+function _aiwSentHtml(o, descOn) {
+  const n = a => (a || []).length, li = [];
+  li.push('Son ' + n(o.son_8_hafta.filter(w => w.islem_sayisi > 0)) + ' haftanın harcamaları: haftalık toplam ve kategori toplamları');
+  li.push('Son ' + n(o.son_4_ay) + ' ayın gelir, gider ve birikim toplamları');
+  li.push('Bu ayın durumu: gelir, sabit gider, taksit, kalan para, günlük limit, hesaptaki para');
+  if (n(o.sabit_giderler)) li.push(n(o.sabit_giderler) + ' sabit giderinin adı ve tutarı');
+  if (n(o.borclar)) li.push(n(o.borclar) + ' borcunun adı, taksiti ve kalan tutarı');
+  if (n(o.hedefler)) li.push(n(o.hedefler) + ' birikim hedefinin adı, hedefi ve biriken tutarı');
+  if (n(o.cuzdanlar)) li.push(n(o.cuzdanlar) + ' cüzdanının adı, ayrılan ve harcanan tutarı');
+  li.push(descOn && n(o.son_4_haftanin_islemleri) ? 'Son 4 haftanın ' + n(o.son_4_haftanin_islemleri) + ' harcaması tek tek: tarih, tutar, kategori ve açıklama' : 'Son 4 haftanın en büyük ' + n(o.son_4_haftanin_en_buyuk_10_harcamasi) + ' harcaması: tarih, tutar, kategori (açıklama yok)');
+  if (o.onceki_mektubun) li.push('Claude\u0027un bir önceki haftaki değerlendirmesi');
+  if (o.isim) li.push('Cüzdan ismin: ' + esc(o.isim));
+  return '<div class="aiw-sent-t">Claude\u0027a gidenler</div>' + li.map(x => '<div class="aiw-sent-li">' + x + '</div>').join('') +
+    '<div class="aiw-sent-t" style="margin-top:12px">Gitmeyenler</div><div class="aiw-sent-li">Kimlik, banka ya da kart bilgisi. Uygulama bunları zaten tutmuyor.</div>' +
+    (descOn ? '' : '<div class="aiw-sent-li">Harcama açıklamaların (yukarıdaki anahtar kapalı).</div>');
+}
 let _aiwBusy = false, _aiwErr = '';
 function renderAiWeekly() {
   const el = document.getElementById('aiWeeklyCard'); if (!el) return;
@@ -12106,7 +12127,7 @@ function renderAiWeekly() {
     ${err}
     <button class="aiw-btn" onclick="aiWeeklyRun()" ${_aiwBusy ? 'disabled' : ''}>${_aiwBusy ? 'Claude yazıyor… (20-40 sn)' : 'Değerlendir'}</button>
     <button class="aiw-link" onclick="const b=document.getElementById('aiwSent');b.style.display=b.style.display==='block'?'none':'block'">Claude'a ne gidiyor?</button>
-    <div class="aiw-sent" id="aiwSent">${esc(JSON.stringify(w.obj, null, 1))}</div></div>`;
+    <div class="aiw-sent" id="aiwSent">${_aiwSentHtml(w.obj, dOn)}</div></div>`;
 }
 async function aiWeeklyRun(force) {
   if (_aiwBusy) return;
