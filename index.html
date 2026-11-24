@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V98.9: VAULT'a Sor › Haftalık Değerlendirme artık nasıl biriktirebileceğini ve nereden kısabileceğini de söylüyor: en fazla iki somut kalem (verideki gerçek kategori ya da yer), her biri için gerçekçi kısma miktarı, ayda kaç ₺ edeceği ve o paranın hangi hedefe gidebileceği. Kira, fatura gibi zorunlu kalemlere "kıs" demez. -->
+<!-- V98.8: Finansal İpuçları — yedi dersin hepsi tamamlanınca ilerleme sıfırlanır ve dersler baştan başlar (giriş kartı yine "Sıradaki ders"i gösterir). Kaçıncı tur olduğu sayılır. Derslerde uygulanan planlar silinmez. -->
+<!-- V98.7: Finansal Analiz › Karakter kartındaki "Ne yapmalıyım? Yol haritasına git →" düğmesi kaldırıldı; Yol Haritası zaten hemen aşağıda. -->
+<!-- V98.6: "VAULT'a Sor" — Claude özelliği Finansal Analiz'in tepesinden çıktı, Özet'te "Paran nereye gidiyor"un altında kendi kartı var (bu haftaki değerlendirmenin ilk cümlesi). Dokununca kendine ait tam sayfa açılır: üstte Haftalık Değerlendirme, altında soru kutusu. Soru kutusuna yazılan soruyu VAULT, bütçe verisine bakarak cevaplar; hazır örnek sorular var, sohbet bu cihazda saklanır, temizlenebilir. -->
+<!-- V98.5: Finansal Analiz sadeleştirme, 1. adım — acil fon tek yerde. Baskı Analizi'ndeki "Acil fonun yok" kartı kaldırıldı (aynı öneri Yol Haritası'nın ilk adımıydı). O kartın "nasıl hesaplandı" dökümü kaybolmadı: Yol Haritası'ndaki acil fon adımına "Nasıl hesaplandı?" bağlantısı olarak taşındı ve aynı sayfayı açıyor. Acil fon adımı Yol Haritası'nda her zaman görünür (ilk dörde sabitlendi). Baskı noktası olmayan kullanıcıda Kartopu ve Sızıntı kartları artık kaybolmuyor. -->
 <!-- V98.4: "Claude boş cevap verdi" düzeltildi. Sebep: bu model yazmadan önce düşünüyor ve düşünme payı cevap uzunluğu sınırına dahil; sınır 900'dü, hepsi düşünmeye gidince yazıya yer kalmıyordu. Sınır 8.000'e çıkarıldı (bağlantı denemesinde 20 → 1.000), bekleme süresi 2 dakika. Yine de yer kalmazsa nedenini söyleyen ayrı bir mesaj var. -->
 <!-- V98.3: "Claude'a ne gidiyor?" artık kod dökümü göstermiyor; gidenleri sade bir liste olarak sayıyor (kaç haftalık / aylık kayıt, kaç sabit gider, borç, hedef, cüzdan, kaç işlem ve açıklamaların gidip gitmediği). -->
 <!-- V98.2: Kartın adı "Haftalık Mektup" yerine "Haftalık Değerlendirme"; düğme "Değerlendir". Ekrandaki bütün "mektup" sözleri kaldırıldı. İçerik ve dil aynı. -->
@@ -756,6 +761,33 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .dla-legend{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:rgba(255,255,255,.7)}
 .dla-legend i{display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:6px}
 .dla-link{display:flex;justify-content:space-between;width:100%;margin-top:14px;padding:11px 0 0;border:none;border-top:1px solid rgba(255,255,255,.06);background:none;color:rgba(255,255,255,.4);font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer}
+.va-page{position:fixed;inset:0;z-index:190;background:var(--bg);display:flex;flex-direction:column;transform:translateX(100%);visibility:hidden;transition:transform .32s cubic-bezier(.32,0,.15,1),visibility 0s linear .32s}
+.va-page.show{transform:none;visibility:visible;transition:transform .32s cubic-bezier(.32,0,.15,1),visibility 0s}
+.va-head{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 10px;max-width:520px;width:100%;margin:0 auto;box-sizing:border-box}
+.va-back{width:64px;display:inline-flex;align-items:center;gap:4px;border:none;background:none;color:var(--muted);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;padding:8px 0}
+.va-title{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.2px}
+.va-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:4px 16px calc(env(safe-area-inset-bottom,0px) + 20px);max-width:520px;width:100%;margin:0 auto;box-sizing:border-box}
+.vac{position:relative;overflow:hidden;background:var(--surface);border:1px solid rgba(177,140,255,.22);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15);-webkit-tap-highlight-color:transparent}
+.vac::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 90% 90% at 92% -20%,rgba(177,140,255,.16) 0%,transparent 60%)}
+.vac>*{position:relative}
+.vac:active{opacity:.9}
+.vac-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.vac-t{font-size:14.5px;font-weight:600;line-height:1.55;color:var(--text);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.vac-go{margin-top:10px;font-size:12px;font-weight:800;color:#B18CFF}
+.vaq-h{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin:22px 0 10px 2px;display:flex;justify-content:space-between;align-items:center}
+.vaq-h button{border:none;background:none;color:rgba(255,255,255,.4);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;text-transform:none;letter-spacing:0}
+.vaq-chips{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.vaq-chip{text-align:left;padding:12px 14px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:rgba(255,255,255,.82);font-family:inherit;font-size:13px;font-weight:600;line-height:1.4;cursor:pointer}
+.vaq-msg{max-width:88%;padding:11px 14px;border-radius:16px;font-size:14px;line-height:1.6;margin-bottom:8px;white-space:pre-wrap;word-break:break-word}
+.vaq-msg.u{margin-left:auto;background:#B18CFF;color:#140a2a;font-weight:600;border-bottom-right-radius:5px}
+.vaq-msg.a{background:var(--surface2);color:rgba(255,255,255,.9);font-weight:500;border-bottom-left-radius:5px}
+.vaq-msg.w{background:var(--surface2);color:var(--muted);font-weight:600}
+.vaq-row{display:flex;gap:8px;align-items:flex-end;margin-top:10px}
+.vaq-in{flex:1;min-height:46px;max-height:120px;box-sizing:border-box;resize:none;background:var(--surface2);border:1px solid var(--border);border-radius:16px;padding:12px 14px;color:var(--text);font-family:inherit;font-size:14px;font-weight:500;line-height:1.4;outline:none}
+.vaq-in:focus{border-color:rgba(177,140,255,.55)}
+.vaq-send{flex-shrink:0;height:46px;padding:0 18px;border:none;border-radius:16px;background:#B18CFF;color:#140a2a;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer}
+.vaq-send:disabled{opacity:.5}
+.vaq-note{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.3);margin-top:10px;line-height:1.5}
 .aiw{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin:6px 0 16px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .aiw::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 90% 70% at 90% -10%,rgba(177,140,255,.11) 0%,transparent 60%)}
 .aiw>*{position:relative}
@@ -1206,12 +1238,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   padding-bottom:26px;
 }
 /* Body — glassmorphism alt kısmı */
-.plan-char-glass {
-  background:rgba(10,10,13,.72);
-  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-  border-top:1px solid rgba(255,255,255,.08);
-  padding:20px 22px;
-}
 .plan-char-section-label {
   font-size:11px; font-weight:600; letter-spacing:.08em;
   text-transform:uppercase; color:var(--muted);
@@ -1505,8 +1531,6 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .plan-trend-chip.neu { color:var(--muted); background:rgba(255,255,255,.05); }
 .plan-bar-track { position:relative; }
 .plan-bar-tick { position:absolute; top:-3px; bottom:-3px; width:2px; border-radius:2px; background:rgba(255,255,255,.45); }
-.plan-char-map-btn { display:block; width:100%; margin-top:12px; padding:11px 14px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:12px; color:var(--text); font-family:inherit; font-size:13px; font-weight:700; letter-spacing:-.01em; cursor:pointer; text-align:center; transition:transform .15s var(--spring), background .2s; -webkit-tap-highlight-color:transparent; }
-.plan-char-map-btn:active { transform:scale(.97); background:rgba(255,255,255,.1); }
 
 /* ═══ V82 — RAPOR GÖRSEL YENİLEME ═══ */
 .ph-gauge-wrap { position:relative; text-align:center; margin:10px 0 2px; cursor:pointer; -webkit-tap-highlight-color:transparent; }
@@ -1637,6 +1661,9 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .advice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 14px}
 .advice-grid .advice-big-card{width:auto;min-height:0}
 .advice-grid .advice-big-inner{min-height:176px}
+.advice-grid .advice-big-card:only-child{grid-column:1/-1}
+.advice-grid .advice-big-card:only-child .advice-big-inner{min-height:0}
+.advice-grid .advice-big-card:only-child .advice-big-value{margin-bottom:12px}
 .advice-big-num.sm{font-size:24px;letter-spacing:-1px}
 @keyframes adviceCardIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 .drv-detail { font-size:12.5px; font-weight:400; color:var(--muted); line-height:1.65; letter-spacing:-.01em; }
@@ -2209,6 +2236,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .plan-step-val.good{color:var(--accent)}
 .plan-step-sub{font-size:13px;font-weight:400;color:var(--muted);line-height:1.75;letter-spacing:-.01em}
 .plan-step-btn{margin-top:10px;padding:9px 16px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(45,184,102,.22)}
+.plan-step-more{margin:10px 0 0 12px;padding:9px 4px;border:none;background:none;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer}
 .plan-step-btn.bad{background:var(--danger);box-shadow:0 4px 14px rgba(255,69,58,.22)}
 .plan-step-btn:active{opacity:.85}
 .report-card{background:var(--surface2);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:18px}
@@ -2630,7 +2658,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .vm-plan-avatar{width:112px;height:112px;overflow:visible;pointer-events:none;transition:transform .12s}
 #planCharCard,#planCharCard *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 #planCharCard .plan-char-gradient{padding-right:140px}
-#planCharCard .plan-char-glass{padding:14px 22px}#planCharCard .plan-char-map-btn{margin-top:0}
+
 .plan-char-gradient{position:relative}
 .vm-alive{transform-box:fill-box;transform-origin:50% 88%;animation:vmAlive 4.2s ease-in-out infinite}
 @keyframes vmAlive{0%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(2deg) translateY(-3px)}100%{transform:rotate(-2deg) translateY(0)}}
@@ -3165,6 +3193,9 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <!-- V96.6: PARAN NEREYE GİDİYOR -->
   <div id="moneyFlowCard"></div>
 
+  <!-- V98.6: VAULT'A SOR giriş kartı -->
+  <div id="vaultAskCard"></div>
+
   <!-- Finansal Analiz kutusu (Plan'ın kapısı) -->
   <div id="financialAdviceBox"></div>
 
@@ -3267,9 +3298,6 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       Özet
     </button>
   </div>
-
-  <!-- V97.8: HAFTALIK YORUM (Claude) -->
-  <div id="aiWeeklyCard"></div>
 
   <!-- 1. DURUM HERO -->
   <div id="planHero"></div>
@@ -3621,6 +3649,15 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <div class="add-sheet-handle"></div>
   <div class="add-sheet-header"><span class="add-sheet-title" id="drvSheetTitle"></span><button class="add-sheet-close" onclick="closeDrvSheet()">&times;</button></div>
   <div class="add-sheet-body" id="drvSheetBody" style="max-height:72vh;overflow-y:auto"></div>
+</div>
+<!-- V98.6: VAULT'A SOR sayfası -->
+<div class="va-page" id="vaPage">
+  <div class="va-head"><button class="va-back" onclick="closeVaultAsk()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Özet</button><span class="va-title">VAULT'a Sor</span><span style="width:64px"></span></div>
+  <div class="va-body" id="vaBody">
+    <div id="aiWeeklyCard"></div>
+    <div id="vaAsk"></div>
+    <div style="height:30px"></div>
+  </div>
 </div>
 <!-- V97.6: Claude anahtarı sayfası -->
 <div class="add-sheet-overlay" id="aiSheetOv" onclick="if(event.target===this)closeAiSheet()"></div>
@@ -9574,13 +9611,14 @@ function _planCalcCore(fb, sc) {
     })(),
   });
   const noEmergency = !data.savingsGoals.some(g => isEmergencyGoal(g)); // V90 Fix#4
+  let efDriver = null;
   if (noEmergency) {
     // V96.4: hedef tutar Yol Haritası'ndaki "Acil fon oluştur" adımıyla aynı tanım (sabit gider + taksit + ortalama harcama, 3 ay)
     const _efC = _adviceCtx();
     const _efT = Math.round((_efC.fb.recTotal + _efC.fb.debtTotal + _efC.avgVar3) * 3);
     const _efM = _efC.structCap > 200 ? Math.max(200, Math.min(Math.ceil(_efT / 6), Math.round(_efC.structCap * 0.5))) : Math.max(100, Math.ceil(_efT / 24));
-    drivers.push({
-      label: 'Acil fonun yok',
+    efDriver = { // V98.5: artık Baskı Analizi kartı değil; Yol Haritası'ndaki "Nasıl hesaplandı?" sayfasının içeriği
+      label: 'Acil fon nasıl hesaplandı',
       pct: 0,
       detail: 'Beklenmedik giderler için ayrılmış paran yok. Hedef 3 aylık yaşam masrafın: ' + fmtTL(_efT) + '.',
       act: 'Ayda ' + fmtTL(_efM) + ' ayırırsan ' + Math.max(1, Math.ceil(_efT / _efM)) + ' ayda dolar.', st: 'warn',
@@ -9595,7 +9633,7 @@ function _planCalcCore(fb, sc) {
           head: '3 ay × ' + fmtTL(m1) + ' = <b>' + fmtTL(_efT) + '</b>',
           btn: { label: 'Acil fon hedefi oluştur', js: 'adviceCreateEmergency(' + _efT + ',' + _efM + ')' } };
       })(),
-    });
+    };
   }
 
   // Aksiyon önerileri (sıralı, somut)
@@ -9628,7 +9666,7 @@ function _planCalcCore(fb, sc) {
   return {
     adjIncome, adjRec, adjAvail, adjVar, adjRemain, savPot,
     fixedRatio, debtRatio, savRatio, rs, rsParts, riskLevel,
-    character, drivers, actions, goals, sc,
+    character, drivers, efDriver, actions, goals, sc,
   };
 }
 
@@ -9755,7 +9793,7 @@ function _buildAdviceCards(ctx) {
       cards.push({ id: 'emergency', score: ctx.debtRatio > 0.4 ? 82 : 90, cls: 'warn', val: fmtTL(efTarget), 
         title: 'Acil fon oluştur — planın ilk adımı bu',
         sub: `Sabit gider + taksit + ortalama harcamana göre 3 aylık yaşam maliyetin ${fmtTL(efTarget)}. Bu tampon olmadan beklenmedik tek bir gider yapıyı borca iter. Ayda ${fmtTL(monthly)} ile ${months} ayda dolar.`,
-        action: { label: 'Acil fon hedefi oluştur', js: `adviceCreateEmergency(${efTarget},${monthly})` } });
+        action: { label: 'Acil fon hedefi oluştur', js: `adviceCreateEmergency(${efTarget},${monthly})` }, more: { label: 'Nasıl hesaplandı?', js: 'openEfSheet()' } });
     } else {
       const g = ctx.emergencyGoal;
       const dep = (g.deposits || []).reduce((s, d) => s + d.amount, 0);
@@ -9918,7 +9956,10 @@ function _renderPlanSteps() {
     el.innerHTML = '<div style="font-size:13px;font-weight:400;color:var(--muted);line-height:1.75;padding:4px 0 8px">Gelir kaydı eklenince kişisel yol haritan burada oluşur.</div>';
     return;
   }
-  const cards = _buildAdviceCards(ctx).sort((a, b) => b.score - a.score).slice(0, 4);
+  const _all = _buildAdviceCards(ctx).sort((a, b) => b.score - a.score);
+  let cards = _all.slice(0, 4);
+  // V98.5: acil fon önerisi artık yalnızca burada yaşıyor — ilk dörde giremezse sonuncunun yerine alınır
+  const _ef = _all.find(c => c.id === 'emergency'); if (_ef && !cards.includes(_ef)) { cards[cards.length - 1] = _ef; cards.sort((a, b) => b.score - a.score); }
   if (!cards.length) {
     el.innerHTML = '<div style="font-size:13px;font-weight:400;color:var(--muted);line-height:1.75;padding:4px 0 8px">Kritik adım yok — yapı sağlıklı görünüyor. Mevcut düzeni korumak en iyi strateji.</div>';
     return;
@@ -9933,6 +9974,7 @@ function _renderPlanSteps() {
         </div>
         <div class="plan-step-sub">${c.sub}</div>
         ${c.action ? `<button class="plan-step-btn ${c.cls}" onclick="${c.action.js}">${c.action.label}</button>` : ''}
+        ${c.more ? `<button class="plan-step-more" onclick="${c.more.js}">${c.more.label} <span>›</span></button>` : ''}
       </div>
     </div>`).join('');
 }
@@ -10083,7 +10125,6 @@ function renderPlan() {
   _planRenderSliders(fb);
   const sc = _planGetScenario();
   const core = _planCalcCore(fb, sc);
-  renderAiWeekly(); // V97.8
   _renderPlanHero(fb, core);
   _renderPlanChar(core);
   _renderPlanRiskDetail(core);
@@ -10364,10 +10405,6 @@ function _renderPlanChar(core) {
         <div class="plan-char-bigname" style="color:${ch.accentColor||'#fff'}">${ch.name}</div>
         <div class="plan-char-tagline">${ch.tagline}</div>
       </div>
-      <div class="plan-char-glass">
-        <!-- V94.5: "neden bu karakter" açıklaması Karakter yolculuğuna taşındı -->
-        <button class="plan-char-map-btn" onclick="var b=document.getElementById('planStepsBlock');if(b)b.scrollIntoView({behavior:'smooth',block:'start'})">Ne yapmalıyım? Yol haritasına git →</button>
-      </div>
       <div class="plan-char-next">
         <div class="plan-char-next-arrow">→</div>
         <div class="plan-char-next-text"><b>${ch.nextLabel}:</b> ${ch.next}</div>
@@ -10377,6 +10414,35 @@ function _renderPlanChar(core) {
 
 
 // ── 3. Baskı Analizi ─────────────────────────────────────────────────────────
+// V98.5: detay sayfası kartı — Baskı Analizi ve acil fon sayfası ortak kullanır
+const _drvStLabel = { ok:'İyi', warn:'Dikkat', bad:'Yüksek' };
+const _drvStColor = { ok:'var(--accent)', warn:'var(--warning)', bad:'var(--danger)' };
+const _drvStBg = { ok:'rgba(45,184,102,.13)', warn:'rgba(255,214,10,.11)', bad:'rgba(255,69,58,.14)' };
+const drvMore = (d) => {
+  const m = d.more || {};
+  return `<div class="drv-more">
+    ${m.head ? `<div class="drv-more-head">${m.head}</div>` : ''}
+    ${m.title ? `<div class="drv-more-title">${m.title}</div>` : ''}
+    ${(m.rows || []).map(r => `<div class="drv-row"><div><div class="drv-row-l">${r.l}</div>${r.s ? `<div class="drv-row-s">${r.s}</div>` : ''}</div><div class="drv-row-v">${r.v}</div></div>`).join('')}
+    ${m.total ? `<div class="drv-row tot"><div class="drv-row-l">${m.total.l}</div><div class="drv-row-v">${m.total.v}</div></div>` : ''}
+    ${d.act ? `<div class="drv-act"><b>Ne yapmalı:</b> ${d.act}</div>` : ''}
+    ${m.btn ? `<button class="drv-btn" onclick="event.stopPropagation();closeDrvSheet();${m.btn.js}">${m.btn.label}</button>` : ''}
+  </div>`;
+};
+const drvCard = (d, i) => {
+  const st = d.st || 'warn', c = _drvStColor[st];
+  const num = d.pct > 0 ? '%' + d.pct : (d.big || '');
+  return `<div class="drv-sh-top">
+      <div class="drv-num" style="color:${c}">${num}</div>
+      <span class="drv-badge" style="background:${_drvStBg[st]};color:${c}">${_drvStLabel[st]}</span>
+    </div>
+    ${d.barPct > 0 ? `<div class="drv-track${d.th ? ' has-th' : ''}">
+      <div class="drv-fill" style="width:${d.barPct}%;background:${c}"></div>
+      ${d.th ? `<div class="plan-bar-tick" style="left:${d.th}%"></div><div class="drv-th" style="left:${d.th}%">${d.thLabel}</div>` : ''}
+    </div>` : ''}
+    <div class="drv-detail">${d.detail}</div>` + drvMore(d);
+};
+
 function _renderPlanRiskDetail(core) {
   const el = document.getElementById('planRiskDetail');
   if (!el) return;
@@ -10395,37 +10461,11 @@ function _renderPlanRiskDetail(core) {
       <div style="padding:16px 0 4px">
         <div style="font-size:15px;font-weight:600;color:var(--accent);margin-bottom:6px">Kritik baskı noktası yok.</div>
         <div style="font-size:13.5px;font-weight:400;color:var(--muted);line-height:1.75">Sabit gider, borç ve birikim oranlarının tümü sağlıklı aralıkta.</div>
-      </div>`;
+      </div>` + _snowballCardHtml() + _leakCardHtml();
+    _snowRender();
     return;
   }
 
-  const stLabel = { ok:'İyi', warn:'Dikkat', bad:'Yüksek' };
-  const stColor = { ok:'var(--accent)', warn:'var(--warning)', bad:'var(--danger)' };
-  const stBg    = { ok:'rgba(45,184,102,.13)', warn:'rgba(255,214,10,.11)', bad:'rgba(255,69,58,.14)' };
-  const drvMore = (d) => {
-    const m = d.more || {};
-    return `<div class="drv-more">
-      ${m.head ? `<div class="drv-more-head">${m.head}</div>` : ''}
-      ${m.title ? `<div class="drv-more-title">${m.title}</div>` : ''}
-      ${(m.rows || []).map(r => `<div class="drv-row"><div><div class="drv-row-l">${r.l}</div>${r.s ? `<div class="drv-row-s">${r.s}</div>` : ''}</div><div class="drv-row-v">${r.v}</div></div>`).join('')}
-      ${m.total ? `<div class="drv-row tot"><div class="drv-row-l">${m.total.l}</div><div class="drv-row-v">${m.total.v}</div></div>` : ''}
-      ${d.act ? `<div class="drv-act"><b>Ne yapmalı:</b> ${d.act}</div>` : ''}
-      ${m.btn ? `<button class="drv-btn" onclick="event.stopPropagation();closeDrvSheet();${m.btn.js}">${m.btn.label}</button>` : ''}
-    </div>`;
-  };
-  const drvCard = (d, i) => {
-    const st = d.st || 'warn', c = stColor[st];
-    const num = d.pct > 0 ? '%' + d.pct : (d.big || '');
-    return `<div class="drv-sh-top">
-        <div class="drv-num" style="color:${c}">${num}</div>
-        <span class="drv-badge" style="background:${stBg[st]};color:${c}">${stLabel[st]}</span>
-      </div>
-      ${d.barPct > 0 ? `<div class="drv-track${d.th ? ' has-th' : ''}">
-        <div class="drv-fill" style="width:${d.barPct}%;background:${c}"></div>
-        ${d.th ? `<div class="plan-bar-tick" style="left:${d.th}%"></div><div class="drv-th" style="left:${d.th}%">${d.thLabel}</div>` : ''}
-      </div>` : ''}
-      <div class="drv-detail">${d.detail}</div>` + drvMore(d);
-  };
   // V96.4: Özet'teki eski tavsiye kartlarının görünüşü — büyük rakam, başlık, kısa cümle; renk duruma göre
   const _cls = { ok:'good', warn:'warn', bad:'bad' };
   const driverHtmlC = core.drivers.map((d, i) => {
@@ -10450,6 +10490,12 @@ let _drvCards = [], _drvTitles = [];
 function _drvToggle(i) {
   document.getElementById('drvSheetTitle').textContent = _drvTitles[i] || '';
   document.getElementById('drvSheetBody').innerHTML = _drvCards[i] || '';
+  document.getElementById('drvSheetOv').classList.add('show'); document.getElementById('drvSheet').classList.add('show');
+}
+function openEfSheet() { // V98.5
+  const core = _planCalcCore(calcFreeBudget(currentMonth), _planGetScenario()); if (!core.efDriver) return;
+  document.getElementById('drvSheetTitle').textContent = core.efDriver.label;
+  document.getElementById('drvSheetBody').innerHTML = drvCard(core.efDriver);
   document.getElementById('drvSheetOv').classList.add('show'); document.getElementById('drvSheet').classList.add('show');
 }
 function closeDrvSheet() { document.getElementById('drvSheetOv').classList.remove('show'); document.getElementById('drvSheet').classList.remove('show'); }
@@ -11949,7 +11995,7 @@ async function aiAsk(system, userText, maxTokens, model, timeoutMs) {
     const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), timeoutMs || 30000);
     res = await fetch(AI_URL, { method: 'POST', signal: ctl.signal,
       headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2026-10-21', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify(Object.assign({ model: model || AI_MODEL, max_tokens: maxTokens || 300, messages: [{ role: 'user', content: userText }] }, system ? { system } : {})) });
+      body: JSON.stringify(Object.assign({ model: model || AI_MODEL, max_tokens: maxTokens || 300, messages: Array.isArray(userText) ? userText : [{ role: 'user', content: userText }] }, system ? { system } : {})) });
     clearTimeout(tm);
   } catch (e) {
     if (e && e.name === 'AbortError') return { ok: false, msg: 'Claude zamanında cevap vermedi. Biraz sonra tekrar dene.' };
@@ -11991,22 +12037,23 @@ const AI_WEEKLY = 'vault_ai_letter', AI_MODEL_WEEKLY = 'claude-opus-5-5', AI_DES
 const _AIW_SYS = [
   'Sen kullanıcının parayla arası iyi olan yakın bir arkadaşısın. Onun bütçe uygulamasının içinden ona haftada bir kısa bir mektup yazıyorsun. Elindeki tek kaynak sana verilen JSON veri; ama yazında "veri", "JSON", "analiz", "rapor", "mektup" gibi kelimeler geçmez. Bir insan gibi yazarsın.',
   '',
-  'MEKTUBUN AKIŞI (başlık, madde işareti, numara, kalın yazı, emoji YOK; sadece düz paragraflar):',
+  'YAZININ AKIŞI (başlık, madde işareti, numara, kalın yazı, emoji YOK; sadece düz paragraflar):',
   '1. paragraf — genel resim: son aylara bakınca nerede duruyor, hangi yöne gidiyor? Gerçekten iyi giden bir şey varsa onunla başla (yoksa uydurma).',
   '2. paragraf — bu ayın hikâyesi: parası neden böyle dağılıyor, yapısı nasıl (ne kadarı ay başlamadan sahipleniliyor, geriye ne kalıyor)? Asıl rahatlama nereden gelir: günlük harcamadan mı, sabit taraftan mı, yaklaşan bir borç bitişinden mi? Tek bir ana fikir söyle.',
-  '3. paragraf — geçen haftadan TEK not: en çok anlam taşıyan şey ne ve NEDEN öyle? Sonra bunu bir teklif olarak bağla ("istersen ..."). Emir verme.',
+  '3. paragraf — nereden kısabilir, nasıl biriktirir: EN FAZLA İKİ somut kalem söyle. Kalemleri verideki gerçek kategorilerden ya da yer adlarından seç (sık ve küçük harcamalar, haftalardır büyüyen kalem, üst üste binen abonelik gibi). Her biri için gerçekçi bir kısma söyle (tamamen bırak değil; "haftada bir azalt", "yarıya indir" gibi) ve bunun ayda kabaca kaç ₺ ettiğini yaz. Sonra bu parayı nereye koyabileceğini söyle: varsa kendi hedeflerinden birine, yoksa acil durum parasına. Bunu teklif olarak yaz ("istersen ..."), emir verme. Kira, fatura, sağlık, borç taksiti gibi zorunlu kalemlere "kıs" deme.',
+  '4. paragraf (kısa, isteğe bağlı) — geçen haftadan dikkat çeken tek şey varsa bir iki cümleyle söyle; yoksa bu paragrafı atla.',
   'Son satır — ona tek bir açık soru sor (önündeki haftalar ya da planlarıyla ilgili). Geçmiş harcamasını sorgulayan soru sorma.',
   '',
   'DİL:',
   '- Sıcak, sade, net. Kısa cümleler. "Sen" diye hitap et. Finans terimi yok ("nakit akışı", "oran", "optimizasyon" gibi kelimeler yasak).',
   '- Yargılama, azarlama, ders verme yok. Abartılı övgü de yok. "Harcamalarına dikkat et" gibi boş cümle yok.',
-  '- Rakam az olsun: mektubun tamamında en fazla 5 rakam. Yuvarla ("yaklaşık 12.000₺"). Yüzde yerine gündelik anlatım kullan ("yarısından fazlası", "üçte biri").',
+  '- Rakam az olsun: yazının tamamında en fazla 8 rakam. Yuvarla ("yaklaşık 12.000₺"). Yüzde yerine gündelik anlatım kullan ("yarısından fazlası", "üçte biri").',
   '- Uygulamanın ekranlarında zaten yazan şeyleri sayıp dökme (toplam harcama, kaç gün limitin altında, kategori listesi). Onlar sadece bir düşünceyi desteklemek için geçebilir.',
-  '- Toplam 110-170 kelime. Uzatma.',
+  '- Toplam 150-220 kelime. Uzatma.',
   '',
   'KURALLAR:',
   '- Yalnızca verilen bilgilerden konuş; veride olmayan hiçbir şeyi varsayma. Basit hesap (fark, toplam, kabaca oran) yapabilirsin.',
-  '- "gecen_hafta_kayit_durumu" yeterli değilse 3. paragrafı geçen hafta yerine bu ayın gidişinden ya da verisi olan en son haftadan yaz. Kayıt girmediği için sitem etme; en fazla tek cümleyle, nazikçe değin.',
+  '- "gecen_hafta_kayit_durumu" yeterli değilse 4. paragrafı atla; kısma önerilerini bu ayın ve son ayların harcamalarından çıkar. Kayıt girmediği için sitem etme; en fazla tek cümleyle, nazikçe değin.',
   '- Elindekiyle konuş. "Daha fazla veri lazım", "birkaç hafta daha bekleyelim" gibi şeyler YAZMA.',
   '- Yatırım, kredi ürünü ya da borsa tavsiyesi verme.',
   '- Para tutarlarını 12.345₺ biçiminde yaz.',
@@ -12099,6 +12146,69 @@ function _aiwSentHtml(o, descOn) {
     '<div class="aiw-sent-t" style="margin-top:12px">Gitmeyenler</div><div class="aiw-sent-li">Kimlik, banka ya da kart bilgisi. Uygulama bunları zaten tutmuyor.</div>' +
     (descOn ? '' : '<div class="aiw-sent-li">Harcama açıklamaların (yukarıdaki anahtar kapalı).</div>');
 }
+// ═══ V98.6: VAULT'A SOR — Özet kartı, sayfa, soru kutusu ═══
+const VA_CHAT = 'vault_ai_chat', VA_MODEL = 'claude-sonnet-5-5';
+const _VA_SYS = [
+  'Sen VAULT\'sun: kullanıcının bütçe uygulamasının içindeki yardımcı. Parayla arası iyi olan yakın bir arkadaş gibi konuşursun. Elindeki tek kaynak sana verilen JSON; ama cevabında "veri", "JSON" gibi kelimeler geçmez.',
+  '',
+  'NASIL CEVAP VERİRSİN:',
+  '- Önce sorunun cevabını söyle (evet / hayır / şu kadar), sonra en fazla 2-3 cümleyle nedenini anlat. Toplam 40-110 kelime.',
+  '- Cevabı kullanıcının kendi rakamlarına dayandır; en fazla 3-4 rakam kullan, yuvarla. Basit hesap yapabilirsin (fark, toplam, kaç ay sürer).',
+  '- Sade, sıcak, net Türkçe. "Sen" diye hitap et. Finans terimi, madde işareti, başlık, kalın yazı, emoji yok.',
+  '- Yargılama ve ders verme yok. Emir yerine teklif ("istersen ...").',
+  '- Cevap için eksik bir bilgi varsa uydurma: tek bir kısa soru sor.',
+  '- Yatırım, kredi ürünü ya da borsa tavsiyesi verme; sorulursa bunu kibarca söyle ve bütçe tarafından bak.',
+  '- Para tutarlarını 12.345₺ biçiminde yaz.',
+  '- Bütçeyle ilgisi olmayan sorularda kısaca bu konuda yardımcı olamayacağını söyle.'
+].join('\n');
+function _aiwKey() { const t = new Date(today() + 'T00:00:00'), dow = (t.getDay() + 6) % 7; const d = new Date(t); d.setDate(t.getDate() - dow - 7); return _aiwDs(d); }
+function renderVaultAskCard() {
+  const el = document.getElementById('vaultAskCard'); if (!el) return;
+  const spark = '<svg width="13" height="13" viewBox="0 0 24 24" fill="#B18CFF"><path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9z"/></svg>';
+  const saved = _aiwStore()[_aiwKey()];
+  let t, go;
+  if (!aiKeyGet()) { t = 'Bütçenle ilgili aklına geleni sor; VAULT rakamlarına bakıp cevaplasın.'; go = 'Kurmak için dokun'; }
+  else if (saved && saved.text) { t = saved.text.split(/\n\s*\n/)[0]; go = 'Devamını oku ve soru sor'; }
+  else { t = 'Bu haftanın değerlendirmesi hazırlanabilir. İstediğin soruyu da sorabilirsin.'; go = 'Aç'; }
+  el.innerHTML = `<div class="vac" onclick="openVaultAsk()"><div class="vac-top"><span class="aiw-over">${spark} VAULT'a Sor</span><span class="aiw-week">${saved && saved.label ? esc(saved.label) : ''}</span></div>
+    <div class="vac-t">${esc(t)}</div><div class="vac-go">${go} ›</div></div>`;
+}
+function openVaultAsk() { renderAiWeekly(); renderVaultAsk(); document.getElementById('vaPage').classList.add('show'); document.getElementById('vaBody').scrollTop = 0; }
+function closeVaultAsk() { document.getElementById('vaPage').classList.remove('show'); renderVaultAskCard(); }
+function _vaChat() { try { const a = JSON.parse(localStorage.getItem(VA_CHAT) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+function _vaChatSave(a) { try { localStorage.setItem(VA_CHAT, JSON.stringify(a.slice(-30))); } catch (e) {} }
+let _vaBusy = false, _vaErr = '', _vaDraft = '';
+function renderVaultAsk() {
+  const el = document.getElementById('vaAsk'); if (!el) return;
+  if (!aiKeyGet()) { el.innerHTML = ''; return; }
+  const chat = _vaChat();
+  const chips = ["Bu ay 15.000₺'lik bir harcama yapsam sıkışır mıyım?", "En çok nereden kısabilirim?", "Bu gidişle ay sonunda ne kalır?"];
+  el.innerHTML = `<div class="vaq-h"><span>Soru sor</span>${chat.length ? '<button onclick="vaultAskClear()">Sohbeti temizle</button>' : ''}</div>
+    ${chat.length ? '' : `<div class="vaq-chips">${chips.map(c => `<button class="vaq-chip" onclick="vaultAskSend(this.textContent)">${esc(c)}</button>`).join('')}</div>`}
+    ${chat.map(m => `<div class="vaq-msg ${m.role === 'user' ? 'u' : 'a'}">${esc(m.content)}</div>`).join('')}
+    ${_vaBusy ? '<div class="vaq-msg w">VAULT düşünüyor…</div>' : ''}
+    ${_vaErr ? `<div class="aiw-err" style="margin:4px 0 8px">${esc(_vaErr)}</div>` : ''}
+    <div class="vaq-row"><textarea class="vaq-in" id="vaIn" rows="1" placeholder="Bütçenle ilgili bir şey sor…" oninput="_vaDraft=this.value" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();vaultAskSend()}">${esc(_vaDraft)}</textarea>
+      <button class="vaq-send" onclick="vaultAskSend()" ${_vaBusy ? 'disabled' : ''}>Sor</button></div>
+    <div class="vaq-note">Her soruda bütçe özetin Claude'a gider. Cevaplar genel bilgidir, yatırım tavsiyesi değildir.</div>`;
+}
+function vaultAskClear() { try { localStorage.removeItem(VA_CHAT); } catch (e) {} _vaErr = ''; renderVaultAsk(); }
+async function vaultAskSend(preset) {
+  if (_vaBusy) return;
+  const q = String(preset != null ? preset : (document.getElementById('vaIn') || {}).value || '').trim(); if (!q) return;
+  const chat = _vaChat(); chat.push({ role: 'user', content: q }); _vaChatSave(chat);
+  _vaDraft = ''; _vaBusy = true; _vaErr = ''; renderVaultAsk();
+  const body = document.getElementById('vaBody'); if (body) body.scrollTop = body.scrollHeight;
+  // bütçe özeti her istekte ilk mesajın başına eklenir; sohbetin son 12 mesajı gider
+  const hist = _vaChat().slice(-12); while (hist.length && hist[0].role !== 'user') hist.shift();
+  const msgs = hist.map((m, i) => ({ role: m.role, content: i === 0 ? 'BÜTÇE BİLGİLERİM (JSON):\n' + JSON.stringify(aiWeekSummary().obj) + '\n\nSORUM: ' + m.content : m.content }));
+  const r = await aiAsk(_VA_SYS, msgs, 6000, VA_MODEL, 120000);
+  _vaBusy = false;
+  if (!r.ok) { _vaErr = r.msg; const c = _vaChat(); c.pop(); _vaChatSave(c); _vaDraft = q; renderVaultAsk(); return; }
+  const text = r.text.replace(/\*\*(.+?)\*\*/g, '$1').replace(/^\s*#{1,6}\s+/gm, '').trim();
+  const c2 = _vaChat(); c2.push({ role: 'assistant', content: text }); _vaChatSave(c2);
+  renderVaultAsk(); if (body) body.scrollTop = body.scrollHeight;
+}
 let _aiwBusy = false, _aiwErr = '';
 function renderAiWeekly() {
   const el = document.getElementById('aiWeeklyCard'); if (!el) return;
@@ -12111,14 +12221,14 @@ function renderAiWeekly() {
     el.innerHTML = `<div class="aiw">${top}
       <div class="aiw-letter">${ps.map((p, i) => `<p${i === ps.length - 1 && ps.length > 1 && /\?\s*$/.test(p) ? ' class="q"' : ''}>${esc(p).replace(/\n/g, '<br>')}</p>`).join('')}</div>
       ${err}
-      <div class="aiw-foot"><span>Claude yazdı · genel bilgidir, yatırım tavsiyesi değildir</span><button onclick="aiWeeklyRun(true)" ${_aiwBusy ? 'disabled' : ''}>${_aiwBusy ? 'Yazıyor…' : 'Yeniden yaz'}</button></div>
+      <div class="aiw-foot"><span>Claude ile yazıldı · genel bilgidir, yatırım tavsiyesi değildir</span><button onclick="aiWeeklyRun(true)" ${_aiwBusy ? 'disabled' : ''}>${_aiwBusy ? 'Yazıyor…' : 'Yeniden yaz'}</button></div>
     </div>`;
     return;
   }
   if (!aiKeyGet()) {
-    el.innerHTML = `<div class="aiw">${top}<div class="aiw-h">Claude haftada bir durumunu değerlendirsin</div>
+    el.innerHTML = `<div class="aiw">${top}<div class="aiw-h">VAULT haftada bir durumunu değerlendirsin</div>
       <div class="aiw-p">Rakam listesi değil; genel olarak nerede durduğunu, bu ayın hikâyesini ve geçen haftadan tek bir notu anlatan kısa bir yazı. Başlamak için Claude anahtarını gir.</div>
-      <button class="aiw-btn" onclick="switchTab('ayarlar');setTimeout(openAiSheet,250)">Anahtarı gir</button></div>`;
+      <button class="aiw-btn" onclick="closeVaultAsk();switchTab('ayarlar');setTimeout(openAiSheet,350)">Anahtarı gir</button></div>`;
     return;
   }
   if (!w.enough) {
@@ -12128,10 +12238,10 @@ function renderAiWeekly() {
   }
   const dOn = _aiwDescOn();
   el.innerHTML = `<div class="aiw">${top}<div class="aiw-h">Bu haftanın değerlendirmesi hazırlanabilir</div>
-    <div class="aiw-p">Claude son aylarına ve geçen haftana bakıp durumunu kısaca, sade bir dille anlatır. Bu cihazda ${w.info.months} aylık, ${w.info.weeks} haftalık kayıt var${w.info.lastWeekTx < 3 ? '; geçen hafta kayıt az olduğu için genel resme ağırlık verecek' : ''}.</div>
+    <div class="aiw-p">VAULT son aylarına ve geçen haftana bakıp durumunu kısaca, sade bir dille anlatır. Bu cihazda ${w.info.months} aylık, ${w.info.weeks} haftalık kayıt var${w.info.lastWeekTx < 3 ? '; geçen hafta kayıt az olduğu için genel resme ağırlık verecek' : ''}.</div>
     <div class="aiw-opt" onclick="aiwToggleDesc()"><div><div class="aiw-opt-t">Harcama açıklamaları da gitsin</div><div class="aiw-opt-s">Açıkken yer adlarını da görür ve daha isabetli yazar. Kapatırsan sadece tutar ve kategori gider.</div></div><div class="aiw-sw${dOn ? ' on' : ''}"><i></i></div></div>
     ${err}
-    <button class="aiw-btn" onclick="aiWeeklyRun()" ${_aiwBusy ? 'disabled' : ''}>${_aiwBusy ? 'Claude düşünüyor… (bir dakikayı bulabilir)' : 'Değerlendir'}</button>
+    <button class="aiw-btn" onclick="aiWeeklyRun()" ${_aiwBusy ? 'disabled' : ''}>${_aiwBusy ? 'VAULT düşünüyor… (bir dakikayı bulabilir)' : 'Değerlendir'}</button>
     <button class="aiw-link" onclick="const b=document.getElementById('aiwSent');b.style.display=b.style.display==='block'?'none':'block'">Claude'a ne gidiyor?</button>
     <div class="aiw-sent" id="aiwSent">${_aiwSentHtml(w.obj, dOn)}</div></div>`;
 }
@@ -12188,6 +12298,7 @@ function renderOzetStats() {
   }
 
   renderMoneyFlow(fb); // V96.6
+  renderVaultAskCard(); // V98.6
 
   // Streak card - her zaman göster
   const scWrap = document.getElementById('streakCardWrap');
@@ -16154,7 +16265,11 @@ function recommend(){const ds=doneSet();let inc=0,debts=0,card=0,subs=0,ef=false
   const C=[];if(debts>0&&!ds.has('kartopu'))C.push({id:'kartopu',why:`${debts} aktif borcun var — sırayı kur.`});if(card>0&&!ds.has('asgari'))C.push({id:'asgari',why:`Kartında ${fmt(card)} ₺ borç var.`});if(subs>=2&&!ds.has('sizinti'))C.push({id:'sizinti',why:`${subs} aboneliğin var — yılda ne tutuyor?`});if(!ef&&!ds.has('acilfon')&&ds.has('kutular'))C.push({id:'acilfon',why:'Henüz acil fon hedefin yok.'});if(!ds.has('kutular'))C.push({id:'kutular',why:'Buradan başla: maaşı 5’e böl.'});
   const first=MAIN_TIPS().find(t=>!ds.has(t.id));if(first)C.push({id:first.id,why:'Sıradaki ders.'});return C[0]||null;}
 function doneSet(){if(typeof data==='undefined')return new Set();if(!Array.isArray(data.tipsDone))data.tipsDone=[];return new Set(data.tipsDone);}
-function markDone(id){if(typeof data==='undefined')return;if(!Array.isArray(data.tipsDone))data.tipsDone=[];if(!data.tipsDone.includes(id)){data.tipsDone.push(id);try{save();}catch(e){}}renderEntry();}
+// V98.8: bütün ana dersler bitince ilerleme sıfırlanır, dersler baştan açılır (uygulanan planlar durur)
+let _flRestarted=false;
+function flRestartIfAll(){try{if(typeof data==='undefined'||!Array.isArray(data.tipsDone))return false;const main=MAIN_TIPS().map(t=>t.id);if(!main.length||!main.every(id=>data.tipsDone.includes(id)))return false;
+  data.tipsDone=data.tipsDone.filter(id=>!main.includes(id));data.tipsRounds=(data.tipsRounds||0)+1;_flRestarted=true;try{save();}catch(e){}return true;}catch(e){return false;}}
+function markDone(id){if(typeof data==='undefined')return;if(!Array.isArray(data.tipsDone))data.tipsDone=[];if(!data.tipsDone.includes(id)){data.tipsDone.push(id);try{save();}catch(e){}}flRestartIfAll();renderEntry();}
 function renderLib(){const ds=doneSet();const rec=recommend();
   const card=t=>{const pr=progOf(t.id),ap=appliedOf(t.id),isRec=rec&&rec.id===t.id&&!pr;const changed=ap&&ap.snap!==snapNow(t.id);
     let badge=t.ready?(pr?`<span class="fl-badge fl-go">DEVAM ${pr.pi+1}/${pr.n}</span>`:ds.has(t.id)?'<span class="fl-badge fl-done">✓ TAMAMLANDI</span>':'<span class="fl-badge fl-go">BAŞLA</span>'):'<span class="fl-badge">YAKINDA</span>';
@@ -16165,7 +16280,7 @@ function renderLib(){const ds=doneSet();const rec=recommend();
   $('libclose').addEventListener('click',close);
   $$('.fl-undo').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const id=b.dataset.undo;if(typeof showConfirm==='function')showConfirm('Bu dersin kurduğu değişiklikler geri alınacak.',()=>undoApplied(id),'Geri al','Geri al','pause');else undoApplied(id);}));
   $$('.fl-tip').forEach(el=>el.addEventListener('click',()=>{const t=TIPS.find(x=>x.id===el.dataset.id);if(t&&t.ready)openLesson(t.id);}));}
-function renderEntry(){const host=document.getElementById('flEntryHost');if(!host)return;const ds=doneSet();const n=MAIN_TIPS().filter(t=>ds.has(t.id)).length;
+function renderEntry(){const host=document.getElementById('flEntryHost');if(!host)return;flRestartIfAll();const ds=doneSet();const n=MAIN_TIPS().filter(t=>ds.has(t.id)).length;
   let prog=null;try{const P=data.tipsProgress||{};const id=Object.keys(P).find(k=>P[k]&&P[k].pi>0&&!ds.has(k));if(id){const t=TIPS.find(x=>x.id===id);if(t)prog={t,p:P[id]};}}catch(e){}
   const rec=recommend();let et,es,ic='#19E68C';
   if(prog){et=`Devam et: ${prog.t.title}`;es=`${prog.p.pi+1}/${prog.p.n}. sayfada kaldın · ${n}/7 ders tamamlandı`;ic=prog.t.ic;}
@@ -16669,7 +16784,7 @@ function render(dir){clearTimers();const P=L.pages,p=P[pi];const onB=p.type==='r
 function go(dir){if(busy)return;const P=L.pages,p=P[pi];if(dir>0&&!canAdvance(p))return;
   if(dir>0&&pi===P.length-1){finish();return;}
   const n=pi+dir;if(n<0||n>=P.length)return;busy=true;$('page').className='fl-page fl-leave'+(dir<0?' fl-rev':'');setTimeout(()=>{pi=n;render(dir);busy=false;},240);}
-function finish(){clearProg(L.id);markDone(L.id);renderLib();showLib(true);if(typeof showToast==='function')showToast('✓ Ders tamamlandı — '+L.title);}
+function finish(){clearProg(L.id);_flRestarted=false;markDone(L.id);renderLib();showLib(true);if(typeof showToast==='function')showToast(_flRestarted?'✓ Yedi dersin hepsi tamam. Dersler baştan başlıyor.':'✓ Ders tamamlandı — '+L.title,_flRestarted?3200:undefined);}
 
 /* ---- onay penceresi (uygulamanın showConfirm'i, ders rengiyle) ---- */
 function confirmStyled(msg,cb,btn,title,color,fg){if(typeof showConfirm!=='function'){cb();return;}showConfirm(msg,cb,btn,title,'pause');
