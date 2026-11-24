@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V97.8: Haftalık Yorum (Claude, 2. adım) — Finansal Analiz sayfasının en üstünde kart. Biten son haftanın (Pzt–Paz) özet rakamlarını uygulama hesaplar, Claude sadece yorumlar: hafta nasıl geçti / dikkat çeken tek şey / gelecek hafta için tek öneri. Yorum bu cihazda saklanır, aynı hafta için tekrar sorulmaz. Claude'a yalnızca toplamlar ve kategori adları gider; "Claude'a ne gidiyor?" ile tam olarak görülebilir. -->
+<!-- V97.7: Claude'a ulaşılamadığında nedenini ayırt ediyor: uygulama bir önizleme penceresinde mi açık (orası internete çıkamaz), cihaz çevrimdışı mı, bir engelleyici mi kesiyor, yoksa tarayıcı mı izin vermiyor. Hata mesajının altında teknik ayrıntı satırı var. -->
 <!-- V97.6: Claude bağlantısı (1. adım) — Hesap sayfasında "Claude Anahtarı" satırı: anahtar girilir, bu cihazda ayrı saklanır (yedek/dışa aktarma dosyasına girmez), "Bağlantıyı dene" ile Claude'a küçük bir deneme isteği atılır ve sonuç sade Türkçe gösterilir. Henüz hiçbir bütçe verisi gönderilmiyor. -->
 <!-- V97.5: Kazanımlar rozeti Toplam Varlığın kartından seri kartının sağ üst köşesine taşındı ("EN UZUN x GÜN" yazısının yerine). En uzun seri, aynı kartta üstteki rakamı tekrar eden "aktif seri" kutusunun yerine geçti ("en uzun seri"). -->
 <!-- V97.4: Aylık Plan grafiği — harcama çizgisinin limit çizgisinin üstünde kalan kısmı (ve altındaki dolgu) artık kırmızı; bugün limit aşıldıysa uçtaki nokta da kırmızı. -->
@@ -748,6 +750,27 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .dla-legend{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:rgba(255,255,255,.7)}
 .dla-legend i{display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:6px}
 .dla-link{display:flex;justify-content:space-between;width:100%;margin-top:14px;padding:11px 0 0;border:none;border-top:1px solid rgba(255,255,255,.06);background:none;color:rgba(255,255,255,.4);font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer}
+.aiw{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin:6px 0 16px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.aiw::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 90% 70% at 90% -10%,rgba(177,140,255,.11) 0%,transparent 60%)}
+.aiw>*{position:relative}
+.aiw-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.aiw-over{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#B18CFF}
+.aiw-week{font-size:11px;font-weight:700;color:var(--muted)}
+.aiw-h{font-size:17px;font-weight:900;letter-spacing:-.3px;color:var(--text);margin-bottom:6px}
+.aiw-p{font-size:13px;font-weight:500;color:var(--muted);line-height:1.6}
+.aiw-btn{width:100%;margin-top:14px;padding:13px;border:none;border-radius:13px;background:#B18CFF;color:#140a2a;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer}
+.aiw-btn:disabled{opacity:.55}
+.aiw-link{display:inline-block;margin-top:12px;padding:0;border:none;background:none;color:rgba(255,255,255,.4);font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.aiw-sent{display:none;margin-top:10px;padding:12px;border-radius:12px;background:rgba(255,255,255,.04);font-size:11px;line-height:1.6;color:rgba(255,255,255,.6);white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,monospace;max-height:260px;overflow:auto}
+.aiw-sec{padding:12px 0;border-top:1px solid rgba(255,255,255,.06)}
+.aiw-sec:first-of-type{border-top:none;padding-top:2px}
+.aiw-sec-l{font-size:10px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:5px}
+.aiw-sec-t{font-size:14px;font-weight:600;color:var(--text);line-height:1.6}
+.aiw-sec.tip{background:rgba(177,140,255,.09);border:1px solid rgba(177,140,255,.2);border-radius:14px;padding:12px 14px;margin-top:4px}
+.aiw-sec.tip .aiw-sec-l{color:#B18CFF}
+.aiw-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px;font-size:10.5px;font-weight:600;color:rgba(255,255,255,.3);line-height:1.5}
+.aiw-foot button{border:none;background:none;color:rgba(255,255,255,.45);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
+.aiw-err{margin-top:12px;padding:11px 13px;border-radius:12px;background:rgba(255,69,58,.1);color:#FF6B60;font-size:12.5px;font-weight:600;line-height:1.55}
 .ai-note{font-size:12px;font-weight:500;color:var(--muted);line-height:1.6;margin-bottom:14px}
 .ai-input{width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px;color:var(--text);font-family:inherit;font-size:14px;font-weight:700;outline:none}
 .ai-input:focus{border-color:rgba(45,184,102,.5)}
@@ -3231,6 +3254,9 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
       Özet
     </button>
   </div>
+
+  <!-- V97.8: HAFTALIK YORUM (Claude) -->
+  <div id="aiWeeklyCard"></div>
 
   <!-- 1. DURUM HERO -->
   <div id="planHero"></div>
@@ -10044,6 +10070,7 @@ function renderPlan() {
   _planRenderSliders(fb);
   const sc = _planGetScenario();
   const core = _planCalcCore(fb, sc);
+  renderAiWeekly(); // V97.8
   _renderPlanHero(fb, core);
   _renderPlanChar(core);
   _renderPlanRiskDetail(core);
@@ -11902,17 +11929,25 @@ function aiDeleteKey(_ok) {
   document.getElementById('aiKeyInput').placeholder = 'sk-ant-...'; _aiRes('', '');
 }
 // Claude'a tek istek: { ok:true, text } ya da { ok:false, msg } (msg sade Türkçe). Diğer adımlar (haftalık yorum) bunu kullanacak.
-async function aiAsk(system, userText, maxTokens) {
+async function aiAsk(system, userText, maxTokens, model) {
   const key = aiKeyGet(); if (!key) return { ok: false, msg: 'Önce Hesap sayfasından Claude anahtarını gir.' };
   let res;
   try {
     const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 30000);
     res = await fetch(AI_URL, { method: 'POST', signal: ctl.signal,
       headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2026-10-21', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify(Object.assign({ model: AI_MODEL, max_tokens: maxTokens || 300, messages: [{ role: 'user', content: userText }] }, system ? { system } : {})) });
+      body: JSON.stringify(Object.assign({ model: model || AI_MODEL, max_tokens: maxTokens || 300, messages: [{ role: 'user', content: userText }] }, system ? { system } : {})) });
     clearTimeout(tm);
   } catch (e) {
-    return { ok: false, msg: e && e.name === 'AbortError' ? 'Claude 30 saniyede cevap vermedi. Biraz sonra tekrar dene.' : 'Claude\u0027a ulaşılamadı. İnternet bağlantını kontrol et.' };
+    if (e && e.name === 'AbortError') return { ok: false, msg: 'Claude 30 saniyede cevap vermedi. Biraz sonra tekrar dene.' };
+    // V97.7: neden ulaşılamadı? — aynı adrese "kör" bir istek at: o da düşüyorsa bu pencere internete hiç çıkamıyor demektir
+    let reach = false; try { await fetch(AI_URL, { method: 'GET', mode: 'no-cors', cache: 'no-store' }); reach = true; } catch (e2) {}
+    let framed = false; try { framed = window.self !== window.top; } catch (e3) { framed = true; }
+    const tech = ' [' + [location.protocol.replace(':', ''), framed ? 'çerçeve içinde' : 'tam sayfa', navigator.onLine ? 'çevrimiçi' : 'çevrimdışı', reach ? 'adres açık' : 'adres kapalı', (e && e.message) || ''].join(' · ') + ']';
+    if (!navigator.onLine) return { ok: false, msg: 'Cihaz internete bağlı değil.' + tech };
+    if (!reach && framed) return { ok: false, msg: 'Uygulama şu an bir önizleme penceresinde açık ve oradan internete çıkılamıyor. Dosyayı indir, Safari ya da Chrome\u0027da aç, orada tekrar dene.' + tech };
+    if (!reach) return { ok: false, msg: 'Bu pencereden Claude\u0027un adresine çıkılamıyor. Reklam engelleyici, VPN ya da şirket ağı kesiyor olabilir; dosyayı başka bir tarayıcıda açıp dene.' + tech };
+    return { ok: false, msg: 'Claude\u0027un adresine ulaşılıyor ama tarayıcı cevabı okumaya izin vermedi. Bu satırın ekran görüntüsünü gönder.' + tech };
   }
   let j = null; try { j = await res.json(); } catch (e) {}
   if (res.ok && j && Array.isArray(j.content)) return { ok: true, text: j.content.filter(c => c.type === 'text').map(c => c.text).join('').trim() };
@@ -11932,6 +11967,110 @@ async function aiTest() {
   const r = await aiAsk('', 'Sadece şu iki kelimeyi yaz: Bağlantı tamam', 20);
   b.disabled = false;
   _aiRes(r.ok ? 'ok' : 'err', r.ok ? 'Bağlantı çalışıyor. Claude\u0027un cevabı: "' + r.text + '"' : r.msg);
+}
+// ═══ V97.8: HAFTALIK YORUM ═══
+const AI_WEEKLY = 'vault_ai_weekly', AI_MODEL_WEEKLY = 'claude-sonnet-5-5';
+const _AIW_SYS = 'Sen bir kişisel bütçe uygulamasının içindeki yorumcusun. Kullanıcının biten haftasına ait özet rakamları JSON olarak alacaksın.\n' +
+  'Kurallar:\n- Yalnızca verilen rakamları kullan. Yeni rakam hesaplama, tahmin yürütme, veride olmayan bir şeyi varsayma.\n' +
+  '- Çok sade, günlük Türkçe yaz. Finans terimi kullanma. Kullanıcıya "sen" diye hitap et.\n- Yargılama ve azarlama yok; abartılı övgü de yok.\n' +
+  '- Yatırım, kredi ya da borsa tavsiyesi verme.\n- Para tutarlarını 12.345₺ biçiminde yaz.\n' +
+  'Çıktın SADECE şu JSON olsun, başka hiçbir şey yazma: {"ozet":"...","dikkat":"...","oneri":"..."}\n' +
+  'ozet: hafta nasıl geçti, en fazla 2 cümle.\ndikkat: verideki en dikkat çekici TEK şey; mümkünse iki bilgiyi birbirine bağla. 1-2 cümle.\n' +
+  'oneri: gelecek hafta için TEK, somut, yapılabilir adım. 1-2 cümle.';
+function _aiwStore() { try { return JSON.parse(localStorage.getItem(AI_WEEKLY) || '{}') || {}; } catch (e) { return {}; } }
+function _aiwDs(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function _aiwRangeLabel(mon, sun) {
+  const a = new Date(mon + 'T00:00:00'), b = new Date(sun + 'T00:00:00');
+  return a.getMonth() === b.getMonth() ? a.getDate() + '–' + b.getDate() + ' ' + MONTH_NAMES[b.getMonth()] : a.getDate() + ' ' + MONTH_NAMES[a.getMonth()] + ' – ' + b.getDate() + ' ' + MONTH_NAMES[b.getMonth()];
+}
+// Biten son hafta (Pzt–Paz) + ondan önceki hafta — Claude'a giden her şey burada üretilir (işlem açıklaması YOK)
+function aiWeekSummary() {
+  const t = new Date(today() + 'T00:00:00'), dow = (t.getDay() + 6) % 7; // Pzt=0
+  const sun = new Date(t); sun.setDate(t.getDate() - dow - 1);
+  const mon = new Date(sun); mon.setDate(sun.getDate() - 6);
+  const pSun = new Date(mon); pSun.setDate(mon.getDate() - 1);
+  const pMon = new Date(pSun); pMon.setDate(pSun.getDate() - 6);
+  const monS = _aiwDs(mon), sunS = _aiwDs(sun), pMonS = _aiwDs(pMon), pSunS = _aiwDs(pSun);
+  const isVar = x => x.type === 'expense' && !x.isRecurring && !x.isDebt && !x.isDebtExtra && !x.isGoalDeposit;
+  const w1 = data.transactions.filter(x => isVar(x) && x.date >= monS && x.date <= sunS);
+  const w0 = data.transactions.filter(x => isVar(x) && x.date >= pMonS && x.date <= pSunS);
+  const sum = a => Math.round(a.reduce((s, x) => s + x.amount, 0));
+  const byCat = a => { const m = {}; a.forEach(x => { const n = getCat(x.category).name; m[n] = (m[n] || 0) + x.amount; }); return m; };
+  const c1 = byCat(w1), c0 = byCat(w0);
+  const kategoriler = Object.entries(c1).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([ad, v]) => ({ ad, bu_hafta: Math.round(v), onceki_hafta: Math.round(c0[ad] || 0) }));
+  const GUN = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'];
+  let alt = 0, ust = 0, hici = 0, hsonu = 0; const gunler = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(mon); d.setDate(mon.getDate() + i); const ds = _aiwDs(d);
+    const all = Math.round(w1.filter(x => x.date === ds).reduce((s, x) => s + x.amount, 0));
+    const free = data.transactions.filter(x => x.date === ds && _isFreeVarTx(x)).reduce((s, x) => s + x.amount, 0);
+    const lim = dayLimitFor(ds);
+    let durum = 'limit yok';
+    if (lim != null) { if (free > Math.max(0, lim)) { ust++; durum = 'limitin üstünde'; } else { alt++; durum = 'limitin altında'; } }
+    if (i >= 5) hsonu += all; else hici += all;
+    gunler.push({ gun: GUN[i], harcama: all, gunluk_limit: lim == null ? null : Math.round(Math.max(0, lim)), durum });
+  }
+  const mk = monthKey(), fb = calcFreeBudget(mk);
+  const obj = {
+    hafta: _aiwRangeLabel(monS, sunS),
+    bu_hafta: { toplam_harcama: sum(w1), islem_sayisi: w1.length, limitin_altinda_gun: alt, limitin_ustunde_gun: ust, hafta_ici_toplam: Math.round(hici), hafta_sonu_toplam: Math.round(hsonu), gunler, kategoriler },
+    onceki_hafta: { toplam_harcama: sum(w0), islem_sayisi: w0.length },
+    bu_ay_su_an: { gelir: Math.round(fb.income), sabit_gider: Math.round(fb.recTotal), borc_taksiti: Math.round(fb.debtTotal), birikime_ayrilan: Math.round(fb.goalTotal + fb.savTarget),
+      gunluk_harcama_toplami: Math.round(fb.varSpent), henuz_odenmemis_sabit_ve_taksit: Math.round(fb.unpaidFixed), ay_sonuna_kalan_para: Math.round(fb.remaining),
+      bugunku_gunluk_limit: Math.round(Math.max(0, fb.daily)), ayin_bitmesine_kalan_gun: fb.daysLeft },
+    not: 'Harcama = sabit gider, taksit ve birikim dışındaki günlük harcamalar. Tutarlar TL.'
+  };
+  return { key: monS, label: obj.hafta, enough: w1.length >= 3, obj };
+}
+let _aiwBusy = false, _aiwErr = '';
+function renderAiWeekly() {
+  const el = document.getElementById('aiWeeklyCard'); if (!el) return;
+  const spark = '<svg width="13" height="13" viewBox="0 0 24 24" fill="#B18CFF"><path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z" opacity=".6"/></svg>';
+  const w = aiWeekSummary(), saved = _aiwStore()[w.key];
+  const top = `<div class="aiw-top"><span class="aiw-over">${spark} Haftalık Yorum</span><span class="aiw-week">${w.label}</span></div>`;
+  const err = _aiwErr ? `<div class="aiw-err">${esc(_aiwErr)}</div>` : '';
+  if (saved) {
+    el.innerHTML = `<div class="aiw">${top}
+      <div class="aiw-sec"><div class="aiw-sec-l">Hafta nasıl geçti</div><div class="aiw-sec-t">${esc(saved.ozet || '')}</div></div>
+      ${saved.dikkat ? `<div class="aiw-sec"><div class="aiw-sec-l">Dikkat çeken</div><div class="aiw-sec-t">${esc(saved.dikkat)}</div></div>` : ''}
+      ${saved.oneri ? `<div class="aiw-sec tip"><div class="aiw-sec-l">Gelecek hafta için</div><div class="aiw-sec-t">${esc(saved.oneri)}</div></div>` : ''}
+      ${err}
+      <div class="aiw-foot"><span>Claude yorumu · genel bilgidir, yatırım tavsiyesi değildir</span><button onclick="aiWeeklyRun(true)" ${_aiwBusy ? 'disabled' : ''}>${_aiwBusy ? 'Yazıyor…' : 'Yeniden yorumla'}</button></div>
+    </div>`;
+    return;
+  }
+  if (!aiKeyGet()) {
+    el.innerHTML = `<div class="aiw">${top}<div class="aiw-h">Claude haftanı yorumlasın</div>
+      <div class="aiw-p">Her hafta üç kısa şey: hafta nasıl geçti, dikkat çeken ne, gelecek hafta ne yapmalı. Başlamak için Claude anahtarını gir.</div>
+      <button class="aiw-btn" onclick="switchTab('ayarlar');setTimeout(openAiSheet,250)">Anahtarı gir</button></div>`;
+    return;
+  }
+  if (!w.enough) {
+    el.innerHTML = `<div class="aiw">${top}<div class="aiw-h">Geçen hafta yeterli kayıt yok</div>
+      <div class="aiw-p">Yorum için o haftada en az 3 harcama kaydı gerekiyor. Harcamalarını girdikçe burası dolacak.</div></div>`;
+    return;
+  }
+  el.innerHTML = `<div class="aiw">${top}<div class="aiw-h">Geçen haftanın yorumu hazırlanabilir</div>
+    <div class="aiw-p">Claude\u0027a sadece özet rakamlar gider: toplamlar ve kategori adları. İşlem açıklamaların gitmez.</div>
+    ${err}
+    <button class="aiw-btn" onclick="aiWeeklyRun()" ${_aiwBusy ? 'disabled' : ''}>${_aiwBusy ? 'Claude yazıyor…' : 'Bu haftayı yorumla'}</button>
+    <button class="aiw-link" onclick="const b=document.getElementById('aiwSent');b.style.display=b.style.display==='block'?'none':'block'">Claude\u0027a ne gidiyor?</button>
+    <div class="aiw-sent" id="aiwSent">${esc(JSON.stringify(w.obj, null, 1))}</div></div>`;
+}
+async function aiWeeklyRun(force) {
+  if (_aiwBusy) return;
+  const w = aiWeekSummary(); if (!w.enough && !force) return;
+  _aiwBusy = true; _aiwErr = ''; renderAiWeekly();
+  const r = await aiAsk(_AIW_SYS, JSON.stringify(w.obj), 500, AI_MODEL_WEEKLY);
+  _aiwBusy = false;
+  if (!r.ok) { _aiwErr = r.msg; renderAiWeekly(); return; }
+  let o = null; try { const m = r.text.match(/\{[\s\S]*\}/); if (m) o = JSON.parse(m[0]); } catch (e) {}
+  if (!o || typeof o.ozet !== 'string') o = { ozet: r.text, dikkat: '', oneri: '' }; // biçim tutmazsa düz metin olarak göster
+  const st = _aiwStore();
+  st[w.key] = { ozet: String(o.ozet || '').trim(), dikkat: String(o.dikkat || '').trim(), oneri: String(o.oneri || '').trim(), at: today() };
+  Object.keys(st).sort().slice(0, -12).forEach(k => delete st[k]); // son 12 hafta kalsın
+  try { localStorage.setItem(AI_WEEKLY, JSON.stringify(st)); } catch (e) {}
+  renderAiWeekly();
 }
 function renderOzetStats() {
   aiKeyRenderSub(); // V97.6
