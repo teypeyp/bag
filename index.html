@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V99: Finansal Analiz sayfası yeniden düzenlendi. Üstte karakter kartı ve "Bu ay nasıl gidiyorum?" (ay sonu tahmini, puan halkası, Karakter Yolculuğu kapısı). Sonra "Şimdi ne yapmalıyım?" (Yol Haritası'nın ilk adımı tek kart; diğerleri "Sıradaki adımlar"da), "Önündeki yol" (borç bitişleri, hedefler, birikim eşikleri ya da açık uyarısı; en fazla 4 satır) ve "Merak edersen" karoları. Hiçbir bölüm silinmedi: kısa olanlar alttan sayfada (Kartopu, Fark etmeden giden, Cüzdanlar, Abonelikler, puan dökümü, Baskı Analizi kartları), uzun olanlar kendi sayfasında (Alışkanlıklar, Karne, Hedefler, Simülasyon) açılır. Dersler kendi giriş kartıyla en altta. -->
 <!-- V98.9: VAULT'a Sor › Haftalık Değerlendirme artık nasıl biriktirebileceğini ve nereden kısabileceğini de söylüyor: en fazla iki somut kalem (verideki gerçek kategori ya da yer), her biri için gerçekçi kısma miktarı, ayda kaç ₺ edeceği ve o paranın hangi hedefe gidebileceği. Kira, fatura gibi zorunlu kalemlere "kıs" demez. -->
 <!-- V98.8: Finansal İpuçları — yedi dersin hepsi tamamlanınca ilerleme sıfırlanır ve dersler baştan başlar (giriş kartı yine "Sıradaki ders"i gösterir). Kaçıncı tur olduğu sayılır. Derslerde uygulanan planlar silinmez. -->
 <!-- V98.7: Finansal Analiz › Karakter kartındaki "Ne yapmalıyım? Yol haritasına git →" düğmesi kaldırıldı; Yol Haritası zaten hemen aşağıda. -->
@@ -761,6 +762,68 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .dla-legend{display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:rgba(255,255,255,.7)}
 .dla-legend i{display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:6px}
 .dla-link{display:flex;justify-content:space-between;width:100%;margin-top:14px;padding:11px 0 0;border:none;border-top:1px solid rgba(255,255,255,.06);background:none;color:rgba(255,255,255,.4);font-family:inherit;font-size:11.5px;font-weight:700;cursor:pointer}
+/* ═══ V99: Finansal Analiz yeni düzen ═══ */
+.nx-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:rgba(255,255,255,.42);margin:30px 2px 12px}
+.nx-label i{width:6px;height:6px;border-radius:2px;background:var(--c,#2DB866)}
+.nx-top{border-radius:28px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#0D0D10;box-shadow:0 18px 50px -24px var(--glow,rgba(255,111,181,.55))}
+.nx-top .plan-char-card{margin:0;border-radius:0}
+.nx-top .plan-char-gradient{min-height:186px}
+.nx-top .plan-char-next,.nx-top #vjEntryHost{display:none}
+.nx-state{position:relative;padding:20px 22px 20px}
+.nx-state-k{font-size:10.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px}
+.nx-state-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.nx-big{font-size:44px;font-weight:900;letter-spacing:-2.4px;line-height:.95;color:#2DB866}
+.nx-big.neg{color:#FF453A}
+.nx-state-s{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.5);margin-top:8px;line-height:1.5}
+.nx-state-s b{color:rgba(255,255,255,.85);font-weight:800}
+.nx-ring{position:relative;width:62px;height:62px;flex-shrink:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.nx-ring b{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:18px;font-weight:900;letter-spacing:-.6px;line-height:1}
+.nx-ring b small{font-size:8px;font-weight:800;letter-spacing:.8px;color:rgba(255,255,255,.4);margin-top:3px}
+.nx-door{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:16px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);cursor:pointer}
+.nx-door span{font-size:12.5px;font-weight:700;color:rgba(255,255,255,.85)}.nx-door em{font-style:normal;color:rgba(255,255,255,.4);font-size:16px}
+.nx-act{position:relative;overflow:hidden;border-radius:24px;padding:20px;background:#0D0D10;border:1px solid color-mix(in srgb,var(--c,#FFD60A) 32%,transparent)}
+.nx-act::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 85% 75% at 8% -8%,color-mix(in srgb,var(--c,#FFD60A) 22%,transparent),transparent 62%);pointer-events:none}
+.nx-act>*{position:relative}
+.nx-act-k{font-size:10.5px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;color:var(--c,#FFD60A);margin-bottom:8px}
+.nx-act-t{font-size:21px;font-weight:900;letter-spacing:-.5px;line-height:1.25;color:var(--text)}
+.nx-act-v{font-size:30px;font-weight:900;letter-spacing:-1.4px;color:var(--c,#FFD60A);margin:10px 0 8px;line-height:1}
+.nx-act-s{font-size:13px;font-weight:500;color:rgba(255,255,255,.62);line-height:1.6;margin-top:8px}
+.nx-act-b{display:flex;flex-direction:column;align-items:stretch;gap:4px;margin-top:16px}
+.nx-act-btn{padding:13px 18px;border:none;border-radius:14px;font-family:inherit;font-size:13.5px;font-weight:800;cursor:pointer;background:var(--c,#FFD60A);color:#14110a;box-shadow:0 8px 22px -10px var(--c,#FFD60A)}
+.nx-act-more{padding:10px 0 0;border:none;background:none;color:var(--muted);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.nx-next{display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:10px;padding:14px 16px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:rgba(255,255,255,.78);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.nx-next b{color:var(--text);font-weight:800}
+.nx-rest{margin:10px 0 0!important;padding:0!important;border:none!important}
+.nx-road{position:relative;border-radius:24px;padding:20px 20px 8px;background:var(--surface);border:1px solid var(--border)}
+.nx-road-i{position:relative;display:flex;gap:16px;padding-bottom:20px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.nx-road-i::before{content:'';position:absolute;left:7px;top:18px;bottom:-2px;width:2px;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.05))}
+.nx-road-i:last-of-type::before{display:none}
+.nx-dot{flex-shrink:0;width:16px;height:16px;border-radius:50%;margin-top:3px;background:var(--c);box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 18%,transparent)}
+.nx-road-i.fin .nx-dot{box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 18%,transparent),0 0 18px var(--c)}
+.nx-road-d{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--c)}
+.nx-road-t{font-size:15.5px;font-weight:800;letter-spacing:-.2px;color:var(--text);margin-top:2px}
+.nx-road-s{font-size:12px;font-weight:500;color:var(--muted);margin-top:2px}
+.nx-road-go{margin-left:auto;align-self:center;color:rgba(255,255,255,.3);font-size:16px}
+.nx-road-hint{font-size:12px;font-weight:500;color:var(--muted);line-height:1.55;padding:2px 0 14px 32px}.nx-road-hint b{color:var(--text);font-weight:800}
+.nx-road-empty{padding:4px 0 14px}
+.nx-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.nx-tile{position:relative;overflow:hidden;border-radius:22px;padding:16px 16px 15px;background:#0D0D10;border:1px solid color-mix(in srgb,var(--c) 26%,transparent);cursor:pointer;display:flex;flex-direction:column;-webkit-tap-highlight-color:transparent}
+.nx-tile::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 110% 90% at var(--gx,8%) -10%,color-mix(in srgb,var(--c) 34%,transparent),transparent 64%),radial-gradient(ellipse 70% 70% at 100% 110%,color-mix(in srgb,var(--c) 10%,transparent),transparent 60%);pointer-events:none}
+.nx-tile>*{position:relative}
+.nx-tile:active{transform:scale(.98)}
+.nx-tile-n{font-size:36px;font-weight:900;letter-spacing:-1.9px;line-height:1;color:var(--c);padding-top:16px}
+.nx-tile-n.sm{font-size:26px;letter-spacing:-1.1px;padding-top:22px}
+.nx-tile-k{font-size:12.5px;font-weight:800;color:rgba(255,255,255,.92);letter-spacing:-.1px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nx-tile-s{font-size:11.5px;font-weight:500;color:rgba(255,255,255,.55);margin-top:8px;line-height:1.45;min-height:33px}
+.nx-full{grid-column:1/-1;padding:18px 18px 16px}
+.nx-simg{position:absolute!important;right:0;bottom:0;width:58%;height:100%;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 46%);mask-image:linear-gradient(90deg,transparent 0,#000 46%)}
+.nx-sim-tx{position:relative;max-width:62%}
+.nx-sim-cta{font-size:11.5px;font-weight:800;color:var(--c);margin-top:12px}
+.nx-lede{font-size:22px;font-weight:900;letter-spacing:-.6px;line-height:1.25;color:var(--text);margin:6px 2px 16px}
+.nx-sheet-b{padding:0 18px 22px;max-height:74vh;overflow-y:auto}
+.nx-sheet-b .plan-section-label,.nx-page-b .plan-section-label{display:none}
+.nx-sheet-b .plan-section-block,.nx-page-b .plan-section-block{margin:0;padding:0;border:none}
+.nx-sheet-b .drv-card{margin-top:0!important}
 .va-page{position:fixed;inset:0;z-index:190;background:var(--bg);display:flex;flex-direction:column;transform:translateX(100%);visibility:hidden;transition:transform .32s cubic-bezier(.32,0,.15,1),visibility 0s linear .32s}
 .va-page.show{transform:none;visibility:visible;transition:transform .32s cubic-bezier(.32,0,.15,1),visibility 0s}
 .va-head{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 10px;max-width:520px;width:100%;margin:0 auto;box-sizing:border-box}
@@ -3299,41 +3362,56 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     </button>
   </div>
 
-  <!-- 1. DURUM HERO -->
-  <div id="planHero"></div>
+  <!-- V99: YENİ DÜZEN -->
+  <!-- 1. Karakter + bu ay nasıl gidiyorum -->
+  <div class="nx-top" id="nxTop">
+    <div id="planCharCard"></div>
+    <div class="nx-state" id="nxState"></div>
+  </div>
 
-  <!-- 2. KARAKTER KARTI -->
-  <div id="planCharCard"></div>
+  <!-- 2. Şimdi ne yapmalıyım (Yol Haritası'nın ilk adımı + sıradakiler) -->
+  <div id="nxActWrap">
+    <div class="nx-label"><i style="--c:#FFD60A"></i>Şimdi ne yapmalıyım?</div>
+    <div id="nxAct"></div>
+    <button class="nx-next" id="nxNext" onclick="nxToggleSteps()"></button>
+    <div class="plan-section-block nx-rest" id="planStepsBlock" style="display:none">
+      <div id="planStepsList"></div>
+    </div>
+  </div>
+
+  <!-- 3. Önündeki yol -->
+  <div id="nxRoadWrap">
+    <div class="nx-label"><i style="--c:#5AA9FF"></i>Önündeki yol</div>
+    <div class="nx-road" id="nxRoad"></div>
+  </div>
+
+  <!-- 4. Merak edersen (karolar) -->
+  <div id="nxGridWrap">
+    <div class="nx-label"><i style="--c:#B18CFF"></i>Merak edersen</div>
+    <div class="nx-grid" id="nxGrid"></div>
+  </div>
 
   <!-- V91 — FİNANSAL İPUÇLARI giriş kartı (modül doldurur) -->
-  <div id="flEntryHost"></div>
+  <div id="flEntryHost" style="margin-top:10px"></div>
 
-  <!-- 3. BASKI ANALİZİ -->
-  <div class="plan-section-block" id="planRiskBlock">
+  <!-- Karoların açtığı bölümler: sayfada görünmez; alttan sayfaya / tam sayfaya taşınarak gösterilir -->
+  <div id="nxPark" style="display:none">
+    <div id="planHero"></div>
+    <div class="plan-section-block" id="planRiskBlock">
     <div class="plan-section-label" id="planRiskOverline">Baskı Analizi</div>
     <div id="planRiskDetail"></div>
   </div>
-
-  <!-- 3.5 ÖNCELİKLİ ADIMLAR -->
-  <div class="plan-section-block" id="planStepsBlock">
-    <div class="plan-section-label">04 · Yol Haritası</div>
-    <div id="planStepsList"></div>
-  </div>
-
-  <!-- 4. HEDEF & ZAMAN -->
-  <div class="plan-section-block" id="planGoalBlock">
+    <div id="planSnowHost"></div>
+    <div id="planLeakHost"></div>
+    <div class="plan-section-block" id="planGoalBlock">
     <div class="plan-section-label">05 · Hedefler</div>
     <div id="planGoalDetail"></div>
   </div>
-
-  <!-- 4.5 AYLIK KARNE -->
-  <div class="plan-section-block" id="planReportBlock">
+    <div class="plan-section-block" id="planReportBlock">
     <div class="plan-section-label">06 · Karne</div>
     <div id="monthlyReportBox"></div>
   </div>
-
-  <!-- V75 / V97.1: ALIŞKANLIKLARIN (davranış içgörüleri) — Özet'ten buraya taşındı -->
-  <div class="plan-section-block" id="habitsSection" style="display:none">
+    <div class="plan-section-block" id="habitsSection" style="display:none">
     <div class="plan-section-label">07 · Alışkanlıkların</div>
     <div class="wk-card">
       <div class="wk-head"><span class="wk-title">Haftanın günlerine göre</span><span class="wk-sub" id="wkSub"></span></div>
@@ -3341,21 +3419,15 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     </div>
     <div id="habitsList"></div>
   </div>
-
-  <!-- V73: BÜTÇE DURUMU -->
-  <div class="plan-section-block" id="planBudgetBlock" style="display:none">
+    <div class="plan-section-block" id="planBudgetBlock" style="display:none">
     <div class="plan-section-label">Cüzdan Durumu</div>
     <div id="planBudgetStatus"></div>
   </div>
-
-  <!-- V70: ABONELİK DENETİMİ -->
-  <div class="plan-section-block" id="planSubBlock" style="display:none">
+    <div class="plan-section-block" id="planSubBlock" style="display:none">
     <div class="plan-section-label">Abonelik Denetimi</div>
     <div id="planSubAudit"></div>
   </div>
-
-  <!-- 5. SİMÜLASYON — V79: oyun alanı (presetler + kokpit + projeksiyon eğrisi) -->
-  <div class="plan-section-block">
+    <div class="plan-section-block" id="planSimBlock">
     <div class="plan-section-label">08 · Simülasyon</div>
     <div class="sc-presets" id="planScenPresets"></div>
     <div id="planScenResult"></div>
@@ -3364,7 +3436,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
     </div>
     <button class="sc-reset-btn" onclick="planScenReset()">Sıfırla</button>
   </div>
-
+  </div>
 
 </div>
 
@@ -3649,6 +3721,17 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   <div class="add-sheet-handle"></div>
   <div class="add-sheet-header"><span class="add-sheet-title" id="drvSheetTitle"></span><button class="add-sheet-close" onclick="closeDrvSheet()">&times;</button></div>
   <div class="add-sheet-body" id="drvSheetBody" style="max-height:72vh;overflow-y:auto"></div>
+</div>
+<!-- V99: Finansal Analiz — karoların açtığı alt sayfa ve tam sayfa -->
+<div class="add-sheet-overlay" id="nxSheetOv" onclick="if(event.target===this)nxCloseSheet()"></div>
+<div class="add-sheet" id="nxSheet">
+  <div class="add-sheet-handle"></div>
+  <div class="add-sheet-header"><span class="add-sheet-title" id="nxSheetTitle"></span><button class="add-sheet-close" onclick="nxCloseSheet()">&times;</button></div>
+  <div class="nx-sheet-b" id="nxSheetBody"></div>
+</div>
+<div class="va-page" id="nxPage">
+  <div class="va-head"><button class="va-back" style="width:84px" onclick="nxClosePage()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg> Analiz</button><span class="va-title" id="nxPageTitle"></span><span style="width:84px"></span></div>
+  <div class="va-body nx-page-b" id="nxPageBody"></div>
 </div>
 <!-- V98.6: VAULT'A SOR sayfası -->
 <div class="va-page" id="vaPage">
@@ -9948,6 +10031,14 @@ function _buildAdviceCards(ctx) {
 }
 
 // ── Render: Öncelikli Adımlar (analiz sayfası bloğu) ──
+function _planStepCards(ctx) {
+  ctx = ctx || _adviceCtx(); if (ctx.fb.income <= 0) return [];
+  const _all = _buildAdviceCards(ctx).sort((a, b) => b.score - a.score);
+  let cards = _all.slice(0, 4);
+  // V98.5: acil fon önerisi yalnızca burada yaşıyor — ilk dörde giremezse sonuncunun yerine alınır
+  const _ef = _all.find(c => c.id === 'emergency'); if (_ef && !cards.includes(_ef)) { cards[cards.length - 1] = _ef; cards.sort((a, b) => b.score - a.score); }
+  return cards;
+}
 function _renderPlanSteps() {
   const el = document.getElementById('planStepsList');
   if (!el) return;
@@ -9956,17 +10047,12 @@ function _renderPlanSteps() {
     el.innerHTML = '<div style="font-size:13px;font-weight:400;color:var(--muted);line-height:1.75;padding:4px 0 8px">Gelir kaydı eklenince kişisel yol haritan burada oluşur.</div>';
     return;
   }
-  const _all = _buildAdviceCards(ctx).sort((a, b) => b.score - a.score);
-  let cards = _all.slice(0, 4);
-  // V98.5: acil fon önerisi artık yalnızca burada yaşıyor — ilk dörde giremezse sonuncunun yerine alınır
-  const _ef = _all.find(c => c.id === 'emergency'); if (_ef && !cards.includes(_ef)) { cards[cards.length - 1] = _ef; cards.sort((a, b) => b.score - a.score); }
-  if (!cards.length) {
-    el.innerHTML = '<div style="font-size:13px;font-weight:400;color:var(--muted);line-height:1.75;padding:4px 0 8px">Kritik adım yok — yapı sağlıklı görünüyor. Mevcut düzeni korumak en iyi strateji.</div>';
-    return;
-  }
+  // V99: ilk adım sayfanın üstündeki "Şimdi ne yapmalıyım?" kartında; burada sıradakiler listelenir
+  const cards = _planStepCards(ctx).slice(1);
+  if (!cards.length) { el.innerHTML = ''; return; }
   el.innerHTML = cards.map((c, i) => `
     <div class="plan-step-row" style="animation:planBlockIn .28s ease ${i * 45}ms both" data-adv="${c.id}">
-      <div class="plan-step-num ${c.cls}">${i + 1}</div>
+      <div class="plan-step-num ${c.cls}">${i + 2}</div>
       <div class="plan-step-body">
         <div class="plan-step-top">
           <div class="plan-step-title">${c.title}</div>
@@ -9980,7 +10066,7 @@ function _renderPlanSteps() {
 }
 
 // =================== AYLIK KARNE (analiz sayfası bloğu) ===================
-let _reportMonth = null;
+let _reportMonth = null, _reportLast = null;
 
 function _reportMonthsList() {
   const cur = monthKey();
@@ -10044,6 +10130,7 @@ function renderMonthlyReportCard() {
 
   const comp = Math.round((uyum ?? 50) * 0.5 + (Math.max(0, Math.min(30, savRate ?? 0)) / 30) * 50);
   const grade = comp >= 80 ? 'A' : comp >= 60 ? 'B' : comp >= 40 ? 'C' : 'D';
+  _reportLast = { mk: pm, grade }; // V99: Finansal Analiz karosu için
   const gColor = grade === 'A' ? 'var(--accent)' : grade === 'B' ? '#0A84FF' : grade === 'C' ? 'var(--warning)' : 'var(--danger)';
   const gBg = grade === 'A' ? 'rgba(45,184,102,.12)' : grade === 'B' ? 'rgba(10,132,255,.12)' : grade === 'C' ? 'rgba(255,214,10,.1)' : 'rgba(255,69,58,.1)';
 
@@ -10135,6 +10222,119 @@ function renderPlan() {
   renderBudgetStatus(); // V73
   renderSubAudit(fb); // V70
   _updatePlanImpact(fb, core);
+  renderPlanLayout(fb, core); // V99
+}
+
+// ═══ V99: FİNANSAL ANALİZ — YENİ DÜZEN ═══
+// Üst blok, tek adım kartı, "Önündeki yol" ve karolar burada çizilir. Bölümlerin kendisi (Durum, Baskı, Kartopu, Sızıntı, Hedefler,
+// Karne, Alışkanlıklar, Cüzdan, Abonelik, Simülasyon) #nxPark'ta durur; karo dokununca alt sayfaya ya da tam sayfaya taşınır.
+const NX = {
+  puan:   { kind: 'sheet', title: 'Puanın nasıl hesaplandı', el: 'planHero' },
+  debt:   { kind: 'sheet', title: 'Borçtan nasıl çıkarım?', el: 'planSnowHost', lede: 'Fazladan ödersen bitiş tarihi öne gelir. Dene.' },
+  leak:   { kind: 'sheet', title: 'Fark etmeden giden para', el: 'planLeakHost', lede: 'Küçük ama sık harcamalar toplanınca büyüyor.' },
+  budget: { kind: 'sheet', title: 'Cüzdanlarım', el: 'planBudgetBlock' },
+  subs:   { kind: 'sheet', title: 'Aboneliklerim', el: 'planSubBlock' },
+  goals:  { kind: 'page', title: 'Hedeflerim', el: 'planGoalBlock', lede: 'Hedeflerine daha hızlı varmak için ne gerekir?' },
+  habits: { kind: 'page', title: 'Alışkanlıklarım', el: 'habitsSection', lede: 'Paran en çok hangi gün, hangi kalemde gidiyor?' },
+  report: { kind: 'page', title: 'Aylık karne', el: 'planReportBlock' },
+  sim:    { kind: 'page', title: 'Ya şöyle olursa?', el: 'planSimBlock', lede: 'Zam gelse, gelir düşse, büyük bir harcama yapsan ne olur? Dene.' }
+};
+let _nxStepsOpen = false, _nxPageKey = null;
+function _nxFill(bodyId, key) {
+  const body = document.getElementById(bodyId), park = document.getElementById('nxPark'), o = NX[key], node = document.getElementById(o.el);
+  if (!body || !park || !node) return false;
+  [...body.children].forEach(c => { if (c.classList.contains('nx-lede')) c.remove(); else park.appendChild(c); });
+  if (o.lede) { const l = document.createElement('div'); l.className = 'nx-lede'; l.textContent = o.lede; body.appendChild(l); }
+  body.appendChild(node); body.scrollTop = 0; return true;
+}
+function nxOpen(key) {
+  const o = NX[key]; if (!o) return;
+  if (o.kind === 'sheet') {
+    if (!_nxFill('nxSheetBody', key)) return;
+    document.getElementById('nxSheetTitle').textContent = o.title;
+    if (key === 'puan') { const b = document.getElementById('planScoreBreak'); if (b) b.hidden = false; }
+    document.getElementById('nxSheetOv').classList.add('show'); document.getElementById('nxSheet').classList.add('show');
+  } else {
+    if (!_nxFill('nxPageBody', key)) return;
+    document.getElementById('nxPageTitle').textContent = key === 'report' && _reportLast ? _mkLabel(_reportLast.mk).split(' ')[0] + ' karnesi' : o.title;
+    _nxPageKey = key; document.getElementById('nxPage').classList.add('show');
+  }
+}
+function nxCloseSheet() { document.getElementById('nxSheetOv').classList.remove('show'); document.getElementById('nxSheet').classList.remove('show'); }
+function nxClosePage() {
+  document.getElementById('nxPage').classList.remove('show');
+  if (_nxPageKey === 'sim') { try { planScenReset(); } catch (e) {} setTimeout(() => { if (currentTab === 'plan') renderPlan(); }, 450); } // denemeler ana sayfaya sızmasın
+  _nxPageKey = null;
+}
+function nxToggleSteps() { _nxStepsOpen = !_nxStepsOpen; const b = document.getElementById('planStepsBlock'); if (b) b.style.display = _nxStepsOpen ? '' : 'none'; const n = document.getElementById('nxNext'); if (n) n.lastElementChild.textContent = _nxStepsOpen ? '⌃' : '⌄'; }
+function _nxMoney(v) { return v >= 1000000 ? String(v / 1000000).replace('.', ',') + ' milyon ₺' : fmtTL(v); }
+function renderPlanLayout(fb, core) {
+  const $ = id => document.getElementById(id); if (!$('nxState')) return;
+  const hasInc = fb.income > 0, base = _planCalcCore(fb, {}), proj = _planProject(fb, {}, 36), net1 = Math.round(proj.nets[0] || 0), neg = net1 < 0;
+  // ── 1: bu ay nasıl gidiyorum
+  const score = _planScore(base), scCol = score >= 70 ? '#2DB866' : score >= 45 ? '#FFD60A' : '#FF453A', C = 2 * Math.PI * 26;
+  const top = $('nxTop'); if (top) top.style.setProperty('--glow', 'color-mix(in srgb,' + ((core.character && core.character.accentColor) || '#FF6FB5') + ' 55%,transparent)');
+  const vjEl = document.querySelector('#vjEntryHost .vj-ev'), vjTxt = (vjEl && vjEl.textContent.trim()) || 'Karakter yolculuğu';
+  $('nxState').innerHTML = !hasInc
+    ? `<div class="nx-state-k">Bu ay nasıl gidiyorum?</div><div class="nx-state-s" style="margin-top:0">Bu ay için gelir kaydı yok. Gelirini ekleyince durumun burada görünür.</div><div class="nx-door" onclick="FL.journey()"><span>${esc(vjTxt)}</span><em>›</em></div>`
+    : `<div class="nx-state-k">Bu ay nasıl gidiyorum?</div>
+      <div class="nx-state-row"><div><div class="nx-big${neg ? ' neg' : ''}">${(neg ? '−' : '') + fmtTL(Math.abs(net1))}</div><div class="nx-state-s">${neg ? 'Bu gidişle <b>her ay</b> bu kadar açık veriyorsun.' : 'Bu gidişle <b>ay sonunda</b> kalacak para.<br>Bugün elinde ' + fmtTL(Math.round(fb.remaining)) + ' var.'}</div></div>
+        <div class="nx-ring" onclick="nxOpen('puan')" role="button" aria-label="Puanın dökümü"><svg width="62" height="62" viewBox="0 0 62 62" style="transform:rotate(-90deg)"><circle cx="31" cy="31" r="26" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="6"/><circle cx="31" cy="31" r="26" fill="none" stroke="${scCol}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - Math.max(0, Math.min(100, score)) / 100)}"/></svg><b style="color:${scCol}">${score}<small>PUAN</small></b></div></div>
+      <div class="nx-door" onclick="FL.journey()"><span>${esc(vjTxt)}</span><em>›</em></div>`;
+  // ── 2: şimdi ne yapmalıyım
+  const cards = _planStepCards(), c0 = cards[0], actW = $('nxActWrap');
+  if (actW) actW.style.display = c0 ? '' : 'none';
+  if (c0) {
+    const colMap = { warn: '#FFD60A', bad: '#FF453A', good: '#2DB866' }, col = colMap[c0.cls] || '#FFD60A';
+    const sents = String(c0.sub || '').replace(/<[^>]+>/g, '').split(/(?<=[.!?])\s+/).filter(Boolean), short = sents.length > 2 ? sents[sents.length - 1] : sents.join(' ');
+    $('nxAct').innerHTML = `<div class="nx-act" style="--c:${col}"><div class="nx-act-k">İlk adımın</div><div class="nx-act-t">${String(c0.title).replace(/ — planın ilk adımı bu$/, '')}</div>${c0.val ? `<div class="nx-act-v">${c0.val}</div>` : ''}<div class="nx-act-s">${short}</div>
+      ${c0.action || c0.more ? `<div class="nx-act-b">${c0.action ? `<button class="nx-act-btn" onclick="${c0.action.js}">${c0.action.label}</button>` : ''}${c0.more ? `<button class="nx-act-more" onclick="${c0.more.js}">${c0.more.label} ›</button>` : ''}</div>` : ''}</div>`;
+    const nb = $('nxNext'), rest = cards.length - 1;
+    if (nb) { nb.style.display = rest > 0 ? '' : 'none'; nb.innerHTML = `<span>Sıradaki <b>${rest} adım</b></span><span>${_nxStepsOpen ? '⌃' : '⌄'}</span>`; }
+    const sb = $('planStepsBlock'); if (sb) sb.style.display = _nxStepsOpen && rest > 0 ? '' : 'none';
+  }
+  // ── 3: önündeki yol — borç bitişleri (Kartopu Planı ile aynı hesap), hedefler, birikim eşikleri ya da açık uyarısı; en fazla 4 satır
+  const ev = [], snow = _planSnowball(0), lblN = n => _mkLabel(addMonthsToMk(monthKey(), n));
+  if (hasInc && neg) { const bal = calcBalance(), m = bal > 0 ? Math.floor(bal / -net1) : 0;
+    ev.push({ n: 0, lbl: 'Şu an', c: '#FF453A', t: 'Her ay ' + fmtTL(-net1) + ' açık veriyorsun', s: 'Gelirinden fazlası çıkıyor', go: 'sim' });
+    if (m >= 1 && m <= 36) ev.push({ n: m - .1, lbl: lblN(m), c: '#FF453A', t: 'Hesabındaki para biter', s: 'Bu gidiş değişmezse', go: 'sim' }); }
+  if (snow && snow.fin) snow.fin.forEach(x => ev.push({ n: x.m, lbl: lblN(x.m), c: '#FF6FB5', t: esc(x.name) + ' biter', s: 'Ayda ' + fmtTL(x.freed) + ' boşa çıkar', go: 'debt', debt: 1 }));
+  (base.goals || []).filter(g => g.left > 0 && g.curMonths).forEach(g => ev.push({ n: g.curMonths, lbl: lblN(g.curMonths), c: '#5AA9FF', t: esc(g.name) + ' parası tamam', s: fmtTL(Math.round(g.dep)) + ' / ' + fmtTL(g.target) + ' birikti', go: 'goals' }));
+  if (hasInc && net1 > 0) { const TH = [25000, 50000, 100000, 250000, 500000, 1000000, 2500000, 5000000], cap = ev.length ? Math.min(1, Math.max(0, 4 - ev.length)) : 3; let k = 0;
+    for (const th of TH) { const m = proj.cum.findIndex(v => v >= th); if (m >= 3 && k < cap) { ev.push({ n: m + .1, lbl: lblN(m), c: '#2DD4BF', t: 'Kenarda ' + _nxMoney(th) + ' birikir', s: 'Ay sonunda kalanı harcamazsan', go: 'sim' }); k++; } } }
+  ev.sort((a, b) => a.n - b.n); ev.splice(4);
+  const lastDebt = neg ? -1 : Math.max(-1, ...ev.filter(e => e.debt).map(e => e.n)), manyDebts = ev.filter(e => e.debt).length > 1, hasGoals = (data.savingsGoals || []).length > 0;
+  const roadW = $('nxRoadWrap'); if (roadW) roadW.style.display = hasInc || ev.length ? '' : 'none';
+  $('nxRoad').innerHTML = ev.length
+    ? ev.map(e => { const fin = e.debt && e.n === lastDebt, nn = Math.round(e.n);
+        return `<div class="nx-road-i${fin ? ' fin' : ''}" style="--c:${fin ? '#2DB866' : e.c}" onclick="nxOpen('${e.go}')"><i class="nx-dot"></i><div><div class="nx-road-d">${e.lbl}${nn >= 1 ? ' · ' + nn + ' ay sonra' : ''}</div><div class="nx-road-t">${fin ? 'Borçsuzsun' : e.t}</div><div class="nx-road-s">${fin ? e.t.replace(' biter', '') + (manyDebts ? ' de' : '') + ' biter · ' + e.s.toLowerCase() : e.s}</div></div><div class="nx-road-go">›</div></div>`; }).join('')
+      + (!hasGoals && !neg ? `<div class="nx-road-hint">Bu paraya bir amaç vermek istersen Aylık Plan’dan <b>hedef ekle</b>; ne zaman hazır olacağını burada görürsün.</div>` : '')
+    : `<div class="nx-road-empty"><div class="nx-road-t">Önünde boş bir yol var</div><div class="nx-road-s" style="margin-top:6px">Borcun yok, hedefin de yok. Biriktirmek istediğin bir şey varsa Aylık Plan’dan bir hedef ekle; ne zaman hazır olacağını burada görürsün.</div></div>`;
+  // ── 4: karolar
+  const T = [], tile = (c, k, n, s, on, sm, gx) => T.push(`<div class="nx-tile" style="--c:${c}${gx ? ';--gx:90%' : ''}" onclick="${on}"><div class="nx-tile-k">${k}</div><div class="nx-tile-n${sm ? ' sm' : ''}">${n}</div><div class="nx-tile-s">${s}</div></div>`);
+  const stC = { ok: '#2DB866', warn: '#FFD60A', bad: '#FF453A' }, NAME = { 'Sabit gider yükü': 'Zorunlu ödemeler', 'Borç & taksit yükü': 'Taksit yükü', 'Ay sonunda az kalıyor': 'Ay sonunda kalan' };
+  const fixedPct = hasInc ? Math.round((fb.recTotal + fb.debtTotal) / fb.income * 100) : 0;
+  if (hasInc) (core.drivers || []).forEach((d, i) => { const big = d.pct > 0 ? '%' + d.pct : (d.big || ''), fx = /Sabit gider/.test(d.label);
+    tile(stC[d.st || 'warn'], NAME[d.label] || d.label, big, fx ? 'Kira, fatura ve taksit. Sınırın (%45) ' + (fixedPct > 45 ? 'üstünde.' : 'altında.') : String(d.brief || d.detail).split('. ')[0].replace(/\.$/, '') + '.', `_drvToggle(${i})`, big.length > 5, T.length % 2); });
+  const leaks = _planLeaks(); if (leaks.length) { const MK = /^(migros|bim|a101|a 101|şok|sok|carrefour|market|macro|file)/i, l = leaks.find(x => !MK.test(x.name)) || leaks[0];
+    tile('#5AA9FF', 'Fark etmeden giden', fmtTL(Math.round(l.total)), esc(l.name) + ' × ' + l.count + ' · son 30 gün', "nxOpen('leak')", 1, T.length % 2); }
+  const hab = $('habitsSection'), hi = document.querySelector('#wkBars .wk-lbl.hi'), DAY = { Pzt: 'Pazartesi', Sal: 'Salı', 'Çar': 'Çarşamba', Per: 'Perşembe', Cum: 'Cuma', Cmt: 'Cumartesi', Paz: 'Pazar' };
+  if (hab && hab.style.display !== 'none' && hi) tile('#FF9F43', 'En pahalı günün', DAY[hi.textContent.trim()] || hi.textContent.trim(), 'Paran hangi gün, hangi kalemde gidiyor.', "nxOpen('habits')", 1, T.length % 2);
+  const rep = $('planReportBlock'); if (rep && rep.style.display !== 'none' && _reportLast) { const g = _reportLast.grade, left = Math.round(monthEndLeft(_reportLast.mk));
+    tile(g === 'A' ? '#2DB866' : g === 'B' ? '#9BE15D' : g === 'C' ? '#FFD60A' : '#FF453A', _mkLabel(_reportLast.mk).split(' ')[0] + ' karnesi', g, 'Ay sonunda ' + (left >= 0 ? '+' : '−') + fmtTL(Math.abs(left)) + ' kaldı.', "nxOpen('report')", 0, T.length % 2); }
+  if ((base.goals || []).length) { const dep = base.goals.reduce((a, g) => a + g.dep, 0), tg = base.goals.reduce((a, g) => a + (g.target || 0), 0);
+    tile('#5AA9FF', 'Hedeflerim', '%' + (tg > 0 ? Math.round(dep / tg * 100) : 0), base.goals.length + ' hedef · ' + fmtTL(Math.round(dep)) + ' birikti.', "nxOpen('goals')", 0, T.length % 2); }
+  const B = typeof budgetList === 'function' ? budgetList() : []; if (B.length) { const over = B.filter(b => b.spent > b.amount).length, near = B.filter(b => b.spent <= b.amount && b.amount > 0 && b.spent / b.amount >= .85).length;
+    tile(over ? '#FF453A' : near ? '#FFD60A' : '#2DD4BF', 'Cüzdanlarım', over ? over + ' aşıldı' : near ? near + ' sınırda' : 'Yolunda', over || near ? B.length + ' cüzdandan ' + (over + near) + ' tanesine bak.' : B.length + ' cüzdanın hepsi sınırın altında.', "nxOpen('budget')", 1, T.length % 2); }
+  const subs = typeof getSubscriptions === 'function' ? getSubscriptions() : []; if (subs.length) { const act = subs.filter(x => x.active), yr = act.reduce((a, x) => a + x.amount, 0) * 12;
+    tile('#FF6B60', 'Aboneliklerim', fmtTL(Math.round(yr)), act.length + ' abonelik · yılda bu kadar ediyor.', "nxOpen('subs')", 1, T.length % 2); }
+  if (T.length % 2) T[T.length - 1] = T[T.length - 1].replace('class="nx-tile"', 'class="nx-tile nx-full"');
+  if (hasInc) { const cum = proj.cum.slice(0, 13), mn = Math.min(...cum), mx = Math.max(...cum), W = 200, H = 110, up = cum[12] >= 0, col = up ? '#5AA9FF' : '#FF6B60';
+    const X = i => (i / 12) * W, Y = v => H - 10 - ((v - mn) / Math.max(1, mx - mn)) * (H - 30), d = cum.map((v, i) => (i ? 'L' : 'M') + ' ' + X(i).toFixed(1) + ' ' + Y(v).toFixed(1)).join(' ');
+    T.push(`<div class="nx-tile nx-full" style="--c:${col}" onclick="nxOpen('sim')"><svg class="nx-simg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><defs><linearGradient id="nxg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".38"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs><path d="${d} L ${W} ${H} L 0 ${H} Z" fill="url(#nxg)"/><path d="${d}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>
+      <div class="nx-sim-tx"><div class="nx-tile-k">Ya şöyle olursa?</div><div class="nx-tile-n sm" style="padding-top:14px">${(up ? '≈' : '−') + fmtTL(Math.abs(Math.round(cum[12])))}</div><div class="nx-tile-s" style="min-height:0">${up ? 'Bu gidişle 12 ay sonra<br>kenarda biriken para.' : 'Bu gidişle 12 ayda<br>oluşacak açık.'}</div><div class="nx-sim-cta">Zam, gelir kaybı, büyük harcama: dene ›</div></div></div>`); }
+  const gw = $('nxGridWrap'); if (gw) gw.style.display = T.length ? '' : 'none';
+  $('nxGrid').innerHTML = T.join('');
 }
 
 // ── V70: ABONELİK DENETİMİ ─────────────────────────────────
@@ -10361,7 +10561,7 @@ function _renderPlanHero(fb, core) {
       <div class="plan-hero-glow" style="background:radial-gradient(circle,${glowColor} 0%,transparent 65%)"></div>
       <div class="plan-hero-overline">
         <span class="plan-hero-overline-dot" style="background:${accentColor}"></span>
-        01 · Durum · ${rlLabel}
+        Durum · ${rlLabel}
       </div>
       <div class="ph-gauge-wrap" onclick="_planToggleScoreBreak()" role="button" aria-label="Skor dökümünü aç">
         ${_scGaugeSvg('ph')}
@@ -10401,7 +10601,7 @@ function _renderPlanChar(core) {
   el.innerHTML = `
     <div class="plan-char-card">
       <div class="plan-char-gradient" style="--char-gradient:${ch.gradient}">
-        <div class="plan-char-overline">02 · Karakter</div>
+        <div class="plan-char-overline">Para tarzın</div>
         <div class="plan-char-bigname" style="color:${ch.accentColor||'#fff'}">${ch.name}</div>
         <div class="plan-char-tagline">${ch.tagline}</div>
       </div>
@@ -10461,8 +10661,8 @@ function _renderPlanRiskDetail(core) {
       <div style="padding:16px 0 4px">
         <div style="font-size:15px;font-weight:600;color:var(--accent);margin-bottom:6px">Kritik baskı noktası yok.</div>
         <div style="font-size:13.5px;font-weight:400;color:var(--muted);line-height:1.75">Sabit gider, borç ve birikim oranlarının tümü sağlıklı aralıkta.</div>
-      </div>` + _snowballCardHtml() + _leakCardHtml();
-    _snowRender();
+      </div>`;
+    _planSideCards();
     return;
   }
 
@@ -10476,12 +10676,12 @@ function _renderPlanRiskDetail(core) {
         <div><div class="advice-big-label">${d.label}</div><div class="advice-big-sub">${d.brief || d.detail}</div><div class="advice-more">Detay <span>›</span></div></div>
       </div></div>`;
   }).join('');
-  _drvCards = core.drivers.map(drvCard); _drvTitles = core.drivers.map(d => d.label); // dokununca açılan ayrıntı kartları
+  _drvCards = core.drivers.map(drvCard); _drvTitles = core.drivers.map(d => ({ 'Sabit gider yükü': 'Zorunlu ödemeler', 'Borç & taksit yükü': 'Taksit yükü', 'Ay sonunda az kalıyor': 'Ay sonunda kalan' })[d.label] || d.label); // V99: karo adlarıyla aynı // dokununca açılan ayrıntı kartları
   const legend = `<div class="advice-grid">${driverHtmlC}</div>`;
 
   // Aksiyonlar tek yerde yaşar — "04 · Yol Haritası". Burada tekrar edilmez.
-  el.innerHTML = legend + _snowballCardHtml() + _leakCardHtml();
-  _snowRender();
+  el.innerHTML = legend;
+  _planSideCards();
 }
 
 
@@ -10497,6 +10697,12 @@ function openEfSheet() { // V98.5
   document.getElementById('drvSheetTitle').textContent = core.efDriver.label;
   document.getElementById('drvSheetBody').innerHTML = drvCard(core.efDriver);
   document.getElementById('drvSheetOv').classList.add('show'); document.getElementById('drvSheet').classList.add('show');
+}
+// V99: Kartopu Planı ve Sızıntı Avcısı kendi kaplarında (karolardan ayrı ayrı açılabilsin diye)
+function _planSideCards() {
+  const sh = document.getElementById('planSnowHost'), lh = document.getElementById('planLeakHost');
+  if (sh) sh.innerHTML = _snowballCardHtml(); if (lh) lh.innerHTML = _leakCardHtml();
+  _snowRender();
 }
 function closeDrvSheet() { document.getElementById('drvSheetOv').classList.remove('show'); document.getElementById('drvSheet').classList.remove('show'); }
 
