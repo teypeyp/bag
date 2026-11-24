@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V98.4: "Claude boş cevap verdi" düzeltildi. Sebep: bu model yazmadan önce düşünüyor ve düşünme payı cevap uzunluğu sınırına dahil; sınır 900'dü, hepsi düşünmeye gidince yazıya yer kalmıyordu. Sınır 8.000'e çıkarıldı (bağlantı denemesinde 20 → 1.000), bekleme süresi 2 dakika. Yine de yer kalmazsa nedenini söyleyen ayrı bir mesaj var. -->
 <!-- V98.3: "Claude'a ne gidiyor?" artık kod dökümü göstermiyor; gidenleri sade bir liste olarak sayıyor (kaç haftalık / aylık kayıt, kaç sabit gider, borç, hedef, cüzdan, kaç işlem ve açıklamaların gidip gitmediği). -->
 <!-- V98.2: Kartın adı "Haftalık Mektup" yerine "Haftalık Değerlendirme"; düğme "Değerlendir". Ekrandaki bütün "mektup" sözleri kaldırıldı. İçerik ve dil aynı. -->
 <!-- V98.1: Haftalık Mektup artık "geçen hafta en az 3 kayıt" şartına takılmıyor. Son 8 haftada ya da son 4 ayda herhangi bir kayıt varsa mektup yazılır; geçen hafta boşsa Claude genel resme ve bu aya ağırlık verir. Kart, Claude'a kaç haftalık ve kaç aylık veri gittiğini de gösterir. -->
@@ -11962,7 +11963,12 @@ async function aiAsk(system, userText, maxTokens, model, timeoutMs) {
     return { ok: false, msg: 'Claude\u0027un adresine ulaşılıyor ama tarayıcı cevabı okumaya izin vermedi. Bu satırın ekran görüntüsünü gönder.' + tech };
   }
   let j = null; try { j = await res.json(); } catch (e) {}
-  if (res.ok && j && Array.isArray(j.content)) return { ok: true, text: j.content.filter(c => c.type === 'text').map(c => c.text).join('').trim() };
+  if (res.ok && j && Array.isArray(j.content)) {
+    // V98.4: model önce "düşünme" blokları yazar; yazı ayrı bloktadır. Sınır düşünmeye giderse yazı bloğu hiç gelmeyebilir.
+    const text = j.content.filter(c => c.type === 'text').map(c => c.text).join('').trim();
+    if (!text) return { ok: false, msg: j.stop_reason === 'max_tokens' ? 'Claude düşünürken ayrılan pay bitti, yazıya yer kalmadı. Tekrar dene; yine olursa bana haber ver.' : 'Claude yazı döndürmedi (' + (j.stop_reason || 'neden belirtilmedi') + '). Tekrar dene.' };
+    return { ok: true, text };
+  }
   const em = (j && j.error && j.error.message) || '';
   if (res.status === 401) return { ok: false, msg: 'Anahtar kabul edilmedi. Yanlış kopyalanmış ya da silinmiş olabilir.' };
   if (res.status === 403) return { ok: false, msg: 'Bu anahtarın izni yok. Claude hesabındaki anahtar ayarlarına bak.' };
@@ -11976,7 +11982,7 @@ async function aiTest() {
   if ((document.getElementById('aiKeyInput').value || '').trim() && !aiSaveKey()) return;
   if (!aiKeyGet()) { _aiRes('err', 'Önce anahtarı yapıştırıp kaydet.'); return; }
   const b = document.getElementById('aiTestBtn'); b.disabled = true; _aiRes('wait', 'Deneniyor…');
-  const r = await aiAsk('', 'Sadece şu iki kelimeyi yaz: Bağlantı tamam', 20);
+  const r = await aiAsk('', 'Sadece şu iki kelimeyi yaz: Bağlantı tamam', 1000);
   b.disabled = false;
   _aiRes(r.ok ? 'ok' : 'err', r.ok ? 'Bağlantı çalışıyor. Claude\u0027un cevabı: "' + r.text + '"' : r.msg);
 }
@@ -12125,7 +12131,7 @@ function renderAiWeekly() {
     <div class="aiw-p">Claude son aylarına ve geçen haftana bakıp durumunu kısaca, sade bir dille anlatır. Bu cihazda ${w.info.months} aylık, ${w.info.weeks} haftalık kayıt var${w.info.lastWeekTx < 3 ? '; geçen hafta kayıt az olduğu için genel resme ağırlık verecek' : ''}.</div>
     <div class="aiw-opt" onclick="aiwToggleDesc()"><div><div class="aiw-opt-t">Harcama açıklamaları da gitsin</div><div class="aiw-opt-s">Açıkken yer adlarını da görür ve daha isabetli yazar. Kapatırsan sadece tutar ve kategori gider.</div></div><div class="aiw-sw${dOn ? ' on' : ''}"><i></i></div></div>
     ${err}
-    <button class="aiw-btn" onclick="aiWeeklyRun()" ${_aiwBusy ? 'disabled' : ''}>${_aiwBusy ? 'Claude yazıyor… (20-40 sn)' : 'Değerlendir'}</button>
+    <button class="aiw-btn" onclick="aiWeeklyRun()" ${_aiwBusy ? 'disabled' : ''}>${_aiwBusy ? 'Claude düşünüyor… (bir dakikayı bulabilir)' : 'Değerlendir'}</button>
     <button class="aiw-link" onclick="const b=document.getElementById('aiwSent');b.style.display=b.style.display==='block'?'none':'block'">Claude'a ne gidiyor?</button>
     <div class="aiw-sent" id="aiwSent">${_aiwSentHtml(w.obj, dOn)}</div></div>`;
 }
@@ -12133,7 +12139,7 @@ async function aiWeeklyRun(force) {
   if (_aiwBusy) return;
   const w = aiWeekSummary(); if (!w.enough && !force) return;
   _aiwBusy = true; _aiwErr = ''; renderAiWeekly();
-  const r = await aiAsk(_AIW_SYS, JSON.stringify(w.obj), 900, AI_MODEL_WEEKLY, 90000);
+  const r = await aiAsk(_AIW_SYS, JSON.stringify(w.obj), 8000, AI_MODEL_WEEKLY, 120000);
   _aiwBusy = false;
   if (!r.ok) { _aiwErr = r.msg; renderAiWeekly(); return; }
   // düz metin beklenir; yanlışlıkla işaretleme gelirse temizle
