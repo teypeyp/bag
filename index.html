@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V101.12: Ekran turu. Aylık Plan › Borçlar kartı ekranın sağına taşıyordu (düğme satırı sığmıyordu) — düğmeler artık alt satıra geçer. Birikim Trendi boşken eksen '1₺ 1₺ 0₺' yazıyordu. Hedeflerim'de eksi tahmin yeşil ve 'ne birikir' diye yazıyordu. 'Aralık 2026 ayında başlıyor' → 'Aralık 2026'da başlıyor'. Ayarlar'da '₺ 0' → '0 ₺' sırası. Şeritteki 'ortalaman limitin X altında' ve 'bütçen N gün daha yeter' Özet/Aylık Plan'daki günlük ortalamayla aynı. -->
+<!-- V101.11: Banka ekstresi elle işaretlemeyle aynı kuralları kullanır: henüz başlamamış borca taksit eşleştirmez; ekstre yüklemesi geri alınınca erken kapatılmış borç kapalı kalır, ekstra ödeme sayacı yeniden hesaplanır. -->
+<!-- V101.10: Ders planını ikinci kez kurunca 'Geri al' ilk kurulumun kaydını kaybediyordu (hiçbir şey geri alınmıyordu). Artık ilk hâl saklanır, kaç kez kurulursa kurulsun Geri al en baştaki hâle döner. Kartopu ikinci kez kurulunca ek ödeme üst üste eklenmez. -->
 <!-- V101.9: 'Planı kur' hiçbir derste önizlemesiz bitmez; son sayfadaki ✓ düğmesi de önizlemeyi açar ('Planı kurmadan dersi bitir' seçeneğiyle). Kartopu'nda ek ödeme yazılmadıysa ya da Abonelik dersinde iptal seçilmediyse eskiden doğrudan 'tamamlandı' diyordu; şimdi 'uygulamada bir şey değişmeyecek, sıran şu' diye gösterir. -->
 <!-- V101.8: Derslerde 'Planı kur' artık düz onay kutusu değil, plan önizlemesi açar: ne kurulacak, nereye gidecek, yeni mi / güncellenecek mi / zaten var mı; bu ay Kalan para ve günlük limit kaçtan kaça iner (eksiye düşüyorsa uyarı). Kurduktan sonra 'kuruldu, şurada' ekranı ve oraya götüren düğmeler. 5 Kutu artık Yaşam cüzdanı kurmaz (sabit giderler zaten düşülüyor; aynı para iki kez ayrılıyordu) — Yaşam tavanı bilgi olarak gösterilir. -->
 <!-- V101.7: Mini test cevapları ve 'Planı kur' onay ekranları ekrandan okundu. Asgari testinde doğru cevaba 'Yanlış.' diye başlayan yazı düzeltildi; uygulanan plan özetlerinde tutarlar ₺ ile ve tek yazımla. -->
@@ -2227,8 +2230,9 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .rec-type-btn{flex:1;padding:9px;border:none;border-radius:10px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:none;color:var(--muted);transition:all .2s}
 .rec-type-btn.active{background:var(--surface3);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.3)}
 /* action buton genişletme */
-.item-actions-row>.item-actions-inner{min-height:0;display:flex;gap:6px;padding:0}
+.item-actions-row>.item-actions-inner{min-height:0;display:flex;flex-wrap:wrap;gap:6px;padding:0}
 .item-expanded .item-actions-row>.item-actions-inner{padding-top:10px;padding-bottom:2px}
+.item-actions-inner>.icon-action-btn{min-width:0}
 .icon-action-btn.stats{flex:1.6;width:auto;height:34px;padding:0 10px;border-color:rgba(45,184,102,.25);background:rgba(45,184,102,.06);color:var(--accent);gap:5px;font-size:11px;font-weight:800;font-family:'Montserrat',sans-serif}
 .icon-action-btn.stats svg{stroke:var(--accent)}
 .icon-action-btn.edit-sm{flex:1;width:auto;height:34px;padding:0 8px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;gap:4px}
@@ -3615,8 +3619,8 @@ html[data-theme="light"] :is(.overlay,.modal-overlay,.confirm-modal){background:
           <div class="settings-row-sub">Bu ay ayırmak istediğin miktar</div>
         </div>
         <div style="display:flex;align-items:center;gap:6px">
-          <span style="font-size:13px;font-weight:800;color:var(--muted)">₺</span>
           <input type="text" id="monthlyTarget" class="settings-inline-input" placeholder="0" inputmode="numeric" style="width:100px;text-align:right" oninput="fmtInput(this)" onblur="saveMonthlyTarget()" onkeydown="if(event.key==='Enter'){this.blur()}">
+          <span style="font-size:13px;font-weight:800;color:var(--muted)">₺</span>
         </div>
       </div>
     </div>
@@ -3689,7 +3693,7 @@ html[data-theme="light"] :is(.overlay,.modal-overlay,.confirm-modal){background:
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v101.9 · Veriler bu cihazda saklanır</div>
+    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v101.12 · Veriler bu cihazda saklanır</div>
   </div>
 </div>
 
@@ -6443,6 +6447,7 @@ function buildCarouselItems(fb) {
   const pastDays = Math.max(1, todayD - 1);
   const pastVarSpent = fb.varSpent - fb.todayVarSpent;
   const avgDailySpent = pastVarSpent / pastDays;
+  let _avgShown = avgDailySpent; try { _avgShown = _monthEndEst(fb).avg || avgDailySpent; } catch (e) {} // V101.12: ekranda yazan 'günlük ort.' ile aynı ortalama
 
   // ── Bütçe yorum insight'ları — sarı/kırmızıda, bağımsız koşullar ──
   if (fb.income > 0) {
@@ -6509,8 +6514,8 @@ function buildCarouselItems(fb) {
 
   // 2. Harcama hızı — baz limite göre karşılaştır
   if (avgDailySpent > 0 && todayD >= 3 && fb.daily > 0 && fb.remaining >= 0) { // V100.6 · V101.3: ekranda yazan günlük limitle kıyas
-    const overSpeed = avgDailySpent > fb.daily;
-    const diff = Math.abs(Math.round(fb.daily) - Math.round(avgDailySpent));
+    const overSpeed = _avgShown > fb.daily;
+    const diff = Math.abs(Math.round(fb.daily) - Math.round(_avgShown));
     items.push({ cls: overSpeed ? 'bad' : 'good', icon: overSpeed ? '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#FF453A" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 13.5a4 4 0 1 0 4 0v-8.5a2 2 0 0 0 -4 0v8.5"/><path d="M10 9l4 0"/></svg>' : '<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#0A84FF" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l0 18"/><path d="M3 12l18 0"/><path d="M12 3l3 3"/><path d="M12 3l-3 3"/><path d="M12 21l3 -3"/><path d="M12 21l-3 -3"/><path d="M3 12l3 -3"/><path d="M3 12l3 3"/><path d="M21 12l-3 3"/><path d="M21 12l-3 -3"/></svg>',
       title: overSpeed
         ? `Ort. harcaman limiti ${fmtTL(diff)} aşıyor <em>— limit düşüyor</em>`
@@ -6556,7 +6561,7 @@ function buildCarouselItems(fb) {
 
   // 6. Kazanılan zaman (sadece varSpent bazlı, daha doğru)
   if (fb.remaining > 0 && avgDailySpent > 0) {
-    const extraDays = Math.floor(fb.remaining / avgDailySpent);
+    const extraDays = Math.floor(fb.remaining / _avgShown);
     if (extraDays > 0 && extraDays < 90) {
       items.push({ cls:'good', icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#818CF8" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.5 7h11"/><path d="M6.5 17h11"/><path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"/><path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"/></svg>',
         title:`Bütçen bu hızda <em>${extraDays} gün daha yeter</em>` });
@@ -8576,7 +8581,7 @@ function renderDebtList() {
           <div style="height:3px;background:var(--surface3);border-radius:2px;margin-top:6px;overflow:hidden">
             <div style="width:${pct}%;height:100%;background:${done?'var(--accent)':paid?'var(--accent)':'rgba(255,69,58,.5)'};border-radius:2px;transition:width .5s ease"></div>
           </div>
-          ${future?`<div style="font-size:10px;color:var(--warning);margin-top:3px;font-weight:800;display:flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--warning)" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.5 7h11"/><path d="M6.5 17h11"/><path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"/><path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"/></svg> ${_mkLabel(d.startMonth)} ayında başlıyor</div>`:''}
+          ${future?`<div style="font-size:10px;color:var(--warning);margin-top:3px;font-weight:800;display:flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="var(--warning)" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.5 7h11"/><path d="M6.5 17h11"/><path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"/><path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"/></svg> ${_mkLabel(d.startMonth)}${_yrSfx(_mkLabel(d.startMonth))} başlıyor</div>`:''}
           ${done?`<div style="font-size:10px;color:var(--accent);margin-top:3px;font-weight:800"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10"/></svg> ${d.closedEarly ? 'Erken kapandı' + (d.closedEarly.discount > 0 ? ' · ' + fmtTL(d.closedEarly.discount) + ' indirim' : '') : 'Tamamlandı'}</div>`:''}
         </div>
         <div class="rec-status" style="cursor:${future||done?'default':'pointer'}" onclick="event.stopPropagation();${!future&&!done?`togglePaidDebt('${d.id}')`:''}"
@@ -11072,18 +11077,18 @@ function _renderPlanGoalDetail(fb, core) {
           ${(() => { const r = _planRealRemain(); if (!r) return ''; return `<div style="padding:8px 20px 10px;font-size:10.5px;font-weight:500;color:rgba(233,232,240,.5);line-height:1.6">Kontrol — geçen aylarda gerçekte kalan: ${r.rows.map(x => _planAySade(x.m) + ' ' + fmtTL(Math.round(x.kalan))).join(' · ')} (ort. ${fmtTL(Math.round(r.avg))})</div>`; })()}
         </div>
         <div style="border-top:1px solid rgba(255,255,255,.06)">
-          <div style="padding:10px 20px 4px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(233,232,240,.55)">Bu parayla ne birikir?</div>
+          <div style="padding:10px 20px 4px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(233,232,240,.55)">${m12 < 0 || m6 < 0 || m3 < 0 ? 'Bu gidişle ne olur? (eksi = açık)' : 'Bu parayla ne birikir?'}</div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 20px;border-top:1px solid rgba(255,255,255,.04)">
             <div style="font-size:13px;font-weight:500;color:rgba(233,232,240,.7)">3 ay</div>
-            <div style="font-size:20px;font-weight:800;letter-spacing:-.05em;color:var(--accent)">${fmtTL(m3)}</div>
+            <div style="font-size:20px;font-weight:800;letter-spacing:-.05em;color:${m3 < 0 ? 'var(--danger)' : 'var(--accent)'}">${fmtTL(m3)}</div>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 20px;border-top:1px solid rgba(255,255,255,.04)">
             <div style="font-size:13px;font-weight:500;color:rgba(233,232,240,.7)">6 ay</div>
-            <div style="font-size:20px;font-weight:800;letter-spacing:-.05em;color:var(--accent)">${fmtTL(m6)}</div>
+            <div style="font-size:20px;font-weight:800;letter-spacing:-.05em;color:${m6 < 0 ? 'var(--danger)' : 'var(--accent)'}">${fmtTL(m6)}</div>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 20px;border-top:1px solid rgba(255,255,255,.04)">
             <div style="font-size:13px;font-weight:500;color:rgba(233,232,240,.7)">1 yıl</div>
-            <div style="font-size:20px;font-weight:800;letter-spacing:-.05em;color:var(--accent)">${fmtTL(m12)}</div>
+            <div style="font-size:20px;font-weight:800;letter-spacing:-.05em;color:${m12 < 0 ? 'var(--danger)' : 'var(--accent)'}">${fmtTL(m12)}</div>
           </div>
           <div style="padding:8px 20px 12px;font-size:10.5px;font-weight:500;color:rgba(233,232,240,.45);line-height:1.5">Tahmini: harcamaların şimdiki ritminde sürdüğü varsayılır, borç bitişleri dahil — simülasyondaki eğriyle aynı hesap.</div>
         </div>
@@ -13204,7 +13209,7 @@ function setupChartObservers() {
     charts.line = new Chart(lCtx, {
       type: 'line',
       data: { labels, datasets: [{ label: 'Birikim', data: cumulativeNets, borderColor: '#4ADE80', borderWidth: 2.5, backgroundColor: 'rgba(74,222,128,0.15)', tension: 0.45, fill: true, pointBackgroundColor: '#4ADE80', pointBorderColor: _surf('#18181C'), pointBorderWidth: 2, pointRadius: 5, pointHoverRadius: 7 }] },
-      options: { responsive: true, maintainAspectRatio: false, animation: { duration: 2200, easing: 'easeOutQuart', x: { duration: 0 }, y: { duration: 2200, easing: 'easeOutQuart', from: (ctx) => ctx.chart.scales.y.bottom } }, plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(24,24,28,0.95)', borderColor: _ink(0.08), borderWidth: 1, titleFont: { family: 'Montserrat', weight: '800' }, bodyFont: { family: 'Montserrat' }, callbacks: { label: ctx => ' Birikim: ' + fmtNum(ctx.raw) + '₺' } } }, scales: { ...baseScales, y: { ...baseScales.y, min: 0 } } }
+      options: { responsive: true, maintainAspectRatio: false, animation: { duration: 2200, easing: 'easeOutQuart', x: { duration: 0 }, y: { duration: 2200, easing: 'easeOutQuart', from: (ctx) => ctx.chart.scales.y.bottom } }, plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(24,24,28,0.95)', borderColor: _ink(0.08), borderWidth: 1, titleFont: { family: 'Montserrat', weight: '800' }, bodyFont: { family: 'Montserrat' }, callbacks: { label: ctx => ' Birikim: ' + fmtNum(ctx.raw) + '₺' } } }, scales: { ...baseScales, y: { ...baseScales.y, min: 0, suggestedMax: Math.max(...cumulativeNets) > 0 ? undefined : 10000 } } }
     });
   });
 }
@@ -16031,7 +16036,7 @@ function _bsQualify(rows, holder) {
     let q = null;
     if (r.type === 'expense') {
       const rec = pick((data.recurring || []).filter(x => x.active !== false), x => x.amount, x => x.desc, 'r');
-      const debt = rec ? null : pick((data.debts || []).filter(x => x.active || (x.paidMonths || []).includes(mk)), x => x.monthlyAmount, x => x.name, 'd');
+      const debt = rec ? null : pick((data.debts || []).filter(x => (x.active || (x.paidMonths || []).includes(mk)) && (!x.startMonth || x.startMonth <= mk)), x => x.monthlyAmount, x => x.name, 'd'); // V101.11: başlamamış borç eşleşmez (elle işaretlemeyle aynı kural)
       if (rec) q = { kind: (rec.paidMonths || []).includes(mk) ? 'paid' : 'rec', id: rec.id, name: rec.desc };
       else if (debt) q = { kind: (debt.paidMonths || []).includes(mk) ? 'paid' : 'debt', id: debt.id, name: debt.name };
       else if (/kredi kart|kart odeme|kart borc|kk odeme/.test(raw) || /kredi karti/.test(tag)) q = { kind: 'transfer' };
@@ -16229,7 +16234,7 @@ function bsUndo(batch) {
     data.transactions.filter(pick).forEach(tx => { // V94.8: ödeme eşleşmelerini de geri al (deleteTx ile aynı kurallar)
       const mk = monthKey(tx.date);
       if (tx.isRecurring && tx.recurringId) { const x = data.recurring.find(z => z.id === tx.recurringId); if (x) { x.paidMonths = (x.paidMonths || []).filter(m => m !== mk); if (x.payHistory) delete x.payHistory[mk]; } }
-      if (tx.isDebt && tx.debtId) { const x = data.debts.find(z => z.id === tx.debtId); if (x) { x.paidMonths = (x.paidMonths || []).filter(m => m !== mk); x.paidCount = Math.max(0, (x.paidCount || 0) - 1); x.active = true; } }
+      if (tx.isDebt && tx.debtId) { const x = data.debts.find(z => z.id === tx.debtId); if (x) { x.paidMonths = (x.paidMonths || []).filter(m => m !== mk); if (x.closedEarly && x.closedEarly.prev) { x.closedEarly.prev.paidCount = Math.max(0, (x.closedEarly.prev.paidCount || 0) - 1); } else { x.paidCount = Math.max(0, (x.paidCount || 0) - 1); x.active = true; if (typeof _debtRecalcExtra === 'function') _debtRecalcExtra(x); } } } // V101.11: deleteTx ile aynı kural
       if (tx.isRecurringIncome && tx.recurringIncomeId) { const x = (data.recurringIncome || []).find(z => z.id === tx.recurringIncomeId); if (x) x.paidMonths = (x.paidMonths || []).filter(m => m !== mk); }
     });
     data.transactions = data.transactions.filter(t => !pick(t));
@@ -16821,13 +16826,18 @@ function saveProg(){if(typeof data==='undefined'||!L)return;if(!data.tipsProgres
 function clearProg(id){try{if(data.tipsProgress){delete data.tipsProgress[id];save();}}catch(e){}}
 function appliedOf(id){try{return (data.tipsApplied||{})[id]||null;}catch(e){return null;}}
 function snapNow(id){let inc=0;try{inc=Math.round(calcFreeBudget(currentMonth).income||0);}catch(e){}let x='';try{if(id==='kartopu')x=(data.debts||[]).filter(d=>d.active).map(d=>d.id+':'+d.monthlyAmount).join(',');if(id==='sizinti')x=(typeof getSubscriptions==='function'?getSubscriptions():[]).filter(r=>r.active).map(r=>r.id).join(',');if(id==='asgari')x=String(Math.round(typeof totalCardsDebt==='function'?totalCardsDebt():0));}catch(e){}return inc+'|'+x;}
-function recordApplied(id,summary,undo){try{if(!data.tipsApplied)data.tipsApplied={};data.tipsApplied[id]={at:today(),summary,undo,snap:snapNow(id)};save();}catch(e){}}
-function undoApplied(id){const r=appliedOf(id);if(!r||!r.undo)return;const u=r.undo;try{
+function _undoMerge(o,n){if(!o)return n;if(!n)return o; // V101.10: ilk kurulumun geri alma kaydı kaybolmasın
+  if(o.type==='items'&&n.type==='items')return{type:'items',budgets:[...new Set([...(o.budgets||[]),...(n.budgets||[])])],goals:[...new Set([...(o.goals||[]),...(n.goals||[])])]};
+  if(o.type==='recs'&&n.type==='recs')return{type:'recs',ids:[...new Set([...(o.ids||[]),...(n.ids||[])])]};
+  const L=o.type==='multi'?o.list.slice():[o];if(L.some(x=>x.type===n.type&&x.id&&x.id===n.id)){const f=L.find(x=>x.type===n.type&&x.id===n.id);if(n.gel&&!f.gel)f.gel=n.gel;return o.type==='multi'?{type:'multi',list:L}:L[0];}
+  L.push(n);return{type:'multi',list:L};}
+function recordApplied(id,summary,undo){try{if(!data.tipsApplied)data.tipsApplied={};const old=data.tipsApplied[id];data.tipsApplied[id]={at:today(),summary,undo:_undoMerge(old&&old.undo,undo),snap:snapNow(id)};save();}catch(e){}}
+function undoApplied(id){const r=appliedOf(id);if(!r||!r.undo)return;const U=r.undo,LIST=U.type==='multi'?U.list.slice().reverse():[U];try{LIST.forEach(u=>{
     if(u.type==='items'){data.budgets=(data.budgets||[]).filter(b=>!(u.budgets||[]).includes(b.id));data.savingsGoals=(data.savingsGoals||[]).filter(g=>!(u.goals||[]).includes(g.id));}
     if(u.type==='goal'){if(u.created)data.savingsGoals=(data.savingsGoals||[]).filter(g=>g.id!==u.id);else{const g=(data.savingsGoals||[]).find(x=>x.id===u.id);if(g)Object.assign(g,u.prev);}if(u.gel){const g=(data.savingsGoals||[]).find(x=>x.id===u.gel.id);if(g)g.monthly=u.gel.monthly;}}
     if(u.type==='debt'){if(u.created)data.debts=(data.debts||[]).filter(d=>d.id!==u.id);else{const d=(data.debts||[]).find(x=>x.id===u.id);if(d)Object.assign(d,u.prev);}}
     if(u.type==='recs'){(u.ids||[]).forEach(i=>{const r2=(data.recurring||[]).find(x=>x.id===i);if(r2)r2.active=true;});}
-    delete data.tipsApplied[id];save();if(typeof renderAll==='function')renderAll();if(typeof showToast==='function')showToast('↩ Geri alındı');}catch(e){console.warn('FL undo',e);}renderLib();renderEntry();}
+    });delete data.tipsApplied[id];save();if(typeof renderAll==='function')renderAll();if(typeof showToast==='function')showToast('↩ Geri alındı');}catch(e){console.warn('FL undo',e);}renderLib();renderEntry();}
 function recommend(){const ds=doneSet();let inc=0,debts=0,card=0,subs=0,ef=false;try{inc=Math.round(calcFreeBudget(currentMonth).income||0);debts=(data.debts||[]).filter(d=>d.active).length;card=typeof totalCardsDebt==='function'?Math.round(totalCardsDebt()):0;subs=(typeof getSubscriptions==='function'?getSubscriptions():[]).filter(r=>r.active).length;ef=(data.savingsGoals||[]).some(g=>typeof isEmergencyGoal==='function'?isEmergencyGoal(g):g.isEmergency);}catch(e){}
   const C=[];if(debts>0&&!ds.has('kartopu'))C.push({id:'kartopu',why:`${debts} aktif borcun var — sırayı kur.`});if(card>0&&!ds.has('asgari'))C.push({id:'asgari',why:`Kartında ${fmt(card)}₺ borç var.`});if(subs>=2&&!ds.has('sizinti'))C.push({id:'sizinti',why:`${subs} aboneliğin var — yılda ne tutuyor?`});if(!ef&&!ds.has('acilfon')&&ds.has('kutular'))C.push({id:'acilfon',why:'Henüz acil fon hedefin yok.'});if(!ds.has('kutular'))C.push({id:'kutular',why:'Buradan başla: maaşı 5’e böl.'});
   const first=MAIN_TIPS().find(t=>!ds.has(t.id));if(first)C.push({id:first.id,why:'Sıradaki ders.'});return C[0]||null;}
@@ -17438,7 +17448,8 @@ function applyDebt(){if(A.debtsSrc!=='data'){planPreview({title:'Borç Kartopu',
   const S=snow(),sorted=debtSorted(),order=sorted.map(d=>d.name).join(' → '),m=Math.round(A.extra);
   const sm=sorted[0];let d=null;try{d=(data.debts||[]).find(x=>x.id===sm.id)||null;}catch(e){}
   if(!(m>0)||!d){planPreview({title:'Borç Kartopu',color:'#FF4B5C',fg:'#fff',btn:'Tamam',infoOnly:true,rows:[{n:'Sıran',v:'',tag:'bilgi',s:order+' · tahmini borçsuz: '+snowDate()+' ('+S.months+' ay)'},{n:'Ek ödeme',v:'0₺',tag:'bilgi',s:'Fazladan ödeme yazmadın. Taksitlerin aynı kalır; bu sıra bir öneri, borçlarında hiçbir şey değişmez. Eklemek istersen geri dönüp “Ayda fazladan ne kadar?” sayfasına tutar yaz.'}],delta:0,doIt:finish});return;}
-  const rem=Math.max(0,((d.installments||0)-(d.paidCount||0))*(d.monthlyAmount||0));const newM=(d.monthlyAmount||0)+m;const newInst=Math.max(1,Math.ceil(rem/newM));
+  const _ka=(data.tipsApplied||{}).kartopu,_ku=_ka&&_ka.undo?(_ka.undo.type==='multi'?_ka.undo.list:[_ka.undo]).find(x=>x.type==='debt'&&x.id===d.id&&x.prev):null,_baseM=_ku?_ku.prev.monthlyAmount:(d.monthlyAmount||0); // V101.10: ek ödeme üst üste eklenmez
+  const rem=Math.max(0,((d.installments||0)-(d.paidCount||0))*(d.monthlyAmount||0));const newM=_baseM+m;const newInst=Math.max(1,Math.ceil(rem/newM));
   const msg=`Kartopu planın:\n• Sıra: ${order}\n• “${d.name}” taksiti ${fmt(d.monthlyAmount)} → ${fmt(newM)}₺/ay (ekstra ${fmt(m)}₺ eklendi)\n• Kalan taksit ${d.installments-d.paidCount} → ${newInst}\n• Tahmini borçsuz: ${snowDate()} (${S.months} ay)\nBu borç bitince ekstrayı sıradakine ekle.`;
   const doIt=()=>{try{
       const undo={type:'debt',id:d.id,prev:{monthlyAmount:d.monthlyAmount,installments:d.installments,totalAmount:d.totalAmount}};
@@ -17447,7 +17458,7 @@ function applyDebt(){if(A.debtsSrc!=='data'){planPreview({title:'Borç Kartopu',
     }catch(e){console.warn('FL applyDebt',e);}
     finish();};
   const _mkN=(typeof monthKey==='function'?monthKey():currentMonth),_paidD=(d.paidMonths||[]).includes(_mkN)||(d.startMonth&&d.startMonth>_mkN);
-  planPreview({title:'Borç Kartopu',color:'#FF4B5C',fg:'#fff',btn:'Kur',rows:[{n:d.name+' taksiti',v:fmt(d.monthlyAmount)+' → '+fmt(newM)+'₺/ay',go:'borc',tag:'güncellenecek',s:'ekstra '+fmt(m)+'₺ eklenir · kalan taksit '+(d.installments-d.paidCount)+' → '+newInst},{n:'Sıra',v:'',tag:'bilgi',s:order+' · tahmini borçsuz: '+snowDate()+' ('+S.months+' ay)'}],delta:_paidD?0:m,note:_paidD?'Bu ayın taksiti zaten ödendiği için etkisi gelecek aydan başlar.':'Bu borç bitince ekstrayı sıradakine ekle.',doIt,doneTitle:'Kartopu başladı'});}
+  planPreview({title:'Borç Kartopu',color:'#FF4B5C',fg:'#fff',btn:'Kur',rows:[{n:d.name+' taksiti',v:(d.monthlyAmount===newM?fmt(newM):fmt(d.monthlyAmount)+' → '+fmt(newM))+'₺/ay',go:'borc',tag:d.monthlyAmount===newM?'zaten var':'güncellenecek',s:(_ku?'normal taksit '+fmt(_baseM)+'₺ + ekstra '+fmt(m)+'₺':'ekstra '+fmt(m)+'₺ eklenir')+' · kalan taksit '+(d.installments-d.paidCount)+' → '+newInst},{n:'Sıra',v:'',tag:'bilgi',s:order+' · tahmini borçsuz: '+snowDate()+' ('+S.months+' ay)'}],delta:_paidD?0:newM-(d.monthlyAmount||0),note:_paidD?'Bu ayın taksiti zaten ödendiği için etkisi gelecek aydan başlar.':'Bu borç bitince ekstrayı sıradakine ekle.',doIt,doneTitle:'Kartopu başladı'});}
 
 /* ---- Planı kur (ders 4): kart ödeme zarfı ---- */
 function applyCard(){const S=ccFix(A.pay),m=Math.round(A.pay),N=S.months;if(S.stuck||!m){planPreview({title:'Kart kapatma planı',color:'#FF6FB5',fg:'#1A0612',btn:'Tamam',infoOnly:true,rows:[{n:'Bu tutarla plan kurulamıyor',v:'',tag:'bilgi',s:'Yazdığın aylık ödeme faizi karşılamıyor ya da boş. Geri dönüp “Ayda ne kadar ödeyebilirsin?” sayfasında tutarı artır.'}],delta:0,doIt:()=>{}});return;}
