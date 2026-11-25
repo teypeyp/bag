@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V101.14: Uzun bildirimler (toast) dar ekranda kesilmiyor, alt satıra iniyor; Kartopu Planı kart taksitlerini de hesaba katıyor (borçsuz tarih tutarlı). -->
+<!-- V101.13: Ders kısayol kartlarında '2 dk’lık ders' soru cümlesinden ayrıldı (satır sonunda '2' tek başına kalıyordu): soru kalın, altında küçük '2 dk’lık ders'. Genel kural: bir sayı yanındaki kelimeden satır sonunda ayrılmaz ('2 ⏎ borç', 'son 30 ⏎ gün' olmaz) — her ekranda, her genişlikte. -->
 <!-- V101.12: Ekran turu. Aylık Plan › Borçlar kartı ekranın sağına taşıyordu (düğme satırı sığmıyordu) — düğmeler artık alt satıra geçer. Birikim Trendi boşken eksen '1₺ 1₺ 0₺' yazıyordu. Hedeflerim'de eksi tahmin yeşil ve 'ne birikir' diye yazıyordu. 'Aralık 2026 ayında başlıyor' → 'Aralık 2026'da başlıyor'. Ayarlar'da '₺ 0' → '0 ₺' sırası. Şeritteki 'ortalaman limitin X altında' ve 'bütçen N gün daha yeter' Özet/Aylık Plan'daki günlük ortalamayla aynı. -->
 <!-- V101.11: Banka ekstresi elle işaretlemeyle aynı kuralları kullanır: henüz başlamamış borca taksit eşleştirmez; ekstre yüklemesi geri alınınca erken kapatılmış borç kapalı kalır, ekstra ödeme sayacı yeniden hesaplanır. -->
 <!-- V101.10: Ders planını ikinci kez kurunca 'Geri al' ilk kurulumun kaydını kaybediyordu (hiçbir şey geri alınmıyordu). Artık ilk hâl saklanır, kaç kez kurulursa kurulsun Geri al en baştaki hâle döner. Kartopu ikinci kez kurulunca ek ödeme üst üste eklenmez. -->
@@ -190,7 +192,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 }
 
 /* TOAST */
-#toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:var(--surface3);border:1px solid var(--border);border-radius:24px;padding:11px 20px;font-size:13px;font-weight:700;z-index:999;display:none;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,.5);backdrop-filter:blur(8px)}
+#toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:var(--surface3);border:1px solid var(--border);border-radius:24px;padding:11px 20px;font-size:13px;font-weight:700;z-index:999;display:none;white-space:normal;width:max-content;max-width:calc(100vw - 32px);box-sizing:border-box;text-align:center;line-height:1.35;box-shadow:0 8px 32px rgba(0,0,0,.5);backdrop-filter:blur(8px)}
 
 /* HEADER */
 .app-header{display:flex;align-items:center;justify-content:flex-start;padding:12px 18px;padding-top:calc(12px + env(safe-area-inset-top, 0px));position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;z-index:50;height:calc(56px + env(safe-area-inset-top, 0px));background:rgba(10,10,13,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
@@ -3693,7 +3695,7 @@ html[data-theme="light"] :is(.overlay,.modal-overlay,.confirm-modal){background:
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v101.12 · Veriler bu cihazda saklanır</div>
+    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v101.14 · Veriler bu cihazda saklanır</div>
   </div>
 </div>
 
@@ -11515,6 +11517,9 @@ function _planSnowball(extra) {
     return { name: d.name||'Borç', pay: d.monthlyAmount||0, bal: rem*(d.monthlyAmount||0), done:false, start: off || 1 };
   }).filter(d => d.bal > 0 && d.pay > 0);
   if (!debts.length) return null;
+  _cardInstPlan().forEach(p => { // V101.14: kart taksitleri de borçtur ama erken kapanmaz — fazla ödeme almaz
+    const st = Math.max(1, p.off), end = p.off + p.left - 1, n = end - st + 1;
+    if (n > 0) debts.push({ name: p.name + ' (kart)', pay: p.per, bal: n * p.per, done: false, start: st, fixed: true }); });
   const fin = [];
   let pool = 0, m = 0;
   while (debts.some(d=>d.bal>0) && m < 720) {
@@ -11522,7 +11527,7 @@ function _planSnowball(extra) {
     let ekstra = (extra||0) + pool;
     debts.forEach(d => { if (d.bal > 0 && m >= d.start) d.bal = Math.max(0, d.bal - d.pay); });
     while (ekstra > 0) {
-      const alive = debts.filter(d=>d.bal>0 && m >= d.start).sort((a,b)=>a.bal-b.bal)[0];
+      const alive = debts.filter(d=>d.bal>0 && m >= d.start && !d.fixed).sort((a,b)=>a.bal-b.bal)[0];
       if (!alive) break;
       const c = Math.min(ekstra, alive.bal);
       alive.bal -= c; ekstra -= c;
@@ -11548,7 +11553,7 @@ function _snowballCardHtml() {
     <input type="range" class="sc-range" id="snowRange" min="0" max="${maxE}" step="250" value="${_snowExtra}"
       style="--sc-fill:var(--accent);--sc-glow:rgba(45,184,102,.18);--sc-a:0%;--sc-b:0%" oninput="_snowMove(this)">
     <div id="snowRows" class="snow-rows"></div>
-    <div class="snow-note">Sıra: en küçük borç önce; biten taksit bir sonrakine eklenir. Faiz hesaba katılmaz.</div>
+    <div class="snow-note">Sıra: en küçük borç önce; biten taksit bir sonrakine eklenir. Faiz hesaba katılmaz.${_cardInstPlan().length ? ' Kart taksitleri erken kapanmaz; fazlası diğer borçlarına gider.' : ''}</div>
   </div>`;
 }
 
@@ -15217,7 +15222,7 @@ const VM = (function(){
     const po=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[oldK])||{},pn=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[newK])||{};
     if(!$('vmCbPath')){$('vmCbSvg').innerHTML=svgMarkup('vmCb',false);}if(!cbM)cbM=makeMorph($('vmCbPath'));
     cel.style.setProperty('--vmc',n.color);
-    $('vmKick').textContent=n.scene;$('vmTitle').textContent=preview?'Sıradaki seviye':'Tebrikler!';$('vmBtn').textContent=preview?'Kapat':'Devam et';
+    $('vmKick').textContent=n.scene;$('vmTitle').textContent=preview?(oldK===newK?'En üst seviyedesin':'Sıradaki seviye'):'Tebrikler!';$('vmBtn').textContent=preview?'Kapat':'Devam et';
     $('vmOld').textContent=o.name;$('vmNew').textContent=n.name;$('vmDesc').textContent=n.tagline;
     const ni=REAL_ORDER.indexOf(newK);$('vmLadder').innerHTML='<small>Risk</small>'+REAL_ORDER.map((r,j)=>'<i class="'+(j<ni?'done':j===ni?'cur':'')+'"></i>').join('')+'<small>Büyüme</small>';
     $('vmNext').innerHTML=preview?('<b>'+(po.nextLabel||'Sıradaki adım')+'</b><span>'+(po.next||'')+'</span>'):('<b>'+(pn.nextLabel||'Sıradaki adım')+'</b><span>'+(pn.next||'')+'</span>');
@@ -15255,7 +15260,7 @@ const VM = (function(){
   }
   let planKey='BIRIKTIREN';
   // kutlama ONIZLEME: mevcut karakter → siradaki (veriye dokunmaz)
-  function previewCeleb(){const cur=planKey||key;const i=REAL_ORDER.indexOf(cur);const next=REAL_ORDER[Math.min(i+1,REAL_ORDER.length-1)]===cur?cur:REAL_ORDER[Math.min(i+1,REAL_ORDER.length-1)];showCeleb(cur,next,true);}
+  function previewCeleb(){const cur=planKey||key;const i=REAL_ORDER.indexOf(cur);let next=REAL_ORDER[Math.min(i+1,REAL_ORDER.length-1)];/* V101.14: sıradaki seviye, karakter kartındaki önerilen yönle aynı olsun */try{const po=(typeof PLAN_CHARACTERS!=='undefined'&&PLAN_CHARACTERS[cur])||{},m=/→\s*(.+)$/.exec(po.nextLabel||'');if(m){const t=m[1].trim().toLocaleLowerCase('tr'),f=REAL_ORDER.find(r=>(info(r).name||'').toLocaleLowerCase('tr')===t);if(f)next=f;}}catch(e){}showCeleb(cur,next,true);}
   // ---- ortak goz canlandirici: pupiller bakinir + kirpar (baglanti kopunca kendini durdurur) ----
   function liveEyes(getEyes,pL,pR,kindFn){
     const t1=setInterval(()=>{const g=getEyes();if(!g||!g.isConnected){clearInterval(t1);return;}const k=kindFn();if(k==='content'||k==='happy'||k==='tired')return;
@@ -16283,6 +16288,11 @@ function bsUndo(batch) {
 .fl-hint2{width:100%;margin:10px 0 4px;border:1px dashed color-mix(in srgb,var(--c) 55%,transparent);background:color-mix(in srgb,var(--c) 8%,transparent);color:#F2F1EB;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;padding:11px 14px;border-radius:16px;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:left}
 .fl-hint2 span{width:26px;height:26px;border-radius:8px;background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c);display:flex;align-items:center;justify-content:center;flex-shrink:0}.fl-hint2 span svg{width:15px;height:15px}
 .fl-hint2 b{margin-left:auto;color:var(--c)}
+v-nb{white-space:nowrap}
+v-nw{display:inline}
+.fl-h2x{font-style:normal;flex:1;min-width:0;line-height:1.3}
+.fl-h2x small{display:block;margin-top:3px;font-size:11px;font-weight:700;color:color-mix(in srgb,var(--c) 75%,#fff);opacity:.85}
+html[data-theme="light"] .fl-h2x small{color:color-mix(in srgb,var(--c) 80%,#000)}
 /* üst bar */
 .fl-top{position:relative;z-index:6;display:flex;align-items:center;gap:12px;padding:16px 18px 4px}
 .fl-circ{width:38px;height:38px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:800;transition:transform .18s var(--fl-spring),background .3s,color .3s;flex-shrink:0;font-size:16px}
@@ -16871,7 +16881,7 @@ function renderWeekTip(){const old=document.getElementById('flWeekHost');if(old)
 (function(){if(typeof buildCarouselItems!=='function'||typeof showCarouselItem!=='function')return;
   const _b=buildCarouselItems;buildCarouselItems=function(fb){const items=_b.apply(this,arguments)||[];try{const {tip,t}=weekTip();items.push({cls:'tip',tip:tip.id,color:t.ic,icon:`<span style="width:27px;height:27px;display:inline-flex;align-items:center;justify-content:center;color:${t.ic}">${ICON[t.icon].replace('<svg','<svg width="22" height="22"')}</span>`,title:`Haftanın ipucu <em>— ${tip.t} →</em>`});}catch(e){console.warn('FL weektip',e);}return items;};
   const _s=showCarouselItem;showCarouselItem=function(idx){const r=_s.apply(this,arguments);try{const item=_carouselItems[idx];const el=document.getElementById('insightCarousel'),card=document.getElementById('insightCard');if(item&&item.tip&&el&&card){el.style.setProperty('--tipc',item.color);card.style.setProperty('--tipc',item.color);card.onclick=()=>FL.openLesson(item.tip);}else if(el){el.style.removeProperty('--tipc');}}catch(e){}return r;};})();
-function renderHints(){const ds=doneSet();const put=(anchorId,hostId,show,id,txt)=>{const a=document.getElementById(anchorId);if(!a)return;let h=document.getElementById(hostId);if(!h){h=document.createElement('div');h.id=hostId;a.insertAdjacentElement('afterend',h);}const t=TIPS.find(x=>x.id===id);h.innerHTML=show?`<button class="fl-hint2" style="--c:${t.ic}" onclick="FL.openLesson('${id}')"><span>${ICON[t.icon]}</span>${txt}<b>→</b></button>`:'';};
+function renderHints(){const ds=doneSet();const put=(anchorId,hostId,show,id,txt)=>{const a=document.getElementById(anchorId);if(!a)return;let h=document.getElementById(hostId);if(!h){h=document.createElement('div');h.id=hostId;a.insertAdjacentElement('afterend',h);}const t=TIPS.find(x=>x.id===id);h.innerHTML=show?`<button class="fl-hint2" style="--c:${t.ic}" onclick="FL.openLesson('${id}')"><span>${ICON[t.icon]}</span><em class="fl-h2x">${txt.replace(/ (\d+ dk’lık ders)$/,'<small>$1</small>')}</em><b>→</b></button>`:'';};
   let debts=0,card=0,subs=0;try{debts=(data.debts||[]).filter(d=>d.active).length;card=typeof totalCardsDebt==='function'?Math.round(totalCardsDebt()):0;subs=(typeof getSubscriptions==='function'?getSubscriptions():[]).filter(r=>r.active).length;}catch(e){}
   put('debtList','flHintDebt',debts>0&&!ds.has('kartopu'),'kartopu','Borçları hangi sırayla kapatmalı? 2 dk’lık ders');
   put('cardList','flHintCard',card>0&&!ds.has('asgari'),'asgari','Asgari ödeme neden tuzak? 2 dk’lık ders');
@@ -17598,5 +17608,26 @@ window.FL={openLibrary,open,close,renderEntry,journey:vjOpen,openLesson:id=>{ov(
 })();
 </script>
 
+
+<script>
+/* V101.13: sayı + yanındaki kelime aynı satırda kalsın (dar ekranda "2 ⏎ borç" olmasın) */
+(function () {
+  const RE = /\d [^\s\d]/;
+  function fix(n) {
+    const t = n.nodeValue; if (!t || !RE.test(t)) return;
+    const p = n.parentElement; if (!p || p.tagName === 'V-NB' || p.closest('script,style,textarea,svg,[contenteditable="true"]')) return;
+    const frag = document.createDocumentFragment(), parts = t.split(/(\S*\d [^\s\d]\S*)/);
+    parts.forEach((x, i) => { if (!x) return; if (i % 2) { const s = document.createElement('v-nb'); s.textContent = x; frag.appendChild(s); } else frag.appendChild(document.createTextNode(x)); });
+    const d = getComputedStyle(p).display;
+    if (/flex|grid/.test(d)) { const w = document.createElement('v-nw'); w.appendChild(frag); p.replaceChild(w, n); }
+    else p.replaceChild(frag, n);
+  }
+  let q = false;
+  function run() { q = false; const tw = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT), L = []; let n; while ((n = tw.nextNode())) if (RE.test(n.nodeValue)) L.push(n); L.forEach(fix); }
+  const mo = new MutationObserver(() => { if (!q) { q = true; requestAnimationFrame(run); } });
+  function start() { run(); mo.observe(document.body, { childList: true, subtree: true, characterData: true }); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+</script>
 </body>
 </html>
