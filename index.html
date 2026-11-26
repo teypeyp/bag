@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V102.2: Ödenmemiş kart harcaması 'Devreden' rozetini küçültmüyor (geçmiş aylardan 8.000₺ açık + 1.000₺ kart harcaması rozette 7.000₺ görünüyordu). Ekstre geri alma, erken kapatılmış borcun taksit kaydını silmiyor; yerinde bırakıp söylüyor. -->
 <!-- V102.1: Yalnızca gerçekten gelen gelir sayılır: ileri tarihli gelir (ör. 30'una tarihli maaş) tarihi gelene kadar Toplam Varlık, Kalan, günlük limit ve Özet gelirine girmez; kaydedince 'şu tarihte hesaba girer' der. Simülasyon kutularındaki etiketler kısalmıyor, dar ekranda iki satıra iniyor ('12 ay sonra', 'Tatil · tüm kalanla'). -->
 <!-- V102: Tam test turu. Seri artık iki aydan geriye de sayılır (her ayın 1'inde yarıya düşüyordu); ay dönünce aynı eşik için ikinci koruma hakkı verilmez; koruma kullanılan gün ay rozetinde ve karnede de 'aşılmış' sayılır; 'geçen ayın aynı gününe göre' kıyası geçen ay kısaysa günlük ortalamayla yapılır; uygulama açıkken gün dönünce kart kesimi işlenir, ay dönünce karne gelir; açılmayan geçen ay günlerinin limiti de sabitlenir. Kredi kartı: ileri tarihli taksitli alışverişin taksiti erken ekstreye yazılmaz; tutarlar gizliyken kart düzenlenebilir, 1.000.000₺ üstü limit düzenlemede 1₺'ye düşmez; kesim günü değişince içinde bulunulan dönem ve son ödeme tarihi kaymaz; ileri tarihli taksitte bildirim 'bugün' demez. Banka ekstresi: (1.234,56), −1.234,56, 1.234,56- eksi; 1.234 bin lira; 2 haneli yıl; olmayan gün atılır; 'Katmerci', 'Batman' ATM sayılmaz; 'Adı Soyadı' başlığı; hatırlanan ATM cevabı etiket olmadan da geçerli; Dekont No'suz ekstre ikinci kez yüklenince 'zaten kayıtlı'. Derslerde ve şeritte kullanıcının yazdığı adlar (borç, abonelik, kategori, cüzdan) HTML olarak işlenmez. Karakter Yolculuğu şartında '%22 · ✗' çelişkisi (sınırda ondalık). Simülasyon kutularında rakam kesilmez. Açık temada seri kilometre taşı alt yazısı okunur. Ölü kod: kullanılmayan 2 fonksiyon, 1 hesap bloğu, 116 CSS sınıfı (121 kural) silindi; ekranlar hesaplanmış stille birebir karşılaştırıldı. -->
 <!-- V101.19: Takvimli ders sayfaları (Sızıntı Avcısı 'Ücretsiz deneme tuzağı', Kart turu 'Kesim ve son ödeme') küçük ekranda yazının üstüne binmiyor: yer yetmezse takvim kareleri yassılaşır, gerekirse maskot küçülür (132 → 88) ve en son takvim biraz küçülür (en az %75). 375×667 (iPhone SE 2/3, iPhone 8), 360×740 ve 320×640'ta takvim yazıya biniyordu; 390×844'te hiçbir şey değişmedi. 320×568'de takvimin üst kenarı yazıya hâlâ hafifçe değiyor. -->
@@ -3526,7 +3527,7 @@ html[data-theme="light"] :is(.overlay,.modal-overlay,.confirm-modal){background:
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v102.1 · Veriler bu cihazda saklanır</div>
+    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v102.2 · Veriler bu cihazda saklanır</div>
   </div>
 </div>
 
@@ -5629,7 +5630,11 @@ function calcFreeBudget(mk) {
   if (isCurrentMonth) {
     const unpaidNow = Math.max(0, (recTotal + debtTotal + goalTotal) - paidFixed);
     let walletLeft = 0; (data.budgets || []).forEach(b => { walletLeft += Math.max(0, (b.amount || 0) - budgetSpent(b)); });
-    const capAvail = (calcBalance() - unpaidNow - savTarget - walletLeft) + varSpent;
+    // V102.2: bu ay kartla yapılıp henüz ödenmemiş harcama bakiyeden düşmedi; geri eklenirse "Devreden" açığı olduğundan küçük görünür
+    let cardUnpaid = 0; const _cs = {}, _cp = {}, _cm = {};
+    data.transactions.forEach(t => { if (!t.cardId || t.date > todayStr) return; if (t.type === 'expense' && t.payMethod === 'card') { _cs[t.cardId] = (_cs[t.cardId] || 0) + t.amount; if (monthKey(t.date) === mk) _cm[t.cardId] = (_cm[t.cardId] || 0) + t.amount; } else if (t.type === 'cardpay') _cp[t.cardId] = (_cp[t.cardId] || 0) + t.amount; });
+    Object.keys(_cm).forEach(id => { cardUnpaid += Math.min(_cm[id], Math.max(0, (_cs[id] || 0) - (_cp[id] || 0))); }); // ödemeler önce eski harcamaları kapatır
+    const capAvail = (calcBalance() - unpaidNow - savTarget - walletLeft) + varSpent - cardUnpaid;
     if (available > capAvail) { capGap = available - capAvail; available = capAvail; }
   }
   const remaining = available - varSpent;
@@ -16105,11 +16110,14 @@ function bsRenderUndoRow() {
 }
 function bsUndoLast() { const last = _bsLastBatch(); bsUndo(last ? last.id : '__legacy__'); }
 function bsUndo(batch) {
-  const pick = t => batch === '__legacy__' ? ((t.source === 'bank' || t.bankRef) && !t.importBatch) : t.importBatch === batch;
+  const _keep = t => { if (!(t.isDebt && t.debtId)) return false; const d = data.debts.find(z => z.id === t.debtId); return !!(d && d.closedEarly); }; // V102.2: erken kapatılmış borcun taksit kaydı silinmez (elle silmeyle aynı kural)
+  const pickAll = t => batch === '__legacy__' ? ((t.source === 'bank' || t.bankRef) && !t.importBatch) : t.importBatch === batch;
+  const kept = data.transactions.filter(t => pickAll(t) && _keep(t)).length;
+  const pick = t => pickAll(t) && !_keep(t);
   const n = data.transactions.filter(pick).length;
-  if (!n) { showToast('Geri alınacak işlem kalmamış'); return; }
+  if (!n) { showToast(kept ? 'Kalan ' + kept + ' işlem erken kapatılmış borca ait, silinmedi' : 'Geri alınacak işlem kalmamış'); return; }
   const meta = (data.importLog || []).find(l => l.id === batch);
-  showConfirm(n + ' işlem silinecek' + (meta ? ' (' + meta.bank + ' · ' + fmtDate(meta.at) + ')' : '') + '. Elle girdiklerine dokunulmaz; aynı ekstreyi sonra yeniden yükleyebilirsin.', () => {
+  showConfirm(n + ' işlem silinecek' + (meta ? ' (' + meta.bank + ' · ' + fmtDate(meta.at) + ')' : '') + '. Elle girdiklerine dokunulmaz' + (kept ? '; erken kapattığın borcun ' + kept + ' taksit kaydı yerinde kalır' : '') + '. Aynı ekstreyi sonra yeniden yükleyebilirsin.', () => {
     data.transactions.filter(pick).forEach(tx => { // V94.8: ödeme eşleşmelerini de geri al (deleteTx ile aynı kurallar)
       const mk = monthKey(tx.date);
       if (tx.isRecurring && tx.recurringId) { const x = data.recurring.find(z => z.id === tx.recurringId); if (x) { x.paidMonths = (x.paidMonths || []).filter(m => m !== mk); if (x.payHistory) delete x.payHistory[mk]; } }
@@ -16117,9 +16125,9 @@ function bsUndo(batch) {
       if (tx.isRecurringIncome && tx.recurringIncomeId) { const x = (data.recurringIncome || []).find(z => z.id === tx.recurringIncomeId); if (x) x.paidMonths = (x.paidMonths || []).filter(m => m !== mk); }
     });
     data.transactions = data.transactions.filter(t => !pick(t));
-    if (meta) data.importLog = data.importLog.filter(l => l.id !== batch);
+    if (meta && !kept) data.importLog = data.importLog.filter(l => l.id !== batch);
     save(); renderAll();
-    showToast(TOAST_OK + ' ' + n + ' işlem geri alındı');
+    showToast(TOAST_OK + ' ' + n + ' işlem geri alındı' + (kept ? ' · ' + kept + ' taksit kaydı erken kapatılmış borca ait olduğu için silinmedi' : ''));
   }, 'Geri Al', 'Ekstre Yüklemesini Geri Al', 'del');
 }
 </script>
