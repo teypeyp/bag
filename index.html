@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V102: Tam test turu. Seri artık iki aydan geriye de sayılır (her ayın 1'inde yarıya düşüyordu); ay dönünce aynı eşik için ikinci koruma hakkı verilmez; koruma kullanılan gün ay rozetinde ve karnede de 'aşılmış' sayılır; 'geçen ayın aynı gününe göre' kıyası geçen ay kısaysa günlük ortalamayla yapılır; uygulama açıkken gün dönünce kart kesimi işlenir, ay dönünce karne gelir; açılmayan geçen ay günlerinin limiti de sabitlenir. Kredi kartı: ileri tarihli taksitli alışverişin taksiti erken ekstreye yazılmaz; tutarlar gizliyken kart düzenlenebilir, 1.000.000₺ üstü limit düzenlemede 1₺'ye düşmez; kesim günü değişince içinde bulunulan dönem ve son ödeme tarihi kaymaz; ileri tarihli taksitte bildirim 'bugün' demez. Banka ekstresi: (1.234,56), −1.234,56, 1.234,56- eksi; 1.234 bin lira; 2 haneli yıl; olmayan gün atılır; 'Katmerci', 'Batman' ATM sayılmaz; 'Adı Soyadı' başlığı; hatırlanan ATM cevabı etiket olmadan da geçerli; Dekont No'suz ekstre ikinci kez yüklenince 'zaten kayıtlı'. Derslerde ve şeritte kullanıcının yazdığı adlar (borç, abonelik, kategori, cüzdan) HTML olarak işlenmez. Karakter Yolculuğu şartında '%22 · ✗' çelişkisi (sınırda ondalık). Simülasyon kutularında rakam kesilmez. Açık temada seri kilometre taşı alt yazısı okunur. Ölü kod: kullanılmayan 2 fonksiyon, 1 hesap bloğu, 116 CSS sınıfı (121 kural) silindi; ekranlar hesaplanmış stille birebir karşılaştırıldı. -->
 <!-- V101.19: Takvimli ders sayfaları (Sızıntı Avcısı 'Ücretsiz deneme tuzağı', Kart turu 'Kesim ve son ödeme') küçük ekranda yazının üstüne binmiyor: yer yetmezse takvim kareleri yassılaşır, gerekirse maskot küçülür (132 → 88) ve en son takvim biraz küçülür (en az %75). 375×667 (iPhone SE 2/3, iPhone 8), 360×740 ve 320×640'ta takvim yazıya biniyordu; 390×844'te hiçbir şey değişmedi. 320×568'de takvimin üst kenarı yazıya hâlâ hafifçe değiyor. -->
 <!-- V101.18: Sızıntı Avcısı dersinin 'Ücretsiz deneme tuzağı' sayfasındaki 'Deneme hatırlatıcısı kur →' düğmesi kaldırıldı (Hatırlatıcılar V93'te kaldırılmıştı; düğmeye dokununca hiçbir şey olmuyordu). -->
 <!-- V101.17: Kartopu dersinin 'ay ay' sayfası: satırlar artık maskotun altından başlar. Yer daralırsa maskot küçülür, satırlar tek satıra iner ('taksiti kartopuna' alt yazısı gizlenir), yine sığmazsa ara satırlar '… N borç daha' satırında toplanır; 'BORÇ YOK' satırı hep görünür. (320 px'te maskot satırların üstüne biniyordu; 5 borçta liste üst çubuğun altına ve alttaki yazının üstüne taşıyordu.) -->
@@ -151,7 +152,7 @@
   --spring:cubic-bezier(.34,1.3,.64,1);--smooth:cubic-bezier(.4,0,.2,1);--emph:cubic-bezier(.2,.85,.25,1);
 }
 /* rakamlar zıplamasın */
-.hero-balance,.hbo-main,.hbo-sub,.bud-hero-spent,.bud-hero-cap,.bud-hero-daily,.ozet-hero-balance,.ozet-stat-val,.stat-value,.cc-amt,.streak-num,.ach-strip-count,.sub-total-amt,.count-anim{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1,"lnum" 1}
+.hero-balance,.bud-hero-spent,.bud-hero-cap,.ozet-hero-balance,.ozet-stat-val{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1,"lnum" 1}
 html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;font-size:15px;overscroll-behavior:none;-webkit-font-smoothing:antialiased;overflow:hidden}#appWrap{max-width:520px;margin:0 auto;height:100vh;overflow-y:auto;overflow-x:hidden;padding-top:calc(52px + env(safe-area-inset-top, 0px));padding-bottom:116px}
 ::-webkit-scrollbar{width:0;height:0;display:none}
 
@@ -164,8 +165,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 @keyframes tabSlideL{0%{opacity:0;transform:translateX(-64px)}60%{opacity:1}100%{opacity:1;transform:translateX(0)}}
 /* V77 — yeni işlem satırı girişi (tepeden düşer + yeşil parıltı) */
 @keyframes txRowIn{0%{opacity:0;transform:translateY(-26px) scale(.96)}55%{transform:translateY(3px) scale(1.012)}100%{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes txRowGlow{0%{background:var(--accent-dim);box-shadow:0 8px 26px -8px var(--accent-glow),inset 0 0 0 1.5px var(--accent)}70%{background:var(--accent-dim)}100%{background:transparent;box-shadow:0 0 0 0 transparent,inset 0 0 0 1.5px transparent}}
-.tx-row.tx-enter,.tx-item.tx-enter{animation:txRowIn .55s var(--spring) both,txRowGlow 1.4s var(--smooth) .05s both;border-radius:12px}
+@keyframes txRowGlow{0%{background:var(--accent-dim);box-shadow:0 8px 26px -8px var(--accent-glow),inset 0 0 0 1.5px var(--accent)}70%{background:var(--accent-dim)}100%{background:transparent;box-shadow:0 0 0 0 transparent,inset 0 0 0 1.5px transparent}}.tx-item.tx-enter{animation:txRowIn .55s var(--spring) both,txRowGlow 1.4s var(--smooth) .05s both;border-radius:12px}
 /* V77 — streak alevi artış pop */
 @keyframes streakPop{0%{transform:scale(1)}30%{transform:scale(1.42) rotate(-6deg)}55%{transform:scale(.9) rotate(3deg)}100%{transform:scale(1) rotate(0)}}
 @keyframes streakSpark{0%{opacity:0;transform:translate(0,0) scale(.2)}25%{opacity:1}100%{opacity:0;transform:translate(var(--sx),var(--sy)) scale(1)}}
@@ -1136,9 +1136,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   transition:background .8s ease;
 }
 .hero-top{padding:22px 20px 18px;position:relative;overflow:hidden;z-index:2;display:flex;align-items:flex-start;justify-content:space-between}
-/* V92: gizlilik gözü header yerine varlık kartında */
-.hero-eye{position:absolute;top:16px;right:16px;z-index:3;width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:rgba(var(--ink),.04);border:1px solid var(--border);border-radius:50%;color:var(--muted);cursor:pointer;padding:0;transition:color .2s,border-color .2s;-webkit-tap-highlight-color:transparent}
-.hero-eye.on{color:var(--warning);border-color:rgba(255,214,10,.4)}
+
+
 .hero-label{font-size:10px;font-weight:800;color:rgba(45,184,102,.55);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px;text-shadow:0 0 12px rgba(45,184,102,.3)}
 .hero-balance{font-size:46px;font-weight:900;letter-spacing:-2.5px;line-height:1;margin-bottom:10px;text-shadow:0 2px 20px rgba(0,0,0,.4)}
 
@@ -1261,47 +1260,18 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   line-height:1.75; letter-spacing:-.01em;
   margin-bottom:22px;
 }
-/* Ring metric — referans: circular "Good / 8h 23m" */
-.plan-hero-ring-row {
-  display:flex; align-items:center; gap:20px;
-  flex-wrap:wrap;
-}
-.plan-ring-wrap { position:relative; flex-shrink:0; }
-.plan-ring-svg { display:block; }
-.plan-ring-bg  { fill:none; stroke:var(--border); stroke-width:6; }
-.plan-ring-fill{
-  fill:none; stroke-width:6; stroke-linecap:round;
-  stroke:var(--plan-accent,var(--accent));
-  stroke-dasharray:var(--ring-circ);
-  stroke-dashoffset:var(--ring-offset);
-  transform:rotate(-90deg); transform-origin:50% 50%;
-  transition:stroke-dashoffset .9s cubic-bezier(.4,0,.2,1), stroke .4s;
-}
-.plan-ring-center {
-  position:absolute; inset:0;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-}
-.plan-ring-score {
-  font-size:22px; font-weight:800; letter-spacing:-.06em;
-  line-height:1;
-}
-.plan-ring-label {
-  font-size:10px; font-weight:600; color:var(--muted);
-  letter-spacing:.04em; text-transform:uppercase; margin-top:2px;
-}
-.plan-hero-metrics {
-  display:flex; flex-direction:column; gap:10px; flex:1;
-}
-.plan-hero-metric-row {
-  display:flex; justify-content:space-between; align-items:baseline;
-}
-.plan-hero-metric-label {
-  font-size:12px; font-weight:500; color:var(--muted); letter-spacing:-.01em;
-}
-.plan-hero-metric-val {
-  font-size:16px; font-weight:700; letter-spacing:-.04em;
-}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* ── Karakter kartı — full-bleed gradient (referans: Jupiter/Saturn kartları) ── */
 .plan-char-card {
@@ -1342,30 +1312,11 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   position:relative; z-index:1;
   padding-bottom:26px;
 }
-/* Body — glassmorphism alt kısmı */
-.plan-char-section-label {
-  font-size:11px; font-weight:600; letter-spacing:.08em;
-  text-transform:uppercase; color:var(--muted);
-  margin-bottom:8px;
-}
-.plan-char-section-text {
-  font-size:14px; font-weight:400; color:rgba(var(--ink),calc(.75*var(--ia)));
-  line-height:1.75; letter-spacing:-.01em;
-}
-.plan-char-action-box {
-  margin-top:16px; padding:14px 16px;
-  background:rgba(var(--ink),.05);
-  border:1px solid rgba(var(--ink),.08);
-  border-radius:14px;
-}
-.plan-char-action-label {
-  font-size:11px; font-weight:600; letter-spacing:.07em;
-  text-transform:uppercase; color:var(--muted); margin-bottom:6px;
-}
-.plan-char-action-text {
-  font-size:14px; font-weight:500; color:var(--text);
-  line-height:1.7; letter-spacing:-.01em;
-}
+
+
+
+
+
 /* "Next state" footer */
 .plan-char-next {
   display:flex; align-items:flex-start; gap:12px;
@@ -1380,48 +1331,27 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 }
 .plan-char-next-text b { font-weight:600; color:var(--text); }
 
-/* ── Collapsible içi — editorial bloklar ── */
-.plan-block {
-  padding:16px 18px; border-radius:16px;
-  margin-bottom:8px; background:var(--surface2);
-  animation:planBlockIn .28s cubic-bezier(.4,0,.2,1) both;
-}
-.plan-block:last-child { margin-bottom:0; }
-.plan-block-head {
-  display:flex; align-items:flex-start; justify-content:space-between;
-  gap:10px; margin-bottom:8px;
-}
-.plan-block-title {
-  font-size:15px; font-weight:600; color:var(--text);
-  line-height:1.3; letter-spacing:-.02em; flex:1;
-}
-.plan-block-body {
-  font-size:13.5px; font-weight:400; color:var(--muted);
-  line-height:1.8; letter-spacing:-.01em;
-}
-.plan-block-level {
-  font-size:10px; font-weight:700; letter-spacing:.06em;
-  text-transform:uppercase; padding:3px 9px;
-  border-radius:6px; flex-shrink:0; margin-top:2px;
-}
 
-/* Hedef zaman */
-.plan-goal-header { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px; }
-.plan-goal-name   { font-size:16px; font-weight:600; color:var(--text); letter-spacing:-.02em; }
-.plan-goal-frac   { font-size:12px; font-weight:400; color:var(--muted); }
-.plan-goal-grid   { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px; }
-.plan-goal-block  { background:var(--surface3); border-radius:12px; padding:13px 14px; }
-.plan-goal-block-label { font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
-/* Big number — referans: "24 Days" */
-.plan-goal-block-val { font-size:24px; font-weight:700; letter-spacing:-.06em; line-height:1; }
-.plan-goal-improve { font-size:13px; font-weight:500; padding-top:4px; letter-spacing:-.01em; }
 
-/* Marj proj */
-.plan-margin-proj { border-radius:16px; background:var(--surface2); overflow:hidden; margin-top:8px; }
-.plan-margin-proj-hdr { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:15px 18px 8px; }
-.plan-margin-proj-row { display:flex; justify-content:space-between; align-items:baseline; padding:10px 18px; border-top:1px solid rgba(var(--ink),.04); }
-.plan-margin-proj-label { font-size:13px; font-weight:400; color:var(--muted); }
-.plan-margin-proj-val { font-size:18px; font-weight:700; letter-spacing:-.04em; color:var(--accent); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* ── Plan section header (risk, goal, simülasyon ortak stil) ── */
 /* plan-section-block: hero/char gibi borderless, akışa entegre */
@@ -1435,69 +1365,25 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   padding: 0 2px;
 }
 
-/* ── Risk / baskı kartları — referans tasarım dili ── */
-/* Bar satırı */
-.plan-bar-row {
-  display:flex; align-items:center; gap:14px;
-  padding:12px 0; border-bottom:1px solid rgba(var(--ink),.05);
-}
-.plan-bar-row:last-child { border-bottom:none; }
-.plan-bar-label { font-size:13px; font-weight:500; color:var(--text); width:110px; flex-shrink:0; }
-.plan-bar-pct   { font-size:13px; font-weight:700; letter-spacing:-.03em; width:36px; text-align:right; flex-shrink:0; }
-.plan-bar-track { flex:1; height:5px; background:rgba(var(--ink),.08); border-radius:99px; overflow:hidden; }
-.plan-bar-fill  { height:100%; border-radius:99px; transition:width .6s cubic-bezier(.4,0,.2,1); }
 
-/* Baskı driver kartları — simülasyon sc-q-card stiliyle */
-.plan-driver-card {
-  background:var(--surface2);
-  border-radius:14px;
-  padding:14px 16px;
-  margin-bottom:6px;
-  animation:planBlockIn .28s cubic-bezier(.4,0,.2,1) both;
-}
-.plan-driver-card:last-child { margin-bottom:0; }
-.plan-driver-top {
-  display:flex; align-items:flex-start; justify-content:space-between;
-  gap:10px; margin-bottom:8px;
-}
-.plan-driver-name {
-  font-size:15px; font-weight:600; color:var(--text);
-  letter-spacing:-.02em; line-height:1.3; flex:1;
-}
-.plan-driver-level {
-  font-size:10px; font-weight:700; letter-spacing:.06em;
-  text-transform:uppercase; padding:3px 9px; border-radius:6px;
-  flex-shrink:0; margin-top:2px;
-}
-.plan-driver-body {
-  font-size:13.5px; font-weight:400; color:var(--muted);
-  line-height:1.8; letter-spacing:-.01em;
-}
 
-/* Aksiyon kartı — referans: glassmorphism action item */
-.plan-action-card {
-  background:var(--surface2);
-  border:1px solid rgba(45,184,102,.2);
-  border-radius:16px;
-  padding:16px 18px;
-  margin-bottom:8px;
-  animation:planBlockIn .28s cubic-bezier(.4,0,.2,1) both;
-  position:relative; overflow:hidden;
-}
-.plan-action-card::before {
-  content:'';
-  position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg, var(--accent), transparent);
-}
-.plan-action-card:last-child { margin-bottom:0; }
-.plan-action-label {
-  font-size:11px; font-weight:600; letter-spacing:.08em;
-  text-transform:uppercase; color:var(--accent); margin-bottom:7px;
-}
-.plan-action-text {
-  font-size:14px; font-weight:500; color:var(--text);
-  line-height:1.7; letter-spacing:-.01em;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* ── Hedef kartları — referans: big number, ring progress ── */
 .plan-goal-card {
@@ -1519,15 +1405,8 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   font-size:12px; font-weight:400; color:var(--muted); letter-spacing:-.01em;
   margin-bottom:14px;
 }
-/* Thin progress bar */
-.plan-goal-prog-track {
-  height:3px; background:rgba(var(--ink),.08);
-  border-radius:99px; margin-bottom:18px; overflow:hidden;
-}
-.plan-goal-prog-fill {
-  height:100%; border-radius:99px; background:var(--accent);
-  transition:width .6s cubic-bezier(.4,0,.2,1);
-}
+
+
 /* Big number grid — referans: "24 Days" */
 .plan-goal-time-grid {
   display:grid; grid-template-columns:1fr 1fr; gap:8px;
@@ -1562,22 +1441,11 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
   line-height:1.7; letter-spacing:-.01em;
 }
 
-/* Marj projeksiyonu */
-.plan-margin-card {
-  background:var(--surface2);
-  border-radius:var(--radius); overflow:hidden; margin-top:8px;
-}
-.plan-margin-header {
-  padding:14px 20px 4px;
-  font-size:11px; font-weight:600; letter-spacing:.08em;
-  text-transform:uppercase; color:var(--muted);
-}
-.plan-margin-row {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:12px 20px; border-top:1px solid rgba(var(--ink),.04);
-}
-.plan-margin-label { font-size:13px; font-weight:400; color:var(--muted); }
-.plan-margin-val   { font-size:20px; font-weight:800; letter-spacing:-.05em; color:var(--accent); }
+
+
+
+
+
 
 /* ── Simülasyon — referans: bold cards, gradient, big impact ── */
 @keyframes scSlideUp   { from{opacity:0;transform:translateY(6px)}  to{opacity:1;transform:translateY(0)} }
@@ -1617,8 +1485,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 }
 .sc-val-input:focus { border-color:var(--sc-vc,var(--accent)); box-shadow:0 0 0 3px rgba(var(--ink),.05); }
 
-/* ═══ V81 — ANALİZ RAPORU ═══ */
-.plan-ring-wrap { cursor:pointer; -webkit-tap-highlight-color:transparent; }
+
 .plan-score-break { margin-top:14px; padding:12px 14px; background:rgba(0,0,0,.28); border:1px solid rgba(var(--ink),.07); border-radius:12px; animation:planBlockIn .25s ease both; }
 .plan-break-head { font-size:11px; font-weight:600; color:var(--muted); letter-spacing:-.01em; margin-bottom:10px; line-height:1.5; }
 .plan-break-row { display:flex; align-items:center; gap:9px; padding:4px 0; }
@@ -1634,7 +1501,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .plan-trend-chip.pos { color:var(--accent); background:rgba(45,184,102,.1); border-color:rgba(45,184,102,.25); }
 .plan-trend-chip.neg { color:var(--danger); background:rgba(255,69,58,.09); border-color:rgba(255,69,58,.22); }
 .plan-trend-chip.neu { color:var(--muted); background:rgba(var(--ink),.05); }
-.plan-bar-track { position:relative; }
+
 .plan-bar-tick { position:absolute; top:-3px; bottom:-3px; width:2px; border-radius:2px; background:rgba(var(--ink),.45); }
 
 /* ═══ V82 — RAPOR GÖRSEL YENİLEME ═══ */
@@ -1791,7 +1658,7 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 /* ═══ V84 — OKUNABİLİRLİK: gövde metinleri (etiketler değil) daha açık ═══ */
 .drv-detail { color:rgba(var(--ink),calc(.78*var(--ia))); font-size:13px; line-height:1.7; }
 .plan-step-sub { color:rgba(var(--ink),calc(.75*var(--ia))); }
-.plan-char-section-text { color:rgba(var(--ink),calc(.8*var(--ia))); }
+
 .plan-hero-sub { color:rgba(var(--ink),calc(.8*var(--ia))); }
 .sc-cp-note { color:rgba(var(--ink),calc(.7*var(--ia))); }
 .plan-break-head { color:rgba(var(--ink),calc(.62*var(--ia))); }
@@ -1846,13 +1713,13 @@ html,body{height:100%;margin:0;padding:0}body{background:var(--bg);color:var(--t
 .mc-row { display:flex; justify-content:space-between; align-items:center; padding:8px 2px; border-top:1px solid rgba(var(--ink),.06); font-size:13px; }
 .mc-row span { color:rgba(var(--ink),calc(.65*var(--ia))); font-weight:600; }
 .mc-row b { font-weight:800; font-variant-numeric:tabular-nums; }
-.mc-focus-label { font-size:12px; font-weight:700; color:rgba(var(--ink),calc(.8*var(--ia))); margin-bottom:10px; }
-.mc-chips { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
-.mc-chip { padding:12px; background:rgba(45,184,102,.09); border:1px solid rgba(45,184,102,.3); border-radius:12px; color:var(--text); font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; transition:transform .15s var(--spring); -webkit-tap-highlight-color:transparent; }
-.mc-chip:active { transform:scale(.97); }
-.mc-skip { background:none; border:none; color:var(--muted); font-family:inherit; font-size:12.5px; font-weight:600; cursor:pointer; padding:6px; }
-.plan-focus-chip { margin-top:12px; display:inline-flex; align-items:center; gap:6px; padding:8px 12px; background:rgba(45,184,102,.09); border:1px solid rgba(45,184,102,.28); border-radius:99px; font-size:12px; font-weight:600; color:rgba(var(--ink),calc(.85*var(--ia))); position:relative; z-index:1; }
-.plan-focus-chip b { font-weight:800; color:var(--text); }
+
+
+
+
+
+
+
 .sc-q-hint {
   font-size:12px; font-weight:400; color:var(--muted);
   margin-bottom:12px; letter-spacing:-.01em;
@@ -1882,76 +1749,33 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
   box-shadow:0 4px 18px rgba(0,0,0,.55), 0 0 0 6px var(--sc-glow,rgba(45,184,102,.15));
 }
 
-/* Impact card — referans: "health $9,000 12%" büyük metric card */
-.sc-impact-card {
+/* Impact card — referans: "health $9{
   border-radius:var(--radius);
   overflow:hidden;
   margin-top:4px;
   animation:scCardIn .3s cubic-bezier(.4,0,.2,1) both;
 }
-.sc-impact-gradient {
-  padding:24px 22px 20px;
-  position:relative;
-  overflow:hidden;
-}
-.sc-impact-gradient::before {
-  content:'';
-  position:absolute; inset:0;
-  background:var(--sc-impact-bg, rgba(45,184,102,.12));
-  pointer-events:none;
-}
-.sc-impact-overline {
-  font-size:11px; font-weight:600; letter-spacing:.1em;
-  text-transform:uppercase; color:var(--muted); margin-bottom:10px;
-  position:relative; z-index:1;
-}
-/* Büyük durum etiketi — referans: "Good", "Dengeli" */
-.sc-impact-status {
+
+
+
+/* Büyük durum etiketi — referans: "Good"{
   font-size:36px; font-weight:800; letter-spacing:-.06em;
   line-height:1; margin-bottom:16px; position:relative; z-index:1;
   transition:color .35s ease;
 }
-/* Metrik satırları */
-.sc-metric-grid {
-  display:grid; grid-template-columns:1fr 1fr;
-  gap:8px; position:relative; z-index:1;
-}
-.sc-metric-block {
-  background:rgba(0,0,0,.25);
-  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
-  border:1px solid rgba(var(--ink),.08);
-  border-radius:12px; padding:12px 14px;
-}
-.sc-metric-label {
-  font-size:11px; font-weight:600; letter-spacing:.04em;
-  text-transform:uppercase; color:rgba(var(--ink),calc(.5*var(--ia)));
-  margin-bottom:5px;
-}
-/* Big metric number — referans */
-.sc-metric-val {
-  font-size:20px; font-weight:800; letter-spacing:-.05em; color:#fff;
-  transition:color .2s ease;
-}
 
-.sc-metric-delta {
-  font-size:12px; font-weight:600; margin-top:3px;
-  letter-spacing:-.01em;
-}
-.sc-metric-delta.pos { color:var(--accent); }
-.sc-metric-delta.neg { color:var(--danger); }
-.sc-metric-delta.neu { display:none; }
 
-/* Shift notu */
-.sc-shift-note {
-  padding:13px 22px;
-  border-top:1px solid rgba(var(--ink),.07);
-  font-size:13px; font-weight:500; letter-spacing:-.01em; line-height:1.5;
-  background:rgba(0,0,0,.2);
-  animation:scSlideUp .3s ease both;
-}
-/* Davet */
-.sc-invite { text-align:center; padding:24px 0 6px; }
-.sc-invite-text { font-size:14px; font-weight:400; color:var(--muted); line-height:1.7; letter-spacing:-.01em; }
+
+
+
+
+
+
+
+
+
+
+
 
 /* Reset */
 .sc-reset-btn {
@@ -2298,7 +2122,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .stats-header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 0;flex-shrink:0}
 .stats-back{width:32px;height:32px;border-radius:10px;background:rgba(var(--ink),.07);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
 .stats-hero{padding:20px 20px 0;flex-shrink:0}
-.stats-item-label{font-size:13px;font-weight:600;color:rgba(var(--ink),calc(.4*var(--ia)));margin-bottom:6px}
+
 .stats-big-row{display:flex;align-items:flex-end;gap:10px;margin-bottom:5px}
 .stats-big-amt{font-size:44px;font-weight:900;letter-spacing:-2px;color:#fff;line-height:1}
 .stats-change-pill{margin-bottom:7px;font-size:12px;font-weight:800;padding:3px 10px;border-radius:20px}
@@ -2447,28 +2271,27 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .hero-add:active{transform:translateY(-50%) scale(.9)}
 .hero-add.pulse{animation:heroaddpulse 2.2s ease-in-out infinite}
 @keyframes heroaddpulse{0%,100%{box-shadow:0 0 0 0 rgba(45,184,102,0)}50%{box-shadow:0 0 0 5px rgba(45,184,102,.10)}}
-/* ekle akışı — tutorial + kategori seç + bütçe belirle */
-.bgt-tut-hero{text-align:center;padding:8px 0 2px}
-.bgt-tut-ic{width:54px;height:54px;border-radius:16px;background:rgba(45,184,102,.1);display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
-.bgt-tut-h{font-size:18px;font-weight:900;letter-spacing:-.4px;margin-bottom:6px}
-.bgt-tut-p{font-size:13px;color:var(--muted);font-weight:500;line-height:1.6}
-.bgt-row{display:flex;gap:12px;padding:13px 2px;border-top:1px solid rgba(var(--ink),.05)}
-.bgt-row-ic{width:30px;height:30px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px}
-.bgt-row-t{font-size:13px;font-weight:700;margin-bottom:2px}
-.bgt-row-s{font-size:12px;color:var(--muted);line-height:1.55}
-.bgt-cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:6px 0 4px}
-.bgt-cat{background:var(--surface2);border:1.5px solid var(--border);border-radius:14px;padding:14px 6px;text-align:center;cursor:pointer;transition:all .15s}
-.bgt-cat:active{transform:scale(.96)}
-.bgt-cat-ic{width:38px;height:38px;border-radius:11px;margin:0 auto 7px;display:flex;align-items:center;justify-content:center}
-.bgt-cat-n{font-size:11px;font-weight:700;letter-spacing:-.1px;line-height:1.2}
-.bgt-cat-s{font-size:9px;font-weight:600;color:var(--muted);margin-top:3px}
-.bgt-cap-wrap{display:flex;align-items:center;justify-content:center;gap:6px;padding:16px 0 4px}
-.bgt-cap-in{font-size:42px;font-weight:900;letter-spacing:-2px;color:var(--accent);background:none;border:none;text-align:center;max-width:220px;width:auto;font-family:'Montserrat',sans-serif;outline:none}
-.bgt-cap-cur{font-size:24px;font-weight:800;color:var(--muted)}
-.bgt-pre-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:6px 0}
-.bgt-pre{padding:8px 14px;border:1.5px solid var(--border);border-radius:20px;background:var(--surface2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;cursor:pointer}
-.bgt-hint{text-align:center;font-size:12px;color:var(--muted);font-weight:600;margin:10px 0 4px;line-height:1.5}
-.bgt-back{background:none;border:none;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;padding:0}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* ── V76: Kazanımlar (başarımlar) ── */
 .ach-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 10px 6px 8px;border-radius:99px;border:1px solid rgba(255,214,10,.28);background:rgba(255,214,10,.09);font-family:inherit;font-size:11.5px;font-weight:800;color:var(--warning);cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -2643,8 +2466,8 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .wz-hint b{color:var(--accent);font-weight:700}
 .wz-bigin{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:14px;padding:16px;color:var(--text);font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;outline:none;text-align:center}
 .wz-bigin:focus{border-color:var(--accent)}
-.wz-chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:12px}
-.wz-chip{padding:8px 14px;border:1.5px solid var(--border);border-radius:20px;background:var(--surface2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer}
+
+
 .wz-opt{display:flex;align-items:flex-start;gap:13px;background:var(--surface2);border:1.5px solid var(--border);border-radius:16px;padding:16px;cursor:pointer;margin-bottom:10px;transition:all .18s}
 .wz-opt:active{transform:scale(.98)}
 .wz-opt.sel{border-color:var(--accent);background:linear-gradient(135deg,rgba(45,184,102,.08),rgba(45,184,102,.02))}
@@ -2664,7 +2487,7 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .wz-amtcur{font-size:24px;font-weight:800;color:var(--muted)}
 .wz-prerow{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:6px 0 4px}
 .wz-pre{padding:10px 15px;border:1.5px solid var(--border);border-radius:20px;background:var(--surface2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;cursor:pointer;transition:all .15s}
-.wz-pre.smart{border-color:rgba(45,184,102,.3)}
+
 .wz-pre.sel{background:var(--accent);border-color:var(--accent);color:#fff}
 .wz-amtnote{text-align:center;font-size:12px;color:var(--muted);font-weight:600;margin-top:12px;line-height:1.5}
 .wz-amtnote b{color:var(--accent)}
@@ -2688,14 +2511,13 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .ef-order-btn{display:flex;align-items:center;gap:4px;padding:9px 12px;border:none;border-radius:9px;background:var(--surface3);color:var(--text);font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;cursor:pointer}
 .ef-order-btn:disabled{opacity:.35}
 .ef-order-pos{font-size:12px;font-weight:800;color:var(--muted)}
-/* tx sheet bütçe etiketi */
-.tx-budget-chips{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px 0}
+
 .tx-budget-chip{padding:8px 13px;border:1.5px solid var(--border);border-radius:20px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;cursor:pointer;background:var(--surface2);color:var(--muted);transition:all .15s;display:flex;align-items:center;gap:6px} /* V92.2: kart chip'iyle aynı hizalama */
 .tx-budget-chip svg{flex-shrink:0}
 .tx-budget-chip{--wc:#BF5AF2;border-color:color-mix(in srgb,var(--wc) 45%,transparent)} /* V92.3: çerçeve cüzdan renginde */
 .tx-budget-chip svg{color:var(--wc)}
 .tx-budget-chip.active{background:color-mix(in srgb,var(--wc) 14%,transparent);border-color:var(--wc);color:var(--wc)}
-.tx-budget-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:12px 16px 0}
+
 
 /* V70: abonelik denetimi */
 .subaud-hero{background:linear-gradient(150deg,#1e1526 0%,var(--surface) 55%,#0f1420 100%);border:1px solid rgba(191,90,242,.22);border-radius:var(--radius);padding:18px;position:relative;overflow:hidden;margin-bottom:12px}
@@ -2908,7 +2730,8 @@ html[data-theme="light"] .tx-date-total{color:var(--muted)!important}
 html[data-theme="light"] .sc-cp-m-v{color:var(--text)!important}
 html[data-theme="light"] .sc-cp-charname{filter:brightness(.62) saturate(1.7)}
 html[data-theme="light"] .cat-item span[style*="color:"]{filter:brightness(.7) saturate(1.5)}
-html[data-theme="light"] .dla-axis,html[data-theme="light"] .mf-scale{color:var(--muted)} /* V101.15: açık temada okunur */
+html[data-theme="light"] .dla-axis,html[data-theme="light"] .mf-scale{color:var(--muted)}
+html[data-theme="light"] .milestone-sub{color:rgba(140,98,0,.85)} /* V102: açık temada seri kilometre taşı alt yazısı okunur */ /* V101.15: açık temada okunur */
 html[data-theme="light"] .bs-row-fig{filter:brightness(.72) saturate(1.3)}
 html[data-theme="light"] .fl-hint2{color:var(--text)}html[data-theme="light"] .fl-hint2 :is(b,span){filter:brightness(.7) saturate(1.4)}
 html[data-theme="light"] .insight-card.tip .insight-title{color:color-mix(in srgb,var(--tipc,#BF5AF2) 62%,#000)}
@@ -3702,7 +3525,7 @@ html[data-theme="light"] :is(.overlay,.modal-overlay,.confirm-modal){background:
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v101.19 · Veriler bu cihazda saklanır</div>
+    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v102 · Veriler bu cihazda saklanır</div>
   </div>
 </div>
 
@@ -5075,7 +4898,7 @@ function _snapshotDayLimit() {
       for (let d = new Date(st); d < t; d.setDate(d.getDate() + 1)) { const ds = localDateStr(d); if (data.dayLimitLog[ds] == null) { const v0 = _dayLimitCalc(ds); if (v0 != null) data.dayLimitLog[ds] = Math.max(0, Math.round(v0)); } }
       data.dayLimitLogInit = true;
     }
-    { const t0 = new Date(td + 'T00:00:00'); let ch = false; for (let d = new Date(t0.getFullYear(), t0.getMonth(), 1); d < t0; d.setDate(d.getDate() + 1)) { const ds = localDateStr(d); if (data.dayLimitLog[ds] == null) { const v0 = _dayLimitCalc(ds); if (v0 != null) { data.dayLimitLog[ds] = Math.max(0, Math.round(v0)); ch = true; } } } if (ch) save(); } // V101.3: uygulamanın açılmadığı günler de sabitlenir
+    { const t0 = new Date(td + 'T00:00:00'); let ch = false; for (let d = new Date(t0.getFullYear(), t0.getMonth() - 1, 1); d < t0; d.setDate(d.getDate() + 1)) { const ds = localDateStr(d); if (data.dayLimitLog[ds] == null) { const v0 = _dayLimitCalc(ds); if (v0 != null) { data.dayLimitLog[ds] = Math.max(0, Math.round(v0)); ch = true; } } } if (ch) save(); } // V101.3: uygulamanın açılmadığı günler de sabitlenir
     const v = Math.max(0, Math.round(fb.daily));
     if (data.dayLimitLog[td] === v) return;
     data.dayLimitLog[td] = v;
@@ -5137,8 +4960,23 @@ function calcStreakData() {
   if (!hitRed) {
     for (let pd = prevDim; pd >= 1; pd--) {
       const s = prevDays[pd - 1].status;
-      if (s === 'red') break;
+      if (s === 'red') { hitRed = true; break; }
       if (s === 'green' || s === 'frozen') streak++;
+    }
+  }
+  if (!hitRed) { // V102: seri iki aydan uzunsa daha eski aylara da bakılır (ilk kayda kadar)
+    const first = (data.transactions || []).reduce((m, t) => t.date && t.date < m ? t.date : m, '9999');
+    let cy = prevY, cm = prevM;
+    outer: for (let k = 0; k < 36; k++) {
+      cm--; if (cm < 1) { cm = 12; cy--; }
+      const cmk = cy + '-' + String(cm).padStart(2, '0'); if (cmk + '-31' < first) break;
+      if (!data.transactions.some(t => t.type === 'income' && monthKey(t.date) === cmk)) break; // hiç geliri olmayan ay seriyi bitirir (uygulama kullanılmamış)
+      for (let d = daysInMonth(cmk); d >= 1; d--) {
+        const ds = cmk + '-' + String(d).padStart(2, '0'); if (ds < first) break outer;
+        const s = getDayInfo(ds).status;
+        if (s === 'red') break outer;
+        if (s === 'green' || s === 'frozen') streak++;
+      }
     }
   }
 
@@ -5147,17 +4985,21 @@ function calcStreakData() {
   if (streak > (data.streak.best || 0)) { data.streak.best = streak; _needsSave = true; }
 
   // Aylık skor: kaç gün green/frozen (bu ay)
-  const greenDays = days.filter(d => d.d <= todayD && (d.status==='green'||d.status==='frozen')).length;
-  const totalPastDays = days.filter(d => d.d <= todayD && d.status !== 'empty' && d.status !== 'future').length; // V95.8: limiti olmayan (gelir girilmemiş) gün sayılmaz — Günlük Limit Analizi ile aynı
+  const _sm = _streakMonthStats(mk, mk === monthKey()); // V102: koruma kullanılan gün yeşil sayılmaz — seri kartı ve karne ile tek tanım
+  const greenDays = _sm.green;
+  const totalPastDays = _sm.n; // V95.8: limiti olmayan (gelir girilmemiş) gün sayılmaz
   const score = totalPastDays > 0 ? Math.round((greenDays / totalPastDays) * 100) : 0;
 
   // Freeze kalan
   const freezesLeft = (data.streak.freezeTotal || 2) - (data.streak.freezesUsed || 0);
 
   // Haftalık freeze hediyesi: her 7 günde +1, max 5
-  const weeklyGiftKey = Math.floor(streak / 7) + '_' + monthKey();
-  if (streak > 0 && streak % 7 === 0 && data.streak.lastWeeklyFreezeGift !== weeklyGiftKey) {
-    data.streak.lastWeeklyFreezeGift = weeklyGiftKey;
+  // V102: hangi 7'li eşik için hediye verildiği tutulur (ay değişince yeniden verilmez; seri koparsa sıfırlanır)
+  const _lvl = Math.floor(streak / 7);
+  if (data.streak.giftLevel == null) data.streak.giftLevel = parseInt(String(data.streak.lastWeeklyFreezeGift || '0'), 10) || 0;
+  if (data.streak.giftLevel > _lvl) { data.streak.giftLevel = _lvl; _needsSave = true; }
+  if (streak > 0 && streak % 7 === 0 && _lvl > data.streak.giftLevel) {
+    data.streak.giftLevel = _lvl; data.streak.lastWeeklyFreezeGift = _lvl + '_' + monthKey();
     if ((data.streak.freezeTotal || 2) < 5) {
       data.streak.freezeTotal = (data.streak.freezeTotal || 2) + 1;
       _needsSave = true;
@@ -6593,7 +6435,7 @@ function buildCarouselItems(fb) {
     if (topCat) {
       const cat=getCat(topCat.id);
       items.push({cls:'warn',icon:'<svg width="27" height="27" style="flex-shrink:0;display:inline-block;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke="#60A5FA" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 13a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M9 13v-8h6v8"/><path d="M9 5h6"/><path d="M5 21h14"/><path d="M12 17v4"/></svg>',
-        title:`${cat.name} harcaman %${topCat.pct} arttı <em>— bütçeni etkiliyor</em>`});
+        title:`${esc(cat.name)} harcaman %${topCat.pct} arttı <em>— bütçeni etkiliyor</em>`});
     }
   }
 
@@ -7366,7 +7208,7 @@ function txSheetSave() {
       if (date <= _payCard.lastCut) _cardStmtAdd(_payCard, per); // V101: kesim günü / geçmiş tarihli harcama kesilmiş ekstreye
       _payCard.installments.push({ id: uid(), name: desc, per, left: _sheetInst - 1, total: _sheetInst, isStart: false, category, txId: _t1, from: date, budgetId: _bId || undefined });
       save();
-      showToast(TOAST_OK + ' ' + esc(_payCard.name) + ' ekstresine yazıldı — bugün ' + fmtTL(per) + ', kalan ' + (_sheetInst - 1) + ' taksit gelecek aylara');
+      showToast(TOAST_OK + ' ' + esc(_payCard.name) + ' ekstresine yazıldı — ' + (date === today() ? 'bugün ' : date < today() ? fmtDate(date) + ' ' : fmtDate(date) + ' tarihli ') + fmtTL(per) + ', kalan ' + (_sheetInst - 1) + ' taksit gelecek aylara');
     } else {
       data.transactions.push({ id: uid(), type, desc, amount, date, category, payMethod: 'card', cardId: _payCard.id, budgetId: _bId, ts: Date.now() });
       markNewTx();
@@ -7453,10 +7295,18 @@ function _nextCutDateStr(lastCutStr, cutDay) {
   const d = new Date(lastCutStr + 'T00:00:00');
   return localDateStr(new Date(d.getFullYear(), d.getMonth() + 1, cutDay));
 }
+function _cardNextCut(c) { // V102: kesim günü değiştiyse içinde bulunulan dönem eski kesim tarihinde biter
+  return c.nextCutFix && c.nextCutFix > c.lastCut ? c.nextCutFix : _nextCutDateStr(c.lastCut, c.cutDay);
+}
+function _instBuyDate(c, it) { // V102: taksitli alışverişin tarihi (yoksa '')
+  if (it.from) return it.from;
+  const d1 = it.name + ' (1/' + it.total + ')', t = data.transactions.find(t => t.cardId === c.id && t.isCardInstallment && t.desc === d1);
+  return t ? t.date : '';
+}
 // Kesilmiş ekstrenin son ödeme tarihi (lastCut'a göre)
 function _dueDateStr(c) {
   const d = new Date(c.lastCut + 'T00:00:00');
-  const m = c.dueDay > c.cutDay ? d.getMonth() : d.getMonth() + 1;
+  const m = c.dueDay > d.getDate() ? d.getMonth() : d.getMonth() + 1; // V102: ekstreyi kesen günün kendisine göre (kesim günü sonradan değişse de)
   return localDateStr(new Date(d.getFullYear(), m, c.dueDay));
 }
 
@@ -7472,10 +7322,11 @@ function _instBoughtInPeriod(c, it, nextCut) { // V101: alışveriş bu dönemde
 }
 function _cardInstPlan() { // V101.1: kart taksitleri — kaç ay sonra başlıyor (0 = bu ay), ayda ne kadar, kaç ay
   const mk = monthKey(), out = [];
-  (data.cards || []).forEach(c => { const nc = _nextCutDateStr(c.lastCut, c.cutDay), nmk = monthKey(nc);
+  (data.cards || []).forEach(c => { const nc = _cardNextCut(c), nmk = monthKey(nc);
     const base = Math.max(0, (+nmk.slice(0,4) - +mk.slice(0,4)) * 12 + (+nmk.slice(5,7) - +mk.slice(5,7)));
     (c.installments || []).forEach(it => { if (!(it.left > 0) || !(it.per > 0)) return;
-      const skip = !it.isStart && it.left === it.total - 1 && _instBoughtInPeriod(c, it, nc) ? 1 : 0;
+      let skip = !it.isStart && it.left === it.total - 1 && _instBoughtInPeriod(c, it, nc) ? 1 : 0;
+      if (!it.isStart && it.left === it.total - 1) { const bd = _instBuyDate(c, it); if (bd && bd > nc) { let k = 0, cut = nc; while (cut < bd && k < 48) { cut = _nextCutDateStr(cut, c.cutDay); k++; } skip = k + 1; } } // V102: ileri tarihli alışveriş
       out.push({ card: c.name, name: it.name || 'Taksit', per: it.per, left: it.left, off: base + skip }); }); });
   return out;
 }
@@ -7503,13 +7354,14 @@ function processCardCycles() {
   data.cards.forEach(c => {
     let guard = 0;
     while (guard++ < 48) {
-      const nextCut = _nextCutDateStr(c.lastCut, c.cutDay);
+      const nextCut = _cardNextCut(c);
       if (nextCut > todayStr) break;
       // Vadesi gelen taksitler: start olanlar sayısal (istatistik dışı), diğerleri tx üretir
       let startInstSum = 0;
       (c.installments || []).forEach(it => {
         if (it.left <= 0) return;
         if (!it.isStart && it.left === it.total - 1 && _instBoughtInPeriod(c, it, nextCut)) return; // V101: ilk ekstrede tek taksit
+        if (!it.isStart && it.left === it.total - 1 && _instBuyDate(c, it) > nextCut) return; // V102: alışveriş bu kesimden sonra → taksit henüz başlamadı
         if (it.isStart) {
           startInstSum += it.per;
         } else {
@@ -7525,7 +7377,7 @@ function processCardCycles() {
       c.carried = (c.carried || 0) + (c.statement || 0);
       c.statement = (c.startDebt || 0) + periodTx + startInstSum;
       c.startDebt = 0;
-      c.lastCut = nextCut;
+      c.lastCut = nextCut; delete c.nextCutFix;
       changed = true;
     }
     c.installments = (c.installments || []).filter(it => it.left > 0);
@@ -7550,7 +7402,7 @@ function renderCardList() {
     const t = calcCardTotals(c);
     const pct = Math.min(100, c.limit > 0 ? t.used / c.limit * 100 : 0);
     const grad = pct > 80 ? 'linear-gradient(90deg,#FF453A,#ff7a6e)' : pct > 55 ? 'linear-gradient(90deg,#FFD60A,#ffe45c)' : 'linear-gradient(90deg,#2DB866,#5fd68f)';
-    const nextCut = _nextCutDateStr(c.lastCut, c.cutDay);
+    const nextCut = _cardNextCut(c);
     const cutDays = Math.max(0, Math.round((new Date(nextCut + 'T00:00:00') - new Date(todayStr + 'T00:00:00')) / 86400000));
     let pill = 'Kesime ' + cutDays + ' gün', pillCls = '';
     let stBox = '';
@@ -7606,6 +7458,10 @@ function openCardAddSheet() {
   document.getElementById('cardAddOverlay').classList.add('show');
   document.getElementById('cardAddSheet').classList.add('show');
 }
+function _numIn(n) { // V102: form alanı için tam lira (gizlemeden ve "1,0M" kısaltmasından etkilenmez; kuruş tutulmaz — Ekn'in isteği)
+  if (!n) return ''; const i = Math.round(Math.abs(n));
+  return i ? (n < 0 ? '-' : '') + String(i).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '';
+}
 function openCardEdit(id) {
   const c = cardById(id);
   if (!c) return;
@@ -7613,7 +7469,7 @@ function openCardEdit(id) {
   document.getElementById('cardAddTitle').textContent = 'Kartı Düzenle';
   document.getElementById('ccSaveBtn').textContent = 'Kaydet';
   document.getElementById('ccName').value = c.name;
-  document.getElementById('ccLimit').value = fmtTL(c.limit).replace('₺', '');
+  document.getElementById('ccLimit').value = _numIn(c.limit);
   document.getElementById('ccCutDay').value = c.cutDay;
   document.getElementById('ccDueDay').value = c.dueDay;
   // V69.1: mevcut durum alanlarını düzenlemede de göster ve doldur
@@ -7621,10 +7477,10 @@ function openCardEdit(id) {
   document.getElementById('ccStartDivider').textContent = 'Mevcut Durum · Düzelt';
   document.getElementById('ccStartNote').innerHTML = 'Bu tutarlar kart borcunu oluşturur; günlük limite ve istatistiklere <b style="color:var(--text)">girmez</b>. Gerçek kart harcamalarından gelen tutar buradan değil, işlemin kendisinden düzenlenir.';
   document.getElementById('ccStartDebtLabel').textContent = 'Manuel Başlangıç Borcu';
-  document.getElementById('ccStartDebt').value = c.startDebt ? fmtNum(c.startDebt).replace('₺', '') : '';
-  document.getElementById('ccStartStmt').value = c.statement ? fmtNum(c.statement).replace('₺', '') : '';
+  document.getElementById('ccStartDebt').value = _numIn(c.startDebt);
+  document.getElementById('ccStartStmt').value = _numIn(c.statement);
   document.getElementById('ccCarriedWrap').style.display = 'block';
-  document.getElementById('ccStartCarried').value = c.carried ? fmtNum(c.carried).replace('₺', '') : '';
+  document.getElementById('ccStartCarried').value = _numIn(c.carried);
   // dönem harcaması bilgisi (gerçek işlemlerden gelen kısım — burada düzenlenemez)
   const txSum = calcCardTotals(c).current - (c.startDebt || 0);
   const hint = document.getElementById('ccStartDebtHint');
@@ -7649,7 +7505,7 @@ function addCardInstRow(name, per, left, iid) {
   const row = document.createElement('div');
   row.className = 'cc-inst-row';
   if (iid) row.dataset.iid = iid;
-  const perStr = per ? fmtNum(per).replace('₺', '') : '';
+  const perStr = typeof _numIn === 'function' ? _numIn(per) : (per ? fmtNum(per) : '');
   row.innerHTML =
     '<input type="text" class="form-input cc-in" placeholder="Beyaz eşya" value="' + esc(name || '') + '">' +
     '<input type="text" class="form-input cc-ip" placeholder="2.100" inputmode="numeric" value="' + perStr + '" oninput="fmtInput(this)">' +
@@ -7706,7 +7562,7 @@ function saveCard() {
     const c = cardById(_editCardId);
     if (!c) return;
     c.name = name; c.limit = limit; c.dueDay = dueDay;
-    if (c.cutDay !== cutDay) { c.cutDay = cutDay; } // V101: içinde bulunulan dönem aynı kalır (borç kaymaz); yeni gün sonraki kesimden geçerli
+    if (c.cutDay !== cutDay) { if (!c.nextCutFix) c.nextCutFix = _nextCutDateStr(c.lastCut, c.cutDay); c.cutDay = cutDay; } // V102: dönem eski tarihte biter // V101: içinde bulunulan dönem aynı kalır (borç kaymaz); yeni gün sonraki kesimden geçerli
     // V69.1: mevcut durum alanları
     c.startDebt = parseNum(document.getElementById('ccStartDebt').value) || 0;
     c.statement = parseNum(document.getElementById('ccStartStmt').value) || 0;
@@ -7797,7 +7653,7 @@ function openCardExt(id) {
       '<button class="btn btn-primary btn-full" style="margin-top:12px" onclick="closeCardExt();openCardPay(\'' + c.id + '\')">Ekstreyi Öde</button>';
   }
   document.getElementById('cardExtBody').innerHTML =
-    '<div class="cc-effect" style="margin-top:0;margin-bottom:8px"><div class="cc-eff-row"><span>Güncel dönem</span><b>' + fmtDate(c.lastCut) + ' sonrası</b></div><div class="cc-eff-row"><span>Sonraki kesim</span><b>' + fmtDate(_nextCutDateStr(c.lastCut, c.cutDay)) + '</b></div></div>' +
+    '<div class="cc-effect" style="margin-top:0;margin-bottom:8px"><div class="cc-eff-row"><span>Güncel dönem</span><b>' + fmtDate(c.lastCut) + ' sonrası</b></div><div class="cc-eff-row"><span>Sonraki kesim</span><b>' + fmtDate(_cardNextCut(c)) + '</b></div></div>' +
     list +
     '<div class="cc-ext-total"><span>Dönem toplamı</span><b>' + fmtTL(Math.round(t.current)) + '</b></div>' +
     futureNote + payBox + '<div style="height:8px"></div>';
@@ -9348,16 +9204,6 @@ function calcWishProjection(wish, fb) {
   }
 
   // Bu ay sonu tahmini
-  const dim = daysInMonth(mk);
-  const todayD = new Date().getDate();
-  const daysLeft = Math.max(1, dim - todayD);
-  const pastTxs = data.transactions.filter(t =>
-    monthKey(t.date) === mk && t.type === 'expense' &&
-    !t.isRecurring && !t.isDebt && !t.isDebtExtra && !t.isGoalDeposit && t.date !== today()
-  );
-  const pastDays = Math.max(1, todayD - 1);
-  const avgPastDaily = pastTxs.reduce((s,t) => s+t.amount, 0) / pastDays;
-  const effectiveDailyRate = fb.todayVarSpent > 0 ? fb.todayVarSpent : (avgPastDaily || fb.baseDaily);
   const projectedMonthEnd = _monthEndEst(fb).proj; // V100.6: Aylık Plan ve Analiz ile aynı sayı (bugünkü tek harcamaya göre oynamaz)
 
   // ── Gerçekçi aylık kapasite ──
@@ -10501,6 +10347,7 @@ function nxOpen(key) {
   document.getElementById('nxSheetTitle').textContent = key === 'report' && _reportLast ? _mkLabel(_reportLast.mk).split(' ')[0] + ' karnesi' : o.title;
   if (key === 'puan') { const b = document.getElementById('planScoreBreak'); if (b) b.hidden = false; const body = document.getElementById('nxSheetBody'), old = body.querySelector('.nx-calc'); if (old) old.remove(); body.insertAdjacentHTML('afterbegin', _nxCalcHtml()); }
   _nxSheetKey = key; document.getElementById('nxSheetOv').classList.add('show'); document.getElementById('nxSheet').classList.add('show');
+  requestAnimationFrame(() => document.querySelectorAll('#nxSheetBody .sc-cp-m-v').forEach(v => _fitNum(v))); // V102: sayfa açıldıktan sonra rakamları sığdır
 }
 function nxCloseSheet() {
   document.getElementById('nxSheetOv').classList.remove('show'); document.getElementById('nxSheet').classList.remove('show');
@@ -10915,6 +10762,7 @@ function _renderPlanHero(fb, core) {
     </div>
   </div>`;
 
+  el.querySelectorAll('.ph-metrics .sc-cp-m-v').forEach(v => _fitNum(v)); // V102
   const phN = el.querySelector('#phNeedle');
   if (phN) requestAnimationFrame(() => {
     phN.style.transform = 'rotate(' + (score*1.8-90).toFixed(1) + 'deg)';
@@ -11702,9 +11550,15 @@ function togglePrivacy() {
   try { showToast((data.hideAmounts ? TOAST_OK + ' Tutarlar gizlendi' : TOAST_OK + ' Tutarlar görünür')); } catch(e) {}
 }
 
+function _fitNum(el, min) { // V102: rakam kutusuna sığmıyorsa yazı küçülür (kesilmez)
+  if (!el || !el.clientWidth) return;
+  if (!el.dataset.fs) el.dataset.fs = parseFloat(getComputedStyle(el).fontSize) || 15;
+  let f = +el.dataset.fs; el.style.fontSize = f + 'px';
+  while (el.scrollWidth > el.clientWidth + 0.5 && f > (min || 10)) { f -= 0.5; el.style.fontSize = f + 'px'; }
+}
 function _scSet(id, txt, color) {
   const el = document.getElementById(id);
-  if (el) { el.textContent = txt; if (color) el.style.color = color; }
+  if (el) { el.textContent = txt; if (color) el.style.color = color; _fitNum(el); }
 }
 function _scDelta(id, v, show) {
   const el = document.getElementById(id); if (!el) return;
@@ -12458,7 +12312,7 @@ function renderHabits() {
   // V95.7: adil kıyas — geçen ayın aynı gününe kadarki harcama
   const _cmpD = new Date().getDate();
   const totNow = Object.values(catNow).reduce((a,b)=>a+b,0), totPrev = vex.filter(t => monthKey(t.date) === pmk && +t.date.slice(8,10) <= _cmpD).reduce((a,t)=>a+t.amount,0);
-  const monPct = totPrev > 0 ? Math.round((totNow/totPrev - 1) * 100) : null;
+  const _pDim = daysInMonth(pmk), monPct = totPrev > 0 ? Math.round(((totNow / _cmpD) / (totPrev / Math.min(_cmpD, _pDim)) - 1) * 100) : null; // V102: geçen ay kısaysa (31 Mart ↔ Şubat) günlük ortalamayla
 
   const cards = [];
   // en yüklü gün (haftanın günü)
@@ -14338,7 +14192,8 @@ function _maybeMonthClose() {
     const dim = daysInMonth(pm); let g = 0, r = 0;
     for (let d2 = 1; d2 <= dim; d2++) {
       const st = getDayInfo(pm + '-' + String(d2).padStart(2,'0')).status;
-      if (st === 'green' || st === 'frozen') g++; else if (st === 'red') r++;
+      if (st === 'green') g++; else if (st === 'red') r++;
+      else if (st === 'frozen') { const ds2 = pm + '-' + String(d2).padStart(2,'0'), lim2 = dayLimitFor(ds2), sp2 = data.transactions.filter(t => t.date === ds2 && _isFreeVarTx(t)).reduce((a, t) => a + t.amount, 0); if (lim2 != null && sp2 > Math.max(0, lim2)) r++; else g++; } // V102: seri kartıyla aynı
     }
     const uyum = (g + r) > 0 ? Math.round(g / (g + r) * 100) : 50;
     const comp = Math.round(uyum * 0.5 + (Math.max(0, Math.min(30, savRate)) / 30) * 50);
@@ -15415,7 +15270,7 @@ function checkMonthRollover() {
     // V100.5: ay aynı ama gün değişti → ekran dünkü rakamlarda kalmasın. Yazı yazılırken bölmemek için odak boşalana kadar bekler.
     if (td !== _lastRenderDay) {
       const ae = document.activeElement, typing = ae && /^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName);
-      if (!typing) { _lastRenderDay = td; renderAll(); }
+      if (!typing) { _lastRenderDay = td; try { processCardCycles(); } catch (e) {} renderAll(); } // V102: açıkken geçen kesim de işlenir
     }
     return;
   }
@@ -15429,7 +15284,9 @@ function checkMonthRollover() {
     data.streak.lastFreezeResetMonth = mk;
     save();
   }
+  try { processCardCycles(); } catch (e) {} // V102
   renderAll();
+  setTimeout(() => { try { _maybeMonthClose(); } catch (e) {} }, 900); // V102: açıkken ay dönünce karne de gelir
 }
 document.addEventListener('visibilitychange', () => { if (!document.hidden) checkMonthRollover(); });
 window.addEventListener('pageshow', checkMonthRollover);
@@ -15778,8 +15635,8 @@ setInterval(checkMonthRollover, 60000);
 .vj-task .vj-rt{flex:1;min-width:0}.vj-task .vj-rn{font-size:14px;font-weight:800}.vj-task .vj-rs{font-size:11px;font-weight:700;color:#8A8993;margin-top:2px}
 .vj-task .vj-rv{font-size:14px;font-weight:800;color:#FF8A94;white-space:nowrap;font-variant-numeric:tabular-nums}
 .vj-bar{height:5px;border-radius:3px;background:rgba(255,255,255,.08);margin-top:7px;overflow:hidden}.vj-bar i{display:block;height:100%;width:var(--w);border-radius:3px;background:var(--bc,#19E68C);transition:width .8s cubic-bezier(.22,1,.36,1)}
-.vj-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
-.vj-chip{font-size:11px;font-weight:800;padding:6px 10px;border-radius:999px;background:rgba(25,230,140,.12);color:#19E68C;white-space:nowrap}
+
+
 .vj-allok{font-size:15px;font-weight:800;margin-top:14px;color:#19E68C}.vj-allok small{display:block;font-size:11.5px;font-weight:700;color:#8A8993;margin-top:4px}
 /* seviye ızgarası */
 .vj-sect{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#8A8993;margin:26px 0 12px;display:flex;justify-content:space-between;align-items:center}
@@ -15958,21 +15815,28 @@ const _bsNorm = s => String(s == null ? '' : s).replace(/İ/g, 'i').replace(/I/g
 function _bsDate(v) {
   if (v == null || v === '') return null;
   if (typeof v === 'number' && typeof XLSX !== 'undefined' && XLSX.SSF) { const d = XLSX.SSF.parse_date_code(v); if (d) return d.y + '-' + String(d.m).padStart(2, '0') + '-' + String(d.d).padStart(2, '0'); }
-  const m = String(v).trim().match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})/);
-  if (m) return m[3] + '-' + m[2].padStart(2, '0') + '-' + m[1].padStart(2, '0');
+  const m = String(v).trim().match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4}|\d{2})(?!\d)/); // V102: 05.11.26 de okunur
+  if (m) { const y = m[3].length === 2 ? '20' + m[3] : m[3], mo = +m[2], da = +m[1]; // V102: 31.02 gibi olmayan gün atılır
+    if (mo < 1 || mo > 12 || da < 1 || da > new Date(+y, mo, 0).getDate()) return null;
+    return y + '-' + String(mo).padStart(2, '0') + '-' + String(da).padStart(2, '0'); }
   const iso = String(v).trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
   return iso ? iso[0] : null;
 }
 function _bsNum(v) {
   if (typeof v === 'number') return v;
-  let s = String(v || '').replace(/TL|₺|\s/g, '');
+  let s = String(v || '').replace(/TL|TRY|₺|\s|\u00a0/gi, '').replace(/[\u2212\u2012\u2013\u2014]/g, '-');
   if (!s) return 0;
+  let neg = false; // V102: (1.234,56) ve 1.234,56- eksi sayılır
+  if (/^\(.*\)$/.test(s)) { neg = true; s = s.slice(1, -1); }
+  if (/-$/.test(s)) { neg = true; s = s.slice(0, -1); }
+  if (/^-/.test(s)) { neg = !neg; s = s.slice(1); }
   if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
-  const n = parseFloat(s); return isNaN(n) ? 0 : n;
+  else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, ''); // V102: 1.234 = bin iki yüz otuz dört
+  const n = parseFloat(s); return isNaN(n) ? 0 : (neg ? -n : n);
 }
 function _bsCleanDesc(raw) {
   let s = String(raw || '');
-  if (/P\.?[ÇC]EKME|ATM/i.test(s) && /[ÇC]EKME|ATM/i.test(s)) return 'ATM Para Çekme';
+  if (/P\.?[ÇC]EKME|\bATM\b/i.test(s)) return 'ATM Para Çekme'; // V102: kelime sınırı
   s = s.replace(/^SATI[ŞS]-\d+\*\d+-/i, '');                    // SATIŞ-1234*5678-
   s = s.replace(/^\d+-\s*[\d.,]+\s*[A-Z]{2,3}\s*-/i, '');        // 9320-  24.00USD-  (yabancı para / taksitli)
   s = s.replace(/-\s*SATI[ŞS]\s*$/i, '');                        // …-SATIŞ
@@ -16000,7 +15864,7 @@ function _bsParse(aoa) {
   const head = aoa.slice(0, hi).flat().map(x => String(x)).join(' ');
   // V94.8: hesap sahibinin adı — kendi hesabına transferleri ayırt etmek için
   let holder = '';
-  for (let i = 0; i < hi; i++) { const r = aoa[i] || []; const k = r.findIndex(c => /^ad ?soyad/.test(_bsNorm(c))); if (k >= 0) { holder = String(r.slice(k + 1).find(c => String(c).trim()) || '').trim(); break; } }
+  for (let i = 0; i < hi; i++) { const r = aoa[i] || []; const k = r.findIndex(c => /^adi? ?soyadi?/.test(_bsNorm(c))); if (k >= 0) { holder = String(r.slice(k + 1).find(c => String(c).trim()) || '').trim(); break; } }
   const bank = /garanti/i.test(head) ? 'Garanti' : /akbank/i.test(head) ? 'Akbank' : /yap[ıi] ?kredi/i.test(head) ? 'Yapı Kredi' : /i[şs] ?bankas/i.test(head) ? 'İş Bankası' : /ziraat/i.test(head) ? 'Ziraat' : /enpara/i.test(head) ? 'Enpara' : 'Banka';
   const rows = [];
   for (let i = hi + 1; i < aoa.length; i++) {
@@ -16013,8 +15877,8 @@ function _bsParse(aoa) {
     const row = { date: d, amount: Math.round(Math.abs(amt) * 100) / 100, type: amt < 0 ? 'expense' : 'income', raw, desc: _bsCleanDesc(raw), tag, ref: ref || null, sel: true, catUser: false };
     row.cat = _bsGuessCat(row);
     row.refund = row.type === 'income' && (/^sati[şs]/i.test(raw) || /alisveris/.test(_bsNorm(tag)));
-    row.exists = row.ref ? data.transactions.some(t => t.bankRef === row.ref) : data.transactions.some(t => t.bankRef && t.date === row.date && Math.abs(t.amount - row.amount) < 0.01);
-    row.manual = !row.exists && data.transactions.some(t => !t.bankRef && t.type === row.type && t.date === row.date && Math.abs(t.amount - row.amount) < 0.01);
+    row.exists = row.ref ? data.transactions.some(t => t.bankRef === row.ref) : data.transactions.some(t => (t.bankRef || t.source === 'bank') && t.type === row.type && t.date === row.date && Math.abs(t.amount - row.amount) < 0.01); // V102: referanssız ekstre de
+    row.manual = !row.exists && data.transactions.some(t => !t.bankRef && t.source !== 'bank' && t.type === row.type && t.date === row.date && Math.abs(t.amount - row.amount) < 0.01);
     row.sel = !row.exists && !row.manual && !row.refund;
     rows.push(row);
   }
@@ -16054,7 +15918,7 @@ function _bsQualify(rows, holder) {
       else if (/kredi kart|kart odeme|kart borc|kk odeme/.test(raw) || /kredi karti/.test(tag)) q = { kind: 'transfer' };
       else if (hn.length && hn.every(w => raw.includes(w))) q = { kind: 'transfer', own: true };
       else if (tag.includes('para cekme') || /\batm\b|p\.?cekme/.test(raw)) q = prefs.atm ? null : { kind: 'cash' };
-      if (!q && tag.includes('para cekme') && prefs.atm) r.sel = prefs.atm === 'count';
+      if (!q && (tag.includes('para cekme') || /\batm\b|p\.?cekme/.test(raw)) && prefs.atm) r.sel = prefs.atm === 'count'; // V102: etiket yoksa da
     } else {
       const inc = pick((data.recurringIncome || []).filter(x => x.active !== false), x => x.amount, x => x.desc, 'i');
       if (inc) q = { kind: (inc.paidMonths || []).includes(mk) ? 'paid' : 'inc', id: inc.id, name: inc.desc };
@@ -16351,7 +16215,7 @@ html[data-theme="light"] .fl-h2x small{color:color-mix(in srgb,var(--c) 80%,#000
 .fl-giant b i{font-style:normal;font-size:48px;letter-spacing:-2px;margin-top:6px}
 @keyframes flGiantIn{from{opacity:0;transform:rotate(180deg) translateY(-30px)}to{opacity:1;transform:rotate(180deg)}}
 .fl-giant.fl-green b{color:var(--fl-lesson)}
-.fl-leftcol{position:absolute;left:0;top:0;bottom:0;width:56%;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;padding-bottom:6px}
+
 .fl-bigin{width:100%;display:flex;align-items:baseline;justify-content:center;gap:8px;border-bottom:4px solid var(--fl-accent);padding-bottom:6px;margin-top:22px}
 .fl-bigin input{flex:0 1 auto;width:6ch;max-width:84%;padding:0;margin:0;background:transparent;border:none;color:#F2F1EB;font-family:inherit;font-size:60px;font-weight:800;letter-spacing:-3px;min-width:0;outline:none;font-variant-numeric:tabular-nums;text-align:right}
 .fl-bigin .fl-u{font-size:32px;font-weight:800;color:var(--fl-accent)}
@@ -16421,8 +16285,7 @@ html[data-theme="light"] .fl-h2x small{color:color-mix(in srgb,var(--c) 80%,#000
 .fl-cl{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;animation:flWIn .5s var(--d) var(--fl-spring) both}
 .fl-cl i{width:10px;height:10px;border-radius:3px;background:var(--c);box-shadow:0 4px 10px -2px var(--c)}
 .fl-cl b{font-size:14px;font-weight:800;letter-spacing:-.3px}.fl-cl span{font-size:10.5px;font-weight:800;opacity:.65;white-space:nowrap}
-/* düşen paralar (yedek grafik) */
-.fl-card{width:100%;border-radius:var(--fl-rc);background:linear-gradient(160deg,#4CF0A8,#19E68C 45%,#0FA666);color:#04170D;padding:20px 22px;position:relative;z-index:2}
+
 /* ── ders 2: acil fon grafikleri ── */
 .fl-mon{width:100%;display:flex;flex-direction:column;gap:14px}
 .fl-inc{display:flex;align-items:center;gap:10px;height:34px}
@@ -16519,9 +16382,9 @@ html[data-theme="light"] .fl-h2x small{color:color-mix(in srgb,var(--c) 80%,#000
 .fl-ms.fl-mc{gap:6px}.fl-ms.fl-mc .fl-mrow{padding-top:8px;padding-bottom:8px}.fl-ms.fl-mc .fl-mrow:not(.fl-final) .fl-ms2{display:none} /* V101.17: dar ekranda kartopu satırları tek satır */
 /* dev kartopu özeti */
 .fl-ballwrap{position:relative;width:100%;height:100%;min-height:330px}
-.fl-bigball{position:absolute;left:50%;top:46%;width:230px;height:230px;margin:-115px 0 0 -115px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#fff,#E9EEF5 55%,#B4C0D3);box-shadow:0 34px 70px -22px rgba(255,255,255,.35),inset -16px -20px 40px rgba(0,0,0,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0a0a0a;animation:flRoll 1.15s .1s cubic-bezier(.2,.8,.2,1) both}
-.fl-bigball b{font-size:92px;font-weight:800;letter-spacing:-5px;line-height:.9;font-variant-numeric:tabular-nums}.fl-bigball b i{font-style:normal;font-size:30px;letter-spacing:-1px;margin-left:4px}
-.fl-bigball em{font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:1.6px;margin-top:8px;opacity:.7;text-transform:uppercase}
+
+
+
 @keyframes flRoll{from{transform:translateX(-300px) rotate(-540deg) scale(.3);opacity:0}60%{opacity:1}to{transform:none;opacity:1}}
 .fl-slope{position:absolute;left:-10px;right:-10px;top:calc(47% + 96px);height:70px;width:calc(100% + 20px)}
 .fl-slope path{fill:none;stroke:rgba(255,255,255,.28);stroke-width:4;stroke-linecap:round;stroke-dasharray:700;stroke-dashoffset:700;animation:flDraw 1.3s .2s ease-out forwards}
@@ -16947,6 +16810,7 @@ const PAGES2=[
 
 /* ---- ders 3: Borç Kartopu ---- */
 const SAMPLE_DEBTS=[{name:'Kredi kartı',rem:12000,monthly:2000},{name:'Telefon taksiti',rem:24000,monthly:2000},{name:'İhtiyaç kredisi',rem:90000,monthly:5000}];
+function flH(x){return typeof esc==='function'?esc(String(x==null?'':x)):String(x==null?'':x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);} // V102: kullanıcının yazdığı adlar derslerde HTML olarak işlenmesin
 function snowSim(list,extra){const ds=list.map(d=>({name:d.name,left:d.rem,monthly:d.monthly,start:d.start||1,fixed:!!d.fixed,done:false})).sort((a,b)=>a.left-b.left);let month=0,ball=Math.max(0,extra||0);const closes=[];let guard=0; // V101.15: Kartopu Planı ile aynı hesap (başlama ayı, kart taksiti ek ödeme almaz)
   while(ds.some(d=>d.left>0)&&guard++<600){month++;let pool=ball;ds.forEach(d=>{if(d.left>0&&month>=d.start)d.left-=d.monthly;});
     for(const d of ds.slice().sort((a,b)=>a.left-b.left)){if(d.left<=0||d.fixed||month<d.start)continue;const pay=Math.min(pool,d.left);d.left-=pay;pool-=pay;if(pool<=0)break;}
@@ -16968,7 +16832,7 @@ const PAGES3=[
   {L:'tg',g:'why',block:true,bg:'#FFE97A',ink:'#0a0a0a',hl:'#0a0a0a',hlfg:'#FFE97A',char:'HEDEFCI',m:['tr',132],kick:'neden küçük',h:'Hız değil,|[[moral.]]',line:'İlk borç 3 ayda bitince devam edersin. Büyükten başlarsan [[aylarca hiçbir şey bitmez.]] Pes edersin.'},
   {L:'tg',g:'rcpt',char:'TUTUMLU',m:['tr',132],say:'Faize değil, tutara bak.',kick:()=>A.debtsSrc==='data'?'senin borçların':'örnek',h:'Küçükten|[[büyüğe]] diz.',line:()=>A.debtsSrc==='data'?'Sıra bu. Faize değil, [[kalan tutara]] göre. Aylık Plan sekmesinden düzenleyebilirsin.':'Sıra bu. Faize değil, [[kalan tutara]] göre. Borç eklersen gerçek rakamlarla hesaplarım.'},
   {L:'center',g:'input',type:'ask',key:'extra',zero:true,char:'ACEMI',m:['tc',180],say:'Sıfır da olur.',kick:'şimdi sen',h:'Ayda fazladan|ne kadar?',line:()=>A.extraSrc==='box'?'5 Kutu’daki Borç parçan (%10) eksi taksitlerin. Sıfır bile olsa kartopu çalışır; istersen değiştir.':'Taksitlerin dışında borca ekleyebileceğin tutar. Sıfır bile olsa kartopu çalışır.'},
-  {L:'result',type:'result',char:'BIRIKTIREN',m:['tr',148],unit:'ay',kick:()=>`${snowN()} borç · ${fmt(snowTot())}₺`,h:'Kartopu|[[planın.]]',line:()=>`Küçükten büyüğe, biten borcun taksiti sonrakine. [[${snowDate()}${typeof _yrSfx==='function'?_yrSfx(snowDate()):''}]] borçsuzsun.`,val:()=>snow().months,segs:()=>snow().closes.map(c=>({t:`AY ${c.month} · ${c.name}`}))},
+  {L:'result',type:'result',char:'BIRIKTIREN',m:['tr',148],unit:'ay',kick:()=>`${snowN()} borç · ${fmt(snowTot())}₺`,h:'Kartopu|[[planın.]]',line:()=>`Küçükten büyüğe, biten borcun taksiti sonrakine. [[${snowDate()}${typeof _yrSfx==='function'?_yrSfx(snowDate()):''}]] borçsuzsun.`,val:()=>snow().months,segs:()=>snow().closes.map(c=>({t:`AY ${c.month} · ${flH(c.name)}`}))},
   {L:'gb',g:'race',char:'YATIRIMCI',m:['tr',150],say:'Aynı para!',kick:'fark',h:()=>snowBase()-snow().months>0?`[[${snowBase()-snow().months} ay]]|erken.`:`Süre|[[aynı.]]`,line:()=>snowBase()-snow().months>0?`Sadece taksitle ${snowBase()} ay. Kartopuyla ${snow().months} ay. [[Aynı para, daha erken biter.]]`:`Fazladan ödeme eklemeden süre aynı: ${snowBase()} ay. [[Ayda biraz fazla eklersen erken biter.]]`},
   {L:'gb',g:'miles',char:'HEDEFCI',m:['tr',150],kick:'ay ay',h:'Sırada|[[ne olacak?]]',line:'Her biten borcun taksiti bir sonrakine eklenir. [[Top büyüdükçe hızlanır.]]'},
   {L:'tg',g:'where',char:'HARCAYAN',m:['tr',132],say:'Yeni taksit yok!',accent:'#FFE97A',hlfg:'#0a0a0a',kick:'dikkat',h:'Yeni borç|[[alma.]]',line:'Kartopu yuvarlanırken yeni taksit girme. [[Asgari ödeme]] borcu büyütür; fazlayı hep borca ver.',
@@ -17164,9 +17028,9 @@ const G={
   where(p){const T=(p&&p.tiles)||[{t:'Ayrı hesap',s:'ulaşılır, gözden uzak',ok:true,c:'#5AA8FF'},{t:'Borsa / kripto',s:'lazım olunca düşmüş olabilir',ok:false,c:'#333'},{t:'Günlük hesap',s:'elin gider',ok:false,c:'#333'}];
     return `<div style="width:100%"><div class="fl-tiles">${T.map((o,i)=>`<div class="fl-tile fl-info ${o.ok?'':'fl-dim'}" style="--c:${o.c};animation-delay:${.15+i*.1}s"><span class="fl-bd ${o.ok?'fl-yes':'fl-no'}" style="--d:${.9+i*.25}s">${o.ok?'✓':'✗'}</span><div><div class="fl-tn">${o.t}</div><div class="fl-ts2">${o.s}</div></div></div>`).join('')}</div></div>`;},
   drain(){const I=[{t:'Tatil fırsatı',ok:0},{t:'Yeni telefon',ok:0},{t:'Araba tamiri',ok:1}];return `<div class="fl-drainwrap"><div class="fl-gauge fl-dg" id="fl_dg"><div class="fl-fill" id="fl_dfill" style="height:100%"></div><div class="fl-jlbl">ACİL FON</div></div><div class="fl-dlist">${I.map((o,i)=>`<div class="fl-dit" id="fl_di${i}"><span>${o.t}</span><i>${o.ok?'✓':'✗'}</i></div>`).join('')}</div></div>`;},
-  snow(){const D=SAMPLE_DEBTS,mx=Math.max(...D.map(d=>d.rem));return `<div class="fl-snow">${D.map((d,i)=>`<div class="fl-srow" id="fl_sr${i}"><div class="fl-sname">${d.name}</div><div class="fl-sbar"><span class="fl-sball" id="fl_sb${i}">+2.000</span><i style="--w:${Math.round(d.rem/mx*100)}%"></i></div><b class="fl-samt" id="fl_sa${i}">${fmt(d.rem)}</b></div>`).join('')}<span class="fl-pill fl-solid fl-sfree fl-rwin" id="fl_sfree">BORÇ YOK ✓</span></div>`;},
+  snow(){const D=SAMPLE_DEBTS,mx=Math.max(...D.map(d=>d.rem));return `<div class="fl-snow">${D.map((d,i)=>`<div class="fl-srow" id="fl_sr${i}"><div class="fl-sname">${flH(d.name)}</div><div class="fl-sbar"><span class="fl-sball" id="fl_sb${i}">+2.000</span><i style="--w:${Math.round(d.rem/mx*100)}%"></i></div><b class="fl-samt" id="fl_sa${i}">${fmt(d.rem)}</b></div>`).join('')}<span class="fl-pill fl-solid fl-sfree fl-rwin" id="fl_sfree">BORÇ YOK ✓</span></div>`;},
   why(){const row=(id,l)=>`<div class="fl-wrow" id="fl_${id}"><div class="fl-wl"><span>${l}</span><b id="fl_${id}b"></b></div><div class="fl-wd">${Array.from({length:12},(_,i)=>`<i id="fl_${id}d${i}"></i>`).join('')}</div></div>`;return `<div class="fl-why">${row('wA','Küçükten başla').replace('class="fl-wrow"','class="fl-wrow fl-hot"')}${row('wB','Büyükten başla')}</div>`;},
-  debts(){return `<div class="fl-dl">${debtSorted().map((d,i)=>`<div class="fl-drow" style="--d:${.15+i*.12}s"><b class="fl-rk">${i+1}</b><div class="fl-dn">${d.name}<small>${fmt(d.monthly)}₺/ay taksit</small></div><div class="fl-da">${fmt(d.rem)}₺</div></div>`).join('')}</div>`;},
+  debts(){return `<div class="fl-dl">${debtSorted().map((d,i)=>`<div class="fl-drow" style="--d:${.15+i*.12}s"><b class="fl-rk">${i+1}</b><div class="fl-dn">${flH(d.name)}<small>${fmt(d.monthly)}₺/ay taksit</small></div><div class="fl-da">${fmt(d.rem)}₺</div></div>`).join('')}</div>`;},
   ball(){const S=snow();const stk=[{t:`${snowN()} borç`,bg:'#FF8A3D',fg:'#000',x:'calc(50% - 176px)',y:'calc(47% - 118px)',r:-8},{t:A.extra>0?`+${fmt(A.extra)}₺/ay`:'taksitler devreder',bg:'#19E68C',fg:'#000',x:'calc(50% + 34px)',y:'calc(47% - 136px)',r:7},{t:S.closes.length?`ilk zafer · Ay ${S.closes[0].month}`:'',bg:'#B48CFF',fg:'#000',x:'calc(50% + 40px)',y:'calc(47% + 96px)',r:-6},{t:snowDate(),bg:'#FFE97A',fg:'#000',x:'calc(50% + 78px)',y:'calc(47% + 30px)',r:6},{t:snowBase()-S.months>0?`${snowBase()-S.months} ay erken`:`sırayla biter`,bg:'#5AA8FF',fg:'#000',x:'calc(50% - 120px)',y:'calc(47% + 150px)',r:-4}].filter(x=>x.t);
     return `<div class="fl-ballwrap"><svg class="fl-slope" viewBox="0 0 360 70" preserveAspectRatio="none"><path d="M0 58 C 100 30, 210 68, 360 34"/></svg><span class="fl-bign"><b id="fl_bbN">0</b><i>ay</i><small>sonra borç yok</small></span>${stk.map((k,i)=>`<span class="fl-stk" style="--x:${k.x};--y:${k.y};--r:${k.r}deg;--bg:${k.bg};--fg:${k.fg};--d:${1.35+i*.16}s">${k.t}</span>`).join('')}</div>`;},
   card(p){const plan=p&&p.mode==='plan';const S=plan?ccFix(A.pay):null;return `<div class="fl-ccwrap"><div class="fl-cc" id="fl_cc"><div class="fl-ccchip"></div><div class="fl-ccslot" id="fl_ccslot"></div><div class="fl-ccnum">•••• •••• •••• 4242</div>${plan?`<div class="fl-ccplan"><span>AYDA<b>${fmt(A.pay)}₺</b></span><span>SÜRE<b>${S.months} ay</b></span><span>BİTİŞ<b>${ccDate(S.months,true)}</b></span><span>TOPLAM FAİZ<b>${fmt(S.interest)}₺</b></span></div>`:`<div class="fl-ccrow"><span>KART SAHİBİ<b>SEN</b></span><span>EKSTRE<b>${fmt(A.cdebt)}₺</b></span></div>`}<span class="fl-ccstamp ${plan?'fl-ok':''}">${plan?'KAPANIYOR ✓':'ASGARİ ÖDENDİ'}</span></div></div>`;},
@@ -17176,14 +17040,14 @@ const G={
   split(){const P=ccFirstMin(),M=ccMin(),F=ccFix(P);return `<div class="fl-split"><div class="fl-spl" style="--d:.15s"><div class="fl-spk">Asgari</div><div class="fl-spn"><span id="fl_spA" data-v="${M.months}">0</span><i>ay</i></div><div class="fl-spi">toplam faiz<b>${fmt(M.interest)}₺</b></div></div><div class="fl-spl fl-hot" style="--d:.3s"><div class="fl-spk">Sabit ${fmt(P)}₺</div><div class="fl-spn"><span id="fl_spB" data-v="${F.months}">0</span><i>ay</i></div><div class="fl-spi">toplam faiz<b>${fmt(F.interest)}₺</b></div></div><div class="fl-vs" id="fl_vs">VS</div></div>`;},
   notes(p){return `<div class="fl-notes">${p.notes.map((n,i)=>`<div class="fl-note" style="--c:${n.c};--r:${n.r}deg;--d:${.2+i*.18}s"><span class="fl-nb ${n.ok?'':'fl-x'}">${n.ok?'✓':'✗'}</span><div class="fl-nt">${n.t}</div><div class="fl-ns">${n.s}</div></div>`).join('')}</div>`;},
   tf(p){return `<div class="fl-tf"><div class="fl-tfcard" id="fl_tfcard"><small>İddia</small>“${p.st}”</div><div class="fl-tfbtns"><button data-v="1" style="background:#19E68C;--d:.35s">DOĞRU</button><button data-v="0" style="background:#FF4B5C;color:#fff;--d:.45s">YANLIŞ</button></div></div>`;},
-  drip(){return `<div class="fl-drip">${A.subs.slice(0,6).map((x,i)=>`<span class="fl-drop" id="fl_dr${i}" style="--x:${12+((i*23)%62)}%;--c:${x.c}">${x.name} ${fmt(x.amt)}</span>`).join('')}<div class="fl-bucket"><div class="fl-bfill" id="fl_bfill"></div><b id="fl_bsum">0₺</b><small>ayda</small></div></div>`;},
+  drip(){return `<div class="fl-drip">${A.subs.slice(0,6).map((x,i)=>`<span class="fl-drop" id="fl_dr${i}" style="--x:${12+((i*23)%62)}%;--c:${x.c}">${flH(x.name)} ${fmt(x.amt)}</span>`).join('')}<div class="fl-bucket"><div class="fl-bfill" id="fl_bfill"></div><b id="fl_bsum">0₺</b><small>ayda</small></div></div>`;},
   stmt(){const gen=[['Market',450],['Taksi',120],['Kahve',85],['Eczane',210],['Benzin',900],['Restoran',640],['Kırtasiye',95]];const rows=[];A.subs.slice(0,5).forEach((x,i)=>{rows.push(gen[i%gen.length]);rows.push([x.name,x.amt,true]);});rows.push(gen[5],gen[6]);
-    return `<div class="fl-stmt"><div class="fl-scan"></div><div class="fl-stmtin" id="fl_stmtin">${rows.map((r,i)=>`<div class="fl-srow2 ${r[2]?'fl-sub':''}" id="fl_st${i}"><span>${r[0]}</span><b>−${fmt(r[1])}₺</b></div>`).join('')}</div><div class="fl-stmtsum"><span>ABONELİK</span><b id="fl_stmtsum">0₺</b></div></div>`;},
-  apps(){return `<div style="width:100%"><div class="fl-apps">${A.subs.map((x,i)=>`<div class="fl-app ${A.cut.has(i)?'fl-xed':''}" data-i="${i}" style="--d:${.12+i*.08}s"><div class="fl-appic" style="--c:${x.c}">${x.ini}</div><div class="fl-appn">${x.name}</div><div class="fl-appa">${fmt(x.amt)}₺/ay</div><i class="fl-appx">✗</i></div>`).join('')}</div><div class="fl-appsum"><span id="fl_cutn">${A.cut.size} iptal</span><b id="fl_cuty">${fmt(cutMonthly()*12)}₺ / yıl</b></div></div>`;},
+    return `<div class="fl-stmt"><div class="fl-scan"></div><div class="fl-stmtin" id="fl_stmtin">${rows.map((r,i)=>`<div class="fl-srow2 ${r[2]?'fl-sub':''}" id="fl_st${i}"><span>${flH(r[0])}</span><b>−${fmt(r[1])}₺</b></div>`).join('')}</div><div class="fl-stmtsum"><span>ABONELİK</span><b id="fl_stmtsum">0₺</b></div></div>`;},
+  apps(){return `<div style="width:100%"><div class="fl-apps">${A.subs.map((x,i)=>`<div class="fl-app ${A.cut.has(i)?'fl-xed':''}" data-i="${i}" style="--d:${.12+i*.08}s"><div class="fl-appic" style="--c:${x.c}">${flH(x.ini)}</div><div class="fl-appn">${flH(x.name)}</div><div class="fl-appa">${fmt(x.amt)}₺/ay</div><i class="fl-appx">✗</i></div>`).join('')}</div><div class="fl-appsum"><span id="fl_cutn">${A.cut.size} iptal</span><b id="fl_cuty">${fmt(cutMonthly()*12)}₺ / yıl</b></div></div>`;},
   cal(p){const mn=MN[new Date().getMonth()];const M=(p&&p.marks)||[{d:1,cls:'fl-start'},{d:30,cls:'fl-pay',pill:`30. GÜN · ${fmt(A.subs&&A.subs[0]?A.subs[0].amt:229)}₺ ÇEKİLDİ`,bg:'#FF4B5C',fg:'#fff'},{d:27,cls:'fl-rem',pill:'27. GÜN · HATIRLAT ✓',bg:'#FFE97A',fg:'#000',late:true}];return `<div class="fl-cal"><div class="fl-calh"><span>${mn}</span><span>${p&&p.marks?'kart takvimi':'ücretsiz deneme'}</span></div><div class="fl-calg">${Array.from({length:30},(_,i)=>`<i class="fl-cd" id="fl_cd${i+1}">${i+1}</i>`).join('')}</div><div class="fl-calnote">${M.filter(m=>m.pill).map((m,i)=>`<span class="fl-pill fl-rwin" id="fl_calp${i}" style="background:${m.bg};color:${m.fg}">${m.pill}</span>`).join('')}</div></div>`;},
-  rota(){const S=A.subs.slice(0,3);const m0=new Date().getMonth();const tot=S.reduce((s,x)=>s+x.amt,0),one=Math.max(...S.map(x=>x.amt));return `<div style="width:100%"><div class="fl-rota">${S.map((x,i)=>`<div class="fl-rm" style="--d:${.15+i*.15}s"><b>${MN[(m0+i)%12].slice(0,3).toUpperCase()}</b><div class="fl-appic" style="--c:${x.c}">${x.ini}</div><span>${x.name}</span><em>${fmt(x.amt)}₺</em></div>`).join('')}</div><div class="fl-rotasum">ayda <s>${fmt(tot)}₺</s> yerine<b id="fl_rotab">${fmt(one)}₺</b></div></div>`;},
+  rota(){const S=A.subs.slice(0,3);const m0=new Date().getMonth();const tot=S.reduce((s,x)=>s+x.amt,0),one=Math.max(...S.map(x=>x.amt));return `<div style="width:100%"><div class="fl-rota">${S.map((x,i)=>`<div class="fl-rm" style="--d:${.15+i*.15}s"><b>${MN[(m0+i)%12].slice(0,3).toUpperCase()}</b><div class="fl-appic" style="--c:${x.c}">${flH(x.ini)}</div><span>${flH(x.name)}</span><em>${fmt(x.amt)}₺</em></div>`).join('')}</div><div class="fl-rotasum">ayda <s>${fmt(tot)}₺</s> yerine<b id="fl_rotab">${fmt(one)}₺</b></div></div>`;},
   multi(p){return `<div style="width:100%"><div class="fl-multi">${p.opts.map((o,i)=>`<button class="fl-mopt" data-i="${i}" style="--c:${o.c};--d:${.15+i*.08}s"><i>${o.ini}</i><span>${o.t}</span></button>`).join('')}</div></div>`;},
-  coupon(){const cut=A.subs.filter((x,i)=>A.cut.has(i)),keep=A.subs.filter((x,i)=>!A.cut.has(i));const y=cutMonthly()*12;return `<div style="width:100%;padding:0 6px"><div class="fl-coupon"><span class="fl-scis">✂</span><div class="fl-cpin"><div class="fl-cpk">Yıllık iade</div><div class="fl-cpn"><span id="fl_cpn">0</span><i>₺</i></div><div class="fl-cpl">${cut.length?`<b>İptal:</b> ${cut.map(x=>x.name).join(', ')}`:'<b>İptal:</b> yok'}</div><div class="fl-cpl">${keep.length?`<b>Kalan:</b> ${keep.map(x=>x.name).join(', ')} · ayda ${fmt(keep.reduce((s,x)=>s+x.amt,0))}₺`:'<b>Kalan:</b> hiç abonelik yok'}</div></div></div></div>`;},
+  coupon(){const cut=A.subs.filter((x,i)=>A.cut.has(i)),keep=A.subs.filter((x,i)=>!A.cut.has(i));const y=cutMonthly()*12;return `<div style="width:100%;padding:0 6px"><div class="fl-coupon"><span class="fl-scis">✂</span><div class="fl-cpin"><div class="fl-cpk">Yıllık iade</div><div class="fl-cpn"><span id="fl_cpn">0</span><i>₺</i></div><div class="fl-cpl">${cut.length?`<b>İptal:</b> ${cut.map(x=>flH(x.name)).join(', ')}`:'<b>İptal:</b> yok'}</div><div class="fl-cpl">${keep.length?`<b>Kalan:</b> ${keep.map(x=>flH(x.name)).join(', ')} · ayda ${fmt(keep.reduce((s,x)=>s+x.amt,0))}₺`:'<b>Kalan:</b> hiç abonelik yok'}</div></div></div></div>`;},
   tree(){const B=[['M150 250 C150 205 152 175 150 140','1s','0s'],['M150 165 C125 145 100 125 78 100','.8s','.9s'],['M150 150 C180 128 205 108 222 88','.8s','1.1s'],['M150 132 C140 105 132 82 118 58','.7s','1.3s'],['M150 128 C162 104 176 84 190 60','.7s','1.5s']];const LV=[[78,100,'#19E68C'],[222,88,'#5AA8FF'],[118,58,'#FFE97A'],[190,60,'#FF8A3D'],[150,138,'#B48CFF']];const LV2=[[58,82],[104,78],[240,108],[206,70],[100,44],[136,44],[172,42],[208,44]];
     return `<div class="fl-tree"><svg viewBox="0 0 300 260">${B.map((b,i)=>`<path class="fl-tp" id="fl_tb${i}" d="${b[0]}" stroke-width="${i?7:12}" style="--dur:${b[1]};--d:${b[2]}"/>`).join('')}<ellipse cx="150" cy="252" rx="70" ry="8" fill="rgba(255,255,255,.08)"/>${LV.map((l,i)=>`<g class="fl-leaf" id="fl_lf${i}"><circle cx="${l[0]}" cy="${l[1]}" r="17" fill="${l[2]}"/><text x="${l[0]}" y="${l[1]}">₺</text></g>`).join('')}${LV2.map((l,i)=>`<g class="fl-leaf" id="fl_lg${i}"><circle cx="${l[0]}" cy="${l[1]}" r="10" fill="#34D399"/><text x="${l[0]}" y="${l[1]}" style="font-size:9px">₺</text></g>`).join('')}</svg></div>`;},
   odo(){const v=Math.round(fv(invBox(),10,.10));const str=fmt(v);return `<div class="fl-odo"><div class="fl-odow">${str.split('').map((ch,i)=>/\d/.test(ch)?`<span class="fl-odc"><i data-d="${ch}" style="--d:${(str.length-i)*.12}s">0<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</i></span>`:`<span class="fl-odsep">${ch}</span>`).join('')}<span class="fl-odp" style="margin-right:0;margin-left:4px">₺</span></div><div class="fl-odsub">${fmt(invBox())}₺ × 120 ay · yıllık %10 tahmin</div><div class="fl-odrow"><span class="fl-pill" style="--d:2s">yatırdığın ${fmt(invBox()*120)}</span><span class="fl-pill fl-solid" style="--d:2.2s">kazanç ${fmt(v-invBox()*120)}</span></div></div>`;},
@@ -17201,11 +17065,11 @@ const G={
   fridge(){return `<div class="fl-fridge"><div class="fl-fpol" id="fl_fpol"><span class="fl-mag"></span><div class="fl-pimg" style="--c:${A.dream.c}">${gIcon(A.dream.icon)}</div><div class="fl-pcap">${A.dream.name}</div></div><div class="fl-fnote">ayda ${fmt(dMonthly())}₺<br>${dDate()}</div></div>`;},
   formula(){const n=limitNums();const R=[['Gelir',n.inc,'#19E68C','+'],[n.real?'Sabitler + harcanan':'Sabit giderler',n.fix,'#FF4B5C','−'],['Birikim',n.sav,'#B48CFF','−'],['Serbest para',n.free,'#fff','='],['Kalan gün',n.dl,'#5AA8FF','÷'],['Günlük limit',n.daily,'#19E68C','=']];return `<div class="fl-form">${R.map((r,i)=>`<div class="fl-frow ${i===5?'fl-fbig':''} ${i===3?'fl-fsum':''}" style="--c:${r[2]};--d:${.2+i*.22}s"><i>${r[3]}</i><span>${r[0]}</span><b>${i===4?r[1]+' gün':fmt(r[1])+'₺'}</b></div>`).join('')}</div>`;},
   daylim(){const n=limitNums();const d=n.daily,over=Math.round(d*1.25),next=Math.round((n.free-over)/Math.max(1,n.dl-1));return `<div class="fl-race" style="gap:20px"><div class="fl-rrow"><div class="fl-rl">Limit</div><div class="fl-rbar"><i id="fl_dl0" style="background:rgba(255,255,255,.35)"></i></div><b>${fmt(d)}₺</b></div><div class="fl-rrow fl-hot" style="--fl-lesson:#FF4B5C"><div class="fl-rl">Bugün</div><div class="fl-rbar"><i id="fl_dl1"></i></div><b id="fl_dlb">0₺</b></div><div class="fl-rrow fl-hot"><div class="fl-rl">Yarın</div><div class="fl-rbar"><i id="fl_dl2"></i></div><b id="fl_dlc">${fmt(Math.max(0,next))}₺</b></div><span class="fl-pill fl-rwin" id="fl_dlp" style="background:#FF4B5C;color:#fff">AŞTIN · YARIN ${fmt(next)}₺</span></div>`;},
-  env(){let E=[];try{E=(data.budgets||[]).slice(0,3).map(b=>({n:b.name,a:b.amount,s:typeof budgetSpent==='function'?budgetSpent(b):0,c:b.color||'#BF5AF2'}));}catch(e){}const SM=[{n:'Market',a:6000,s:4200,c:'#BF5AF2'},{n:'Eğlence',a:2000,s:1900,c:'#FF8A3D'},{n:'Ulaşım',a:1500,s:600,c:'#5AA8FF'}];while(E.length<3)E.push(SM[E.length]);return `<div class="fl-dl">${E.map((e,i)=>`<div class="fl-drow fl-env" style="--d:${.15+i*.14}s;--c:${e.c}"><div class="fl-dn">${e.n}<small>${fmt(e.s)} / ${fmt(e.a)}₺</small><div class="fl-envbar"><i id="fl_env${i}" data-w="${Math.min(100,Math.round(e.s/Math.max(1,e.a)*100))}"></i></div></div><div class="fl-da">%${Math.min(100,Math.round(e.s/Math.max(1,e.a)*100))}</div></div>`).join('')}</div>`;},
+  env(){let E=[];try{E=(data.budgets||[]).slice(0,3).map(b=>({n:b.name,a:b.amount,s:typeof budgetSpent==='function'?budgetSpent(b):0,c:b.color||'#BF5AF2'}));}catch(e){}const SM=[{n:'Market',a:6000,s:4200,c:'#BF5AF2'},{n:'Eğlence',a:2000,s:1900,c:'#FF8A3D'},{n:'Ulaşım',a:1500,s:600,c:'#5AA8FF'}];while(E.length<3)E.push(SM[E.length]);return `<div class="fl-dl">${E.map((e,i)=>`<div class="fl-drow fl-env" style="--d:${.15+i*.14}s;--c:${e.c}"><div class="fl-dn">${flH(e.n)}<small>${fmt(e.s)} / ${fmt(e.a)}₺</small><div class="fl-envbar"><i id="fl_env${i}" data-w="${Math.min(100,Math.round(e.s/Math.max(1,e.a)*100))}"></i></div></div><div class="fl-da">%${Math.min(100,Math.round(e.s/Math.max(1,e.a)*100))}</div></div>`).join('')}</div>`;},
   gauge2(){return `<div class="fl-gaugewrap"><div class="fl-gauge" id="fl_gauge"><div class="fl-fill" id="fl_gfill"></div></div><div class="fl-limit" style="top:24%">zarf limiti</div><div class="fl-warn"><span>DOLDU ✕</span></div><div class="fl-fut" style="justify-content:center"><div class="fl-pill fl-solid" style="--d:.6s;white-space:normal;text-align:center;line-height:1.3">bu ay<br>bu kalem kapalı</div></div></div>`;},
-  rcpt(){const D=debtSorted(),T=D.reduce((s,d)=>s+d.rem,0);const dt=new Date();return `<div style="width:100%"><div class="fl-rcpt"><div class="fl-rh"><span>Borç fişi · kalan</span><span></span></div>${D.map((d,i)=>`<div class="fl-rr" style="--d:${.35+i*.16}s"><b class="fl-rk">${i+1}</b><div class="fl-rn">${d.name}<small>${fmt(d.monthly)}₺/ay taksit</small></div><i class="fl-rdots"></i><span class="fl-ra">${fmt(d.rem)}₺</span></div>`).join('')}<div class="fl-rt"><span>Toplam</span><b>${fmt(T)}₺</b></div><span class="fl-rstamp">ÖNCE BU</span></div><div class="fl-rtear"></div></div>`;},
+  rcpt(){const D=debtSorted(),T=D.reduce((s,d)=>s+d.rem,0);const dt=new Date();return `<div style="width:100%"><div class="fl-rcpt"><div class="fl-rh"><span>Borç fişi · kalan</span><span></span></div>${D.map((d,i)=>`<div class="fl-rr" style="--d:${.35+i*.16}s"><b class="fl-rk">${i+1}</b><div class="fl-rn">${flH(d.name)}<small>${fmt(d.monthly)}₺/ay taksit</small></div><i class="fl-rdots"></i><span class="fl-ra">${fmt(d.rem)}₺</span></div>`).join('')}<div class="fl-rt"><span>Toplam</span><b>${fmt(T)}₺</b></div><span class="fl-rstamp">ÖNCE BU</span></div><div class="fl-rtear"></div></div>`;},
   race(){return `<div class="fl-race"><div class="fl-rrow"><div class="fl-rl">Taksitle</div><div class="fl-rbar"><i id="fl_rb0"></i></div><b id="fl_rm0">0 ay</b></div><div class="fl-rrow fl-hot"><div class="fl-rl">Kartopu</div><div class="fl-rbar"><i id="fl_rb1"></i></div><b id="fl_rm1">0 ay</b></div><span class="fl-pill fl-solid fl-rwin" id="fl_rwin">${snowBase()-snow().months>0?(snowBase()-snow().months)+' AY ERKEN':'SÜRE AYNI'}</span></div>`;},
-  miles(){const S=snow();let ball=A.extra;const rows=S.closes.slice(0,4).map((c,i)=>{ball+=c.monthly;return `<div class="fl-mrow" id="fl_mr${i}"><b class="fl-mm">AY ${c.month}</b><div class="fl-mt2"><div class="fl-mn">${c.name} bitti ✓</div><div class="fl-ms2">taksiti kartopuna: ${fmt(ball)}₺/ay</div></div></div>`;});const more=S.closes.length>4?`<div class="fl-mrow" id="fl_mr4"><b class="fl-mm">…</b><div class="fl-mt2"><div class="fl-mn">${S.closes.length-4} borç daha</div></div></div>`:'';return `<div class="fl-ms">${rows.join('')}${more}<div class="fl-mrow fl-final" id="fl_mrF"><b class="fl-mm">AY ${S.months}</b><div class="fl-mt2"><div class="fl-mn">BORÇ YOK</div><div class="fl-ms2">${snowDate()} · ayda ${fmt(S.ball)}₺ serbest kalır</div></div></div></div>`;},
+  miles(){const S=snow();let ball=A.extra;const rows=S.closes.slice(0,4).map((c,i)=>{ball+=c.monthly;return `<div class="fl-mrow" id="fl_mr${i}"><b class="fl-mm">AY ${c.month}</b><div class="fl-mt2"><div class="fl-mn">${flH(c.name)} bitti ✓</div><div class="fl-ms2">taksiti kartopuna: ${fmt(ball)}₺/ay</div></div></div>`;});const more=S.closes.length>4?`<div class="fl-mrow" id="fl_mr4"><b class="fl-mm">…</b><div class="fl-mt2"><div class="fl-mn">${S.closes.length-4} borç daha</div></div></div>`:'';return `<div class="fl-ms">${rows.join('')}${more}<div class="fl-mrow fl-final" id="fl_mrF"><b class="fl-mm">AY ${S.months}</b><div class="fl-mt2"><div class="fl-mn">BORÇ YOK</div><div class="fl-ms2">${snowDate()} · ayda ${fmt(S.ball)}₺ serbest kalır</div></div></div></div>`;},
   grid2(p){const C=p.cells();return `<div class="fl-grid">${C.map((c,i)=>`<div class="fl-cell ${c.big?'fl-big':'fl-small'}" style="--c:${c.c};animation-delay:${.1+i*.1}s"><div class="fl-n">${c.n}</div><div class="fl-a"${c.v!=null?` data-v="${c.v}"`:''}${!c.big&&c.v!=null&&fmt(c.v).length>7?' style="font-size:10.5px"':''}>${c.v!=null?fmt(c.v)+'<small> ₺</small>':c.t}</div>${c.p?`<div class="fl-p"${c.big&&String(c.p).length>4?' style="font-size:16px"':''}>${c.p}</div>`:''}</div>`).join('')}</div>`;},
 };
 const GA={
@@ -17343,7 +17207,6 @@ const REACT={
 function react(kind){const svg=msvg(),K=REACT[kind];if(!svg||!K)return;svg.animate(K[0],Object.assign({composite:'add'},K[1]));}
 function bounce(big){react(big?'jump':'nod');}
 function talk(){const svg=msvg();if(!svg)return;svg.animate([{transform:'rotate(0)'},{transform:'rotate(-4deg)'},{transform:'rotate(4deg)'},{transform:'rotate(-2deg)'},{transform:'rotate(0)'}],{duration:520,delay:420,composite:'add'});}
-function haloBurst(){const h=$('mascot').querySelector('.vm-halo');if(!h)return;h.style.transformBox='fill-box';h.style.transformOrigin='center';h.animate([{transform:'scale(1)',opacity:1},{transform:'scale(1.9)',opacity:1,offset:.45},{transform:'scale(1)',opacity:1}],{duration:950,easing:'cubic-bezier(.2,.8,.2,1)'});}
 function floatIdle(){const svg=msvg();if(!svg||svg._flIdle)return;svg._flIdle=svg.animate([{transform:'translateY(0)'},{transform:'translateY(-7px)'},{transform:'translateY(0)'}],{duration:3200,iterations:Infinity,easing:'ease-in-out',composite:'add'});}
 function setMascot(key,big,soft){const m=$('mascot');
   if(!mascot){if(typeof VM!=='undefined'&&VM.spawn){mascot=VM.spawn(m,key);curChar=key;const s=msvg();if(s)s.style.transformOrigin='50% 88%';if(mascot.morph&&mascot.morph.to){const o=mascot.morph.to;mascot._to=o;mascot.morph.to=(n,d)=>o.call(mascot.morph,n,1800);}floatIdle();react('pop');}return;}
@@ -17407,10 +17270,6 @@ function go(dir){if(busy)return;const P=L.pages,p=P[pi];if(dir>0&&!canAdvance(p)
 function finish(){clearProg(L.id);_flRestarted=false;markDone(L.id);renderLib();showLib(true);if(typeof showToast==='function')showToast(_flRestarted?'✓ Yedi dersin hepsi tamam. Dersler baştan başlıyor.':'✓ Ders tamamlandı — '+L.title,_flRestarted?3200:undefined);}
 
 /* ---- onay penceresi (uygulamanın showConfirm'i, ders rengiyle) ---- */
-function confirmStyled(msg,cb,btn,title,color,fg){if(typeof showConfirm!=='function'){cb();return;}showConfirm(msg,cb,btn,title,'pause');
-  const ic=document.getElementById('confirmIconWrap'),ok=document.getElementById('confirmOkBtn');
-  if(ic){ic.style.background=`color-mix(in srgb,${color} 12%,transparent)`;ic.style.borderColor=`color-mix(in srgb,${color} 30%,transparent)`;ic.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px"><path d="M5 12l5 5L20 7"/></svg>`;}
-  if(ok){ok.style.background=color;ok.style.color=fg;ok.style.boxShadow=`0 4px 20px color-mix(in srgb,${color} 30%,transparent)`;}}
 
 
 /* ---- V101.8: plan önizlemesi — ne, nereye, bütçeye etkisi; sonra "kuruldu, şurada" ---- */
@@ -17554,9 +17413,10 @@ function vjMetrics(){const m={txn:0,days:0,inc:0,debtR:0,fixR:0,rem:0,savR:0,var
     const goals=data.savingsGoals||[];m.goals=goals.some(g=>g.monthly>0);const emg=goals.filter(g=>typeof isEmergencyGoal==='function'?isEmergencyGoal(g):g.isEmergency);m.emg=emg.length>0;const emgT=emg.reduce((s,g)=>s+(g.deposits||[]).reduce((a,d)=>a+(d.amount||0),0),0);const out=m._out||(fb.recTotal+fb.debtTotal+(fb.varSpent||0))||m.inc*0.7;m.emgM=out>0?emgT/out:0;
     const last3=[0,1,2].map(i=>{const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');});const dm=new Set();goals.forEach(g=>(g.deposits||[]).forEach(d=>{if(d.date)dm.add(typeof monthKey==='function'?monthKey(d.date):d.date.slice(0,7));}));m.regular=last3.every(x=>dm.has(x));}catch(e){}return m;}
 const pc=v=>'%'+Math.round(v*100);
+const pcx=(v,lim)=>Math.round(v*100)===Math.round(lim*100)?'%'+String(Math.round(v*1000)/10).replace('.',','):pc(v); // V102: sınıra çok yakınsa ondalıkla ("%22 · ✗" çelişkisi olmasın)
 function dat(n){const v=(n.toLocaleLowerCase('tr').match(/[aeıioöuü]/g)||['e']).pop();const back='aıou'.includes(v);const end=/[aeıioöuü]$/i.test(n);return n+'’'+(end?'y':'')+(back?'a':'e');}
-function vjReqs(target,m){const R=[];const base=(fx)=>{fx=fx||0.60;R.push({n:'Yeterli veri',s:'8 işlem ve 7 gün',v:`${m.txn} işlem · ${m.days} gün`,ok:m.txn>=8&&m.days>=7,p:Math.min(1,Math.min(m.txn/8,m.days/7))});R.push({n:'Gelir girildi',s:'bu ay en az bir gelir',v:m.inc>0?fmt(m.inc)+'₺':'yok',ok:m.inc>0});R.push({n:'Borç / gelir',s:'en fazla %28',v:pc(m.debtR),ok:m.debtR<=0.28,p:Math.max(0,1-Math.max(0,m.debtR-0.28)/0.28)});R.push({n:'Sabit + borç / gelir',s:fx<0.6?'%'+Math.round(fx*100)+'’ın altında':'en fazla %60',v:pc(m.fixR),ok:fx<0.6?m.fixR<fx:m.fixR<=0.60});R.push({n:'Normal ay artıda',s:'gider gelirden az',v:(m.rem>=0?'+':'−')+fmt(Math.abs(m.rem))+'₺',ok:m.rem>=0});};
-  const marj=(lim,lbl)=>R.push({n:'Aylık marj',s:'en az '+pc(lim),v:pc(m.savR),ok:lim<=0.06?m.savR>=lim:m.savR>lim,p:Math.min(1,m.savR/lim),c:'#5AA8FF'});
+function vjReqs(target,m){const R=[];const base=(fx)=>{fx=fx||0.60;R.push({n:'Yeterli veri',s:'8 işlem ve 7 gün',v:`${m.txn} işlem · ${m.days} gün`,ok:m.txn>=8&&m.days>=7,p:Math.min(1,Math.min(m.txn/8,m.days/7))});R.push({n:'Gelir girildi',s:'bu ay en az bir gelir',v:m.inc>0?fmt(m.inc)+'₺':'yok',ok:m.inc>0});R.push({n:'Borç / gelir',s:'en fazla %28',v:pcx(m.debtR,0.28),ok:m.debtR<=0.28,p:Math.max(0,1-Math.max(0,m.debtR-0.28)/0.28)});R.push({n:'Sabit + borç / gelir',s:fx<0.6?'%'+Math.round(fx*100)+'’ın altında':'en fazla %60',v:pcx(m.fixR,fx<0.6?fx:0.60),ok:fx<0.6?m.fixR<fx:m.fixR<=0.60});R.push({n:'Normal ay artıda',s:'gider gelirden az',v:(m.rem>=0?'+':'−')+fmt(Math.abs(m.rem))+'₺',ok:m.rem>=0});};
+  const marj=(lim,lbl)=>R.push({n:'Aylık marj',s:lim<=0.06?'en az '+pc(lim):pc(lim)+' üstü',v:pcx(m.savR,lim),ok:lim<=0.06?m.savR>=lim:m.savR>lim,p:Math.min(1,m.savR/lim),c:'#5AA8FF'});
   const goal=()=>R.push({n:'Aylık birikim hedefi',s:'en az bir hedef, aylık tutarlı',v:m.goals?'var':'yok',ok:m.goals});
   const emg=()=>R.push({n:'Acil fon hedefi',s:'Acil Fon dersiyle kurulur',v:m.emg?'var':'yok',ok:m.emg});
   switch(target){case 'DENGELI':base(0.40);marj(0.06);break;case 'BIRIKTIREN':base();goal();marj(0.12);break;case 'TUTUMLU':base();marj(0.15);R.push({n:'Değişken harcama',s:'gelirin en fazla %25’i',v:pc(m.varR),ok:m.varR<0.25});break;case 'HARCAYAN':base();marj(0.18);break;case 'HEDEFCI':base();goal();marj(0.10);R.push({n:'Düzenli yatırım',s:'son 3 ayın her birinde hedefe para',v:m.regular?'3/3 ay':'eksik',ok:m.regular});break;case 'YATIRIMCI':base();goal();emg();marj(0.22);break;case 'OZGUR':base();goal();emg();R.push({n:'Acil fon büyüklüğü',s:'6 aylık gideri karşılasın',v:m.emgM.toFixed(1).replace('.',',')+' ay',ok:m.emgM>=6,p:Math.min(1,m.emgM/6),c:'#B48CFF'});marj(0.30);break;case 'KIRILGAN':R.push({n:'Kırılgan',s:'ay sonu eksi, marj %6 altı ya da acil fon yok',v:'—',ok:true});break;case 'BORCLU':R.push({n:'Borçlu',s:'borç/gelir %28 ya da sabit+borç %60 üstü',v:'—',ok:true});break;default:R.push({n:'Acemi',s:'veri birikene kadar',v:'—',ok:true});}
