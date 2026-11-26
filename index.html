@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VAULT</title>
 <!-- V91: Finansal İpuçları — maskotlu ders motoru (5 Kutu · Acil Fon · Borç Kartopu · Asgari Tuzağı) + onboarding ders dili -->
+<!-- V102.1: Yalnızca gerçekten gelen gelir sayılır: ileri tarihli gelir (ör. 30'una tarihli maaş) tarihi gelene kadar Toplam Varlık, Kalan, günlük limit ve Özet gelirine girmez; kaydedince 'şu tarihte hesaba girer' der. Simülasyon kutularındaki etiketler kısalmıyor, dar ekranda iki satıra iniyor ('12 ay sonra', 'Tatil · tüm kalanla'). -->
 <!-- V102: Tam test turu. Seri artık iki aydan geriye de sayılır (her ayın 1'inde yarıya düşüyordu); ay dönünce aynı eşik için ikinci koruma hakkı verilmez; koruma kullanılan gün ay rozetinde ve karnede de 'aşılmış' sayılır; 'geçen ayın aynı gününe göre' kıyası geçen ay kısaysa günlük ortalamayla yapılır; uygulama açıkken gün dönünce kart kesimi işlenir, ay dönünce karne gelir; açılmayan geçen ay günlerinin limiti de sabitlenir. Kredi kartı: ileri tarihli taksitli alışverişin taksiti erken ekstreye yazılmaz; tutarlar gizliyken kart düzenlenebilir, 1.000.000₺ üstü limit düzenlemede 1₺'ye düşmez; kesim günü değişince içinde bulunulan dönem ve son ödeme tarihi kaymaz; ileri tarihli taksitte bildirim 'bugün' demez. Banka ekstresi: (1.234,56), −1.234,56, 1.234,56- eksi; 1.234 bin lira; 2 haneli yıl; olmayan gün atılır; 'Katmerci', 'Batman' ATM sayılmaz; 'Adı Soyadı' başlığı; hatırlanan ATM cevabı etiket olmadan da geçerli; Dekont No'suz ekstre ikinci kez yüklenince 'zaten kayıtlı'. Derslerde ve şeritte kullanıcının yazdığı adlar (borç, abonelik, kategori, cüzdan) HTML olarak işlenmez. Karakter Yolculuğu şartında '%22 · ✗' çelişkisi (sınırda ondalık). Simülasyon kutularında rakam kesilmez. Açık temada seri kilometre taşı alt yazısı okunur. Ölü kod: kullanılmayan 2 fonksiyon, 1 hesap bloğu, 116 CSS sınıfı (121 kural) silindi; ekranlar hesaplanmış stille birebir karşılaştırıldı. -->
 <!-- V101.19: Takvimli ders sayfaları (Sızıntı Avcısı 'Ücretsiz deneme tuzağı', Kart turu 'Kesim ve son ödeme') küçük ekranda yazının üstüne binmiyor: yer yetmezse takvim kareleri yassılaşır, gerekirse maskot küçülür (132 → 88) ve en son takvim biraz küçülür (en az %75). 375×667 (iPhone SE 2/3, iPhone 8), 360×740 ve 320×640'ta takvim yazıya biniyordu; 390×844'te hiçbir şey değişmedi. 320×568'de takvimin üst kenarı yazıya hâlâ hafifçe değiyor. -->
 <!-- V101.18: Sızıntı Avcısı dersinin 'Ücretsiz deneme tuzağı' sayfasındaki 'Deneme hatırlatıcısı kur →' düğmesi kaldırıldı (Hatırlatıcılar V93'te kaldırılmıştı; düğmeye dokununca hiçbir şey olmuyordu). -->
@@ -1820,8 +1821,8 @@ input[type=range].sc-range:active::-webkit-slider-thumb {
 .sc-chart text{font-family:'Montserrat',sans-serif}
 /* Metrik satiri */
 .sc-cp-metrics{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.sc-cp-m{position:relative;background:rgba(0,0,0,.25);border:1px solid rgba(var(--ink),.07);border-radius:12px;padding:10px 11px;overflow:hidden}
-.sc-cp-m-l{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:rgba(var(--ink),calc(.45*var(--ia)));margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-cp-m{position:relative;background:rgba(0,0,0,.25);border:1px solid rgba(var(--ink),.07);border-radius:12px;padding:10px 11px;overflow:hidden;display:flex;flex-direction:column}
+.sc-cp-m-l{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:rgba(var(--ink),calc(.45*var(--ia)));margin-bottom:4px;line-height:1.25;overflow-wrap:normal;word-break:keep-all;flex:1} /* V102.1: dar ekranda iki satıra iner; rakamlar aynı hizada kalır */
 .sc-cp-m-v{font-size:15px;font-weight:800;letter-spacing:-.04em;color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap}
 .sc-cp-m-d{font-size:11px;font-weight:700;margin-top:2px;letter-spacing:-.01em;min-height:13px}
 .sc-cp-m-d.pos{color:var(--accent)}.sc-cp-m-d.neg{color:var(--danger)}.sc-cp-m-d.neu{color:transparent}
@@ -3525,7 +3526,7 @@ html[data-theme="light"] :is(.overlay,.modal-overlay,.confirm-modal){background:
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v102 · Veriler bu cihazda saklanır</div>
+    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--muted)">Vault v102.1 · Veriler bu cihazda saklanır</div>
   </div>
 </div>
 
@@ -5533,8 +5534,9 @@ function _hardStopConfetti() {
 // =================== CALCULATE ===================
 function calcBalance() {
   if (!Array.isArray(data.transactions)) data.transactions = [];
+  const _td = today();
   return data.transactions.reduce((s, t) => {
-    if (t.type === 'income') return s + t.amount;
+    if (t.type === 'income') return t.date > _td ? s : s + t.amount; // V102.1: tarihi gelmemiş gelir henüz cepte değil
     // V69: kart harcaması bakiyeyi düşürmez — para ekstre ödemesinde (cardpay) çıkar
     if (t.type === 'expense' && t.payMethod === 'card') return s;
     return s - t.amount; // expense (nakit) + cardpay (transfer)
@@ -5543,7 +5545,7 @@ function calcBalance() {
 
 function calcMonthData(mk) {
   const txs = data.transactions.filter(t => monthKey(t.date) === mk);
-  const txIncome = txs.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+  const _td = today(), txIncome = txs.filter(t => t.type === 'income' && t.date <= _td).reduce((s, t) => s + t.amount, 0); // V102.1: yalnızca gerçekten gelen gelir (ileri tarihli gelir tarihi gelince sayılır)
   // Tekrarlayan gelirler: bu ay "Alındı" işaretlenenler tx'e yansımış olmalı
   // (toggleRecIncome tx ekliyor) — txIncome zaten kapsar; ama henüz tx eklenmemişse ekstra saymayız
   const income = txIncome;
@@ -7231,6 +7233,7 @@ function txSheetSave() {
   }
 
   // Friendly contextual feedback
+  if (type === 'income' && date > today()) { showToast(TOAST_OK + ' ' + fmtTL(amount) + ' gelir kaydedildi — ' + fmtDate(date) + ' günü hesaba girer'); renderAll(); return; } // V102.1
   if (type === 'income') {
     const incomeMessages = [
       '<svg width="10" height="10" viewBox="0 0 24 24" fill="#2DB866" stroke="none" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg> Gelir eklendi, limitin güncellendi.',
@@ -10347,7 +10350,7 @@ function nxOpen(key) {
   document.getElementById('nxSheetTitle').textContent = key === 'report' && _reportLast ? _mkLabel(_reportLast.mk).split(' ')[0] + ' karnesi' : o.title;
   if (key === 'puan') { const b = document.getElementById('planScoreBreak'); if (b) b.hidden = false; const body = document.getElementById('nxSheetBody'), old = body.querySelector('.nx-calc'); if (old) old.remove(); body.insertAdjacentHTML('afterbegin', _nxCalcHtml()); }
   _nxSheetKey = key; document.getElementById('nxSheetOv').classList.add('show'); document.getElementById('nxSheet').classList.add('show');
-  requestAnimationFrame(() => document.querySelectorAll('#nxSheetBody .sc-cp-m-v').forEach(v => _fitNum(v))); // V102: sayfa açıldıktan sonra rakamları sığdır
+  requestAnimationFrame(() => { document.querySelectorAll('#nxSheetBody .sc-cp-m-v').forEach(v => _fitNum(v)); document.querySelectorAll('#nxSheetBody .sc-cp-m-l').forEach(v => _fitNum(v, 8)); }); // V102: sayfa açıldıktan sonra rakamları sığdır
 }
 function nxCloseSheet() {
   document.getElementById('nxSheetOv').classList.remove('show'); document.getElementById('nxSheet').classList.remove('show');
@@ -10762,7 +10765,7 @@ function _renderPlanHero(fb, core) {
     </div>
   </div>`;
 
-  el.querySelectorAll('.ph-metrics .sc-cp-m-v').forEach(v => _fitNum(v)); // V102
+  el.querySelectorAll('.ph-metrics .sc-cp-m-v').forEach(v => _fitNum(v)); el.querySelectorAll('.ph-metrics .sc-cp-m-l').forEach(v => _fitNum(v, 8)); // V102 · V102.1: etiketin tek kelimesi sığmazsa küçülür
   const phN = el.querySelector('#phNeedle');
   if (phN) requestAnimationFrame(() => {
     phN.style.transform = 'rotate(' + (score*1.8-90).toFixed(1) + 'deg)';
